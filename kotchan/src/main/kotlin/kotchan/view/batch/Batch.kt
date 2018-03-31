@@ -64,7 +64,6 @@ class Batch {
                 }
                 val batchBufferBundle = nodesByTexture[texture] ?: return@texture
 
-                gl.debug()
                 batchBufferBundle.positionBuffer.flush()
                 batchBufferBundle.colorBuffer.flush()
                 batchBufferBundle.texcoordBuffer.flush()

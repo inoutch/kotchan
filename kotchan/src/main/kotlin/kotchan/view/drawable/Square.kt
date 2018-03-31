@@ -7,7 +7,7 @@ import utility.type.Mesh
 import utility.type.Size
 
 class Square(size: Size) :
-        Drawable(Engine.getInstance().gl.compileShaderProgram(SimpleVertexShaderSource, SimpleFragmentShaderSource),
+        Drawable(Engine.getInstance().shaderManager.getShaderProgram(SimpleVertexShaderSource, SimpleFragmentShaderSource),
                 createSquareMesh(size)) {
     companion object {
         fun createSquareMesh(size: Size) = Mesh(

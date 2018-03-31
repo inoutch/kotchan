@@ -15,7 +15,7 @@ class Engine {
     val gl = GL()
     val fileManager = null
     val textureManager = null
-    val shaderManager = null
+    val shaderManager = ShaderManager(gl)
 
     private var currentView: View? = null
 

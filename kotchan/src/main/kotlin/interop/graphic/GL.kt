@@ -12,6 +12,7 @@ expect class GL() {
     fun updateVBO(vbo: GLVBO, offset: Int, data: List<Float>)
     fun vertexPointer(location: GLAttribLocation, interval: Int, vbo: GLVBO)
     fun compileShaderProgram(vertexShaderText: String, fragmentShaderText: String): GLShaderProgram
+    fun deleteShaderProgram(shaderProgram: GLShaderProgram)
     fun useProgram(shaderProgram: GLShaderProgram)
     fun useTexture(texture: Texture?, index: Int)
     fun bindAttributeLocation(shaderProgram: GLShaderProgram, attributeLocation: GLAttribLocation, name: String)
