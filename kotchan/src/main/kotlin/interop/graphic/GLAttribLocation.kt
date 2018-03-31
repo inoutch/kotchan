@@ -1,7 +1,7 @@
 package interop.graphic
 
-enum class GLAttribLocation(val value: Int) {
-    ATTRIBUTE_POSITION(0),
-    ATTRIBUTE_COLOR(1),
-    ATTRIBUTE_TEXCOORD(2),
+enum class GLAttribLocation(val value: Int, val locationName: String) {
+    ATTRIBUTE_POSITION(1, "position"),
+    ATTRIBUTE_TEXCOORD(2, "texcoord"),
+    ATTRIBUTE_COLOR(3, "color"),
 }

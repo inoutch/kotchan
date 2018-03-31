@@ -2,6 +2,8 @@ package kotchan
 
 import application.AppDelegate
 import interop.graphic.GL
+import kotchan.view.Texture
+import kotchan.view.View
 
 //  Do not create Engine instance!
 class Engine {
@@ -10,21 +12,27 @@ class Engine {
         fun getInstance() = engine as Engine
     }
 
-    private val renderer: ViewController
-
     val gl = GL()
+    val fileManager = null
+    val textureManager = null
+    val shaderManager = null
+
+    private var currentView: View? = null
 
     init {
         if (Engine.engine != null) {
             throw RuntimeException("Engine should be created only 1")
         }
         Engine.engine = this
-        renderer = ViewController()
-        renderer.runRender(AppDelegate())
+    }
+
+    fun init(x: Int, y: Int, width: Int, height: Int) {
+        gl.viewPort(x, y, width, height)
+        currentView = AppDelegate()
     }
 
     fun render(delta: Float) {
-        renderer.render(delta)
+        currentView?.render(delta)
     }
 
     fun reshape(x: Int, y: Int, width: Int, height: Int) {

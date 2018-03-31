@@ -16,4 +16,7 @@ expect class GL() {
     fun useTexture(texture: Texture?, index: Int)
     fun bindAttributeLocation(shaderProgram: GLShaderProgram, attributeLocation: GLAttribLocation, name: String)
     fun getUniform(shaderProgram: GLShaderProgram, name: String): Int
+
+    fun getAttribLocation(shaderProgram: GLShaderProgram, name: String): Int
+    fun debug()
 }

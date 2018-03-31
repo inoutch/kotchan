@@ -1,34 +1,48 @@
 package interop.graphic
 
 val SimpleVertexShaderSource = """
-#version 410
-#ifdef GL_ES
-precision mediump float;
+#if __VERSION__ >= 130
+    #define attribute in
+    #define varying out
 #endif
 
-in vec4 position;
-in vec4 color;
+#ifdef GL_ES
+precision mediump float;
+precision mediump int;
+#endif
 
-out vec4 vColor;
+attribute vec4 position;
+attribute vec4 color;
+attribute vec2 texcoord;
+
+varying vec4 vColor;
+varying vec2 vTexcoord;
 
 void main(void){
     vColor = color;
+    vTexcoord = texcoord;
     gl_Position = position;
 }
 """
 
 val SimpleFragmentShaderSource = """
-#version 410
-#ifdef GL_ES
-precision mediump float;
+#if __VERSION__ >= 130
+    #define varying in
+    out vec4 mgl_FragColor;
+    #define texture2D texture
+    #define gl_FragColor mgl_FragColor
 #endif
 
-in vec4 vColor;
+#ifdef GL_ES
+precision mediump float;
+precision mediump int;
+#endif
 
-out vec4 color;
+varying vec4 vColor;
+varying vec2 vTexcoord;
 
 void main(void)
 {
-    color = vColor;
+    gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0);
 }
 """
