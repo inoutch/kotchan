@@ -12,7 +12,7 @@ class JoglLauncher(title: String) : GLEventListener {
     private val glWindow = GLWindow.create(glCaps)
     private val animator = FPSAnimator(glWindow, 60)
 
-    private lateinit var engine: Engine
+    private var engine: Engine? = null
 
     private var beforeMillis: Long = 0
 
@@ -39,18 +39,26 @@ class JoglLauncher(title: String) : GLEventListener {
             throw RuntimeException("jogl could not launch")
         }
         JoglProvider.gl = drawable.gl as GL4ES3
-        engine = Engine()
+        JoglProvider.gl?.glClear(GL4ES3.GL_COLOR_BUFFER_BIT)
+        JoglProvider.gl?.glClearColor(0.0f, 0.0f, 0.0f, 0.0f)
     }
 
     override fun reshape(drawable: GLAutoDrawable?, x: Int, y: Int, width: Int, height: Int) {
-        engine.reshape(x, y, width, height)
+        var engineTmp = this.engine
+        if (engineTmp == null) {
+            engineTmp = Engine()
+            engineTmp.init(x, y, width, height)
+            this.engine = engineTmp
+            return
+        }
+        engineTmp.reshape(x, y, width, height)
         beforeMillis = System.currentTimeMillis()
     }
 
     override fun display(drawable: GLAutoDrawable?) {
         val millisPerFrame = System.currentTimeMillis() - beforeMillis
         beforeMillis = System.currentTimeMillis()
-        engine.render(millisPerFrame.toFloat() / 1000.0f)
+        engine?.render(millisPerFrame.toFloat() / 1000.0f)
     }
 
     override fun dispose(drawable: GLAutoDrawable?) {

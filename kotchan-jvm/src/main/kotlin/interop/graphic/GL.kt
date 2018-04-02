@@ -7,6 +7,7 @@ import com.jogamp.opengl.GLES3
 import com.jogamp.opengl.util.GLArrayDataClient
 import kotchan.view.Texture
 import java.nio.ByteBuffer
+import java.nio.FloatBuffer
 import java.nio.IntBuffer
 
 actual class GL {
@@ -40,13 +41,18 @@ actual class GL {
 
     actual fun compileShaderProgram(vertexShaderText: String, fragmentShaderText: String): GLShaderProgram {
         return gl.run {
-            val vertexShader = compileShader(GL4ES3.GL_VERTEX_SHADER, vertexShaderText)
-            val fragmentShader = compileShader(GL4ES3.GL_FRAGMENT_SHADER, fragmentShaderText)
+            val vertexShader = compileShader(GL4ES3.GL_VERTEX_SHADER, "#version 410\n$vertexShaderText")
+            val fragmentShader = compileShader(GL4ES3.GL_FRAGMENT_SHADER, "#version 410\n$fragmentShaderText")
 
             val shaderProgram = glCreateProgram()
             glAttachShader(shaderProgram, vertexShader)
             glAttachShader(shaderProgram, fragmentShader)
+
+            GLAttribLocation.values().forEach {
+                glBindAttribLocation(shaderProgram, it.value, it.locationName)
+            }
             glLinkProgram(shaderProgram)
+
             glValidateProgram(shaderProgram)
 
             if (vertexShader != 0) {
@@ -59,6 +65,10 @@ actual class GL {
             }
             return@run GLShaderProgram(shaderProgram)
         }
+    }
+
+    actual fun deleteShaderProgram(shaderProgram: GLShaderProgram) {
+        gl.glDeleteProgram(shaderProgram.id)
     }
 
     actual fun useProgram(shaderProgram: GLShaderProgram) {
@@ -82,7 +92,7 @@ actual class GL {
         val id = arrayOf(0).toIntArray()
         gl.glGenBuffers(1, id, 0)
         gl.glBindBuffer(GL4ES3.GL_ARRAY_BUFFER, id.first())
-        gl.glBufferData(GL4ES3.GL_ARRAY_BUFFER, data.size.toLong(), vertexBuffer, GL4ES3.GL_DYNAMIC_DRAW)
+        gl.glBufferData(GL4ES3.GL_ARRAY_BUFFER, data.size.toLong() * 4, vertexBuffer, GL4ES3.GL_DYNAMIC_DRAW)
         return GLVBO(id.first())
     }
 
@@ -94,7 +104,7 @@ actual class GL {
     actual fun updateVBO(vbo: GLVBO, offset: Int, data: List<Float>) {
         val vertexBuffer = Buffers.newDirectFloatBuffer(data.toFloatArray())
         gl.glBindBuffer(GL4ES3.GL_ARRAY_BUFFER, vbo.id)
-        gl.glBufferSubData(GL4ES3.GL_ARRAY_BUFFER, offset.toLong(), data.size.toLong(), vertexBuffer)
+        gl.glBufferSubData(GL4ES3.GL_ARRAY_BUFFER, offset.toLong(), data.size.toLong() * 4, vertexBuffer)
     }
 
     private fun compileShader(type: Int, text: String): Int = gl.run {
@@ -115,5 +125,13 @@ actual class GL {
             }
         }
         return@run shader
+    }
+
+    actual fun getAttribLocation(shaderProgram: GLShaderProgram, name: String): Int {
+        return gl.glGetAttribLocation(shaderProgram.id, name)
+    }
+
+    actual fun debug() {
+        gl.glDisable(GL4ES3.GL_CULL_FACE)
     }
 }

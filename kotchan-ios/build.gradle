@@ -11,11 +11,18 @@ buildscript {
     }
 }
 
+konan.targets = ["iphone", "iphone_sim"]
+
 konanArtifacts {
-    framework('KotlinMyFramework', targets: ['iphone', 'iphone_sim']) {
-        srcDir 'src/main/kotlin'
+    program("app") {
+        srcDir "src/main/kotlin"
 
         enableMultiplatform true
+        enableOptimizations true
+
+        libraries {
+            // allLibrariesFrom common
+        }
     }
 }
 
