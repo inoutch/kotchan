@@ -18,6 +18,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
+    compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.+"
     compile "org.jogamp.gluegen:gluegen-rt:$jogl_version"
     compile "org.jogamp.jogl:jogl-all:$jogl_version"
 

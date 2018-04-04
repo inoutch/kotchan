@@ -101,12 +101,12 @@ captures/
 .externalNativeBuild
 
 # Google Services (e.g. APIs or Firebase)
-google-services.json
+google-services.jsonObject
 
 # Freeline
 freeline.py
 freeline/
-freeline_project_description.json
+freeline_project_description.jsonObject
 ### CMake template
 CMakeCache.txt
 CMakeFiles
@@ -115,7 +115,7 @@ Testing
 Makefile
 cmake_install.cmake
 install_manifest.txt
-compile_commands.json
+compile_commands.jsonObject
 CTestTestfile.cmake
 ### Gradle template
 .gradle
