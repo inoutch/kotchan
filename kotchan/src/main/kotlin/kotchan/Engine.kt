@@ -3,6 +3,7 @@ package kotchan
 import application.AppDelegate
 import interop.graphic.GL
 import interop.io.File
+import kotchan.texture.TextureManager
 import kotchan.view.View
 import utility.type.Size
 

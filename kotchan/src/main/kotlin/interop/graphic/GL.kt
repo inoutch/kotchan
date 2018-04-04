@@ -55,5 +55,7 @@ expect class GL() {
 
     fun destroyTexture(texture: GLTexture)
 
+    fun filterTexture(texture: GLTexture, type: GLFilterType)
+
     fun debug()
 }

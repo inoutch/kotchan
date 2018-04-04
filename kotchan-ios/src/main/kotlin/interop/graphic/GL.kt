@@ -142,6 +142,19 @@ actual class GL {
         glDeleteTextures(1, buffer.toIntArray().refTo(0))
     }
 
+    actual fun filterTexture(texture: GLTexture, type: GLFilterType) {
+        when (type) {
+            GLFilterType.Nearest -> {
+                glTexParameteri(texture.id, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
+                glTexParameteri(texture.id, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+            }
+            GLFilterType.Linear -> {
+                glTexParameteri(texture.id, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+                glTexParameteri(texture.id, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+            }
+        }
+    }
+
     actual fun debug() {
         glDisable(GL_CULL_FACE)
     }

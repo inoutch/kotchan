@@ -1,4 +1,4 @@
-package kotchan
+package kotchan.texture
 
 import interop.graphic.GL
 import interop.graphic.GLTexture
