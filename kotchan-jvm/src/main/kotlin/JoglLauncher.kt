@@ -27,7 +27,7 @@ class JoglLauncher(title: String) : GLEventListener {
         glWindow.addGLEventListener(this)
     }
 
-    var windowSize: Size = Size(300.0f, 300.0f)
+    var windowSize: Size = Size(640.0f, 1136.0f)
 
     fun run() {
         glWindow.setSize(windowSize.width.toInt() / 2, windowSize.height.toInt() / 2)
@@ -47,7 +47,9 @@ class JoglLauncher(title: String) : GLEventListener {
         var engineTmp = this.engine
         if (engineTmp == null) {
             engineTmp = Engine()
-            engineTmp.init(x, y, width, height)
+            engineTmp.init(
+                    Size(width.toFloat(), height.toFloat()),
+                    Size(width.toFloat() / 2.0f, height.toFloat() / 2.0f))
             this.engine = engineTmp
             return
         }

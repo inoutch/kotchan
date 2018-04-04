@@ -1,9 +1,10 @@
 package kotchan.view.batch
 
 import interop.graphic.GLAttribLocation
+import interop.graphic.GLCamera
 import interop.graphic.GLShaderProgram
 import kotchan.Engine
-import kotchan.view.Texture
+import interop.graphic.GLTexture
 import kotchan.view.drawable.Drawable
 
 class Batch {
@@ -13,13 +14,15 @@ class Batch {
 
     private val gl = Engine.getInstance().gl
 
-    private val nodes: MutableMap<GLShaderProgram, MutableMap<Texture, BatchBundle>> = mutableMapOf()
+    private val nodes: MutableMap<GLShaderProgram, MutableMap<GLTexture, BatchBundle>> = mutableMapOf()
+    private val shaders: MutableMap<Drawable, GLShaderProgram> = mutableMapOf()
 
-    fun add(node: Drawable) {
-        var nodesByShader = nodes[node.shaderProgram]
+    fun add(node: Drawable, shaderProgram: GLShaderProgram) {
+        shaders[node] = shaderProgram
+        var nodesByShader = nodes[shaderProgram]
         if (nodesByShader == null) {
             nodesByShader = mutableMapOf()
-            nodes[node.shaderProgram] = nodesByShader
+            nodes[shaderProgram] = nodesByShader
         }
         var nodesByShaderAndTexture = nodesByShader[node.texture]
         if (nodesByShaderAndTexture == null) {
@@ -30,43 +33,56 @@ class Batch {
             nodesByShader[node.texture] = nodesByShaderAndTexture
         }
         nodesByShaderAndTexture.apply {
-            val positionBufferData = positionBuffer.add(node.mesh.vertices)
-            val colorBufferData = colorBuffer.add(node.mesh.colors)
-            val texcoordBufferData = texcoordBuffer.add(node.mesh.texcoords)
+            val positionBufferData = positionBuffer.add(node.positions())
+            val texcoordBufferData = texcoordBuffer.add(node.texcoords())
+            val colorBufferData = colorBuffer.add(node.colors())
             nodes[node] = BatchNode(positionBufferData, colorBufferData, texcoordBufferData)
         }
     }
 
     fun remove(node: Drawable) {
-        val nodesByShaderAndTexture = nodes[node.shaderProgram]?.get(node.texture) ?: return
+        val shaderProgram = shaders[node] ?: return
+        val nodesByShaderAndTexture = nodes[shaderProgram]?.get(node.texture) ?: return
         val batchData = nodesByShaderAndTexture.nodes[node] ?: return
+        shaders.remove(node)
         nodesByShaderAndTexture.positionBuffer.remove(batchData.positionBufferData)
         nodesByShaderAndTexture.colorBuffer.remove(batchData.colorBufferData)
         nodesByShaderAndTexture.texcoordBuffer.remove(batchData.texcoordBufferData)
         nodesByShaderAndTexture.nodes.remove(node)
     }
 
-    fun draw(delta: Float) {
+    fun draw(delta: Float, camera: GLCamera) {
         var currentShaderProgram: GLShaderProgram? = null
-        var currentTexture: Texture? = null
+        var currentTexture: GLTexture? = null
         nodes.keys.forEach shader@{ shaderProgram ->
             val nodesByTexture = nodes[shaderProgram] ?: return@shader
             if (currentShaderProgram != shaderProgram) {
                 currentShaderProgram = shaderProgram
+                shaderProgram.prepare(delta, camera)
                 shaderProgram.use()
-                // TODO: set uniform
             }
             nodesByTexture.keys.forEach texture@{ texture ->
                 if (currentTexture != texture) {
                     currentTexture = texture
-                    // TODO: enable texture and change dynamic index
-                    texture.use(0)
+                    texture.use()
                 }
                 val batchBufferBundle = nodesByTexture[texture] ?: return@texture
 
                 batchBufferBundle.positionBuffer.flush()
                 batchBufferBundle.colorBuffer.flush()
                 batchBufferBundle.texcoordBuffer.flush()
+
+                batchBufferBundle.nodes
+                        .filterKeys { it.isPositionsDirty }
+                        .forEach { batchBufferBundle.positionBuffer.update(it.value.positionBufferData, it.key.positions()) }
+
+                batchBufferBundle.nodes
+                        .filterKeys { it.isColorsDirty }
+                        .forEach { batchBufferBundle.colorBuffer.update(it.value.colorBufferData, it.key.colors()) }
+
+                batchBufferBundle.nodes
+                        .filterKeys { it.isTexcoordsDirty }
+                        .forEach { batchBufferBundle.texcoordBuffer.update(it.value.texcoordBufferData, it.key.texcoords()) }
 
                 gl.vertexPointer(GLAttribLocation.ATTRIBUTE_POSITION, 3, batchBufferBundle.positionBuffer.vbo)
                 gl.vertexPointer(GLAttribLocation.ATTRIBUTE_TEXCOORD, 2, batchBufferBundle.texcoordBuffer.vbo)

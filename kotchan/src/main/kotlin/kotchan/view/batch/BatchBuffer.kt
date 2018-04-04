@@ -10,7 +10,7 @@ class BatchBuffer(var maxSize: Int) {
     val vbo = gl.createVBO(maxSize)
     var isDirty = false
 
-    fun add(vertices: List<Float>): BatchBufferData {
+    fun add(vertices: FloatArray): BatchBufferData {
         val last = if (data.size > 0) data.last().end() else 0
         if (last + vertices.size > maxSize) {
             throw RuntimeException("batch: overflow default vbo size")
@@ -30,10 +30,9 @@ class BatchBuffer(var maxSize: Int) {
         isDirty = true
     }
 
-    fun update(batchBufferVertex: BatchBufferData, vertices: List<Float>, autoFlush: Boolean = true) {
+    fun update(batchBufferVertex: BatchBufferData, vertices: FloatArray, autoFlush: Boolean = true) {
         if (vertices.size != batchBufferVertex.vertices.size) {
-            // TODO: throw exception
-            return
+            throw Error("broken batch buffer vertex")
         }
         batchBufferVertex.vertices = vertices
         if (autoFlush) {
@@ -42,9 +41,19 @@ class BatchBuffer(var maxSize: Int) {
     }
 
     fun flush() {
-        if (isDirty) {
-            gl.updateVBO(vbo, 0, data.flatMap { it.vertices })
-            isDirty = false
+        if (!isDirty) {
+            return
         }
+        isDirty = false
+
+        var currentPoint = 0
+        val array = data
+                .flatMap {
+                    it.start = currentPoint
+                    currentPoint += it.vertices.size
+                    it.vertices.asIterable()
+                }
+                .toFloatArray()
+        gl.updateVBO(vbo, 0, array)
     }
 }

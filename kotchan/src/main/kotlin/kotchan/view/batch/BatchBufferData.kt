@@ -1,5 +1,5 @@
 package kotchan.view.batch
 
-data class BatchBufferData(val start: Int, var vertices: List<Float>) {
+class BatchBufferData(var start: Int, var vertices: FloatArray) {
     fun end() = start + vertices.size
 }
