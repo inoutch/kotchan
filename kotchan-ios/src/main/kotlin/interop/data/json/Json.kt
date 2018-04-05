@@ -13,8 +13,7 @@ actual class Json {
             val jsonObject = memScoped {
                 val errorVar = alloc<ObjCObjectVar<NSError?>>()
                 val result = NSJSONSerialization.JSONObjectWithData(data, 0, errorVar.ptr)
-                val error = errorVar.value
-                if (error != null) {
+                if (errorVar.value != null) {
                     return null
                 }
                 result!!
@@ -28,7 +27,7 @@ actual class Json {
                 jsonObject.isList() -> output(jsonObject)
                 else -> null
             } ?: return null
-            val data = NSJSONSerialization.dataWithJSONObject(obj, NSJSONWritingPrettyPrinted, null) ?: return null
+            val data = NSJSONSerialization.dataWithJSONObject(obj, 0, null) ?: return null
             return data.bytes!!.readBytes(data.length.toInt()).stringFromUtf8()
         }
 

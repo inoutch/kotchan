@@ -1,5 +1,6 @@
 package kotchan.texture
 
-class TextureAtlas {
+import interop.graphic.GLTexture
+import kotchan.tool.TextureFrame
 
-}
+data class TextureAtlas(val frames: List<TextureFrame>, val texture: GLTexture)

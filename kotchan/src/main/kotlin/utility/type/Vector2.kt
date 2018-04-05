@@ -3,6 +3,8 @@ package utility.type
 import kotlin.math.sqrt
 
 data class Vector2(val x: Float, val y: Float) {
+    constructor() : this(0.0f, 0.0f)
+
     val length get() = sqrt(x * x + y * y)
 
     fun normalized(): Vector2 {
@@ -31,3 +33,6 @@ fun List<Vector2>.flatten() = FloatArray(this.size * 2).also {
         it[index * 2 + 1] = vector.y
     }
 }
+
+fun List<Float>.toVector2(offset: Int = 0) =
+        if (this.size >= 2 + offset) Vector2(this[offset], this[offset + 1]) else Vector2()

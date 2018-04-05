@@ -1,13 +1,8 @@
 package interop.data.json
 
+import extension.*
+
 class JsonObject {
-    enum class JsonType {
-        ErrorType,
-        FloatType,
-        MapType,
-        ListType,
-        TextType,
-    }
 
     private var type: JsonType = JsonType.ErrorType
 
@@ -35,14 +30,33 @@ class JsonObject {
         fun createMap() = JsonObject(JsonType.MapType)
     }
 
+    // byScheme check
     fun isFloat() = type == JsonType.FloatType
+
     fun isList() = type == JsonType.ListType
+
     fun isMap() = type == JsonType.MapType
+
     fun isText() = type == JsonType.TextType
 
+    fun hasKeys(keys: List<Pair<String, JsonType>>) =
+            isMap() && !keys.any { mapValue[it.first]?.type != it.second }
+
+    fun byScheme(keys: List<Pair<String, JsonType>>): List<JsonObject>? {
+        if (!hasKeys(keys)) return null
+        return mapValue[keys.map { it.first }]
+    }
+
     fun toFloat() = floatValue
+
+    fun toBoolean(): Boolean? {
+        return (floatValue ?: return null) > 0.5f
+    }
+
     fun toMap() = mapValue
+
     fun toList() = listValue
+
     fun toText() = textValue
 
     fun addAsMap(key: String, jsonObject: JsonObject) {
@@ -100,4 +114,5 @@ class JsonObject {
             else -> throw Error("unknown type")
         }
     }
+
 }

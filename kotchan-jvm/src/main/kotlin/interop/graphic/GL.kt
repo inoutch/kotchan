@@ -155,7 +155,7 @@ actual class GL {
             val buffer = loadBuffer(filepath, false)
             val textureData = AWTTextureIO.newTextureData(gl.glProfile, buffer, false)
             val texture = TextureIO.newTexture(textureData)
-            GLTexture(texture.imageTarget, texture.width, texture.height)
+            GLTexture(texture.getTextureObject(gl), texture.width, texture.height)
         } catch (e: FileNotFoundException) {
             null
         }

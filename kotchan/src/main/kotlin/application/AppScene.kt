@@ -6,6 +6,7 @@ import kotchan.scene.batch.Batch
 import kotchan.scene.Scene
 import kotchan.scene.drawable.Square
 import kotchan.scene.shader.SimpleShaderProgram
+import kotchan.tool.TexturePacker
 import utility.math.Random
 import utility.type.Size
 import utility.type.Vector3
@@ -27,8 +28,11 @@ class AppScene : Scene() {
     private var timer = 0
 
     init {
-        Json.parse("[1,4,5, {\"sample\": 5.6, \"example\":[\"hoge\", 2, 5, false]}]")?.let {
-            //println(Json.write(it))
+        val fullpath = file.getResourcePath("textures/spritesheet.json")
+        val dirpath = file.getResourcePath("textures")
+        if (fullpath != null && dirpath != null) {
+            val textureAtlas = TexturePacker.loadFile(dirpath, fullpath)
+            println(textureAtlas)
         }
     }
 
