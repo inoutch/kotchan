@@ -1,8 +1,9 @@
 package kotchan.scene.drawable
 
+import interop.graphic.GLTexture
 import utility.type.*
 
-open class Square(size: Size) : Drawable(createSquareMesh(size)) {
+open class Square(size: Size, texture: GLTexture = GLTexture.empty) : Drawable(createSquareMesh(size), texture) {
     companion object {
         fun createSquareMesh(size: Size) = Mesh(
                 listOf(Vector3(0.0f, 0.0f, 0.0f),

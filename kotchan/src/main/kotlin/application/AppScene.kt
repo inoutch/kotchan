@@ -2,8 +2,10 @@ package application
 
 import interop.data.json.Json
 import interop.graphic.GLCamera
+import interop.graphic.GLFilterType
 import kotchan.scene.batch.Batch
 import kotchan.scene.Scene
+import kotchan.scene.drawable.Sprite
 import kotchan.scene.drawable.Square
 import kotchan.scene.shader.SimpleShaderProgram
 import kotchan.tool.TexturePacker
@@ -17,8 +19,7 @@ class AppScene : Scene() {
     private val shaderProgram = SimpleShaderProgram()
     private val texture = textureManager.get(file.getResourcePath("textures/sample.png"))
     private val sprites = MutableList(100) {
-        Square(Size(32.0f, 32.0f)).also {
-            it.texture = texture
+        Square(Size(32.0f, 32.0f), texture).also {
             val x = Random.next((screenSize.width / ratio).toInt())
             val y = Random.next((screenSize.height / ratio).toInt())
             it.position = Vector3(x.toFloat(), y.toFloat(), 0.0f)
@@ -26,13 +27,19 @@ class AppScene : Scene() {
     }
     private val spriteBatch = Batch().apply { sprites.forEach { add(it, shaderProgram) } }
     private var timer = 0
+    private var sprite: Sprite? = null
 
     init {
         val fullpath = file.getResourcePath("textures/spritesheet.json")
         val dirpath = file.getResourcePath("textures")
         if (fullpath != null && dirpath != null) {
-            val textureAtlas = TexturePacker.loadFile(dirpath, fullpath)
-            println(textureAtlas)
+            TexturePacker.loadFile(dirpath, fullpath)?.let {
+                val sprite = Sprite(it)
+                spriteBatch.add(sprite, shaderProgram)
+                sprite.setAtlas("RunRight01.png")
+                sprite.texture.filterType = GLFilterType.Linear
+                this.sprite = sprite
+            }
         }
     }
 
@@ -45,6 +52,7 @@ class AppScene : Scene() {
         camera.update()
         spriteBatch.draw(delta, camera)
 
+        // create and destroy
         if (timer % 100 == 0) {
             val remove = sprites.last()
             sprites.remove(remove)
@@ -57,6 +65,10 @@ class AppScene : Scene() {
                 it.position = Vector3(x.toFloat(), y.toFloat(), 0.0f)
             }, shaderProgram)
         }
+
+        // animation
+        val names = listOf("RunRight01.png", "RunRight02.png", "RunRight03.png", "RunRight04.png")
+        sprite?.setAtlas(names[(timer / 10) % names.size])
         timer += 1
     }
 

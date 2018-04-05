@@ -3,13 +3,13 @@ package kotchan.scene.drawable
 import interop.graphic.GLTexture
 import utility.type.*
 
-abstract class Drawable(private val mesh: Mesh, var texture: GLTexture = GLTexture.empty) {
+abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTexture.empty) {
     var isPositionsDirty = false
-        private set
+        protected set
     var isColorsDirty = false
-        private set
+        protected set
     var isTexcoordsDirty = false
-        private set
+        protected set
 
     var position: Vector3 = Vector3()
         set(value) {
@@ -23,14 +23,14 @@ abstract class Drawable(private val mesh: Mesh, var texture: GLTexture = GLTextu
             field = value
         }
 
-    private var positionsBuffer = mesh.vertices.flatten()
-    private var texcoordsBuffer = mesh.texcoords.flatten()
-    private var colorsBuffer = mesh.colors.flatten()
+    private var positionsBuffer = mesh.pos().flatten()
+    private var texcoordsBuffer = mesh.tex().flatten()
+    private var colorsBuffer = mesh.col().flatten()
 
     open val positions = {
         if (isPositionsDirty) {
             val modelMatrix = Matrix4.createTranslation(position)
-            positionsBuffer = mesh.vertices
+            positionsBuffer = mesh.pos()
                     .map { modelMatrix * Vector4(it, 1.0f) }
                     .map { Vector3(it) }
                     .flatten()
@@ -41,14 +41,19 @@ abstract class Drawable(private val mesh: Mesh, var texture: GLTexture = GLTextu
 
     open val colors = {
         if (isColorsDirty) {
-            colorsBuffer = mesh.colors
+            colorsBuffer = mesh.col()
                     .map { color }
                     .flatten()
+            isColorsDirty = false
         }
         colorsBuffer
     }
 
     open val texcoords = {
+        if (isTexcoordsDirty) {
+            texcoordsBuffer = mesh.tex().flatten()
+            isTexcoordsDirty = false
+        }
         texcoordsBuffer
     }
 }
