@@ -2,16 +2,16 @@ package application
 
 import interop.data.json.Json
 import interop.graphic.GLCamera
-import interop.graphic.GLFilterType
-import kotchan.view.batch.Batch
-import kotchan.view.View
-import kotchan.view.drawable.Square
-import kotchan.view.shader.SimpleShaderProgram
+import kotchan.scene.batch.Batch
+import kotchan.scene.Scene
+import kotchan.scene.drawable.Square
+import kotchan.scene.shader.SimpleShaderProgram
+import kotchan.tool.TexturePacker
 import utility.math.Random
 import utility.type.Size
 import utility.type.Vector3
 
-class AppDelegate : View() {
+class AppScene : Scene() {
     private val ratio = 2
     private val camera = GLCamera.createOrthographic(0.0f, screenSize.width / ratio, 0.0f, screenSize.height / ratio, -1.0f, 1.0f)
     private val shaderProgram = SimpleShaderProgram()
@@ -28,8 +28,12 @@ class AppDelegate : View() {
     private var timer = 0
 
     init {
-        val sample = Json.parse("[1,4,5]")
-        println("value is " + sample.toList()[1].toFloat())
+        val fullpath = file.getResourcePath("textures/spritesheet.json")
+        val dirpath = file.getResourcePath("textures")
+        if (fullpath != null && dirpath != null) {
+            val textureAtlas = TexturePacker.loadFile(dirpath, fullpath)
+            println(textureAtlas)
+        }
     }
 
     override fun render(delta: Float) {

@@ -1,8 +1,8 @@
-package kotchan.view.drawable
+package kotchan.scene.drawable
 
 import utility.type.*
 
-class Square(size: Size) : Drawable(createSquareMesh(size)) {
+open class Square(size: Size) : Drawable(createSquareMesh(size)) {
     companion object {
         fun createSquareMesh(size: Size) = Mesh(
                 listOf(Vector3(0.0f, 0.0f, 0.0f),
@@ -17,11 +17,11 @@ class Square(size: Size) : Drawable(createSquareMesh(size)) {
                         Vector2(0.0f, 1.0f),
                         Vector2(1.0f, 1.0f),
                         Vector2(1.0f, 0.0f)),
-                listOf(Vector4(1.0f, 0.0f, 0.0f, 1.0f),
-                        Vector4(0.0f, 1.0f, 0.0f, 1.0f),
-                        Vector4(0.0f, 0.0f, 1.0f, 1.0f),
-                        Vector4(1.0f, 0.0f, 0.0f, 1.0f),
-                        Vector4(0.0f, 0.0f, 1.0f, 1.0f),
+                listOf(Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+                        Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+                        Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+                        Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+                        Vector4(1.0f, 1.0f, 1.0f, 1.0f),
                         Vector4(1.0f, 1.0f, 1.0f, 1.0f))
         )
     }

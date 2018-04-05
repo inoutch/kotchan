@@ -1,5 +1,6 @@
 package interop.io
 
+import interop.extension.toUTF8String
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
@@ -16,7 +17,7 @@ actual class File {
     }
 
     actual fun readText(filepath: String): String? {
-        return readBytes(filepath)?.let { String() }
+        return readBytes(filepath)?.toUTF8String()
     }
 
     actual fun getResourcePath(name: String): String? {

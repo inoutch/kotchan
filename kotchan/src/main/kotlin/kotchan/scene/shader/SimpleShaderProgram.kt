@@ -1,4 +1,4 @@
-package kotchan.view.shader
+package kotchan.scene.shader
 
 import interop.graphic.GLCamera
 import interop.graphic.GLShaderProgram
@@ -42,7 +42,7 @@ out vec4 outColor;
 
 void main(void)
 {
-    outColor = texture(u_texture0, vTexcoord);
+    outColor = vColor * texture(u_texture0, vTexcoord);
 }
 """
 

@@ -1,17 +1,52 @@
 package interop.data.json
 
+import com.fasterxml.jackson.core.JsonParseException
+import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 
 actual class Json {
     actual companion object {
         private val mapper = jacksonObjectMapper()
-        actual fun parse(json: String): JsonObject {
-            return parse(mapper.readTree(json))
+
+        actual fun parse(json: String): JsonObject? {
+            return try {
+                parse(mapper.readTree(json))
+            } catch (e: JsonParseException) {
+                return null
+            }
         }
 
-        actual fun write(jsonObject: JsonObject): String {
-            return "[]"
+        actual fun write(jsonObject: JsonObject): String? {
+            return try {
+                mapper.writeValueAsString(outputNode(jsonObject))
+            } catch (e: JsonProcessingException) {
+                null
+            }
+        }
+
+        private fun outputNode(obj: JsonObject): JsonNode {
+            when {
+                obj.isList() -> return mapper.createArrayNode().also { node ->
+                    obj.toList().forEach {
+                        when {
+                            it.isFloat() -> node.add(it.toFloat())
+                            it.isText() -> node.add(it.toText())
+                            else -> node.add(outputNode(it))
+                        }
+                    }
+                }
+                obj.isMap() -> return mapper.createObjectNode().also { node ->
+                    obj.toMap().forEach {
+                        when {
+                            it.value.isFloat() -> node.put(it.key, it.value.toFloat())
+                            it.value.isText() -> node.put(it.key, it.value.toText())
+                            else -> node[it.key] = outputNode(it.value)
+                        }
+                    }
+                }
+                else -> throw Error("broken json object")
+            }
         }
 
         private fun parse(jsonNode: JsonNode): JsonObject {

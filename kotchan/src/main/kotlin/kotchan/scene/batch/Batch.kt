@@ -1,11 +1,11 @@
-package kotchan.view.batch
+package kotchan.scene.batch
 
 import interop.graphic.GLAttribLocation
 import interop.graphic.GLCamera
 import interop.graphic.GLShaderProgram
 import kotchan.Engine
 import interop.graphic.GLTexture
-import kotchan.view.drawable.Drawable
+import kotchan.scene.drawable.Drawable
 
 class Batch {
     companion object {

@@ -1,4 +1,4 @@
-package kotchan.view.batch
+package kotchan.scene.batch
 
 import kotchan.Engine
 

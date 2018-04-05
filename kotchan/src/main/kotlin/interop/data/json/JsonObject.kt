@@ -1,13 +1,8 @@
 package interop.data.json
 
+import extension.*
+
 class JsonObject {
-    enum class JsonType {
-        ErrorType,
-        FloatType,
-        MapType,
-        ListType,
-        StringType,
-    }
 
     private var type: JsonType = JsonType.ErrorType
 
@@ -23,7 +18,7 @@ class JsonObject {
 
     constructor(value: String) {
         textValue = value
-        type = JsonType.StringType
+        type = JsonType.TextType
     }
 
     private constructor(type: JsonType) {
@@ -35,13 +30,33 @@ class JsonObject {
         fun createMap() = JsonObject(JsonType.MapType)
     }
 
+    // byScheme check
     fun isFloat() = type == JsonType.FloatType
+
     fun isList() = type == JsonType.ListType
+
     fun isMap() = type == JsonType.MapType
 
+    fun isText() = type == JsonType.TextType
+
+    fun hasKeys(keys: List<Pair<String, JsonType>>) =
+            isMap() && !keys.any { mapValue[it.first]?.type != it.second }
+
+    fun byScheme(keys: List<Pair<String, JsonType>>): List<JsonObject>? {
+        if (!hasKeys(keys)) return null
+        return mapValue[keys.map { it.first }]
+    }
+
     fun toFloat() = floatValue
+
+    fun toBoolean(): Boolean? {
+        return (floatValue ?: return null) > 0.5f
+    }
+
     fun toMap() = mapValue
+
     fun toList() = listValue
+
     fun toText() = textValue
 
     fun addAsMap(key: String, jsonObject: JsonObject) {
@@ -53,6 +68,51 @@ class JsonObject {
     }
 
     fun setFloat(value: Float) {
-        if (isFloat()) floatValue = value
+        if (!isFloat()) {
+            setNull(type)
+            type = JsonType.FloatType
+        }
+        floatValue = value
     }
+
+    fun setText(value: String) {
+        if (!isText()) {
+            setNull(type)
+            type = JsonType.TextType
+        }
+        textValue = value
+    }
+
+    fun setMap() {
+        if (!isMap()) {
+            setNull(type)
+        }
+        mapValue.clear()
+    }
+
+    fun setList() {
+        if (!isList()) {
+            setNull(type)
+        }
+        listValue.clear()
+    }
+
+    private fun setNull(type: JsonType) {
+        when (type) {
+            JsonType.FloatType -> {
+                floatValue = null
+            }
+            JsonType.MapType -> {
+                mapValue = mutableMapOf()
+            }
+            JsonType.ListType -> {
+                listValue = mutableListOf()
+            }
+            JsonType.TextType -> {
+                textValue = null
+            }
+            else -> throw Error("unknown type")
+        }
+    }
+
 }

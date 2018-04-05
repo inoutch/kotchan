@@ -1,4 +1,4 @@
-package kotchan.view.batch
+package kotchan.scene.batch
 
 data class BatchNode(
         val positionBufferData: BatchBufferData,
