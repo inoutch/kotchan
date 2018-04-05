@@ -16,10 +16,11 @@ actual class Json {
 
         private fun parse(jsonNode: JsonNode): JsonObject {
             when {
-                jsonNode.isInt -> return JsonObject(jsonNode.intValue())
+                jsonNode.isInt -> return JsonObject(jsonNode.intValue().toFloat())
                 jsonNode.isFloat -> return JsonObject(jsonNode.floatValue())
-                jsonNode.isBoolean -> return JsonObject(jsonNode.booleanValue())
+                jsonNode.isBoolean -> return JsonObject(if (jsonNode.booleanValue()) 1.0f else 0.0f)
                 jsonNode.isDouble -> return JsonObject(jsonNode.doubleValue().toFloat())
+                jsonNode.isTextual -> return JsonObject(jsonNode.textValue())
                 jsonNode.isObject -> {
                     val jsonObject = JsonObject.createMap()
                     jsonNode.fields().forEach {
@@ -34,7 +35,7 @@ actual class Json {
                     }
                     return jsonObject
                 }
-                else -> throw Error("unknown json type")
+                else -> throw Error("unknown json extension")
             }
         }
     }

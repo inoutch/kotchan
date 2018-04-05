@@ -2,6 +2,7 @@ package interop.io
 
 import kotlinx.cinterop.*
 import platform.Foundation.*
+import interop.extension.*
 
 actual class File {
     actual fun readBytes(filepath: String): ByteArray? {
@@ -10,7 +11,7 @@ actual class File {
     }
 
     actual fun readText(filepath: String): String? {
-        return readBytes(filepath)?.let { String() }
+        return readBytes(filepath)?.toUTF8String()
     }
 
     actual fun getResourcePath(name: String): String? {

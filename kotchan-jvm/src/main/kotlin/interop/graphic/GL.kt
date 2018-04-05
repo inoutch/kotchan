@@ -167,15 +167,15 @@ actual class GL {
         gl.glDeleteTextures(1, buffer)
     }
 
-    actual fun filterTexture(texture: GLTexture, type: GLFilterType) {
+    actual fun filterTexture(type: GLFilterType) {
         when (type) {
             GLFilterType.Nearest -> {
-                gl.glTexParameteri(texture.id, GL4ES3.GL_TEXTURE_MIN_FILTER, GL4ES3.GL_NEAREST)
-                gl.glTexParameteri(texture.id, GL4ES3.GL_TEXTURE_MAG_FILTER, GL4ES3.GL_NEAREST)
+                gl.glTexParameteri(GL4ES3.GL_TEXTURE_2D, GL4ES3.GL_TEXTURE_MIN_FILTER, GL4ES3.GL_NEAREST)
+                gl.glTexParameteri(GL4ES3.GL_TEXTURE_2D, GL4ES3.GL_TEXTURE_MAG_FILTER, GL4ES3.GL_NEAREST)
             }
             GLFilterType.Linear -> {
-                gl.glTexParameteri(texture.id, GL4ES3.GL_TEXTURE_MIN_FILTER, GL4ES3.GL_LINEAR)
-                gl.glTexParameteri(texture.id, GL4ES3.GL_TEXTURE_MAG_FILTER, GL4ES3.GL_LINEAR)
+                gl.glTexParameteri(GL4ES3.GL_TEXTURE_2D, GL4ES3.GL_TEXTURE_MIN_FILTER, GL4ES3.GL_LINEAR)
+                gl.glTexParameteri(GL4ES3.GL_TEXTURE_2D, GL4ES3.GL_TEXTURE_MAG_FILTER, GL4ES3.GL_LINEAR)
             }
         }
     }

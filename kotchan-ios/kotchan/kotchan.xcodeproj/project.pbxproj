@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9500D77A2074DF4A0056CE79 /* sample.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9500D7782074DF4A0056CE79 /* sample.txt */; };
-		9500D77B2074DF4A0056CE79 /* textures in Resources */ = {isa = PBXBuildFile; fileRef = 9500D7792074DF4A0056CE79 /* textures */; };
+		95611AD22075AF0B007ABEF2 /* sample.txt in Resources */ = {isa = PBXBuildFile; fileRef = 95611AD02075AF0B007ABEF2 /* sample.txt */; };
+		95611AD32075AF0B007ABEF2 /* textures in Resources */ = {isa = PBXBuildFile; fileRef = 95611AD12075AF0B007ABEF2 /* textures */; };
 		95B2510020711F2800B001E5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 95B250FF20711F2800B001E5 /* AppDelegate.m */; };
 		95B2510F20711F2800B001E5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95B2510E20711F2800B001E5 /* Assets.xcassets */; };
 		95B2511520711F2800B001E5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 95B2511420711F2800B001E5 /* main.m */; };
@@ -20,8 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		9500D7782074DF4A0056CE79 /* sample.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sample.txt; path = ../../src/main/resources/sample.txt; sourceTree = "<group>"; };
-		9500D7792074DF4A0056CE79 /* textures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = textures; path = ../../src/main/resources/textures; sourceTree = "<group>"; };
+		95611AD02075AF0B007ABEF2 /* sample.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sample.txt; path = ../../src/main/resources/sample.txt; sourceTree = "<group>"; };
+		95611AD12075AF0B007ABEF2 /* textures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = textures; path = ../../src/main/resources/textures; sourceTree = "<group>"; };
 		95B250FB20711F2800B001E5 /* kotchan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = kotchan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		95B250FE20711F2800B001E5 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		95B250FF20711F2800B001E5 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -49,11 +49,11 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		9500D7772074DF280056CE79 /* resources */ = {
+		95611ACF2075AEED007ABEF2 /* resources */ = {
 			isa = PBXGroup;
 			children = (
-				9500D7782074DF4A0056CE79 /* sample.txt */,
-				9500D7792074DF4A0056CE79 /* textures */,
+				95611AD02075AF0B007ABEF2 /* sample.txt */,
+				95611AD12075AF0B007ABEF2 /* textures */,
 			);
 			path = resources;
 			sourceTree = "<group>";
@@ -61,8 +61,8 @@
 		95B250F220711F2800B001E5 = {
 			isa = PBXGroup;
 			children = (
+				95611ACF2075AEED007ABEF2 /* resources */,
 				95B250FD20711F2800B001E5 /* kotchan */,
-				9500D7772074DF280056CE79 /* resources */,
 				95B250FC20711F2800B001E5 /* Products */,
 				95B2511B207121E900B001E5 /* Frameworks */,
 			);
@@ -163,9 +163,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				95B25128207124C900B001E5 /* Main.storyboard in Resources */,
-				9500D77B2074DF4A0056CE79 /* textures in Resources */,
+				95611AD32075AF0B007ABEF2 /* textures in Resources */,
 				95B251252071247A00B001E5 /* LaunchScreen.storyboard in Resources */,
-				9500D77A2074DF4A0056CE79 /* sample.txt in Resources */,
+				95611AD22075AF0B007ABEF2 /* sample.txt in Resources */,
 				95B2510F20711F2800B001E5 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

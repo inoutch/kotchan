@@ -1,5 +1,6 @@
 package application
 
+import interop.data.json.Json
 import interop.graphic.GLCamera
 import interop.graphic.GLFilterType
 import kotchan.view.batch.Batch
@@ -14,9 +15,7 @@ class AppDelegate : View() {
     private val ratio = 2
     private val camera = GLCamera.createOrthographic(0.0f, screenSize.width / ratio, 0.0f, screenSize.height / ratio, -1.0f, 1.0f)
     private val shaderProgram = SimpleShaderProgram()
-    private val texture = textureManager
-            .get(file.getResourcePath("textures/sample.png"))
-            .also { gl.filterTexture(it, GLFilterType.Nearest) }
+    private val texture = textureManager.get(file.getResourcePath("textures/sample.png"))
     private val sprites = MutableList(100) {
         Square(Size(32.0f, 32.0f)).also {
             it.texture = texture
@@ -27,6 +26,11 @@ class AppDelegate : View() {
     }
     private val spriteBatch = Batch().apply { sprites.forEach { add(it, shaderProgram) } }
     private var timer = 0
+
+    init {
+        val sample = Json.parse("[1,4,5]")
+        println("value is " + sample.toList()[1].toFloat())
+    }
 
     override fun render(delta: Float) {
         gl.clearColor(0.0f, 1.0f, 1.0f, 1.0f)
