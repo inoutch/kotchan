@@ -1,0 +1,33 @@
+package utility.type
+
+import kotlin.math.sqrt
+
+data class Vector2(val x: Float, val y: Float) {
+    val length get() = sqrt(x * x + y * y)
+
+    fun normalized(): Vector2 {
+        val len = length
+        return Vector2(x / len, y / len)
+    }
+
+    fun copyCoordinatesTo(arr: MutableList<Float>) {
+        arr.add(x)
+        arr.add(y)
+    }
+
+    operator fun minus(other: Vector2) = Vector2(x - other.x, y - other.y)
+    operator fun plus(other: Vector2) = Vector2(x + other.x, y + other.y)
+    operator fun times(other: Float) = Vector2(x * other, y * other)
+    operator fun div(other: Float) = Vector2(x / other, y / other)
+
+    companion object {
+        val Zero = Vector2(0.0f, 0.0f)
+    }
+}
+
+fun List<Vector2>.flatten() = FloatArray(this.size * 2).also {
+    this.forEachIndexed { index, vector ->
+        it[index * 2 + 0] = vector.x
+        it[index * 2 + 1] = vector.y
+    }
+}
