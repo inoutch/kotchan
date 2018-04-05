@@ -1,5 +1,7 @@
 package interop.data.json
 
+import com.fasterxml.jackson.core.JsonParseException
+import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 
@@ -7,12 +9,20 @@ actual class Json {
     actual companion object {
         private val mapper = jacksonObjectMapper()
 
-        actual fun parse(json: String): JsonObject {
-            return parse(mapper.readTree(json))
+        actual fun parse(json: String): JsonObject? {
+            return try {
+                parse(mapper.readTree(json))
+            } catch (e: JsonParseException) {
+                return null
+            }
         }
 
-        actual fun write(jsonObject: JsonObject): String {
-            return mapper.writeValueAsString(outputNode(jsonObject))
+        actual fun write(jsonObject: JsonObject): String? {
+            return try {
+                mapper.writeValueAsString(outputNode(jsonObject))
+            } catch (e: JsonProcessingException) {
+                null
+            }
         }
 
         private fun outputNode(obj: JsonObject): JsonNode {

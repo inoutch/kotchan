@@ -27,8 +27,9 @@ class AppScene : Scene() {
     private var timer = 0
 
     init {
-        val sample = Json.parse("[1,4,5]")
-        println("value is " + sample.toList()[1].toFloat())
+        Json.parse("[1,4,5, {\"sample\": 5.6, \"example\":[\"hoge\", 2, 5, false]}]")?.let {
+            //println(Json.write(it))
+        }
     }
 
     override fun render(delta: Float) {
