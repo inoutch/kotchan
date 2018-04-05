@@ -1,4 +1,4 @@
-package kotchan.view.drawable
+package kotchan.scene.drawable
 
 import utility.type.*
 

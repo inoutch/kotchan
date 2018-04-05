@@ -1,8 +1,8 @@
-package kotchan.view
+package kotchan.scene
 
 import kotchan.Engine
 
-abstract class View {
+abstract class Scene {
     protected val gl = Engine.getInstance().gl
     protected val file = Engine.getInstance().file
     protected val textureManager = Engine.getInstance().textureManager

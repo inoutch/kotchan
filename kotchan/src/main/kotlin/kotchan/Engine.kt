@@ -1,10 +1,10 @@
 package kotchan
 
-import application.AppDelegate
+import application.AppScene
 import interop.graphic.GL
 import interop.io.File
 import kotchan.texture.TextureManager
-import kotchan.view.View
+import kotchan.scene.Scene
 import utility.type.Size
 
 // Do not create Engine instance!
@@ -21,7 +21,7 @@ class Engine {
     var windowSize: Size = Size(0.0f, 0.0f)
     var screenSize: Size = Size(0.0f, 0.0f)
 
-    private var currentView: View? = null
+    private var currentScene: Scene? = null
 
     init {
         if (Engine.engine != null) {
@@ -34,12 +34,12 @@ class Engine {
         this.windowSize = windowSize
         this.screenSize = screenSize
         gl.viewPort(0, 0, windowSize.width.toInt(), windowSize.height.toInt())
-        currentView = AppDelegate()
+        currentScene = AppScene()
     }
 
     fun render(delta: Float) {
         gl.debug()
-        currentView?.render(delta)
+        currentScene?.render(delta)
     }
 
     fun reshape(x: Int, y: Int, width: Int, height: Int) {

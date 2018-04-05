@@ -1,6 +1,6 @@
-package kotchan.view.batch
+package kotchan.scene.batch
 
-import kotchan.view.drawable.Drawable
+import kotchan.scene.drawable.Drawable
 
 data class BatchBundle(
         val positionBuffer: BatchBuffer,

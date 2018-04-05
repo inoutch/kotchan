@@ -2,16 +2,15 @@ package application
 
 import interop.data.json.Json
 import interop.graphic.GLCamera
-import interop.graphic.GLFilterType
-import kotchan.view.batch.Batch
-import kotchan.view.View
-import kotchan.view.drawable.Square
-import kotchan.view.shader.SimpleShaderProgram
+import kotchan.scene.batch.Batch
+import kotchan.scene.Scene
+import kotchan.scene.drawable.Square
+import kotchan.scene.shader.SimpleShaderProgram
 import utility.math.Random
 import utility.type.Size
 import utility.type.Vector3
 
-class AppDelegate : View() {
+class AppScene : Scene() {
     private val ratio = 2
     private val camera = GLCamera.createOrthographic(0.0f, screenSize.width / ratio, 0.0f, screenSize.height / ratio, -1.0f, 1.0f)
     private val shaderProgram = SimpleShaderProgram()

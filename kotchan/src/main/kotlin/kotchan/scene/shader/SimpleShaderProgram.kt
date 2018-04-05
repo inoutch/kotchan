@@ -1,4 +1,4 @@
-package kotchan.view.shader
+package kotchan.scene.shader
 
 import interop.graphic.GLCamera
 import interop.graphic.GLShaderProgram
