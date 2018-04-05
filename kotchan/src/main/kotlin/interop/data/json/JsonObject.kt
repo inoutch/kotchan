@@ -6,7 +6,7 @@ class JsonObject {
         FloatType,
         MapType,
         ListType,
-        StringType,
+        TextType,
     }
 
     private var type: JsonType = JsonType.ErrorType
@@ -23,7 +23,7 @@ class JsonObject {
 
     constructor(value: String) {
         textValue = value
-        type = JsonType.StringType
+        type = JsonType.TextType
     }
 
     private constructor(type: JsonType) {
@@ -38,6 +38,7 @@ class JsonObject {
     fun isFloat() = type == JsonType.FloatType
     fun isList() = type == JsonType.ListType
     fun isMap() = type == JsonType.MapType
+    fun isText() = type == JsonType.TextType
 
     fun toFloat() = floatValue
     fun toMap() = mapValue
@@ -53,6 +54,50 @@ class JsonObject {
     }
 
     fun setFloat(value: Float) {
-        if (isFloat()) floatValue = value
+        if (!isFloat()) {
+            setNull(type)
+            type = JsonType.FloatType
+        }
+        floatValue = value
+    }
+
+    fun setText(value: String) {
+        if (!isText()) {
+            setNull(type)
+            type = JsonType.TextType
+        }
+        textValue = value
+    }
+
+    fun setMap() {
+        if (!isMap()) {
+            setNull(type)
+        }
+        mapValue.clear()
+    }
+
+    fun setList() {
+        if (!isList()) {
+            setNull(type)
+        }
+        listValue.clear()
+    }
+
+    private fun setNull(type: JsonType) {
+        when (type) {
+            JsonType.FloatType -> {
+                floatValue = null
+            }
+            JsonType.MapType -> {
+                mapValue = mutableMapOf()
+            }
+            JsonType.ListType -> {
+                listValue = mutableListOf()
+            }
+            JsonType.TextType -> {
+                textValue = null
+            }
+            else -> throw Error("unknown type")
+        }
     }
 }
