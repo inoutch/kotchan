@@ -36,6 +36,9 @@ actual class GL {
     }
 
     actual fun updateVBO(vbo: GLVBO, offset: Int, data: FloatArray) {
+        if (data.size == 0) {
+            return
+        }
         glBindBuffer(GL_ARRAY_BUFFER, vbo.id)
         glBufferSubData(GL_ARRAY_BUFFER, (offset * 4).toLong(), (data.size * 4).toLong(), data.refTo(0))
     }

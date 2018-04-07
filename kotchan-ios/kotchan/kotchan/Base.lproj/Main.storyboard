@@ -21,16 +21,10 @@
                         <viewLayoutGuide key="safeArea" id="nyv-WX-aSd"/>
                         <connections>
                             <outlet property="delegate" destination="oik-7P-CJs" id="Iw7-UP-eNO"/>
-                            <outletCollection property="gestureRecognizers" destination="N7K-WW-oa4" appends="YES" id="ZUk-Ix-mkq"/>
                         </connections>
                     </glkView>
                 </glkViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bah-EO-oxh" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <panGestureRecognizer minimumNumberOfTouches="1" id="N7K-WW-oa4">
-                    <connections>
-                        <action selector="handlePanGesture:" destination="oik-7P-CJs" id="CY8-z9-aJJ"/>
-                    </connections>
-                </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="116" y="90.404797601199405"/>
         </scene>

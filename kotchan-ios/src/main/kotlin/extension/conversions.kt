@@ -4,15 +4,15 @@ import kotlinx.cinterop.*
 import platform.Foundation.*
 
 
-fun Int.toNSNumber(): NSNumber {
+internal fun Int.toNSNumber(): NSNumber {
     return NSNumber.numberWithInt(this)
 }
 
-fun Float.toNSNumber(): NSNumber {
+internal fun Float.toNSNumber(): NSNumber {
     return NSNumber.numberWithFloat(this)
 }
 
-fun NSArray.toList(): List<ObjCObject> {
+internal fun NSArray.toList(): List<ObjCObject> {
     val mutable = mutableListOf<ObjCObject>()
     for (i in 0 until this.count) {
         mutable.add(this[i])
@@ -20,7 +20,7 @@ fun NSArray.toList(): List<ObjCObject> {
     return mutable
 }
 
-fun List<ObjCObject>.toNSArray(): NSArray {
+internal fun List<ObjCObject>.toNSArray(): NSArray {
     val mutable = NSMutableArray.arrayWithCapacity(this.size.toLong())
     this.forEach {
         mutable.addObject(it)
@@ -28,7 +28,7 @@ fun List<ObjCObject>.toNSArray(): NSArray {
     return mutable
 }
 
-fun NSDictionary.toMap(): Map<String, ObjCObject> {
+internal fun NSDictionary.toMap(): Map<String, ObjCObject> {
     val mutableMap = mutableMapOf<String, ObjCObject>()
     val keys = this.allKeys
     for (i in 1..keys.count) {
@@ -38,7 +38,7 @@ fun NSDictionary.toMap(): Map<String, ObjCObject> {
     return mutableMap
 }
 
-fun Map<String, ObjCObject>.toNSDictionary(): NSDictionary {
+internal fun Map<String, ObjCObject>.toNSDictionary(): NSDictionary {
     val mutable = NSMutableDictionary.dictionaryWithCapacity(this.size.toLong())
     this.forEach { (key, value) ->
         mutable[key.toNSString()] = value
@@ -46,6 +46,21 @@ fun Map<String, ObjCObject>.toNSDictionary(): NSDictionary {
     return mutable
 }
 
-fun String.toNSString(): NSString {
+internal fun String.toNSString(): NSString {
     return interpretObjCPointer(CreateNSStringFromKString(this))
+}
+
+internal fun <T> NSSet?.toList(): kotlin.collections.List<T> {
+    if (this == null) return listOf()
+    return objectEnumerator().toList()
+}
+
+internal fun <T> NSEnumerator.toList(): List<T> {
+    val items = mutableListOf<T>()
+    var obj = nextObject()
+    while (obj != null) {
+        items += obj.uncheckedCast<T>()
+        obj = nextObject()
+    }
+    return items
 }

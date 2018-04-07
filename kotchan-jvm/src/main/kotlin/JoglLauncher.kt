@@ -1,20 +1,24 @@
+import com.jogamp.newt.event.MouseEvent
+import com.jogamp.newt.event.MouseListener
 import com.jogamp.newt.event.WindowAdapter
 import com.jogamp.newt.event.WindowEvent
 import com.jogamp.newt.opengl.GLWindow
 import com.jogamp.opengl.*
 import com.jogamp.opengl.util.FPSAnimator
 import kotchan.Engine
+import kotchan.event.TouchEvent
 import utility.type.Size
+import utility.type.Vector2
 
-class JoglLauncher(title: String) : GLEventListener {
+class JoglLauncher(title: String) : GLEventListener, MouseListener {
     private val glProfile = GLProfile.get(GLProfile.GL4ES3)
     private val glCaps = GLCapabilities(glProfile)
     private val glWindow = GLWindow.create(glCaps)
     private val animator = FPSAnimator(glWindow, 60)
 
     private var engine: Engine? = null
-
     private var beforeMillis: Long = 0
+    private var singleTouchEvent: TouchEvent? = null
 
     init {
         glWindow.title = title
@@ -25,12 +29,14 @@ class JoglLauncher(title: String) : GLEventListener {
             }
         })
         glWindow.addGLEventListener(this)
+        glWindow.addMouseListener(this)
     }
 
     var windowSize: Size = Size(640.0f, 1136.0f)
 
     fun run() {
         glWindow.setSize(windowSize.width.toInt() / 2, windowSize.height.toInt() / 2)
+        glWindow.isResizable = false
         animator.start()
     }
 
@@ -65,4 +71,41 @@ class JoglLauncher(title: String) : GLEventListener {
 
     override fun dispose(drawable: GLAutoDrawable?) {
     }
+
+    override fun mousePressed(e: MouseEvent?) {
+        val engine = this.engine
+        if (e == null || engine == null) {
+            return
+        }
+        val x = e.x.toFloat()
+        val y = (glWindow.surfaceHeight - e.y).toFloat()
+        singleTouchEvent = TouchEvent(Vector2(x, y))
+        singleTouchEvent?.let { engine.touchInterface.onTouchesBegan(listOf(it)) }
+    }
+
+    override fun mouseReleased(e: MouseEvent?) {
+        val engine = this.engine
+        if (e == null || engine == null) {
+            return
+        }
+        singleTouchEvent?.let { engine.touchInterface.onTouchesEnded(listOf(it)) }
+    }
+
+    override fun mouseDragged(e: MouseEvent?) {
+        val engine = this.engine
+        if (e == null || engine == null) {
+            return
+        }
+        singleTouchEvent?.let { engine.touchInterface.onTouchesMoved(listOf(it)) }
+    }
+
+    override fun mouseClicked(e: MouseEvent?) {}
+
+    override fun mouseMoved(e: MouseEvent?) {}
+
+    override fun mouseEntered(e: MouseEvent?) {}
+
+    override fun mouseExited(e: MouseEvent?) {}
+
+    override fun mouseWheelMoved(e: MouseEvent?) {}
 }

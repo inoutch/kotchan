@@ -8,12 +8,18 @@ import platform.GLKit.*
 import platform.UIKit.*
 import platform.glescommon.*
 import platform.gles3.*
+
 import kotchan.Engine
+import kotchan.event.TouchEvent
+
 import utility.type.Size
+import utility.type.Vector2
+import extension.*
 
 @ExportObjCClass
 class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol {
     private lateinit var engine: Engine
+    private val touchEvents = mutableMapOf<ObjCObject, TouchEvent>()
 
     constructor(aDecoder: NSCoder) : super(aDecoder)
 
@@ -47,7 +53,42 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
 
     override fun gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController) {}
 
-    @ObjCAction
-    fun handlePanGesture(sender: UIPanGestureRecognizer) {
+    override fun touchesBegan(touches: NSSet, withEvent: UIEvent?) {
+        super.touchesBegan(touches, withEvent)
+
+        val list = touches.objectEnumerator().toList<ObjCObject>().map {
+            val touch = it.reinterpret<UITouch>()
+            val point = touch.locationInView(this.view).useContents { Vector2(x.toFloat(), y.toFloat()) }
+            TouchEvent(point).also { touchEvents[touch] = it }
+        }
+        engine.touchInterface.onTouchesBegan(list)
+    }
+
+    override fun touchesMoved(touches: NSSet, withEvent: UIEvent?) {
+        super.touchesMoved(touches, withEvent)
+
+        val list = touches.objectEnumerator().toList<ObjCObject>().mapNotNull {
+            val touch = it.reinterpret<UITouch>()
+            touchEvents[touch]
+        }
+        engine.touchInterface.onTouchesMoved(list)
+    }
+
+    override fun touchesEnded(touches: NSSet, withEvent: UIEvent?) {
+        super.touchesEnded(touches, withEvent)
+
+        val list = touches.objectEnumerator().toList<ObjCObject>().mapNotNull {
+            val touch = it.reinterpret<UITouch>()
+            val touchEvent = touchEvents[touch]
+            touch?.let { touchEvents.remove(it) }
+            touchEvent
+        }
+        engine.touchInterface.onTouchesEnded(list)
+    }
+
+    override fun touchesCancelled(touches: NSSet, withEvent: UIEvent?) {
+        super.touchesCancelled(touches, withEvent)
+        touchEvents.clear()
+        engine.touchInterface.onTouchesCancelled()
     }
 }

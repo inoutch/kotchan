@@ -1,6 +1,5 @@
 package application
 
-import interop.data.json.Json
 import interop.graphic.GLCamera
 import interop.graphic.GLFilterType
 import kotchan.scene.batch.Batch
@@ -18,7 +17,7 @@ class AppScene : Scene() {
     private val camera = GLCamera.createOrthographic(0.0f, screenSize.width / ratio, 0.0f, screenSize.height / ratio, -1.0f, 1.0f)
     private val shaderProgram = SimpleShaderProgram()
     private val texture = textureManager.get(file.getResourcePath("textures/sample.png"))
-    private val sprites = MutableList(100) {
+    private val sprites = MutableList(500) {
         Square(Size(32.0f, 32.0f), texture).also {
             val x = Random.next((screenSize.width / ratio).toInt())
             val y = Random.next((screenSize.height / ratio).toInt())
@@ -53,16 +52,18 @@ class AppScene : Scene() {
         spriteBatch.draw(delta, camera)
 
         // create and destroy
-        if (timer % 100 == 0) {
-            val remove = sprites.last()
-            sprites.remove(remove)
-            spriteBatch.remove(remove)
-        } else if (timer % 150 == 0) {
+        if (timer % Random.next(5, 1) == 0) {
+            sprites.firstOrNull()?.let {
+                sprites.remove(it)
+                spriteBatch.remove(it)
+            }
+        } else if (timer % Random.next(5, 1) == 0) {
             spriteBatch.add(Square(Size(32.0f, 32.0f)).also {
                 it.texture = texture
                 val x = Random.next((screenSize.width / ratio).toInt())
                 val y = Random.next((screenSize.height / ratio).toInt())
                 it.position = Vector3(x.toFloat(), y.toFloat(), 0.0f)
+                sprites.add(it)
             }, shaderProgram)
         }
 

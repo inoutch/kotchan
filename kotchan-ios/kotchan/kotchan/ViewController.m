@@ -20,4 +20,7 @@
 
 - (IBAction)handlePanGesture:(UIPanGestureRecognizer *)sender {
 }
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+}
 @end
