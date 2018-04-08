@@ -3,6 +3,7 @@ package kotchan
 import application.AppScene
 import interop.graphic.GL
 import interop.io.File
+import kotchan.event.TouchEmitter
 import kotchan.event.TouchInterface
 import kotchan.event.TouchManager
 import kotchan.texture.TextureManager
@@ -23,11 +24,12 @@ class Engine {
     val file = File()
 
     val textureManager = TextureManager(gl)
-    val touchInterface = TouchInterface(touchManager)
 
     var windowSize: Size = Size(0.0f, 0.0f)
     var screenSize: Size = Size(0.0f, 0.0f)
 
+    val touchEmitter: TouchEmitter = touchManager
+    val touchInterface: TouchInterface = touchManager
 
     init {
         if (Engine.engine != null) {
@@ -45,12 +47,15 @@ class Engine {
 
     fun render(delta: Float) {
         gl.debug()
+        touchManager.begin()
+
         currentScene?.render(delta)
+
+        touchManager.end()
     }
 
     fun reshape(x: Int, y: Int, width: Int, height: Int) {
         // renderer.scene?.reshape()
     }
-
 
 }

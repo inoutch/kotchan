@@ -10,7 +10,7 @@ precision mediump float;
 precision mediump int;
 #endif
 
-in vec4 position;
+in vec4 point;
 in vec4 color;
 in vec2 texcoord;
 
@@ -22,7 +22,7 @@ out vec2 vTexcoord;
 void main(void){
     vColor = color;
     vTexcoord = texcoord;
-    gl_Position = u_viewProjectionMatrix * position;
+    gl_Position = u_viewProjectionMatrix * point;
 }
 """
 

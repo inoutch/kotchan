@@ -61,7 +61,7 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
             val point = touch.locationInView(this.view).useContents { Vector2(x.toFloat(), y.toFloat()) }
             TouchEvent(point).also { touchEvents[touch] = it }
         }
-        engine.touchInterface.onTouchesBegan(list)
+        engine.touchEmitter.onTouchesBegan(list)
     }
 
     override fun touchesMoved(touches: NSSet, withEvent: UIEvent?) {
@@ -71,7 +71,7 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
             val touch = it.reinterpret<UITouch>()
             touchEvents[touch]
         }
-        engine.touchInterface.onTouchesMoved(list)
+        engine.touchEmitter.onTouchesMoved(list)
     }
 
     override fun touchesEnded(touches: NSSet, withEvent: UIEvent?) {
@@ -83,12 +83,12 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
             touch?.let { touchEvents.remove(it) }
             touchEvent
         }
-        engine.touchInterface.onTouchesEnded(list)
+        engine.touchEmitter.onTouchesEnded(list)
     }
 
     override fun touchesCancelled(touches: NSSet, withEvent: UIEvent?) {
         super.touchesCancelled(touches, withEvent)
         touchEvents.clear()
-        engine.touchInterface.onTouchesCancelled()
+        engine.touchEmitter.onTouchesCancelled()
     }
 }

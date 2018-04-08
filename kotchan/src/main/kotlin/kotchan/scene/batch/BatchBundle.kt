@@ -15,6 +15,6 @@ data class BatchBundle(
         if (p == c && c == t) {
             return p
         }
-        throw Error("broken relation of position, color and texcoord.")
+        throw Error("broken relation of point, color and texcoord.")
     }
 }

@@ -80,7 +80,7 @@ class JoglLauncher(title: String) : GLEventListener, MouseListener {
         val x = e.x.toFloat()
         val y = (glWindow.surfaceHeight - e.y).toFloat()
         singleTouchEvent = TouchEvent(Vector2(x, y))
-        singleTouchEvent?.let { engine.touchInterface.onTouchesBegan(listOf(it)) }
+        singleTouchEvent?.let { engine.touchEmitter.onTouchesBegan(listOf(it)) }
     }
 
     override fun mouseReleased(e: MouseEvent?) {
@@ -88,7 +88,7 @@ class JoglLauncher(title: String) : GLEventListener, MouseListener {
         if (e == null || engine == null) {
             return
         }
-        singleTouchEvent?.let { engine.touchInterface.onTouchesEnded(listOf(it)) }
+        singleTouchEvent?.let { engine.touchEmitter.onTouchesEnded(listOf(it)) }
     }
 
     override fun mouseDragged(e: MouseEvent?) {
@@ -96,7 +96,7 @@ class JoglLauncher(title: String) : GLEventListener, MouseListener {
         if (e == null || engine == null) {
             return
         }
-        singleTouchEvent?.let { engine.touchInterface.onTouchesMoved(listOf(it)) }
+        singleTouchEvent?.let { engine.touchEmitter.onTouchesMoved(listOf(it)) }
     }
 
     override fun mouseClicked(e: MouseEvent?) {}

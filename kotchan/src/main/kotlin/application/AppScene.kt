@@ -2,6 +2,7 @@ package application
 
 import interop.graphic.GLCamera
 import interop.graphic.GLFilterType
+import kotchan.event.checkOnlyBegan
 import kotchan.scene.batch.Batch
 import kotchan.scene.Scene
 import kotchan.scene.drawable.Sprite
@@ -71,6 +72,11 @@ class AppScene : Scene() {
         val names = listOf("RunRight01.png", "RunRight02.png", "RunRight03.png", "RunRight04.png")
         sprite?.setAtlas(names[(timer / 10) % names.size])
         timer += 1
+
+        val touchEvent = touchInterface.touchesByOneCycle(0)
+        if (touchEvent != null && touchEvent.type().checkOnlyBegan()) {
+            println("ボタンが押された!")
+        }
     }
 
     override fun pause() {}
