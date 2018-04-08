@@ -1,4 +1,4 @@
-package kotchan.event
+package kotchan.controller
 
 interface TouchEmitter {
     // call each platforms

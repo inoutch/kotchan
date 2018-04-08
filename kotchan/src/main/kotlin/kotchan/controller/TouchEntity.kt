@@ -1,4 +1,4 @@
-package kotchan.event
+package kotchan.controller
 
 import utility.type.Vector2
 

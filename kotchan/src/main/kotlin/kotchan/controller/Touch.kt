@@ -1,4 +1,4 @@
-package kotchan.event
+package kotchan.controller
 
 interface Touch {
     fun type(): TouchType

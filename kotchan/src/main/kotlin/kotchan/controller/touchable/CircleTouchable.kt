@@ -1,6 +1,6 @@
-package kotchan.event.touchable
+package kotchan.controller.touchable
 
-import kotchan.event.TouchType
+import kotchan.controller.TouchType
 import utility.type.Vector2
 
 open class CircleTouchable(

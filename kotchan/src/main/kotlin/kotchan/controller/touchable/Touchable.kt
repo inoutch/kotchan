@@ -1,6 +1,6 @@
-package kotchan.event.touchable
+package kotchan.controller.touchable
 
-import kotchan.event.*
+import kotchan.controller.*
 import utility.type.*
 
 abstract class Touchable(private val callback: (point: Vector2, type: TouchType) -> Boolean) {

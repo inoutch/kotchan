@@ -6,7 +6,7 @@ import com.jogamp.newt.opengl.GLWindow
 import com.jogamp.opengl.*
 import com.jogamp.opengl.util.FPSAnimator
 import kotchan.Engine
-import kotchan.event.TouchEvent
+import kotchan.controller.TouchEvent
 import utility.type.Size
 import utility.type.Vector2
 

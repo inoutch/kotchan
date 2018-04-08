@@ -1,8 +1,8 @@
-package kotchan.event
+package kotchan.controller
 
-import kotchan.event.touchable.Touchable
+import kotchan.controller.touchable.Touchable
 
-class TouchManager : TouchEmitter, TouchInterface {
+class TouchControllerEntity : TouchEmitter, TouchController {
     // about touchable
     private val touchables: List<Touchable> = mutableListOf()
     private val targets: MutableMap<TouchEntity, Touchable> = mutableMapOf()

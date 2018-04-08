@@ -2,7 +2,7 @@ package application
 
 import interop.graphic.GLCamera
 import interop.graphic.GLFilterType
-import kotchan.event.checkOnlyBegan
+import kotchan.controller.checkOnlyBegan
 import kotchan.scene.batch.Batch
 import kotchan.scene.Scene
 import kotchan.scene.drawable.Sprite

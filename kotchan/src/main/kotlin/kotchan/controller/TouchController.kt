@@ -1,6 +1,6 @@
-package kotchan.event
+package kotchan.controller
 
-interface TouchInterface {
+interface TouchController {
     fun touches(): List<Touch>
     fun touchesByOneCycle(index: Int): Touch?
 }
