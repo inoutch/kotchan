@@ -7,7 +7,6 @@ import com.jogamp.opengl.*
 import com.jogamp.opengl.util.FPSAnimator
 import kotchan.Engine
 import kotchan.controller.TouchEvent
-import utility.type.Size
 import utility.type.Vector2
 
 class JoglLauncher(title: String) : GLEventListener, MouseListener {
@@ -32,10 +31,10 @@ class JoglLauncher(title: String) : GLEventListener, MouseListener {
         glWindow.addMouseListener(this)
     }
 
-    var windowSize: Size = Size(640.0f, 1136.0f)
+    var windowSize = Vector2(640.0f, 1136.0f) / 2.0f
 
     fun run() {
-        glWindow.setSize(windowSize.width.toInt() / 2, windowSize.height.toInt() / 2)
+        glWindow.setSize(windowSize.x.toInt(), windowSize.y.toInt())
         glWindow.isResizable = false
         animator.start()
     }
@@ -54,8 +53,8 @@ class JoglLauncher(title: String) : GLEventListener, MouseListener {
         if (engineTmp == null) {
             engineTmp = Engine()
             engineTmp.init(
-                    Size(width.toFloat(), height.toFloat()),
-                    Size(width.toFloat() / 2.0f, height.toFloat() / 2.0f))
+                    Vector2(width.toFloat(), height.toFloat()),
+                    Vector2(width.toFloat() * 2.0f, height.toFloat() * 2.0f))
             this.engine = engineTmp
             return
         }
@@ -77,8 +76,8 @@ class JoglLauncher(title: String) : GLEventListener, MouseListener {
         if (e == null || engine == null) {
             return
         }
-        val x = e.x.toFloat()
-        val y = (glWindow.surfaceHeight - e.y).toFloat()
+        val x = e.x.toFloat() / 2.0f
+        val y = (glWindow.surfaceHeight - e.y).toFloat() / 2.0f
         singleTouchEvent = TouchEvent(Vector2(x, y))
         singleTouchEvent?.let { engine.touchEmitter.onTouchesBegan(listOf(it)) }
     }
@@ -88,6 +87,9 @@ class JoglLauncher(title: String) : GLEventListener, MouseListener {
         if (e == null || engine == null) {
             return
         }
+        val x = e.x.toFloat() / 2.0f
+        val y = (glWindow.surfaceHeight - e.y).toFloat() / 2.0f
+        singleTouchEvent?.point = Vector2(x, y)
         singleTouchEvent?.let { engine.touchEmitter.onTouchesEnded(listOf(it)) }
     }
 
@@ -96,6 +98,9 @@ class JoglLauncher(title: String) : GLEventListener, MouseListener {
         if (e == null || engine == null) {
             return
         }
+        val x = e.x.toFloat() / 2.0f
+        val y = (glWindow.surfaceHeight - e.y).toFloat() / 2.0f
+        singleTouchEvent?.point = Vector2(x, y)
         singleTouchEvent?.let { engine.touchEmitter.onTouchesMoved(listOf(it)) }
     }
 

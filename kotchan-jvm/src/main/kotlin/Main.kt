@@ -1,11 +1,11 @@
-import utility.type.Size
+import utility.type.Vector2
 import kotlin.jvm.JvmStatic
 
 object Main {
     @JvmStatic
     fun main(args: Array<String>) {
         JoglLauncher("サンプル").apply {
-            windowSize = Size(640.0f, 1136.0f)
+            windowSize = Vector2(640.0f, 1136.0f) / 2.0f
             run()
         }
     }

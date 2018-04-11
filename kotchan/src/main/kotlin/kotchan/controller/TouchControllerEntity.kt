@@ -1,10 +1,14 @@
 package kotchan.controller
 
+import interop.graphic.GLCamera
+import kotchan.Engine
 import kotchan.controller.touchable.Touchable
+import utility.type.Vector2
+import utility.type.Vector4
 
 class TouchControllerEntity : TouchEmitter, TouchController {
     // about touchable
-    private val touchables: List<Touchable> = mutableListOf()
+    private val touchables: MutableList<Touchable> = mutableListOf()
     private val targets: MutableMap<TouchEntity, Touchable> = mutableMapOf()
 
     // about touch
@@ -16,12 +20,20 @@ class TouchControllerEntity : TouchEmitter, TouchController {
 
     private val willDestroyTouchEvents: MutableList<TouchEvent> = mutableListOf()
 
+    private var camera: GLCamera = GLCamera()
+
+    private fun convertPoint(p: Vector2): Vector2 {
+        val p4 = camera.combine * Vector4(p.x, p.y, 0.0f, 1.0f)
+        return Vector2(p4.x, p4.y)
+    }
+
     override fun onTouchesBegan(touchEvents: List<TouchEvent>) {
         touchEvents.forEach { event ->
             val touch = TouchEntity(event.point, TouchType.Began)
             touches[event] = touch
             touchables
-                    .filter { it.check(event.point) }
+                    .filter { it.check(event.point / Engine.getInstance().windowSize) }
+                    //.filter { it.check(convertPoint(event.point)) }
                     .forEach {
                         targets[touch] = it
                         it.on(event.point, TouchType.Began)
@@ -66,6 +78,14 @@ class TouchControllerEntity : TouchEmitter, TouchController {
     override fun touches(): List<Touch> = touches.values.toList()
 
     override fun touchesByOneCycle(index: Int): Touch? = touchesByOneCycle[index]
+
+    override fun add(touchable: Touchable) {
+        touchables.add(touchable)
+    }
+
+    override fun camera(camera: GLCamera) {
+        this.camera = camera
+    }
 
     fun begin() {
         touches.forEach {

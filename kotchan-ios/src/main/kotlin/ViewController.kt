@@ -12,7 +12,6 @@ import platform.gles3.*
 import kotchan.Engine
 import kotchan.event.TouchEvent
 
-import utility.type.Size
 import utility.type.Vector2
 import extension.*
 
@@ -43,8 +42,8 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
         }
         engine = Engine()
         engine.init(
-                Size(screenWidth.toFloat(), screenHeight.toFloat()),
-                Size(screenWidth.toFloat(), screenHeight.toFloat()))
+                Vector2(screenWidth.toFloat(), screenHeight.toFloat()),
+                Vector2(screenWidth.toFloat(), screenHeight.toFloat()))
     }
 
     override fun glkView(view: GLKView, drawInRect: CValue<CGRect>) {

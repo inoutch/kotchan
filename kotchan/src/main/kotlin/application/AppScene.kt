@@ -1,44 +1,35 @@
 package application
 
-import interop.graphic.GLCamera
-import interop.graphic.GLFilterType
-import kotchan.controller.checkOnlyBegan
+import interop.graphic.*
 import kotchan.scene.batch.Batch
 import kotchan.scene.Scene
-import kotchan.scene.drawable.Sprite
-import kotchan.scene.drawable.Square
 import kotchan.scene.shader.SimpleShaderProgram
 import kotchan.tool.TexturePacker
-import utility.math.Random
-import utility.type.Size
-import utility.type.Vector3
+import kotchan.ui.Button
 
 class AppScene : Scene() {
-    private val ratio = 2
-    private val camera = GLCamera.createOrthographic(0.0f, screenSize.width / ratio, 0.0f, screenSize.height / ratio, -1.0f, 1.0f)
+    // common data
+    private val ratio = 4
+    private val camera = GLCamera.createOrthographic(0.0f, screenSize.x / ratio, 0.0f, screenSize.y / ratio, -1.0f, 1.0f)
     private val shaderProgram = SimpleShaderProgram()
-    private val texture = textureManager.get(file.getResourcePath("textures/sample.png"))
-    private val sprites = MutableList(500) {
-        Square(Size(32.0f, 32.0f), texture).also {
-            val x = Random.next((screenSize.width / ratio).toInt())
-            val y = Random.next((screenSize.height / ratio).toInt())
-            it.position = Vector3(x.toFloat(), y.toFloat(), 0.0f)
-        }
-    }
-    private val spriteBatch = Batch().apply { sprites.forEach { add(it, shaderProgram) } }
-    private var timer = 0
-    private var sprite: Sprite? = null
+    private val spriteBatch = Batch()
+
+    // sprites
+    private var button: Button? = null
 
     init {
-        val fullpath = file.getResourcePath("textures/spritesheet.json")
-        val dirpath = file.getResourcePath("textures")
-        if (fullpath != null && dirpath != null) {
-            TexturePacker.loadFile(dirpath, fullpath)?.let {
-                val sprite = Sprite(it)
-                spriteBatch.add(sprite, shaderProgram)
-                sprite.setAtlas("RunRight01.png")
-                sprite.texture.filterType = GLFilterType.Linear
-                this.sprite = sprite
+        // need to check touching in view (camera)
+        touchController.camera(camera)
+
+        val fullPath = file.getResourcePath("textures/spritesheet.json") ?: ""
+        val dirPath = file.getResourcePath("textures") ?: ""
+        TexturePacker.loadFile(dirPath, fullPath)?.let {
+            button = Button(it, "RunRight01.png", "RunRight02.png") {
+                println("pressed!")
+                true
+            }.also {
+                spriteBatch.add(it, shaderProgram)
+                touchController.add(it.touchable)
             }
         }
     }
@@ -51,32 +42,6 @@ class AppScene : Scene() {
 
         camera.update()
         spriteBatch.draw(delta, camera)
-
-        // create and destroy
-        if (timer % Random.next(5, 1) == 0) {
-            sprites.firstOrNull()?.let {
-                sprites.remove(it)
-                spriteBatch.remove(it)
-            }
-        } else if (timer % Random.next(5, 1) == 0) {
-            spriteBatch.add(Square(Size(32.0f, 32.0f)).also {
-                it.texture = texture
-                val x = Random.next((screenSize.width / ratio).toInt())
-                val y = Random.next((screenSize.height / ratio).toInt())
-                it.position = Vector3(x.toFloat(), y.toFloat(), 0.0f)
-                sprites.add(it)
-            }, shaderProgram)
-        }
-
-        // animation
-        val names = listOf("RunRight01.png", "RunRight02.png", "RunRight03.png", "RunRight04.png")
-        sprite?.setAtlas(names[(timer / 10) % names.size])
-        timer += 1
-
-        val touchEvent = touchInterface.touchesByOneCycle(0)
-        if (touchEvent != null && touchEvent.type().checkOnlyBegan()) {
-            println("ボタンが押された!")
-        }
     }
 
     override fun pause() {}

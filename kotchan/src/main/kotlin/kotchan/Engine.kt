@@ -8,7 +8,7 @@ import kotchan.controller.TouchController
 import kotchan.controller.TouchControllerEntity
 import kotchan.texture.TextureManager
 import kotchan.scene.Scene
-import utility.type.Size
+import utility.type.Vector2
 
 // Do not create Engine instance!
 class Engine {
@@ -25,8 +25,9 @@ class Engine {
 
     val textureManager = TextureManager(gl)
 
-    var windowSize: Size = Size(0.0f, 0.0f)
-    var screenSize: Size = Size(0.0f, 0.0f)
+    // actual window size, but you should not use it
+    var windowSize: Vector2 = Vector2(0.0f, 0.0f)
+    var screenSize: Vector2 = Vector2(0.0f, 0.0f)
 
     val touchEmitter: TouchEmitter = touchControllerEntity
     val touchController: TouchController = touchControllerEntity
@@ -38,10 +39,10 @@ class Engine {
         Engine.engine = this
     }
 
-    fun init(windowSize: Size, screenSize: Size) {
+    fun init(windowSize: Vector2, screenSize: Vector2) {
         this.windowSize = windowSize
         this.screenSize = screenSize
-        gl.viewPort(0, 0, windowSize.width.toInt(), windowSize.height.toInt())
+        gl.viewPort(0, 0, windowSize.x.toInt(), windowSize.y.toInt())
         currentScene = AppScene()
     }
 

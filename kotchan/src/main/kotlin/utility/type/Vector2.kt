@@ -18,9 +18,13 @@ data class Vector2(val x: Float, val y: Float) {
     }
 
     operator fun minus(other: Vector2) = Vector2(x - other.x, y - other.y)
+    operator fun minus(other: Float) = Vector2(x - other, y - other)
     operator fun plus(other: Vector2) = Vector2(x + other.x, y + other.y)
+    operator fun plus(other: Float) = Vector2(x + other, y + other)
     operator fun times(other: Float) = Vector2(x * other, y * other)
+    operator fun times(other: Vector2) = Vector2(x * other.x, y * other.y)
     operator fun div(other: Float) = Vector2(x / other, y / other)
+    operator fun div(other: Vector2) = Vector2(x / other.x, y / other.y)
 
     companion object {
         val Zero = Vector2(0.0f, 0.0f)
@@ -36,3 +40,4 @@ fun List<Vector2>.flatten() = FloatArray(this.size * 2).also {
 
 fun List<Float>.toVector2(offset: Int = 0) =
         if (this.size >= 2 + offset) Vector2(this[offset], this[offset + 1]) else Vector2()
+

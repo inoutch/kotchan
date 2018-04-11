@@ -25,10 +25,12 @@ class GLCamera {
     var projectionMatrix = Matrix4()
     var viewMatrix = Matrix4()
 
-    var combine = Matrix4()
+    var combine = projectionMatrix * viewMatrix
         private set
+    var inverse = combine.inverse()
 
     fun update() {
         combine = projectionMatrix * viewMatrix
+        inverse = combine.inverse()
     }
 }
