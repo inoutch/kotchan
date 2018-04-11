@@ -1,5 +1,7 @@
 package utility.type
 
+import kotlin.math.*
+
 data class Matrix4(val col1: Vector4, val col2: Vector4, val col3: Vector4, val col4: Vector4) {
     companion object {
         fun createTranslation(vector: Vector3) = Matrix4(
@@ -44,7 +46,7 @@ data class Matrix4(val col1: Vector4, val col2: Vector4, val col3: Vector4, val 
         val b5 = col3.z * col4.w - col3.w * col4.z
 
         val det = a0 * b5 - a1 * b4 + a2 * b3 + a3 * b2 - a4 * b1 + a5 * b0
-        if (fabs(det) <= 2e-37f)
+        if (abs(det) <= 2e-37f)
             throw Error("could not inverse")
 
         val col1 = Vector4(
@@ -70,10 +72,6 @@ data class Matrix4(val col1: Vector4, val col2: Vector4, val col3: Vector4, val 
         )
         return Matrix4(col1, col2, col3, col4) * (1.0f / det)
     }
-
-    fun fabs(det: Float) = if (det > 0) {
-        det
-    } else -det
 
     operator fun times(other: Vector4) = Vector4(
             col1.x * other.x + col2.x * other.y + col3.x * other.z + col4.x * other.w,

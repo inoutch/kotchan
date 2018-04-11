@@ -43,10 +43,12 @@ actual class GL {
         glBufferSubData(GL_ARRAY_BUFFER, (offset * 4).toLong(), (data.size * 4).toLong(), data.refTo(0))
     }
 
-    actual fun vertexPointer(location: GLAttribLocation, interval: Int, vbo: GLVBO) {
+    actual fun vertexPointer(location: GLAttribLocation, dimension: Int, stride: Int, offset: Int, vbo: GLVBO) {
         glBindBuffer(GL_ARRAY_BUFFER, vbo.id)
         glEnableVertexAttribArray(location.value)
-        glVertexAttribPointer(location.value, interval, GL_FLOAT, GL_FALSE.narrow(), 0, null)
+        glVertexAttribPointer(
+                location.value, dimension, GL_FLOAT,
+                GL_FALSE.narrow(), stride * 4, (offset * 4L).toCPointer<CPointed>())
     }
 
     actual fun compileShaderProgram(vertexShaderText: String, fragmentShaderText: String): Int {

@@ -15,7 +15,7 @@ expect class GL() {
 
     fun updateVBO(vbo: GLVBO, offset: Int, data: FloatArray)
 
-    fun vertexPointer(location: GLAttribLocation, interval: Int, vbo: GLVBO)
+    fun vertexPointer(location: GLAttribLocation, dimension: Int, stride: Int, offset: Int, vbo: GLVBO)
 
     fun compileShaderProgram(vertexShaderText: String, fragmentShaderText: String): Int
 

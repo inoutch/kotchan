@@ -10,7 +10,7 @@ import platform.glescommon.*
 import platform.gles3.*
 
 import kotchan.Engine
-import kotchan.event.TouchEvent
+import kotchan.controller.*
 
 import utility.type.Vector2
 import extension.*

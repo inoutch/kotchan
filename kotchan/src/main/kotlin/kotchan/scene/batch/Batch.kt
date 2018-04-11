@@ -84,9 +84,9 @@ class Batch {
                         .filterKeys { it.isTexcoordsDirty }
                         .forEach { batchBufferBundle.texcoordBuffer.update(it.value.texcoordBufferData, it.key.texcoords()) }
 
-                gl.vertexPointer(GLAttribLocation.ATTRIBUTE_POSITION, 3, batchBufferBundle.positionBuffer.vbo)
-                gl.vertexPointer(GLAttribLocation.ATTRIBUTE_TEXCOORD, 2, batchBufferBundle.texcoordBuffer.vbo)
-                gl.vertexPointer(GLAttribLocation.ATTRIBUTE_COLOR, 4, batchBufferBundle.colorBuffer.vbo)
+                gl.vertexPointer(GLAttribLocation.ATTRIBUTE_POSITION, 3, 0, 0, batchBufferBundle.positionBuffer.vbo)
+                gl.vertexPointer(GLAttribLocation.ATTRIBUTE_TEXCOORD, 2, 0, 0, batchBufferBundle.texcoordBuffer.vbo)
+                gl.vertexPointer(GLAttribLocation.ATTRIBUTE_COLOR, 4, 0, 0, batchBufferBundle.colorBuffer.vbo)
 
                 gl.drawTriangleArrays(0, batchBufferBundle.getSize())
             }

@@ -25,6 +25,7 @@ class AppScene : Scene() {
                 println("pressed!")
                 true
             }.also {
+                it.bind()
                 spriteBatch.add(it, shaderProgram)
                 touchController.add(it.touchable)
             }
@@ -38,7 +39,8 @@ class AppScene : Scene() {
         gl.enableTexture()
 
         camera.update()
-        spriteBatch.draw(delta, camera)
+        button?.draw(delta, shaderProgram, camera)
+        //spriteBatch.draw(delta, camera)
     }
 
     override fun pause() {}

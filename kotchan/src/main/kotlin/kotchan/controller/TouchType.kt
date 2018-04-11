@@ -13,7 +13,7 @@ enum class TouchType {
     Cancelled
 }
 
-fun TouchType.checkOnlyBegan(): Boolean = when (this) {
+fun TouchType.likeBegan(): Boolean = when (this) {
     TouchType.Began,
     TouchType.BeganAndEnded,
     TouchType.BeganAndMoved,
@@ -21,7 +21,7 @@ fun TouchType.checkOnlyBegan(): Boolean = when (this) {
     else -> false
 }
 
-fun TouchType.checkOnlyEnded(): Boolean = when (this) {
+fun TouchType.likeEnded(): Boolean = when (this) {
     TouchType.Ended,
     TouchType.BeganAndEnded,
     TouchType.BeganAndMovedAndEnded -> true

@@ -1,6 +1,11 @@
 package kotchan.scene.drawable
 
+import interop.graphic.GLAttribLocation
+import interop.graphic.GLCamera
 import interop.graphic.GLTexture
+import interop.graphic.GLVBO
+import kotchan.Engine
+import kotchan.scene.shader.SimpleShaderProgram
 import utility.type.*
 
 abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTexture.empty) {
@@ -23,9 +28,12 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
             field = value
         }
 
+    private val gl = Engine.getInstance().gl
     private var positionsBuffer = mesh.pos().flatten()
     private var texcoordsBuffer = mesh.tex().flatten()
     private var colorsBuffer = mesh.col().flatten()
+
+    private var vbo: GLVBO? = null
 
     open val positions = {
         if (isPositionsDirty) {
@@ -55,5 +63,44 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
             isTexcoordsDirty = false
         }
         texcoordsBuffer
+    }
+
+    private fun vertices(): FloatArray {
+        val vertices: MutableList<Float> = mutableListOf()
+        for (i in 0 until mesh.size) {
+            mesh.getVertex(i)?.let {
+                vertices.add(it.position.x)
+                vertices.add(it.position.y)
+                vertices.add(it.position.z)
+
+                vertices.add(it.color.x)
+                vertices.add(it.color.y)
+                vertices.add(it.color.z)
+                vertices.add(it.color.w)
+
+                vertices.add(it.texcoord.x)
+                vertices.add(it.texcoord.y)
+            }
+        }
+        return vertices.toFloatArray()
+    }
+
+    fun bind() {
+        vbo = gl.createVBO(vertices())
+    }
+
+    fun draw(delta: Float, shaderProgram: SimpleShaderProgram, camera: GLCamera) {
+        val vbo = vbo ?: return
+        if (isPositionsDirty || isColorsDirty || isTexcoordsDirty) {
+            gl.updateVBO(vbo, 0, vertices())
+        }
+        shaderProgram.use()
+        shaderProgram.prepare(delta, camera)
+
+        gl.vertexPointer(GLAttribLocation.ATTRIBUTE_POSITION, 3, 9, 0, vbo)
+        gl.vertexPointer(GLAttribLocation.ATTRIBUTE_COLOR, 4, 9, 3, vbo)
+        gl.vertexPointer(GLAttribLocation.ATTRIBUTE_TEXCOORD, 2, 9, 7, vbo)
+
+        gl.drawTriangleArrays(0, mesh.size)
     }
 }

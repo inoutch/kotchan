@@ -13,8 +13,6 @@ import java.awt.image.BufferedImage
 import java.io.IOException
 import com.jogamp.opengl.GLException
 import com.jogamp.opengl.util.awt.ImageUtil
-import com.jogamp.opengl.util.awt.ImageUtil.flipImageVertically
-import com.jogamp.opengl.util.texture.Texture
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO
 import javax.imageio.ImageIO
 
@@ -61,10 +59,10 @@ actual class GL {
         gl.glBufferSubData(GL4ES3.GL_ARRAY_BUFFER, (offset * 4).toLong(), (data.size * 4).toLong(), vertexBuffer)
     }
 
-    actual fun vertexPointer(location: GLAttribLocation, interval: Int, vbo: GLVBO) {
+    actual fun vertexPointer(location: GLAttribLocation, dimension: Int, stride: Int, offset: Int, vbo: GLVBO) {
         gl.glBindBuffer(GL4ES3.GL_ARRAY_BUFFER, vbo.id)
         gl.glEnableVertexAttribArray(location.value)
-        gl.glVertexAttribPointer(location.value, interval, GL4ES3.GL_FLOAT, false, 0, 0)
+        gl.glVertexAttribPointer(location.value, dimension, GL4ES3.GL_FLOAT, false, stride * 4, offset.toLong() * 4)
     }
 
     actual fun compileShaderProgram(vertexShaderText: String, fragmentShaderText: String): Int {

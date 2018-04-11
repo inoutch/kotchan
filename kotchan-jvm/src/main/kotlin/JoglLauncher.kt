@@ -106,7 +106,8 @@ class JoglLauncher(title: String) : GLEventListener, MouseListener {
         singleTouchEvent?.let { engine.touchEmitter.onTouchesMoved(listOf(it)) }
     }
 
-    override fun mouseClicked(e: MouseEvent?) {}
+    override fun mouseClicked(e: MouseEvent?) {
+    }
 
     override fun mouseMoved(e: MouseEvent?) {}
 
