@@ -31,10 +31,12 @@ class JoglLauncher(title: String) : GLEventListener, MouseListener {
         glWindow.addMouseListener(this)
     }
 
-    var windowSize = Vector2(640.0f, 1136.0f) / 2.0f
+    private val windowSize = Vector2(640.0f, 1136.0f)
+    private val screenSize = windowSize
 
     fun run() {
-        glWindow.setSize(windowSize.x.toInt(), windowSize.y.toInt())
+        // should be 1/2
+        glWindow.setSize(windowSize.x.toInt() / 2, windowSize.y.toInt() / 2)
         glWindow.isResizable = false
         animator.start()
     }
@@ -54,7 +56,7 @@ class JoglLauncher(title: String) : GLEventListener, MouseListener {
             engineTmp = Engine()
             engineTmp.init(
                     Vector2(width.toFloat(), height.toFloat()),
-                    Vector2(width.toFloat() * 2.0f, height.toFloat() * 2.0f))
+                    screenSize)
             this.engine = engineTmp
             return
         }
@@ -76,8 +78,8 @@ class JoglLauncher(title: String) : GLEventListener, MouseListener {
         if (e == null || engine == null) {
             return
         }
-        val x = e.x.toFloat() / 2.0f
-        val y = (glWindow.surfaceHeight - e.y).toFloat() / 2.0f
+        val x = e.x.toFloat()
+        val y = (glWindow.surfaceHeight - e.y).toFloat()
         singleTouchEvent = TouchEvent(Vector2(x, y))
         singleTouchEvent?.let { engine.touchEmitter.onTouchesBegan(listOf(it)) }
     }
@@ -87,8 +89,8 @@ class JoglLauncher(title: String) : GLEventListener, MouseListener {
         if (e == null || engine == null) {
             return
         }
-        val x = e.x.toFloat() / 2.0f
-        val y = (glWindow.surfaceHeight - e.y).toFloat() / 2.0f
+        val x = e.x.toFloat()
+        val y = (glWindow.surfaceHeight - e.y).toFloat()
         singleTouchEvent?.point = Vector2(x, y)
         singleTouchEvent?.let { engine.touchEmitter.onTouchesEnded(listOf(it)) }
     }
@@ -98,8 +100,8 @@ class JoglLauncher(title: String) : GLEventListener, MouseListener {
         if (e == null || engine == null) {
             return
         }
-        val x = e.x.toFloat() / 2.0f
-        val y = (glWindow.surfaceHeight - e.y).toFloat() / 2.0f
+        val x = e.x.toFloat()
+        val y = (glWindow.surfaceHeight - e.y).toFloat()
         singleTouchEvent?.point = Vector2(x, y)
         singleTouchEvent?.let { engine.touchEmitter.onTouchesMoved(listOf(it)) }
     }

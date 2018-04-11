@@ -36,12 +36,12 @@ data class Matrix4(val col1: Vector4, val col2: Vector4, val col3: Vector4, val 
         val a3 = col1.y * col2.z - col1.z * col2.y
         val a4 = col1.y * col2.w - col1.w * col2.y
         val a5 = col1.z * col2.w - col1.w * col2.z
-        val b0 = col2.x * col2.y - col2.y * col2.x
-        val b1 = col2.x * col2.z - col2.z * col2.x
-        val b2 = col2.x * col2.w - col2.w * col2.x
-        val b3 = col2.y * col2.z - col2.z * col2.y
-        val b4 = col2.y * col2.w - col2.w * col2.y
-        val b5 = col2.z * col2.w - col2.w * col2.z
+        val b0 = col3.x * col4.y - col3.y * col4.x
+        val b1 = col3.x * col4.z - col3.z * col4.x
+        val b2 = col3.x * col4.w - col3.w * col4.x
+        val b3 = col3.y * col4.z - col3.z * col4.y
+        val b4 = col3.y * col4.w - col3.w * col4.y
+        val b5 = col3.z * col4.w - col3.w * col4.z
 
         val det = a0 * b5 - a1 * b4 + a2 * b3 + a3 * b2 - a4 * b1 + a5 * b0
         if (fabs(det) <= 2e-37f)
@@ -81,6 +81,10 @@ data class Matrix4(val col1: Vector4, val col2: Vector4, val col3: Vector4, val 
             col1.z * other.x + col2.z * other.y + col3.z * other.z + col4.z * other.w,
             col1.w * other.x + col2.w * other.y + col3.w * other.z + col4.w * other.w
     )
+
+    operator fun times(other: Vector3) = this * Vector4(other, 1.0f)
+
+    operator fun times(other: Vector2) = this * Vector3(other, 1.0f)
 
     operator fun times(other: Matrix4) = Matrix4(
             col1 = this * other.col1,

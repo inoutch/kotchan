@@ -1,15 +1,18 @@
 package kotchan.controller
 
-import interop.graphic.GLCamera
 import kotchan.Engine
 import kotchan.controller.touchable.Touchable
 import utility.type.Vector2
-import utility.type.Vector4
 
 class TouchControllerEntity : TouchEmitter, TouchController {
+    companion object {
+        fun convertNormalPointInView(p: Vector2): Vector2 {
+            return p / Engine.getInstance().windowSize * 2.0f - 1.0f
+        }
+    }
+
     // about touchable
     private val touchables: MutableList<Touchable> = mutableListOf()
-    private val targets: MutableMap<TouchEntity, Touchable> = mutableMapOf()
 
     // about touch
     private val touches: MutableMap<TouchEvent, TouchEntity> = mutableMapOf()
@@ -20,24 +23,11 @@ class TouchControllerEntity : TouchEmitter, TouchController {
 
     private val willDestroyTouchEvents: MutableList<TouchEvent> = mutableListOf()
 
-    private var camera: GLCamera = GLCamera()
-
-    private fun convertPoint(p: Vector2): Vector2 {
-        val p4 = camera.combine * Vector4(p.x, p.y, 0.0f, 1.0f)
-        return Vector2(p4.x, p4.y)
-    }
-
     override fun onTouchesBegan(touchEvents: List<TouchEvent>) {
-        touchEvents.forEach { event ->
-            val touch = TouchEntity(event.point, TouchType.Began)
-            touches[event] = touch
-            touchables
-                    .filter { it.check(event.point / Engine.getInstance().windowSize) }
-                    //.filter { it.check(convertPoint(event.point)) }
-                    .forEach {
-                        targets[touch] = it
-                        it.on(event.point, TouchType.Began)
-                    }
+        touchEvents.forEach {
+            val touch = TouchEntity(it.point, TouchType.Began)
+            touches[it] = touch
+            touchables.forEach { it.on(touch.point, TouchType.Began) }
         }
     }
 
@@ -49,7 +39,7 @@ class TouchControllerEntity : TouchEmitter, TouchController {
                 TouchType.Began -> TouchType.BeganAndMoved
                 else -> TouchType.Moved
             }
-            targets[touch]?.on(touch.point, TouchType.Moved)
+            touchables.forEach { it.on(touch.point, TouchType.Began) }
         }
     }
 
@@ -62,13 +52,13 @@ class TouchControllerEntity : TouchEmitter, TouchController {
                 TouchType.BeganAndMoved -> TouchType.BeganAndMovedAndEnded
                 else -> TouchType.Ended
             }
-            targets[touch]?.on(touch.point, TouchType.Moved)
-            targets.remove(touch)
+            touchables.forEach { it.on(touch.point, touch.type) }
         }
         willDestroyTouchEvents.addAll(touchEvents)
     }
 
     override fun onTouchesCancelled() {
+        touchables.forEach { it.on(Vector2(), TouchType.Cancelled) }
         willDestroyTouchEvents.clear()
         willDestroyTouchEvents.addAll(touches.keys)
         touchesByOneCycle.clear()
@@ -81,10 +71,6 @@ class TouchControllerEntity : TouchEmitter, TouchController {
 
     override fun add(touchable: Touchable) {
         touchables.add(touchable)
-    }
-
-    override fun camera(camera: GLCamera) {
-        this.camera = camera
     }
 
     fun begin() {
@@ -120,7 +106,6 @@ class TouchControllerEntity : TouchEmitter, TouchController {
         willDestroyTouchEvents.forEach {
             val touch = touches[it]
             touches.remove(it)
-            targets.remove(touch)
 
             val i = touchesByOneCycleInv[touch]
             touchesByOneCycleInv.remove(touch)
