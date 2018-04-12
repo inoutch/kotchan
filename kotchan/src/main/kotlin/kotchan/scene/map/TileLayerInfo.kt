@@ -1,3 +1,3 @@
 package kotchan.scene.map
 
-data class TileLayerInfo(val mapInfo: TileMapInfo, val mapId: List<List<Int>> = mutableListOf())
+data class TileLayerInfo(val mapId: List<List<Int>> = mutableListOf())

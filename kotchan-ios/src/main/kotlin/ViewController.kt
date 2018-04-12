@@ -48,7 +48,7 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
         engine = Engine()
         engine.init(
                 Vector2(width, height),
-                Vector2(width, height))
+                Vector2(640.0f, 1136.0f))
     }
 
     override fun glkView(view: GLKView, drawInRect: CValue<CGRect>) {

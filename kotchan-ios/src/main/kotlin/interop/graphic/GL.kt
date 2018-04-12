@@ -5,7 +5,7 @@ import platform.glescommon.*
 import platform.gles3.*
 import platform.GLKit.*
 
-import utility.type.Matrix4
+import utility.type.*
 
 actual class GL {
     actual fun clearColor(red: Float, green: Float, blue: Float, alpha: Float) {
@@ -112,6 +112,14 @@ actual class GL {
 
     actual fun uniform1f(location: Int, v0: Float) {
         glUniform1f(location, v0)
+    }
+
+    actual fun uniform3f(location: Int, v: Vector3) {
+        glUniform3f(location, v.x, v.y, v.z)
+    }
+
+    actual fun uniform4f(location: Int, v: Vector4) {
+        glUniform4f(location, v.x, v.y, v.z, v.w)
     }
 
     actual fun uniformMatrix4fv(location: Int, count: Int, transpose: Boolean, matrix: Matrix4) {
