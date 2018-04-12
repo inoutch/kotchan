@@ -1,6 +1,8 @@
 package interop.graphic
 
 import utility.type.Matrix4
+import utility.type.Vector3
+import utility.type.Vector4
 
 expect class GL() {
     fun clearColor(red: Float, green: Float, blue: Float, alpha: Float)
@@ -38,6 +40,10 @@ expect class GL() {
     fun uniform1i(location: Int, v0: Int)
 
     fun uniform1f(location: Int, v0: Float)
+
+    fun uniform3f(location: Int, v: Vector3)
+
+    fun uniform4f(location: Int, v: Vector4)
 
     fun uniformMatrix4fv(location: Int, count: Int, transpose: Boolean, matrix: Matrix4)
 

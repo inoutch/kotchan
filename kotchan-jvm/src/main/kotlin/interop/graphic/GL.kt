@@ -14,6 +14,8 @@ import java.io.IOException
 import com.jogamp.opengl.GLException
 import com.jogamp.opengl.util.awt.ImageUtil
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO
+import utility.type.Vector3
+import utility.type.Vector4
 import javax.imageio.ImageIO
 
 
@@ -128,6 +130,14 @@ actual class GL {
 
     actual fun uniform1f(location: Int, v0: Float) {
         gl.glUniform1f(location, v0)
+    }
+
+    actual fun uniform3f(location: Int, v: Vector3) {
+        gl.glUniform3f(location, v.x, v.y, v.z)
+    }
+
+    actual fun uniform4f(location: Int, v: Vector4) {
+        gl.glUniform4f(location, v.x, v.y, v.z, v.w)
     }
 
     actual fun uniformMatrix4fv(location: Int, count: Int, transpose: Boolean, matrix: Matrix4) {

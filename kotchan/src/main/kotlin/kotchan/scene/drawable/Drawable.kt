@@ -5,6 +5,7 @@ import interop.graphic.GLCamera
 import interop.graphic.GLTexture
 import interop.graphic.GLVBO
 import kotchan.Engine
+import kotchan.scene.shader.NoColorsShaderProgram
 import kotchan.scene.shader.SimpleShaderProgram
 import utility.type.*
 
@@ -72,11 +73,6 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
                 vertices.add(it.position.y)
                 vertices.add(it.position.z)
 
-                vertices.add(it.color.x)
-                vertices.add(it.color.y)
-                vertices.add(it.color.z)
-                vertices.add(it.color.w)
-
                 vertices.add(it.texcoord.x)
                 vertices.add(it.texcoord.y)
             }
@@ -88,17 +84,17 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
         vbo = gl.createVBO(vertices())
     }
 
-    fun draw(delta: Float, shaderProgram: SimpleShaderProgram, camera: GLCamera) {
+    fun draw(delta: Float, shaderProgram: NoColorsShaderProgram, camera: GLCamera) {
         val vbo = vbo ?: return
         if (isPositionsDirty || isColorsDirty || isTexcoordsDirty) {
             gl.updateVBO(vbo, 0, vertices())
         }
         shaderProgram.use()
         shaderProgram.prepare(delta, camera)
+        texture.use()
 
-        gl.vertexPointer(GLAttribLocation.ATTRIBUTE_POSITION, 3, 9, 0, vbo)
-        gl.vertexPointer(GLAttribLocation.ATTRIBUTE_COLOR, 4, 9, 3, vbo)
-        gl.vertexPointer(GLAttribLocation.ATTRIBUTE_TEXCOORD, 2, 9, 7, vbo)
+        gl.vertexPointer(GLAttribLocation.ATTRIBUTE_POSITION, 3, 5, 0, vbo)
+        gl.vertexPointer(GLAttribLocation.ATTRIBUTE_TEXCOORD, 2, 5, 3, vbo)
 
         gl.drawTriangleArrays(0, mesh.size)
     }

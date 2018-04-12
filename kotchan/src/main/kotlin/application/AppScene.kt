@@ -3,15 +3,17 @@ package application
 import interop.graphic.*
 import kotchan.scene.batch.Batch
 import kotchan.scene.Scene
+import kotchan.scene.shader.NoColorsShaderProgram
 import kotchan.scene.shader.SimpleShaderProgram
 import kotchan.tool.TexturePacker
 import kotchan.ui.Button
 
 class AppScene : Scene() {
     // common data
-    private val ratio = 1.0f
+    private val ratio = 4.0f
     private val camera = GLCamera.createOrthographic(0.0f, screenSize.x / ratio, 0.0f, screenSize.y / ratio, -1.0f, 1.0f)
-    private val shaderProgram = SimpleShaderProgram()
+    private val shaderProgram1 = SimpleShaderProgram()
+    private val shaderProgram2 = NoColorsShaderProgram()
     private val spriteBatch = Batch()
 
     // sprites
@@ -40,7 +42,7 @@ class AppScene : Scene() {
         gl.clearColor(0.0f, 1.0f, 1.0f, 1.0f)
 
         camera.update()
-        button?.draw(delta, shaderProgram, camera)
+        button?.draw(delta, shaderProgram2, camera)
     }
 
     override fun pause() {}
