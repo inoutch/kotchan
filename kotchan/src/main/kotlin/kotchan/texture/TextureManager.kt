@@ -14,6 +14,6 @@ class TextureManager(private val gl: GL) {
     }
 
     fun clearAll() {
-        textureMap.forEach { gl.destroyTexture(it.value) }
+        textureMap.clear()
     }
 }

@@ -25,6 +25,8 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
     override fun initWithCoder(aDecoder: NSCoder) = initBy(ViewController(aDecoder))
 
     private lateinit var context: EAGLContext
+    private var width: Float = 0.0f
+    private var height: Float = 0.0f
 
     override fun viewDidLoad() {
         this.preferredFramesPerSecond = 60
@@ -40,10 +42,13 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
         val (screenWidth, screenHeight) = view.bounds.useContents {
             size.width to size.height
         }
+        width = screenWidth.toFloat()
+        height = screenHeight.toFloat()
+
         engine = Engine()
         engine.init(
-                Vector2(screenWidth.toFloat(), screenHeight.toFloat()),
-                Vector2(screenWidth.toFloat(), screenHeight.toFloat()))
+                Vector2(width, height),
+                Vector2(width, height))
     }
 
     override fun glkView(view: GLKView, drawInRect: CValue<CGRect>) {
@@ -57,7 +62,7 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
 
         val list = touches.objectEnumerator().toList<ObjCObject>().map {
             val touch = it.reinterpret<UITouch>()
-            val point = touch.locationInView(this.view).useContents { Vector2(x.toFloat(), y.toFloat()) }
+            val point = touch.locationInView(this.view).useContents { Vector2(x.toFloat(), height - y.toFloat()) }
             TouchEvent(point).also { touchEvents[touch] = it }
         }
         engine.touchEmitter.onTouchesBegan(list)
@@ -68,7 +73,10 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
 
         val list = touches.objectEnumerator().toList<ObjCObject>().mapNotNull {
             val touch = it.reinterpret<UITouch>()
-            touchEvents[touch]
+            val touchEvent = touchEvents[touch] ?: return@mapNotNull null
+            touchEvent.point = touch.locationInView(this.view)
+                    .useContents { Vector2(x.toFloat(), height - y.toFloat()) }
+            touchEvent
         }
         engine.touchEmitter.onTouchesMoved(list)
     }
@@ -78,8 +86,9 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
 
         val list = touches.objectEnumerator().toList<ObjCObject>().mapNotNull {
             val touch = it.reinterpret<UITouch>()
-            val touchEvent = touchEvents[touch]
-            touch?.let { touchEvents.remove(it) }
+            val touchEvent = touchEvents[touch] ?: return@mapNotNull null
+            touchEvent.point = touch.locationInView(this.view)
+                    .useContents { Vector2(x.toFloat(), height - y.toFloat()) }
             touchEvent
         }
         engine.touchEmitter.onTouchesEnded(list)

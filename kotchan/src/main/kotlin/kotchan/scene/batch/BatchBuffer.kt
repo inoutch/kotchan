@@ -56,4 +56,8 @@ class BatchBuffer(var maxSize: Int) {
                 .toFloatArray()
         gl.updateVBO(vbo, 0, array)
     }
+
+    fun destroy() {
+        vbo.destroy()
+    }
 }

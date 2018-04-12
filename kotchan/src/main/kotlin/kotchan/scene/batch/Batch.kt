@@ -92,4 +92,16 @@ class Batch {
             }
         }
     }
+
+    fun clear() {
+        nodes.values.forEach {
+            it.values.forEach {
+                it.positionBuffer.destroy()
+                it.colorBuffer.destroy()
+                it.texcoordBuffer.destroy()
+            }
+        }
+        nodes.clear()
+        shaders.clear()
+    }
 }

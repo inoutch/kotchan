@@ -32,7 +32,6 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
     private var positionsBuffer = mesh.pos().flatten()
     private var texcoordsBuffer = mesh.tex().flatten()
     private var colorsBuffer = mesh.col().flatten()
-
     private var vbo: GLVBO? = null
 
     open val positions = {
@@ -102,5 +101,10 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
         gl.vertexPointer(GLAttribLocation.ATTRIBUTE_TEXCOORD, 2, 9, 7, vbo)
 
         gl.drawTriangleArrays(0, mesh.size)
+    }
+
+    fun destroy() {
+        vbo?.destroy()
+        texture.destroy()
     }
 }

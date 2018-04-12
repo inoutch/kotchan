@@ -15,6 +15,8 @@ expect class GL() {
 
     fun updateVBO(vbo: GLVBO, offset: Int, data: FloatArray)
 
+    fun destroyVBO(vboId: Int)
+
     fun vertexPointer(location: GLAttribLocation, dimension: Int, stride: Int, offset: Int, vbo: GLVBO)
 
     fun compileShaderProgram(vertexShaderText: String, fragmentShaderText: String): Int
@@ -53,7 +55,7 @@ expect class GL() {
 
     fun loadTexture(filepath: String): GLTexture?
 
-    fun destroyTexture(texture: GLTexture)
+    fun destroyTexture(textureId: Int)
 
     fun filterTexture(type: GLFilterType)
 

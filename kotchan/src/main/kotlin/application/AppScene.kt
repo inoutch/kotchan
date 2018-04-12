@@ -22,25 +22,25 @@ class AppScene : Scene() {
         val dirPath = file.getResourcePath("textures") ?: ""
         TexturePacker.loadFile(dirPath, fullPath)?.let {
             button = Button(it, "RunRight01.png", "RunRight02.png", camera) {
-                println("pressed!")
+                println("押された！")
                 true
             }.also {
                 it.bind()
-                spriteBatch.add(it, shaderProgram)
+                //spriteBatch.add(it, shaderProgram)
                 touchController.add(it.touchable)
             }
         }
+
+        gl.enableBlend()
+        gl.activeTexture(0)
+        gl.enableTexture()
     }
 
     override fun render(delta: Float) {
         gl.clearColor(0.0f, 1.0f, 1.0f, 1.0f)
-        gl.enableBlend()
-        gl.activeTexture(0)
-        gl.enableTexture()
 
         camera.update()
         button?.draw(delta, shaderProgram, camera)
-        //spriteBatch.draw(delta, camera)
     }
 
     override fun pause() {}

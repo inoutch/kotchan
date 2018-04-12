@@ -7,7 +7,7 @@ abstract class GLShaderProgram(val id: Int) {
 
     private val viewProjectionMatrixLocation = gl.getUniform(id, "u_viewProjectionMatrix")
     private val timeDeltaLocation = gl.getUniform(id, "u_timeDelta")
-    private var isDeleted = false
+    private var isDestroy = false
 
     open fun prepare(delta: Float, camera: GLCamera) {
         gl.uniform1f(timeDeltaLocation, delta)
@@ -15,14 +15,14 @@ abstract class GLShaderProgram(val id: Int) {
     }
 
     fun use() {
-        if (isDeleted) {
+        if (isDestroy) {
             throw Error("this shader is already deleted.")
         }
         gl.useProgram(this)
     }
 
-    fun delete() {
-        isDeleted = true
+    fun destroy() {
+        isDestroy = true
         gl.deleteShaderProgram(this)
     }
 }

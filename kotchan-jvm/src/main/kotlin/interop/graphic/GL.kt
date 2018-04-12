@@ -59,6 +59,10 @@ actual class GL {
         gl.glBufferSubData(GL4ES3.GL_ARRAY_BUFFER, (offset * 4).toLong(), (data.size * 4).toLong(), vertexBuffer)
     }
 
+    actual fun destroyVBO(vboId: Int) {
+        gl.glDeleteBuffers(1, IntBuffer.wrap(IntArray(1, { vboId })))
+    }
+
     actual fun vertexPointer(location: GLAttribLocation, dimension: Int, stride: Int, offset: Int, vbo: GLVBO) {
         gl.glBindBuffer(GL4ES3.GL_ARRAY_BUFFER, vbo.id)
         gl.glEnableVertexAttribArray(location.value)
@@ -159,10 +163,8 @@ actual class GL {
         }
     }
 
-    actual fun destroyTexture(texture: GLTexture) {
-        val buffer = IntBuffer.allocate(1)
-        buffer.put(0, texture.id)
-        gl.glDeleteTextures(1, buffer)
+    actual fun destroyTexture(textureId: Int) {
+        gl.glDeleteTextures(1, IntBuffer.wrap(IntArray(1, { textureId })))
     }
 
     actual fun filterTexture(type: GLFilterType) {

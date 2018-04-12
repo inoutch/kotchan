@@ -2,6 +2,7 @@ package kotchan
 
 import application.AppScene
 import interop.graphic.GL
+import interop.graphic.GLTexture
 import interop.io.File
 import kotchan.controller.TouchEmitter
 import kotchan.controller.TouchController
@@ -47,11 +48,8 @@ class Engine {
     }
 
     fun render(delta: Float) {
-        gl.debug()
         touchControllerEntity.begin()
-
         currentScene?.render(delta)
-
         touchControllerEntity.end()
     }
 
