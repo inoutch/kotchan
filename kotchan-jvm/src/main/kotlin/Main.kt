@@ -1,8 +1,9 @@
+import application.AppConfig
 import kotlin.jvm.JvmStatic
 
 object Main {
     @JvmStatic
     fun main(args: Array<String>) {
-        JoglLauncher("サンプル").apply { run() }
+        JoglLauncher(AppConfig.APP_NAME).apply { run() }
     }
 }

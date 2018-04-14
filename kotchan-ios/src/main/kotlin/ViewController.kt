@@ -9,6 +9,7 @@ import platform.UIKit.*
 import platform.glescommon.*
 import platform.gles3.*
 
+import application.AppConfig
 import kotchan.Engine
 import kotchan.controller.*
 
@@ -48,7 +49,7 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
         engine = Engine()
         engine.init(
                 Vector2(width, height),
-                Vector2(640.0f, 1136.0f))
+                AppConfig.SCREEN_SIZE)
     }
 
     override fun glkView(view: GLKView, drawInRect: CValue<CGRect>) {

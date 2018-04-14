@@ -1,3 +1,4 @@
+import application.AppConfig
 import com.jogamp.newt.event.MouseEvent
 import com.jogamp.newt.event.MouseListener
 import com.jogamp.newt.event.WindowAdapter
@@ -31,7 +32,7 @@ class JoglLauncher(title: String) : GLEventListener, MouseListener {
         glWindow.addMouseListener(this)
     }
 
-    private val windowSize = Vector2(640.0f, 1136.0f)
+    private val windowSize = AppConfig.SCREEN_SIZE
     private val screenSize = windowSize
 
     fun run() {
