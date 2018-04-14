@@ -7,10 +7,12 @@ class TileMap(private val mapInfo: TileMapInfo) {
     private val shaderProgram = NoColorsShaderProgram()
     private val layers: List<TileLayer> = mapInfo.layersInfo.map { TileLayer(mapInfo, it) }
 
-    fun draw(delta: Float, camera: GLCamera) {
+    fun draw(delta: Float, camera: GLCamera, layerRange: IntRange = IntRange(0, layers.size - 1)) {
         mapInfo.texture.use()
         shaderProgram.prepare(delta, camera)
-        layers.forEach { it.draw() }
+        for (i in layerRange) {
+            layer(i)?.draw()
+        }
     }
 
     fun layer(index: Int) = layers.getOrNull(index)
