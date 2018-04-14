@@ -11,7 +11,10 @@ class TileMap(private val mapInfo: TileMapInfo) {
         mapInfo.texture.use()
         shaderProgram.prepare(delta, camera)
         for (i in layerRange) {
-            layer(i)?.draw()
+            val l = layer(i) ?: continue
+            if (l.visible) {
+                l.draw()
+            }
         }
     }
 

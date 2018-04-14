@@ -17,6 +17,8 @@ class TileLayer(private val mapInfo: TileMapInfo, private val tileLayerInfo: Til
     }.toMutableList()
         private set
 
+    var visible = tileLayerInfo.visible
+
     private val gl = Engine.getInstance().gl
     private val positionsVbo: GLVBO
     private val texcoordsVbo: GLVBO

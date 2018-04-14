@@ -82,7 +82,7 @@ class AppScene : Scene() {
 
         camera.update()
         button?.draw(delta, shaderProgram2, camera)
-        tileMap?.draw(delta, camera)
+        //tileMap?.draw(delta, camera)
         timer++
     }
 

@@ -10,6 +10,8 @@ import kotchan.scene.shader.SimpleShaderProgram
 import utility.type.*
 
 abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTexture.empty) {
+    var size: Vector2 = Vector2()
+        protected set
     var isPositionsDirty = false
         protected set
     var isColorsDirty = false
@@ -26,6 +28,12 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
     var color: Vector4 = Vector4(1.0f, 1.0f, 1.0f, 1.0f)
         set(value) {
             isColorsDirty = (field != value)
+            field = value
+        }
+
+    var anchorPoint = Vector2(0.5f, 0.5f)
+        set(value) {
+            isPositionsDirty = (field != value)
             field = value
         }
 
@@ -69,8 +77,8 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
         val vertices: MutableList<Float> = mutableListOf()
         for (i in 0 until mesh.size) {
             mesh.getVertex(i)?.let {
-                vertices.add(it.position.x)
-                vertices.add(it.position.y)
+                vertices.add(it.position.x - size.x * anchorPoint.x)
+                vertices.add(it.position.y - size.y * anchorPoint.y)
                 vertices.add(it.position.z)
 
                 vertices.add(it.texcoord.x)

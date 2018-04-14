@@ -32,4 +32,8 @@ open class Square(size: Vector2, texture: GLTexture = GLTexture.empty) : Drawabl
                 Vector2(position.x + size.x, position.y + size.y),
                 Vector2(position.x + size.x, position.y))
     }
+
+    init {
+        this.size = size
+    }
 }

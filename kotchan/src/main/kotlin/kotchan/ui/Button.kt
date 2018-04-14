@@ -17,14 +17,15 @@ class Button(textureAtlas: TextureAtlas,
              onClick: () -> Boolean) : Sprite(textureAtlas) {
 
     // this size is applied from normal texture atlas
-    private val size: Vector2 = textureAtlas.frame(normalName)?.sourceSize ?: Vector2()
     private var isBegan = false
 
     init {
         setAtlas(normalName)
     }
 
-    val touchable = RectTouchable(Rect(Vector2(), size), camera) { _, type, check ->
+    private fun rect() = Rect(Vector2(position.x, position.y) - anchorPoint * size, size)
+
+    val touchable = RectTouchable({ rect() }, camera) { _, type, check ->
         if (type.likeBegan() && check) {
             this.setAtlas(pressedName)
             isBegan = true
