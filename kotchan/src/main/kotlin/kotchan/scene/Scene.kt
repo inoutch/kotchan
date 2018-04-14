@@ -10,7 +10,8 @@ abstract class Scene {
     protected val windowSize = Engine.getInstance().windowSize
     protected val screenSize = Engine.getInstance().screenSize
 
-    abstract fun render(delta: Float)
+    abstract fun draw(delta: Float)
+    abstract fun reshape(x: Int, y: Int, width: Int, height: Int)
     abstract fun pause()
     abstract fun resume()
 }

@@ -2,7 +2,6 @@ package kotchan
 
 import application.AppScene
 import interop.graphic.GL
-import interop.graphic.GLTexture
 import interop.io.File
 import kotchan.controller.TouchEmitter
 import kotchan.controller.TouchController
@@ -47,12 +46,11 @@ class Engine {
         currentScene = AppScene()
     }
 
-    fun render(delta: Float) {
-        currentScene?.render(delta)
+    fun draw(delta: Float) {
+        currentScene?.draw(delta)
     }
 
     fun reshape(x: Int, y: Int, width: Int, height: Int) {
-        // renderer.scene?.reshape()
+        currentScene?.reshape(x, y, width, height)
     }
-
 }

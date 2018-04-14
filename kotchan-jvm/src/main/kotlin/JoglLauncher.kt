@@ -67,7 +67,7 @@ class JoglLauncher(title: String) : GLEventListener, MouseListener {
     override fun display(drawable: GLAutoDrawable?) {
         val millisPerFrame = System.currentTimeMillis() - beforeMillis
         beforeMillis = System.currentTimeMillis()
-        engine?.render(millisPerFrame.toFloat() / 1000.0f)
+        engine?.draw(millisPerFrame.toFloat() / 1000.0f)
     }
 
     override fun dispose(drawable: GLAutoDrawable?) {
