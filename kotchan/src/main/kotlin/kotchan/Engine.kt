@@ -3,6 +3,7 @@ package kotchan
 import application.AppConfig
 import application.AppScene
 import interop.graphic.GL
+import interop.graphic.GLCamera
 import interop.io.File
 import kotchan.constant.ScreenType
 import kotchan.controller.TouchEmitter
@@ -10,6 +11,7 @@ import kotchan.controller.TouchController
 import kotchan.controller.TouchControllerEntity
 import kotchan.texture.TextureManager
 import kotchan.scene.Scene
+import utility.type.Rect
 import utility.type.Vector2
 
 // Do not create Engine instance!
@@ -29,6 +31,8 @@ class Engine {
 
     var windowSize: Vector2 = Vector2(0.0f, 0.0f)
     var screenSize: Vector2 = Vector2(0.0f, 0.0f)
+    var viewport: Rect = Rect()
+        private set
 
     val touchEmitter: TouchEmitter = touchControllerEntity
     val touchController: TouchController = touchControllerEntity
@@ -47,15 +51,15 @@ class Engine {
         when (AppConfig.SCREEN_TYPE) {
             ScreenType.EXTEND -> {
                 this.screenSize = screenSize
-                gl.viewPort(0, 0, windowSize.x.toInt(), windowSize.y.toInt())
+                viewport = Rect(Vector2(0.0f, 0.0f), windowSize)
             }
             ScreenType.FIX_WIDTH -> {
                 this.screenSize = Vector2(screenSize.x, screenSize.x * windowRatio)
-                gl.viewPort(0, 0, windowSize.x.toInt(), windowSize.y.toInt())
+                viewport = Rect(Vector2(0.0f, 0.0f), windowSize)
             }
             ScreenType.FIX_HEIGHT -> {
                 this.screenSize = Vector2(screenSize.y / windowRatio, screenSize.y)
-                gl.viewPort(0, 0, windowSize.x.toInt(), windowSize.y.toInt())
+                viewport = Rect(Vector2(0.0f, 0.0f), windowSize)
             }
             ScreenType.BORDER -> {
                 val screenRatio = screenSize.y / screenSize.x
@@ -63,11 +67,11 @@ class Engine {
                 if (windowRatio > screenRatio) {
                     // top-bottom
                     val border = (windowSize.y - windowSize.x * screenRatio) / 2.0f
-                    gl.viewPort(0, border.toInt(), windowSize.x.toInt(), windowSize.y.toInt())
+                    viewport = Rect(Vector2(0.0f, border), Vector2(windowSize.x, windowSize.y - border))
                 } else if (windowRatio < screenRatio) else {
                     // right-left
                     val border = (windowSize.x - windowSize.y / screenRatio) / 2.0f
-                    gl.viewPort(border.toInt(), 0, windowSize.x.toInt(), windowSize.y.toInt())
+                    viewport = Rect(Vector2(border, 0.0f), Vector2(windowSize.x - border, windowSize.y))
                 }
             }
         }
@@ -75,10 +79,15 @@ class Engine {
     }
 
     fun draw(delta: Float) {
+        gl.viewPort(viewport.origin.x.toInt(), viewport.origin.y.toInt(), viewport.size.x.toInt(), viewport.size.y.toInt())
         currentScene?.draw(delta)
     }
 
     fun reshape(x: Int, y: Int, width: Int, height: Int) {
         currentScene?.reshape(x, y, width, height)
+    }
+
+    fun createOrthographicCamera(): GLCamera {
+        return GLCamera.createOrthographic(0.0f, screenSize.x, 0.0f, screenSize.y, -1.0f, 1.0f)
     }
 }

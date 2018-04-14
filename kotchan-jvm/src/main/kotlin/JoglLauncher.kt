@@ -32,8 +32,8 @@ class JoglLauncher(title: String) : GLEventListener, MouseListener {
         glWindow.addMouseListener(this)
     }
 
-    private val windowSize = AppConfig.SCREEN_SIZE
-    private val screenSize = windowSize
+    private val windowSize = AppConfig.WINDOW_SIZE
+    private var screenSize = AppConfig.SCREEN_SIZE
 
     fun run() {
         // should be 1/2

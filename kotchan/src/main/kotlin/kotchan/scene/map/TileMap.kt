@@ -22,6 +22,7 @@ class TileMap(private val mapInfo: TileMapInfo) {
 
     fun draw(delta: Float, camera: GLCamera, layerRange: IntRange = IntRange(0, layers.size - 1)) {
         mapInfo.texture.use()
+        shaderProgram.use()
         shaderProgram.prepare(delta, camera)
         for (i in layerRange) {
             val l = layer(i) ?: continue
