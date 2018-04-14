@@ -6,9 +6,9 @@ import utility.type.Vector2
 data class TileMapInfo(
         val name: String,
         val tileSize: Vector2,
-        val size: Vector2,
         val texture: GLTexture,
         val layersInfo: List<TileLayerInfo>) {
+    val mapSize: Vector2
     val tileNumber: Vector2
     val tileTexcoordSize: Vector2
 
@@ -19,5 +19,8 @@ data class TileMapInfo(
         }
         tileNumber = Vector2(texture.width / tileSize.x, texture.height / tileSize.y)
         tileTexcoordSize = Vector2(1.0f, 1.0f) / tileNumber
+        val x = layersInfo.map { it.mapSize.x }.max() ?: 0.0f
+        val y = layersInfo.map { it.mapSize.y }.max() ?: 0.0f
+        mapSize = Vector2(x, y)
     }
 }

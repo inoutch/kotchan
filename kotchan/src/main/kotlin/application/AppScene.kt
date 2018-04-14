@@ -10,6 +10,7 @@ import kotchan.scene.shader.NoColorsShaderProgram
 import kotchan.scene.shader.SimpleShaderProgram
 import kotchan.tool.TexturePacker
 import kotchan.ui.Button
+import utility.math.Random
 import utility.type.Vector2
 
 class AppScene : Scene() {
@@ -19,6 +20,7 @@ class AppScene : Scene() {
     private val shaderProgram1 = SimpleShaderProgram()
     private val shaderProgram2 = NoColorsShaderProgram()
     private val spriteBatch = Batch()
+    private var timer = 0
 
     // sprites
     private var button: Button? = null
@@ -47,18 +49,17 @@ class AppScene : Scene() {
                 val tileMapInfo = TileMapInfo(
                         "hoge",
                         Vector2(16.0f, 16.0f),
-                        Vector2(10.0f, 10.0f),
                         tileMapTexture, listOf(TileLayerInfo(listOf(
                         listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+                        listOf(0, 0, 2, 3, 4, 5, 6, 7, 8, 9, 10),
                         listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+                        listOf(0, 1, 2, 2, 4, 5, 6, 7, 8, 9, 10),
                         listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+                        listOf(0, 1, 2, 3, 4, 5, 8, 7, 8, 9, 10),
                         listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+                        listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 10),
                         listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
-                        listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
-                        listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
-                        listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
-                        listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
-                        listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)))))
+                        listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)))))
                 tileMap = TileMap(tileMapInfo)
             }
         }
@@ -70,10 +71,19 @@ class AppScene : Scene() {
 
     override fun render(delta: Float) {
         gl.clearColor(0.0f, 1.0f, 1.0f, 1.0f)
+        if (timer % 100 == 0) {
+            tileMap?.layer(0)?.mapId(3, 4, Random.next(9))
+            tileMap?.layer(0)?.mapId(4, 4, Random.next(9))
+            tileMap?.layer(0)?.mapId(5, 4, Random.next(9))
+            tileMap?.layer(0)?.mapId(3, 5, Random.next(9))
+            tileMap?.layer(0)?.mapId(4, 5, Random.next(9))
+            tileMap?.layer(0)?.mapId(5, 5, Random.next(9))
+        }
 
         camera.update()
         button?.draw(delta, shaderProgram2, camera)
         tileMap?.draw(delta, camera)
+        timer++
     }
 
     override fun pause() {}

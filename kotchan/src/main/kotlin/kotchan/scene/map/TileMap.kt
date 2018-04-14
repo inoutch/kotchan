@@ -13,6 +13,8 @@ class TileMap(private val mapInfo: TileMapInfo) {
         layers.forEach { it.draw() }
     }
 
+    fun layer(index: Int) = layers.getOrNull(index)
+
     fun destroy() {
         layers.forEach { it.destroy() }
         shaderProgram.destroy()
