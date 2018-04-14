@@ -2,9 +2,8 @@ package kotchan.ui
 
 import interop.graphic.GLCamera
 import kotchan.controller.TouchType
-import kotchan.controller.likeBegan
-import kotchan.controller.likeEnded
 import kotchan.controller.touchable.RectTouchable
+import kotchan.controller.touchable.TouchableType
 import kotchan.scene.drawable.Sprite
 import kotchan.texture.TextureAtlas
 import utility.type.Rect
@@ -25,12 +24,15 @@ class Button(textureAtlas: TextureAtlas,
 
     private fun rect() = Rect(Vector2(position.x, position.y) - anchorPoint * size, size)
 
-    val touchable = RectTouchable({ rect() }, camera) { _, type, check ->
-        if (type.likeBegan() && check) {
+    val touchable = RectTouchable({ rect() }, camera) { index, _, type, check ->
+        if (index != 0) {
+            return@RectTouchable
+        }
+        if (type == TouchType.Began && check) {
             this.setAtlas(pressedName)
             isBegan = true
         }
-        if (type.likeEnded()) {
+        if (type == TouchType.Ended) {
             if (check && isBegan) {
                 isBegan = false
                 onClick()
@@ -41,5 +43,5 @@ class Button(textureAtlas: TextureAtlas,
             isBegan = false
             this.setAtlas(normalName)
         }
-    }
+    }.apply { type = TouchableType.EventHandler }
 }

@@ -7,7 +7,7 @@ import kotchan.scene.drawable.Square
 import utility.type.Vector2
 import utility.type.Vector3
 import utility.type.flatten
-import kotlin.math.round
+import kotlin.math.floor
 
 class TileLayer(private val mapInfo: TileMapInfo, private val tileLayerInfo: TileLayerInfo) {
     var mapId: MutableList<MutableList<Int>> = List(mapInfo.mapSize.y.toInt(), {
@@ -45,7 +45,7 @@ class TileLayer(private val mapInfo: TileMapInfo, private val tileLayerInfo: Til
 
     private fun calcTexcoord(id: Int): Vector2 {
         val u = (id % mapInfo.tileNumber.x.toInt()).toFloat()
-        val v = round(id / mapInfo.tileNumber.x)
+        val v = floor(id / mapInfo.tileNumber.x)
         return Vector2(u, v) * mapInfo.tileTexcoordSize
     }
 

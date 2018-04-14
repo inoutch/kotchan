@@ -1,6 +1,7 @@
 package application
 
 import interop.graphic.*
+import kotchan.controller.TouchType
 import kotchan.scene.batch.Batch
 import kotchan.scene.Scene
 import kotchan.scene.map.TileLayerInfo
@@ -60,7 +61,13 @@ class AppScene : Scene() {
                         listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 10),
                         listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
                         listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)))))
-                tileMap = TileMap(tileMapInfo)
+                tileMap = TileMap(tileMapInfo).apply {
+                    touchController.add(enableTouch(camera) { p, tilePoint, type ->
+                        if (type == TouchType.Began) {
+                            layer(0)?.mapId(tilePoint.x.toInt(), tilePoint.y.toInt(), 1)
+                        }
+                    })
+                }
             }
         }
 

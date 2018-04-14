@@ -48,9 +48,7 @@ class Engine {
     }
 
     fun render(delta: Float) {
-        touchControllerEntity.begin()
         currentScene?.render(delta)
-        touchControllerEntity.end()
     }
 
     fun reshape(x: Int, y: Int, width: Int, height: Int) {
