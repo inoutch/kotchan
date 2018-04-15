@@ -62,16 +62,20 @@ class Engine {
                 viewport = Rect(Vector2(0.0f, 0.0f), windowSize)
             }
             ScreenType.BORDER -> {
-                val screenRatio = screenSize.y / screenSize.x
                 this.screenSize = screenSize
-                if (windowRatio > screenRatio) {
-                    // top-bottom
-                    val border = (windowSize.y - windowSize.x * screenRatio) / 2.0f
-                    viewport = Rect(Vector2(0.0f, border), Vector2(windowSize.x, windowSize.y - border))
-                } else if (windowRatio < screenRatio) else {
-                    // right-left
-                    val border = (windowSize.x - windowSize.y / screenRatio) / 2.0f
-                    viewport = Rect(Vector2(border, 0.0f), Vector2(windowSize.x - border, windowSize.y))
+                val screenRatio = screenSize.y / screenSize.x
+                viewport = when {
+                    windowRatio > screenRatio -> {
+                        // top-bottom
+                        val border = (windowSize.y - windowSize.x * screenRatio) / 2.0f
+                        Rect(Vector2(0.0f, border), Vector2(windowSize.x, windowSize.y - border))
+                    }
+                    windowRatio < screenRatio -> {
+                        // right-left
+                        val border = (windowSize.x - windowSize.y / screenRatio) / 2.0f
+                        Rect(Vector2(border, 0.0f), Vector2(windowSize.x - border, windowSize.y))
+                    }
+                    else -> Rect(Vector2(0.0f, 0.0f), windowSize)
                 }
             }
         }
@@ -88,6 +92,7 @@ class Engine {
     }
 
     fun createOrthographicCamera(): GLCamera {
+        println(screenSize)
         return GLCamera.createOrthographic(0.0f, screenSize.x, 0.0f, screenSize.y, -1.0f, 1.0f)
     }
 }

@@ -30,7 +30,6 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
     private var height: Float = 0.0f
 
     override fun viewDidLoad() {
-        this.preferredFramesPerSecond = 60
         this.context = EAGLContext(kEAGLRenderingAPIOpenGLES3)
 
         val view = this.view.reinterpret<GLKView>()
@@ -38,9 +37,10 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
         view.drawableDepthFormat = GLKViewDrawableDepthFormat24
         view.drawableMultisample = GLKViewDrawableMultisample4X
 
+        this.preferredFramesPerSecond = 60
         EAGLContext.setCurrentContext(this.context)
 
-        val (screenWidth, screenHeight) = view.bounds.useContents {
+        val (screenWidth, screenHeight) = UIScreen.mainScreen().nativeBounds.useContents {
             size.width to size.height
         }
         width = screenWidth.toFloat()
@@ -53,7 +53,7 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
     }
 
     override fun glkView(view: GLKView, drawInRect: CValue<CGRect>) {
-        engine.render(0.0f)
+        engine.draw(0.0f)
     }
 
     override fun gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController) {}
