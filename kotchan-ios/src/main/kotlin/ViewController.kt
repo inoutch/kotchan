@@ -34,8 +34,7 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
 
         val view = this.view.reinterpret<GLKView>()
         view.context = this.context
-        view.drawableDepthFormat = GLKViewDrawableDepthFormat24
-        view.drawableMultisample = GLKViewDrawableMultisample4X
+        view.drawableDepthFormat = GLKViewDrawableDepthFormat16
 
         this.preferredFramesPerSecond = 60
         EAGLContext.setCurrentContext(this.context)
