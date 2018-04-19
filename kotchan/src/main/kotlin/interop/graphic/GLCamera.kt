@@ -1,11 +1,19 @@
 package interop.graphic
 
+import kotchan.Engine
 import utility.type.Matrix3
 import utility.type.Matrix4
 import utility.type.Vector4
 
 class GLCamera {
     companion object {
+        fun createOrthographic(): GLCamera {
+            return createOrthographic(
+                    0.0f, Engine.getInstance().screenSize.x,
+                    0.0f, Engine.getInstance().screenSize.y,
+                    -1.0f, 1.0f)
+        }
+
         fun createOrthographic(left: Float, right: Float,
                                bottom: Float, top: Float,
                                near: Float, far: Float) = GLCamera().apply {
