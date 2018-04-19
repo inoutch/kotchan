@@ -18,6 +18,12 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
     var isTexcoordsDirty = false
         protected set
 
+    var visible = true
+        set(value) {
+            isPositionsDirty = (field != value)
+            field = value
+        }
+
     var position: Vector3 = Vector3()
         set(value) {
             isPositionsDirty = (field != value)
@@ -45,10 +51,13 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
     open val positions = {
         if (isPositionsDirty) {
             val modelMatrix = Matrix4.createTranslation(translate())
-            positionsBuffer = mesh.pos()
-                    .map { modelMatrix * Vector4(it, 1.0f) }
-                    .map { Vector3(it) }
-                    .flatten()
+            val pos = mesh.pos()
+            positionsBuffer = if (visible) {
+                pos.map { modelMatrix * Vector4(it, 1.0f) }.map { Vector3(it) }
+            } else {
+                pos.map { Vector3() }
+
+            }.flatten()
             isPositionsDirty = false
         }
         positionsBuffer
@@ -100,7 +109,11 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
         vbo = gl.createVBO(vertices())
     }
 
-    fun draw(delta: Float, shaderProgram: NoColorsShaderProgram, camera: GLCamera) {
+    open fun draw(delta: Float, shaderProgram: NoColorsShaderProgram, camera: GLCamera) {
+        if (!visible) {
+            return
+        }
+
         val vbo = vbo ?: return
         shaderProgram.use()
         shaderProgram.modelMatrix4 = Matrix4.createTranslation(translate())
