@@ -15,9 +15,9 @@ class TextureManager(private val gl: GL) {
         return textureMap[filepath] ?: gl.loadTexture(filepath) ?: GLTexture.empty
     }
 
-    fun createSquare(filepath: String): Square {
+    fun createSquare(filepath: String?): Square {
         val texture = get(filepath)
-        return Square(Vector2(texture.width.toFloat(), texture.height.toFloat()))
+        return Square(Vector2(texture.width.toFloat(), texture.height.toFloat()), texture)
     }
 
     fun clearAll() {

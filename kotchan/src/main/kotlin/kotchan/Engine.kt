@@ -92,8 +92,9 @@ class Engine {
     }
 
     fun createOrthographicCamera(): GLCamera {
-        println(screenSize)
-        return GLCamera.createOrthographic(0.0f, screenSize.x, 0.0f, screenSize.y, -1.0f, 1.0f)
+        return GLCamera.createOrthographic(0.0f, screenSize.x, 0.0f, screenSize.y, -1.0f, 1.0f).apply {
+            update()
+        }
     }
 
     fun runScene(scene: Scene) {

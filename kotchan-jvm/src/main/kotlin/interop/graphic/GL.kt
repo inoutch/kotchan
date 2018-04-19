@@ -164,7 +164,7 @@ actual class GL {
 
     actual fun loadTexture(filepath: String): GLTexture? {
         return try {
-            val buffer = loadBuffer(filepath, false)
+            val buffer = loadBuffer(filepath, false) ?: return null
             val textureData = AWTTextureIO.newTextureData(gl.glProfile, buffer, false)
             val texture = TextureIO.newTexture(textureData)
             GLTexture(texture.getTextureObject(gl), texture.width, texture.height)
@@ -222,17 +222,15 @@ actual class GL {
     }
 
     private fun loadBuffer(filepath: String, flipVertical: Boolean): BufferedImage? {
-        val file = File(filepath)
-        try {
+        return try {
+            val file = File(filepath)
             val image = ImageIO.read(file)
             if (image != null && flipVertical) {
                 ImageUtil.flipImageVertically(image)
             }
-            return image
-        } catch (e: GLException) {
-            throw Error("Error creating texture from: $file")
+            image
         } catch (e: IOException) {
-            throw Error("File not found: $file")
+            null
         }
     }
 }
