@@ -95,4 +95,8 @@ class Engine {
         println(screenSize)
         return GLCamera.createOrthographic(0.0f, screenSize.x, 0.0f, screenSize.y, -1.0f, 1.0f)
     }
+
+    fun runScene(scene: Scene) {
+        this.currentScene = scene
+    }
 }
