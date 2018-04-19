@@ -5,8 +5,8 @@ import kotchan.Engine
 abstract class GLShaderProgram(val id: Int) {
     protected val gl: GL = Engine.getInstance().gl
 
-    private val viewProjectionMatrixLocation = gl.getUniform(id, "u_viewProjectionMatrix")
-    private val timeDeltaLocation = gl.getUniform(id, "u_timeDelta")
+    protected val viewProjectionMatrixLocation = gl.getUniform(id, "u_viewProjectionMatrix")
+    protected val timeDeltaLocation = gl.getUniform(id, "u_timeDelta")
     private var isDestroy = false
 
     open fun prepare(delta: Float, camera: GLCamera) {

@@ -98,6 +98,7 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
             gl.updateVBO(vbo, 0, vertices())
         }
         shaderProgram.use()
+        shaderProgram.modelMatrix4 = Matrix4.createTranslation(position)
         shaderProgram.prepare(delta, camera)
         texture.use()
 

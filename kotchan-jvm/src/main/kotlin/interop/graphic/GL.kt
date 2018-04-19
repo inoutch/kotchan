@@ -11,7 +11,6 @@ import java.nio.FloatBuffer
 import java.nio.IntBuffer
 import java.awt.image.BufferedImage
 import java.io.IOException
-import com.jogamp.opengl.GLException
 import com.jogamp.opengl.util.awt.ImageUtil
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO
 import utility.type.Vector3
