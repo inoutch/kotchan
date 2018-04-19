@@ -45,7 +45,7 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
 
     open val positions = {
         if (isPositionsDirty) {
-            val modelMatrix = Matrix4.createTranslation(position)
+            val modelMatrix = Matrix4.createTranslation(translate())
             positionsBuffer = mesh.pos()
                     .map { modelMatrix * Vector4(it, 1.0f) }
                     .map { Vector3(it) }
@@ -73,13 +73,22 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
         texcoordsBuffer
     }
 
+    private fun translate(position: Vector3 = this.position): Vector3 {
+        return Vector3(
+                position.x - size.x * anchorPoint.x,
+                position.y - size.y * anchorPoint.y,
+                position.z
+        )
+    }
+
     private fun vertices(): FloatArray {
         val vertices: MutableList<Float> = mutableListOf()
         for (i in 0 until mesh.size) {
             mesh.getVertex(i)?.let {
-                vertices.add(it.position.x - size.x * anchorPoint.x)
-                vertices.add(it.position.y - size.y * anchorPoint.y)
-                vertices.add(it.position.z)
+                val v = translate(it.position)
+                vertices.add(v.x)
+                vertices.add(v.y)
+                vertices.add(v.z)
 
                 vertices.add(it.texcoord.x)
                 vertices.add(it.texcoord.y)
@@ -94,11 +103,8 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
 
     fun draw(delta: Float, shaderProgram: NoColorsShaderProgram, camera: GLCamera) {
         val vbo = vbo ?: return
-        if (isPositionsDirty || isColorsDirty || isTexcoordsDirty) {
-            gl.updateVBO(vbo, 0, vertices())
-        }
         shaderProgram.use()
-        shaderProgram.modelMatrix4 = Matrix4.createTranslation(position)
+        shaderProgram.modelMatrix4 = Matrix4.createTranslation(translate())
         shaderProgram.prepare(delta, camera)
         texture.use()
 
