@@ -6,7 +6,6 @@ import interop.graphic.GLTexture
 import interop.graphic.GLVBO
 import kotchan.Engine
 import kotchan.scene.shader.NoColorsShaderProgram
-import kotchan.scene.shader.SimpleShaderProgram
 import utility.type.*
 
 abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTexture.empty) {
