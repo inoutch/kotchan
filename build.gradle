@@ -5,6 +5,11 @@ allprojects {
 
         repositories {
             jcenter()
+            google()
         }
     }
+}
+
+repositories {
+    google()
 }
