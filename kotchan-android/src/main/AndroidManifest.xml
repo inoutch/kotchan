@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.app">
 
-    <application android:theme="@style/Theme.AppCompat" >>
+    <application android:theme="@style/Theme.AppCompat" >
         <activity android:name="com.example.app.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

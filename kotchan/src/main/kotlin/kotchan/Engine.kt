@@ -23,6 +23,7 @@ import utility.type.Vector2
 
 // Do not create Engine instance!
 class Engine {
+
     companion object {
         private var engine: Engine? = null
         fun getInstance() = engine as Engine
