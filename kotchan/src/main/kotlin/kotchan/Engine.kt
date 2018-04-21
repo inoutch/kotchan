@@ -5,6 +5,7 @@ import application.AppScene
 import interop.graphic.GL
 import interop.graphic.GLCamera
 import interop.io.File
+import kotchan.animator.Animator
 import kotchan.constant.ScreenType
 import kotchan.controller.TouchEmitter
 import kotchan.controller.TouchController
@@ -36,6 +37,7 @@ class Engine {
 
     val touchEmitter: TouchEmitter = touchControllerEntity
     val touchController: TouchController = touchControllerEntity
+    val animator = Animator()
 
     init {
         if (Engine.engine != null) {
@@ -84,6 +86,7 @@ class Engine {
 
     fun draw(delta: Float) {
         gl.viewPort(viewport.origin.x.toInt(), viewport.origin.y.toInt(), viewport.size.x.toInt(), viewport.size.y.toInt())
+        animator.update(delta)
         currentScene?.draw(delta)
     }
 
