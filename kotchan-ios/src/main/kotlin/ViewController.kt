@@ -52,7 +52,7 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
     }
 
     override fun glkView(view: GLKView, drawInRect: CValue<CGRect>) {
-        engine.draw(0.0f)
+        engine.draw()
     }
 
     override fun gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController) {}

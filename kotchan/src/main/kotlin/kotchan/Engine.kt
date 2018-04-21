@@ -5,6 +5,7 @@ import application.AppScene
 import interop.graphic.GL
 import interop.graphic.GLCamera
 import interop.io.File
+import interop.time.Time
 import kotchan.animator.Animator
 import kotchan.constant.ScreenType
 import kotchan.controller.TouchEmitter
@@ -24,6 +25,7 @@ class Engine {
 
     private var currentScene: Scene? = null
     private val touchControllerEntity = TouchControllerEntity()
+    private var beforeMillis: Long = 0
 
     val gl = GL()
     val file = File()
@@ -81,10 +83,17 @@ class Engine {
                 }
             }
         }
+        beforeMillis = Time.milliseconds()
         currentScene = AppScene()
     }
 
-    fun draw(delta: Float) {
+    fun draw() {
+        // calc frame seconds
+        val now = Time.milliseconds()
+        val millisPerFrame = now - beforeMillis
+        beforeMillis = now
+        val delta = millisPerFrame.toFloat() / 1000.0f
+
         gl.viewPort(viewport.origin.x.toInt(), viewport.origin.y.toInt(), viewport.size.x.toInt(), viewport.size.y.toInt())
         animator.update(delta)
         currentScene?.draw(delta)

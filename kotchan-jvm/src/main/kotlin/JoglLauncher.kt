@@ -6,6 +6,7 @@ import com.jogamp.newt.event.WindowEvent
 import com.jogamp.newt.opengl.GLWindow
 import com.jogamp.opengl.*
 import com.jogamp.opengl.util.FPSAnimator
+import interop.time.Time
 import kotchan.Engine
 import kotchan.controller.TouchEvent
 import utility.type.Vector2
@@ -17,7 +18,6 @@ class JoglLauncher(title: String) : GLEventListener, MouseListener {
     private val animator = FPSAnimator(glWindow, 60)
 
     private var engine: Engine? = null
-    private var beforeMillis: Long = 0
     private var singleTouchEvent: TouchEvent? = null
 
     init {
@@ -62,13 +62,10 @@ class JoglLauncher(title: String) : GLEventListener, MouseListener {
             return
         }
         engineTmp.reshape(x, y, width, height)
-        beforeMillis = System.currentTimeMillis()
     }
 
     override fun display(drawable: GLAutoDrawable?) {
-        val millisPerFrame = System.currentTimeMillis() - beforeMillis
-        beforeMillis = System.currentTimeMillis()
-        engine?.draw(millisPerFrame.toFloat() / 1000.0f)
+        engine?.draw()
     }
 
     override fun dispose(drawable: GLAutoDrawable?) {
