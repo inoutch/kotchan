@@ -60,6 +60,7 @@ class JoglLauncher(title: String) : GLEventListener, MouseListener {
             this.engine = engineTmp
             return
         }
+
         engineTmp.reshape(x, y, width, height)
     }
 

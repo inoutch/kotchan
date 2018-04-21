@@ -67,7 +67,7 @@ class Batch {
                     texture.use()
                 }
                 val batchBufferBundle = nodesByTexture[texture] ?: return@texture
-
+0
                 batchBufferBundle.positionBuffer.flush()
                 batchBufferBundle.colorBuffer.flush()
                 batchBufferBundle.texcoordBuffer.flush()
