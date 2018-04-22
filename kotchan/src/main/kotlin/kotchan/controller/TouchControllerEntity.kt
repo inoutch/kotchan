@@ -2,7 +2,6 @@ package kotchan.controller
 
 import kotchan.Engine
 import kotchan.controller.touchable.Touchable
-import kotchan.controller.touchable.TouchableType
 import utility.type.Vector2
 
 class TouchControllerEntity : TouchEmitter, TouchController {
@@ -13,7 +12,7 @@ class TouchControllerEntity : TouchEmitter, TouchController {
     }
 
     // about touchable
-    private val touchables: MutableMap<TouchableType, MutableList<Touchable>> = mutableMapOf()
+    private val touchables: MutableList<Touchable> = mutableListOf()
 
     // about touch
     private val touches: MutableMap<TouchEvent, TouchEntity> = mutableMapOf()
@@ -23,7 +22,8 @@ class TouchControllerEntity : TouchEmitter, TouchController {
         touchEvents.forEach {
             val touch = TouchEntity(incremental++, it.point, TouchType.Began)
             touches[it] = touch
-            touchables[TouchableType.EventHandler]?.forEach { it.on(touch) }
+            touchables.filter { it.enable }
+                    .forEach { it.on(touch) }
         }
     }
 
@@ -32,7 +32,8 @@ class TouchControllerEntity : TouchEmitter, TouchController {
             val touch = touches[it] ?: return@forEach
             touch.point = it.point
             touch.type = TouchType.Moved
-            touchables[TouchableType.EventHandler]?.forEach { it.on(touch) }
+            touchables.filter { it.enable }
+                    .forEach { it.on(touch) }
         }
     }
 
@@ -41,7 +42,8 @@ class TouchControllerEntity : TouchEmitter, TouchController {
             val touch = touches[it] ?: return
             touch.point = it.point
             touch.type = TouchType.Ended
-            touchables[TouchableType.EventHandler]?.forEach { it.on(touch) }
+            touchables.filter { it.enable }
+                    .forEach { it.on(touch) }
         }
         touchEvents.forEach { touches.remove(it) }
         if (touches.isEmpty()) {
@@ -50,11 +52,10 @@ class TouchControllerEntity : TouchEmitter, TouchController {
     }
 
     override fun onTouchesCancelled() {
-        touchables[TouchableType.EventHandler]?.forEach { it.on(TouchEntity(-1, Vector2(), TouchType.Cancelled)) }
+        touchables.forEach { it.on(TouchEntity(-1, Vector2(), TouchType.Cancelled)) }
     }
 
     override fun add(touchable: Touchable) {
-        val mutableList = touchables.getOrPut(touchable.type, { mutableListOf() })
-        mutableList.add(touchable)
+        touchables.add(touchable)
     }
 }

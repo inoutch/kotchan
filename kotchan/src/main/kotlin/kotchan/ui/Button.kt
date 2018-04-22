@@ -3,7 +3,6 @@ package kotchan.ui
 import interop.graphic.GLCamera
 import kotchan.controller.TouchType
 import kotchan.controller.touchable.RectTouchable
-import kotchan.controller.touchable.TouchableType
 import kotchan.scene.drawable.Sprite
 import kotchan.texture.TextureAtlas
 import utility.type.Rect
@@ -13,7 +12,7 @@ class Button(textureAtlas: TextureAtlas,
              private val normalName: String,
              private val pressedName: String,
              camera: GLCamera,
-             onClick: () -> Boolean) : Sprite(textureAtlas) {
+             onClick: () -> Unit) : Sprite(textureAtlas) {
 
     // this size is applied from normal texture atlas
     private var isBegan = false
@@ -32,8 +31,8 @@ class Button(textureAtlas: TextureAtlas,
             this.setAtlas(pressedName)
             isBegan = true
         }
-        if (type == TouchType.Ended) {
-            if (check && isBegan) {
+        if (type == TouchType.Ended && isBegan) {
+            if (check) {
                 isBegan = false
                 onClick()
             }
@@ -43,5 +42,5 @@ class Button(textureAtlas: TextureAtlas,
             isBegan = false
             this.setAtlas(normalName)
         }
-    }.apply { type = TouchableType.EventHandler }
+    }
 }
