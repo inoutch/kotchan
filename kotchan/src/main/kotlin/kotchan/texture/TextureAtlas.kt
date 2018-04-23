@@ -46,7 +46,15 @@ data class TextureAtlas(private val frames: List<TextureFrame>, val texture: GLT
         return frameMeshes[frameMap[name] ?: return null]
     }
 
+    fun frameMesh(index: Int): Pair<List<Vector3>, List<Vector2>>? {
+        return frameMeshes.getOrNull(index)
+    }
+
     fun frame(name: String): TextureFrame? {
         return frames[frameMap[name] ?: return null]
+    }
+
+    fun frame(index: Int): TextureFrame? {
+        return frames.getOrNull(index)
     }
 }
