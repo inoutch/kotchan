@@ -8,7 +8,11 @@ import utility.type.Vector2
 open class RectTouchable(
         private val rect: () -> Rect,
         camera: GLCamera,
-        callback: (index: Int, point: Vector2, type: TouchType, check: Boolean) -> Unit) : Touchable(camera, callback) {
+        private val argCallback: (index: Int, point: Vector2, type: TouchType, check: Boolean) -> Unit) : Touchable(camera) {
+    override fun callback(index: Int, point: Vector2, type: TouchType, check: Boolean) {
+        argCallback(index, point, type, check)
+    }
+
     override fun check(point: Vector2, camera: GLCamera): Boolean {
         val rect = rect()
         val p1 = camera.combine * rect.origin

@@ -4,9 +4,10 @@ import interop.graphic.GLCamera
 import kotchan.controller.*
 import utility.type.*
 
-abstract class Touchable(private val camera: GLCamera, private val callback: (index: Int, point: Vector2, type: TouchType, check: Boolean) -> Unit) {
+abstract class Touchable(private val camera: GLCamera) {
     var enable = true
     abstract fun check(point: Vector2, camera: GLCamera): Boolean
+    abstract fun callback(index: Int, point: Vector2, type: TouchType, check: Boolean)
 
     fun on(touch: Touch) {
         val normal = TouchControllerEntity.convertNormalPointInView(touch.point())

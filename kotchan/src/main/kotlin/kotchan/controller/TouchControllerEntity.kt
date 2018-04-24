@@ -59,4 +59,8 @@ class TouchControllerEntity : TouchEmitter, TouchController {
     override fun add(touchable: Touchable) {
         touchables.add(touchable)
     }
+
+    override fun clearAll() {
+        touchables.clear()
+    }
 }
