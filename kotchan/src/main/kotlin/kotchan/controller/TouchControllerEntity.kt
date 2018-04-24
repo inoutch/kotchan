@@ -2,6 +2,7 @@ package kotchan.controller
 
 import kotchan.Engine
 import kotchan.controller.touchable.Touchable
+import kotchan.logger.logger
 import utility.type.Vector2
 
 class TouchControllerEntity : TouchEmitter, TouchController {

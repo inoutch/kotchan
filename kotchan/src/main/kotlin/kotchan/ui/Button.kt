@@ -3,6 +3,7 @@ package kotchan.ui
 import interop.graphic.GLCamera
 import kotchan.controller.TouchType
 import kotchan.controller.touchable.RectTouchable
+import kotchan.logger.logger
 import kotchan.scene.drawable.Sprite
 import kotchan.texture.TextureAtlas
 import utility.type.Rect
