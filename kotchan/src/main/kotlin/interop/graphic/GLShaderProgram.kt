@@ -7,10 +7,13 @@ abstract class GLShaderProgram(val id: Int) {
 
     protected val viewProjectionMatrixLocation = gl.getUniform(id, "u_viewProjectionMatrix")
     protected val timeDeltaLocation = gl.getUniform(id, "u_timeDelta")
+    protected val textureEnableLocation = gl.getUniform(id, "u_textureEnable")
     private var isDestroy = false
+    var textureEnable = true
 
     open fun prepare(delta: Float, camera: GLCamera) {
         gl.uniform1f(timeDeltaLocation, delta)
+        gl.uniform1f(textureEnableLocation, if (textureEnable) 2.0f else 0.0f)
         gl.uniformMatrix4fv(viewProjectionMatrixLocation, 1, false, camera.combine)
     }
 

@@ -36,4 +36,6 @@ open class Square(size: Vector2, texture: GLTexture = GLTexture.empty) : Drawabl
     init {
         this.size = size
     }
+
+    fun rect() = Rect(Vector2(position.x, position.y) - anchorPoint * size, size)
 }

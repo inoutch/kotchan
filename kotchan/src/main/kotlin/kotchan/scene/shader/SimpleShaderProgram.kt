@@ -37,12 +37,16 @@ in vec2 vTexcoord;
 
 uniform sampler2D u_texture0;
 uniform float u_timeDelta;
+uniform float u_textureEnable;
 
 out vec4 outColor;
 
 void main(void)
 {
-    outColor = vColor * texture(u_texture0, vTexcoord);
+    outColor = vColor;
+    if (u_textureEnable >= 1.0) {
+        outColor = outColor * texture(u_texture0, vTexcoord);
+    }
 }
 """
 

@@ -36,12 +36,17 @@ in vec2 vTexcoord;
 uniform sampler2D u_texture0;
 uniform float u_timeDelta;
 uniform vec4 u_color;
+uniform float u_textureEnable;
 
 out vec4 outColor;
 
 void main(void)
 {
-    outColor = u_color * texture(u_texture0, vTexcoord);
+    if (u_textureEnable >= 1.0) {
+        outColor = u_color * texture(u_texture0, vTexcoord);
+    } else {
+        outColor = u_color;
+    }
 }
 """
 
@@ -53,6 +58,7 @@ class NoColorsShaderProgram : GLShaderProgram(Engine.getInstance().gl.compileSha
     var modelMatrix4 = Matrix4()
 
     override fun prepare(delta: Float, camera: GLCamera) {
+        gl.uniform1f(textureEnableLocation, if (textureEnable) 2.0f else 0.0f)
         gl.uniform1i(texture0Location, 0)
         gl.uniform4f(colorLocation, color)
         gl.uniformMatrix4fv(mvpMatrixLocation, 1, false, camera.combine * modelMatrix4)

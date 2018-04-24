@@ -40,8 +40,8 @@ class TileMap(private val mapInfo: TileMapInfo) {
     }
 
     fun enableTouch(camera: GLCamera, callback: (point: Vector2, tilePoint: Vector2, type: TouchType) -> Unit): Touchable {
-        val touchable = RectTouchable({ Rect(Vector2(position.x, position.y), size) }, camera) { _, point, type, check ->
-            if (check) {
+        val touchable = RectTouchable({ Rect(Vector2(position.x, position.y), size) }, camera) { _, point, type, check, skip ->
+            if (check && !skip) {
                 val pointInView = camera.combine * Vector4(position, 1.0f)
                 val sizeInView = camera.combine * Vector4(Vector3(mapInfo.tileSize, 0.0f), 1.0f)
                 val pointInTileMap = (point - Vector2(pointInView.x, pointInView.y)) / Vector2(1.0f + sizeInView.x, 1.0f + sizeInView.y) * mapInfo.tileSize
@@ -49,6 +49,7 @@ class TileMap(private val mapInfo: TileMapInfo) {
                 val tileY = floor(pointInTileMap.y / mapInfo.tileSize.y)
                 callback(pointInTileMap, Vector2(tileX, tileY), type)
             }
+            return@RectTouchable true
         }
         this.touchable = touchable
         return touchable
