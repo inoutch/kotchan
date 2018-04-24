@@ -2,7 +2,9 @@ package kotchan.tool
 
 import interop.data.json.Json
 import interop.data.json.JsonType
+import interop.graphic.GLTexture
 import kotchan.Engine
+import kotchan.logger.logger
 import kotchan.texture.TextureAtlas
 import utility.path.Path
 import utility.type.Rect
@@ -12,9 +14,14 @@ class TexturePacker {
     companion object {
         fun loadFile(textureDir: String, filepath: String, enableCache: Boolean = true): TextureAtlas? {
             val file = Engine.getInstance().file
-            val json = file.readText(filepath) ?: return null // not found
+            val json = file.readText(filepath)
+            if (json == null) {
+                logger.error("this file is not json [$filepath]")
+                return null
+            }
             val root = Json.parse(json) ?: return null // parse error
             if (!root.isMap() && !root.isList()) {
+                logger.error("incorrect json format [$root]")
                 return null // not map or list
             }
 
@@ -37,7 +44,11 @@ class TexturePacker {
                     "h" to JsonType.FloatType)
             val metaScheme = listOf("image" to JsonType.TextType)
 
-            val rootMap = root.byScheme(rootScheme) ?: return null
+            val rootMap = root.byScheme(rootScheme)
+            if (rootMap == null) {
+                logger.error("incorrect json format [$root, $rootScheme]")
+                return null
+            }
             val frames = rootMap[0].toMap()
                     .filter { it.value.hasKeys(frameScheme) }
                     .mapNotNull {
@@ -66,8 +77,11 @@ class TexturePacker {
                 Engine.getInstance().textureManager.get(imagePath)
             } else {
                 Engine.getInstance().gl.loadTexture(imagePath)
-            } ?: return null
-            return TextureAtlas(frames, texture)
+            }
+            if (texture == null) {
+                logger.warn("texture is not found [$imagePath]")
+            }
+            return TextureAtlas(frames, texture ?: GLTexture.empty)
         }
     }
 }

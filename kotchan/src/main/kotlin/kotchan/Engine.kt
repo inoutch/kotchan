@@ -11,6 +11,7 @@ import kotchan.constant.ScreenType
 import kotchan.controller.TouchEmitter
 import kotchan.controller.TouchController
 import kotchan.controller.TouchControllerEntity
+import kotchan.logger.*
 import kotchan.texture.TextureManager
 import kotchan.scene.Scene
 import utility.type.Rect
@@ -43,6 +44,7 @@ class Engine {
 
     init {
         if (Engine.engine != null) {
+            logger.error("engine is already instanced.")
             throw Error("Engine should be created only 1")
         }
         Engine.engine = this
