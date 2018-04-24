@@ -8,9 +8,9 @@ import utility.type.Vector2
 open class RectTouchable(
         private val rect: () -> Rect,
         camera: GLCamera,
-        private val argCallback: (index: Int, point: Vector2, type: TouchType, check: Boolean) -> Unit) : Touchable(camera) {
-    override fun callback(index: Int, point: Vector2, type: TouchType, check: Boolean) {
-        argCallback(index, point, type, check)
+        private val argCallback: ((index: Int, point: Vector2, type: TouchType, check: Boolean, skip: Boolean) -> Boolean)?) : Touchable(camera) {
+    override fun callback(index: Int, point: Vector2, type: TouchType, check: Boolean, chain: Boolean): Boolean {
+        return argCallback?.invoke(index, point, type, check, chain) ?: true
     }
 
     override fun check(point: Vector2, camera: GLCamera): Boolean {
