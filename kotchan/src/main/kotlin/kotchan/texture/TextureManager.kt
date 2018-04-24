@@ -2,6 +2,7 @@ package kotchan.texture
 
 import interop.graphic.GL
 import interop.graphic.GLTexture
+import kotchan.Engine
 import kotchan.scene.drawable.Square
 import utility.type.Vector2
 
@@ -13,6 +14,11 @@ class TextureManager(private val gl: GL) {
             return GLTexture.empty
         }
         return textureMap[filepath] ?: gl.loadTexture(filepath) ?: GLTexture.empty
+    }
+
+    fun getFromResource(filepath: String): GLTexture {
+        val fullPath = Engine.getInstance().file.getResourcePath(filepath)
+        return get(fullPath)
     }
 
     fun createSquare(filepath: String?): Square {
