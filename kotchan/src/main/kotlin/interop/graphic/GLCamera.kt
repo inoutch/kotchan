@@ -2,6 +2,7 @@ package interop.graphic
 
 import utility.type.Matrix3
 import utility.type.Matrix4
+import utility.type.Vector3
 import utility.type.Vector4
 
 class GLCamera {
@@ -24,12 +25,14 @@ class GLCamera {
 
     var projectionMatrix = Matrix4()
     var viewMatrix = Matrix4()
+    var position = Vector3()
 
     var combine = projectionMatrix * viewMatrix
         private set
     var inverse = combine.inverse()
 
     fun update() {
+        viewMatrix = Matrix4.createTranslation(position)
         combine = projectionMatrix * viewMatrix
         inverse = combine.inverse()
     }
