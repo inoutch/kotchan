@@ -19,13 +19,17 @@ expect class GL() {
 
     fun destroyVBO(vboId: Int)
 
-    fun vertexPointer(location: GLAttribLocation, dimension: Int, stride: Int, offset: Int, vbo: GLVBO)
+    fun bindVBO(vboId: Int)
+
+    fun vertexPointer(location: GLAttribLocation, dimension: Int, stride: Int, offset: Int)
+
+    fun disableVertexPointer(location: GLAttribLocation)
 
     fun compileShaderProgram(vertexShaderText: String, fragmentShaderText: String): Int
 
     fun deleteShaderProgram(shaderProgram: GLShaderProgram)
 
-    fun useProgram(shaderProgram: GLShaderProgram)
+    fun useProgram(shaderProgramId: Int)
 
     fun bindAttributeLocation(shaderProgram: GLShaderProgram, attributeLocation: GLAttribLocation, name: String)
 
@@ -51,10 +55,6 @@ expect class GL() {
     fun enableBlend()
 
     // texture
-    fun enableTexture()
-
-    fun disableTexture()
-
     fun activeTexture(index: Int)
 
     fun useTexture(texture: GLTexture?)
@@ -64,6 +64,4 @@ expect class GL() {
     fun destroyTexture(textureId: Int)
 
     fun filterTexture(type: GLFilterType)
-
-    fun debug()
 }

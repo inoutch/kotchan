@@ -64,10 +64,17 @@ actual class GL {
         gl.glDeleteBuffers(1, IntBuffer.wrap(IntArray(1, { vboId })))
     }
 
-    actual fun vertexPointer(location: GLAttribLocation, dimension: Int, stride: Int, offset: Int, vbo: GLVBO) {
-        gl.glBindBuffer(GL4ES3.GL_ARRAY_BUFFER, vbo.id)
+    actual fun bindVBO(vboId: Int) {
+        gl.glBindBuffer(GL4ES3.GL_ARRAY_BUFFER, vboId)
+    }
+
+    actual fun vertexPointer(location: GLAttribLocation, dimension: Int, stride: Int, offset: Int) {
         gl.glEnableVertexAttribArray(location.value)
         gl.glVertexAttribPointer(location.value, dimension, GL4ES3.GL_FLOAT, false, stride * 4, offset.toLong() * 4)
+    }
+
+    actual fun disableVertexPointer(location: GLAttribLocation) {
+        gl.glDisableVertexAttribArray(location.value)
     }
 
     actual fun compileShaderProgram(vertexShaderText: String, fragmentShaderText: String): Int {
@@ -101,8 +108,8 @@ actual class GL {
         gl.glDeleteProgram(shaderProgram.id)
     }
 
-    actual fun useProgram(shaderProgram: GLShaderProgram) {
-        gl.glUseProgram(shaderProgram.id)
+    actual fun useProgram(shaderProgramId: Int) {
+        gl.glUseProgram(shaderProgramId)
     }
 
     actual fun bindAttributeLocation(shaderProgram: GLShaderProgram, attributeLocation: GLAttribLocation, name: String) {
@@ -145,14 +152,6 @@ actual class GL {
     }
 
     // texture
-    actual fun enableTexture() {
-        gl.glEnable(GL4ES3.GL_TEXTURE_2D)
-    }
-
-    actual fun disableTexture() {
-        gl.glDisable(GL4ES3.GL_TEXTURE_2D)
-    }
-
     actual fun activeTexture(index: Int) {
         gl.glActiveTexture(GL4ES3.GL_TEXTURE0 + index)
     }
@@ -193,10 +192,6 @@ actual class GL {
     actual fun enableBlend() {
         gl.glEnable(GL4ES3.GL_BLEND)
         gl.glBlendFunc(GL4ES3.GL_SRC_ALPHA, GL4ES3.GL_ONE_MINUS_SRC_ALPHA)
-    }
-
-    actual fun debug() {
-        gl.glDisable(GL4ES3.GL_CULL_FACE)
     }
 
     // private

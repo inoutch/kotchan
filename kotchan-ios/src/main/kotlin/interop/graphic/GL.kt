@@ -47,12 +47,19 @@ actual class GL {
         glDeleteBuffers(1, arrayOf(vboId).toIntArray().refTo(0))
     }
 
-    actual fun vertexPointer(location: GLAttribLocation, dimension: Int, stride: Int, offset: Int, vbo: GLVBO) {
-        glBindBuffer(GL_ARRAY_BUFFER, vbo.id)
+    actual fun bindVBO(vboId: Int) {
+        glBindBuffer(GL_ARRAY_BUFFER, vboId)
+    }
+
+    actual fun vertexPointer(location: GLAttribLocation, dimension: Int, stride: Int, offset: Int) {
         glEnableVertexAttribArray(location.value)
         glVertexAttribPointer(
                 location.value, dimension, GL_FLOAT,
                 GL_FALSE.narrow(), stride * 4, (offset * 4L).toCPointer<CPointed>())
+    }
+
+    actual fun disableVertexPointer(location: GLAttribLocation) {
+        glDisableVertexAttribArray(location.value)
     }
 
     actual fun compileShaderProgram(vertexShaderText: String, fragmentShaderText: String): Int {
@@ -63,12 +70,13 @@ actual class GL {
         glAttachShader(program, fragmentShader)
 
         GLAttribLocation.values().forEach {
+            glEnableVertexAttribArray(it.value)
             glBindAttribLocation(program, it.value, it.locationName)
         }
         glLinkProgram(program)
         glValidateProgram(program)
 
-        checkError()
+        checkError("LinkProgram")
         if (vertexShader != 0) {
             glDetachShader(program, vertexShader)
             glDeleteShader(vertexShader)
@@ -84,8 +92,8 @@ actual class GL {
         glDeleteProgram(shaderProgram.id)
     }
 
-    actual fun useProgram(shaderProgram: GLShaderProgram) {
-        glUseProgram(shaderProgram.id)
+    actual fun useProgram(shaderProgramId: Int) {
+        glUseProgram(shaderProgramId)
     }
 
     actual fun bindAttributeLocation(shaderProgram: GLShaderProgram, attributeLocation: GLAttribLocation, name: String) {
@@ -133,14 +141,6 @@ actual class GL {
     }
 
     // texture
-    actual fun enableTexture() {
-        glEnable(GL_TEXTURE_2D)
-    }
-
-    actual fun disableTexture() {
-        glDisable(GL_TEXTURE_2D)
-    }
-
     actual fun activeTexture(index: Int) {
         glActiveTexture(GL_TEXTURE0 + index)
     }
@@ -171,14 +171,9 @@ actual class GL {
         }
     }
 
-    actual fun debug() {
-        glDisable(GL_CULL_FACE)
-    }
-
-
     private fun compileShader(type: Int, text: String) = memScoped {
         val shader = glCreateShader(type)
-        checkError()
+        checkError("CreateShader")
 
         glShaderSource(shader, 1, cValuesOf(text.cstr.getPointer(memScope)), null)
         glCompileShader(shader)
@@ -191,11 +186,11 @@ actual class GL {
             throw Error("Shader compilation failed: ${logBuffer.toKString()}")
         }
 
-        checkError()
+        checkError("CompileShader")
         shader
     }
 
-    private fun checkError() {
+    private fun checkError(tag: String) {
         val error = glGetError()
         if (error != 0) {
             val errorString = when (error) {
@@ -206,7 +201,7 @@ actual class GL {
                 GL_OUT_OF_MEMORY -> "GL_OUT_OF_MEMORY"
                 else -> "unknown"
             }
-            throw Error("GL error: 0x${error.toString(16)} ($errorString)")
+            throw Error("GL error: 0x${error.toString(16)} [tag:$tag] ($errorString)")
         }
     }
 }

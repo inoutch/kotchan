@@ -18,7 +18,7 @@ abstract class GLShaderProgram(val id: Int) {
         if (isDestroy) {
             throw Error("this shader is already deleted.")
         }
-        gl.useProgram(this)
+        gl.useProgram(this.id)
     }
 
     fun destroy() {

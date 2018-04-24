@@ -15,6 +15,7 @@ actual class File {
     }
 
     actual fun getResourcePath(name: String): String? {
-        return NSBundle.mainBundle.pathForResource(name, ofType = null)?.toString()
+        val path = if (name.endsWith('/')) name.substring(0, name.length - 1) else name
+        return NSBundle.mainBundle.pathForResource(path, ofType = null)?.toString()
     }
 }
