@@ -93,10 +93,9 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
         val vertices: MutableList<Float> = mutableListOf()
         for (i in 0 until mesh.size) {
             mesh.getVertex(i)?.let {
-                val v = translate(it.position)
-                vertices.add(v.x)
-                vertices.add(v.y)
-                vertices.add(v.z)
+                vertices.add(it.position.x)
+                vertices.add(it.position.y)
+                vertices.add(it.position.z)
 
                 vertices.add(it.texcoord.x)
                 vertices.add(it.texcoord.y)
@@ -120,8 +119,9 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
         shaderProgram.prepare(delta, camera)
         texture.use()
 
-        gl.vertexPointer(GLAttribLocation.ATTRIBUTE_POSITION, 3, 5, 0, vbo)
-        gl.vertexPointer(GLAttribLocation.ATTRIBUTE_TEXCOORD, 2, 5, 3, vbo)
+        gl.bindVBO(vbo.id)
+        gl.vertexPointer(GLAttribLocation.ATTRIBUTE_POSITION, 3, 5, 0)
+        gl.vertexPointer(GLAttribLocation.ATTRIBUTE_TEXCOORD, 2, 5, 3)
 
         gl.drawTriangleArrays(0, mesh.size)
     }

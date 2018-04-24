@@ -15,4 +15,5 @@ abstract class Scene {
     abstract fun reshape(x: Int, y: Int, width: Int, height: Int)
     abstract fun pause()
     abstract fun resume()
+    abstract fun destroyed()
 }

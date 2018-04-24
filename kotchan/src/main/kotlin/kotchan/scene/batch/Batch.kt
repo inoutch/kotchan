@@ -58,8 +58,8 @@ class Batch {
             val nodesByTexture = nodes[shaderProgram] ?: return@shader
             if (currentShaderProgram != shaderProgram) {
                 currentShaderProgram = shaderProgram
-                shaderProgram.prepare(delta, camera)
                 shaderProgram.use()
+                shaderProgram.prepare(delta, camera)
             }
             nodesByTexture.keys.forEach texture@{ texture ->
                 if (currentTexture != texture) {
@@ -84,9 +84,12 @@ class Batch {
                         .filterKeys { it.isTexcoordsDirty }
                         .forEach { batchBufferBundle.texcoordBuffer.update(it.value.texcoordBufferData, it.key.texcoords()) }
 
-                gl.vertexPointer(GLAttribLocation.ATTRIBUTE_POSITION, 3, 0, 0, batchBufferBundle.positionBuffer.vbo)
-                gl.vertexPointer(GLAttribLocation.ATTRIBUTE_TEXCOORD, 2, 0, 0, batchBufferBundle.texcoordBuffer.vbo)
-                gl.vertexPointer(GLAttribLocation.ATTRIBUTE_COLOR, 4, 0, 0, batchBufferBundle.colorBuffer.vbo)
+                gl.bindVBO(batchBufferBundle.positionBuffer.vbo.id)
+                gl.vertexPointer(GLAttribLocation.ATTRIBUTE_POSITION, 3, 0, 0)
+                gl.bindVBO(batchBufferBundle.texcoordBuffer.vbo.id)
+                gl.vertexPointer(GLAttribLocation.ATTRIBUTE_TEXCOORD, 2, 0, 0)
+                gl.bindVBO(batchBufferBundle.colorBuffer.vbo.id)
+                gl.vertexPointer(GLAttribLocation.ATTRIBUTE_COLOR, 4, 0, 0)
 
                 gl.drawTriangleArrays(0, batchBufferBundle.getSize())
             }

@@ -3,6 +3,7 @@ package kotchan
 import application.AppConfig
 import application.AppScene
 import interop.graphic.GL
+import interop.graphic.GLAttribLocation
 import interop.graphic.GLCamera
 import interop.io.File
 import interop.time.Time
@@ -25,6 +26,7 @@ class Engine {
     }
 
     private var currentScene: Scene? = null
+    private var sceneFactory: (() -> Scene)? = null
     private val touchControllerEntity = TouchControllerEntity()
     private var beforeMillis: Long = 0
 
@@ -90,6 +92,14 @@ class Engine {
     }
 
     fun draw() {
+        val sceneFactory = this.sceneFactory
+        if (sceneFactory != null) {
+            currentScene?.destroyed()
+            touchController.clearAll()
+            currentScene = sceneFactory.invoke()
+            this.sceneFactory = null
+        }
+
         // calc frame seconds
         val now = Time.milliseconds()
         val millisPerFrame = now - beforeMillis
@@ -99,6 +109,13 @@ class Engine {
         gl.viewPort(viewport.origin.x.toInt(), viewport.origin.y.toInt(), viewport.size.x.toInt(), viewport.size.y.toInt())
         animator.update(delta)
         currentScene?.draw(delta)
+
+        // release bindings
+        gl.useProgram(0)
+        gl.bindVBO(0)
+        gl.disableVertexPointer(GLAttribLocation.ATTRIBUTE_COLOR)
+        gl.disableVertexPointer(GLAttribLocation.ATTRIBUTE_TEXCOORD)
+        gl.disableVertexPointer(GLAttribLocation.ATTRIBUTE_POSITION)
     }
 
     fun reshape(x: Int, y: Int, width: Int, height: Int) {
@@ -111,7 +128,7 @@ class Engine {
         }
     }
 
-    fun runScene(scene: Scene) {
-        this.currentScene = scene
+    fun runScene(sceneFactory: () -> Scene) {
+        this.sceneFactory = sceneFactory
     }
 }

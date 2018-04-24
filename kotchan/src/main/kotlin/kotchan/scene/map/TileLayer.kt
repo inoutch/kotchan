@@ -109,8 +109,10 @@ class TileLayer(private val mapInfo: TileMapInfo, private val tileLayerInfo: Til
 
     fun draw() {
         updateMapIds()
-        gl.vertexPointer(GLAttribLocation.ATTRIBUTE_POSITION, 3, 0, 0, positionsVbo)
-        gl.vertexPointer(GLAttribLocation.ATTRIBUTE_TEXCOORD, 2, 0, 0, texcoordsVbo)
+        gl.bindVBO(positionsVbo.id)
+        gl.vertexPointer(GLAttribLocation.ATTRIBUTE_POSITION, 3, 0, 0)
+        gl.bindVBO(texcoordsVbo.id)
+        gl.vertexPointer(GLAttribLocation.ATTRIBUTE_TEXCOORD, 2, 0, 0)
         gl.drawTriangleArrays(0, size)
     }
 
