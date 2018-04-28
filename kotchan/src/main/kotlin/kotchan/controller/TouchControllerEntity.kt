@@ -49,6 +49,7 @@ class TouchControllerEntity : TouchEmitter, TouchController {
     }
 
     override fun onTouchesCancelled() {
+        incremental = 0
         touchables.forEach { it.on(TouchEntity(-1, Vector2(), TouchType.Cancelled), false) }
     }
 
