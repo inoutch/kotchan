@@ -1,6 +1,6 @@
 package kotchan.scene.shader
 
-import interop.graphic.GLCamera
+import kotchan.camera.Camera
 import interop.graphic.GLShaderProgram
 import kotchan.Engine
 import utility.type.Matrix4
@@ -57,11 +57,11 @@ class NoColorsShaderProgram : GLShaderProgram(Engine.getInstance().gl.compileSha
     var color: Vector4 = Vector4(1.0f, 1.0f, 1.0f, 1.0f)
     var modelMatrix4 = Matrix4()
 
-    override fun prepare(delta: Float, camera: GLCamera) {
+    override fun prepare(delta: Float, mvpMatrix: Matrix4) {
         gl.uniform1f(textureEnableLocation, if (textureEnable) 2.0f else 0.0f)
         gl.uniform1i(texture0Location, 0)
         gl.uniform4f(colorLocation, color)
-        gl.uniformMatrix4fv(mvpMatrixLocation, 1, false, camera.combine * modelMatrix4)
+        gl.uniformMatrix4fv(mvpMatrixLocation, 1, false, mvpMatrix * modelMatrix4)
         gl.uniform1f(timeDeltaLocation, delta)
     }
 }

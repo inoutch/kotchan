@@ -1,7 +1,7 @@
 package kotchan.scene.batch
 
 import interop.graphic.GLAttribLocation
-import interop.graphic.GLCamera
+import kotchan.camera.Camera
 import interop.graphic.GLShaderProgram
 import kotchan.Engine
 import interop.graphic.GLTexture
@@ -51,7 +51,7 @@ class Batch {
         nodesByShaderAndTexture.nodes.remove(node)
     }
 
-    fun draw(delta: Float, camera: GLCamera) {
+    fun draw(delta: Float, camera: Camera) {
         var currentShaderProgram: GLShaderProgram? = null
         var currentTexture: GLTexture? = null
         nodes.keys.forEach shader@{ shaderProgram ->
@@ -59,7 +59,7 @@ class Batch {
             if (currentShaderProgram != shaderProgram) {
                 currentShaderProgram = shaderProgram
                 shaderProgram.use()
-                shaderProgram.prepare(delta, camera)
+                shaderProgram.prepare(delta, camera.combine)
             }
             nodesByTexture.keys.forEach texture@{ texture ->
                 if (currentTexture != texture) {

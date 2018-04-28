@@ -1,19 +1,19 @@
 package kotchan.controller.touchable
 
-import interop.graphic.GLCamera
+import kotchan.camera.Camera
 import kotchan.controller.TouchType
 import utility.type.Rect
 import utility.type.Vector2
 
 open class RectTouchable(
         private val rect: () -> Rect,
-        camera: GLCamera,
+        camera: Camera,
         private val argCallback: ((index: Int, point: Vector2, type: TouchType, check: Boolean, skip: Boolean) -> Boolean)?) : Touchable(camera) {
     override fun callback(index: Int, point: Vector2, type: TouchType, check: Boolean, chain: Boolean): Boolean {
         return argCallback?.invoke(index, point, type, check, chain) ?: true
     }
 
-    override fun check(point: Vector2, camera: GLCamera): Boolean {
+    override fun check(point: Vector2, camera: Camera): Boolean {
         val rect = rect()
         val p1 = camera.combine * rect.origin
         val p2 = camera.combine * (rect.origin + rect.size)

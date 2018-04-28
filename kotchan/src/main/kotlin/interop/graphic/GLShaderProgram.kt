@@ -1,6 +1,8 @@
 package interop.graphic
 
 import kotchan.Engine
+import kotchan.camera.Camera
+import utility.type.Matrix4
 
 abstract class GLShaderProgram(val id: Int) {
     protected val gl: GL = Engine.getInstance().gl
@@ -11,10 +13,10 @@ abstract class GLShaderProgram(val id: Int) {
     private var isDestroy = false
     var textureEnable = true
 
-    open fun prepare(delta: Float, camera: GLCamera) {
+    open fun prepare(delta: Float, mvpMatrix: Matrix4) {
         gl.uniform1f(timeDeltaLocation, delta)
         gl.uniform1f(textureEnableLocation, if (textureEnable) 2.0f else 0.0f)
-        gl.uniformMatrix4fv(viewProjectionMatrixLocation, 1, false, camera.combine)
+        gl.uniformMatrix4fv(viewProjectionMatrixLocation, 1, false, mvpMatrix)
     }
 
     fun use() {

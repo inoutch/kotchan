@@ -1,8 +1,9 @@
 package kotchan.scene.shader
 
-import interop.graphic.GLCamera
+import kotchan.camera.Camera
 import interop.graphic.GLShaderProgram
 import kotchan.Engine
+import utility.type.Matrix4
 
 private const val SimpleVSource = """
 #ifdef GL_ES
@@ -53,8 +54,8 @@ void main(void)
 class SimpleShaderProgram : GLShaderProgram(Engine.getInstance().gl.compileShaderProgram(SimpleVSource, SimpleFSource)) {
     private val texture0Location = gl.getUniform(this, "u_texture0")
 
-    override fun prepare(delta: Float, camera: GLCamera) {
+    override fun prepare(delta: Float, mvpMatrix: Matrix4) {
         gl.uniform1i(texture0Location, 0)
-        super.prepare(delta, camera)
+        super.prepare(delta, mvpMatrix)
     }
 }

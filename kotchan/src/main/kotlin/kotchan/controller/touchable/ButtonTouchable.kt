@@ -1,6 +1,6 @@
 package kotchan.controller.touchable
 
-import interop.graphic.GLCamera
+import kotchan.camera.Camera
 import kotchan.controller.TouchType
 import utility.type.Rect
 import utility.type.Vector2
@@ -9,7 +9,7 @@ class ButtonTouchable(
         setRect: () -> Rect,
         private val setNormalView: () -> Unit,
         private val setPressedView: () -> Unit,
-        camera: GLCamera, private val onClick: () -> Unit) :
+        camera: Camera, private val onClick: () -> Unit) :
         RectTouchable(setRect, camera, null) {
     // this size is applied from normal texture atlas
     private var isBegan = false

@@ -4,10 +4,12 @@ import application.AppConfig
 import application.AppScene
 import interop.graphic.GL
 import interop.graphic.GLAttribLocation
-import interop.graphic.GLCamera
+import kotchan.camera.Camera
 import interop.io.File
 import interop.time.Time
 import kotchan.animator.Animator
+import kotchan.camera.Camera2D
+import kotchan.camera.Camera3D
 import kotchan.constant.ScreenType
 import kotchan.controller.TouchEmitter
 import kotchan.controller.TouchController
@@ -15,6 +17,7 @@ import kotchan.controller.TouchControllerEntity
 import kotchan.logger.*
 import kotchan.texture.TextureManager
 import kotchan.scene.Scene
+import utility.type.Matrix4
 import utility.type.Rect
 import utility.type.Vector2
 
@@ -125,10 +128,18 @@ class Engine {
         currentScene?.reshape(x, y, width, height)
     }
 
-    fun createOrthographicCamera(): GLCamera {
-        return GLCamera.createOrthographic(0.0f, screenSize.x, 0.0f, screenSize.y, -1.0f, 1.0f).apply {
-            update()
-        }
+    fun createOrthographic(): Matrix4 {
+        return Camera.createOrthographic(0.0f, screenSize.x, 0.0f, screenSize.y, -1.0f, 1.0f)
+    }
+
+    fun createCamera2D() = Camera2D().apply {
+        projectionMatrix = createOrthographic()
+        update()
+    }
+
+    fun createCamera3D() = Camera3D().apply {
+        projectionMatrix = createOrthographic()
+        update()
     }
 
     fun runScene(sceneFactory: () -> Scene) {

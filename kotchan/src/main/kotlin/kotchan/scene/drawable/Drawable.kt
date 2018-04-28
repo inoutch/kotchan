@@ -1,7 +1,7 @@
 package kotchan.scene.drawable
 
 import interop.graphic.GLAttribLocation
-import interop.graphic.GLCamera
+import kotchan.camera.Camera
 import interop.graphic.GLTexture
 import interop.graphic.GLVBO
 import kotchan.Engine
@@ -108,7 +108,7 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
         vbo = gl.createVBO(vertices())
     }
 
-    open fun draw(delta: Float, shaderProgram: NoColorsShaderProgram, camera: GLCamera) {
+    open fun draw(delta: Float, shaderProgram: NoColorsShaderProgram, camera: Camera) {
         if (!visible) {
             return
         }
@@ -116,7 +116,7 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
         val vbo = vbo ?: return
         shaderProgram.use()
         shaderProgram.modelMatrix4 = Matrix4.createTranslation(translate())
-        shaderProgram.prepare(delta, camera)
+        shaderProgram.prepare(delta, camera.combine)
         texture.use()
 
         gl.bindVBO(vbo.id)

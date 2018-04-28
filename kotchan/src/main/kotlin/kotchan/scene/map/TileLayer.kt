@@ -24,7 +24,7 @@ class TileLayer(private val mapInfo: TileMapInfo, private val tileLayerInfo: Til
     private val texcoordsVbo: GLVBO
     private val size: Int
     private var changes: MutableMap<Int, HashSet<Int>>? = null
-    private val bias = Vector2(0.3f, 0.3f)
+    private val bias = Vector2(1.0f, 1.0f) / mapInfo.tileNumber * 0.01f
 
     init {
         val pBuffer: MutableList<Vector3> = mutableListOf()
@@ -32,7 +32,7 @@ class TileLayer(private val mapInfo: TileMapInfo, private val tileLayerInfo: Til
         mapId.forEachIndexed { y, cols ->
             cols.forEachIndexed { x, id ->
                 val p = Vector2(x.toFloat(), y.toFloat()) * mapInfo.tileSize
-                val positions = Square.createSquarePositions(p, mapInfo.tileSize + bias)
+                val positions = Square.createSquarePositions(p, mapInfo.tileSize)
                 val texcoords: List<Vector2> = calcTexcoords(id)
                 pBuffer.addAll(positions)
                 tBuffer.addAll(texcoords)
@@ -50,7 +50,7 @@ class TileLayer(private val mapInfo: TileMapInfo, private val tileLayerInfo: Til
     }
 
     private fun calcTexcoords(id: Int): List<Vector2> {
-        return Square.createSquareTexcoords(calcTexcoord(id), mapInfo.tileTexcoordSize)
+        return Square.createSquareTexcoords(calcTexcoord(id) + bias, mapInfo.tileTexcoordSize - bias * 2.0f)
     }
 
     private fun calcOffset(x: Int, y: Int, stride: Int): Int {
