@@ -62,6 +62,10 @@ class TouchControllerEntity : TouchEmitter, TouchController {
         touchables.clear()
     }
 
+    fun update(delta: Float) {
+        touchables.forEach { it.update(delta) }
+    }
+
     private fun onTouch(touchables: List<Touchable>, toucheEntity: TouchEntity) {
         val sortedTouchable = touchables
                 .filter { it.enable }

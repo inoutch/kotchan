@@ -14,4 +14,6 @@ abstract class Touchable(private val camera: GLCamera) {
         val normal = TouchControllerEntity.convertNormalPointInView(touch.point())
         return callback(touch.index(), normal, touch.type(), check(normal, camera), chain)
     }
+
+    open fun update(delta: Float) {}
 }

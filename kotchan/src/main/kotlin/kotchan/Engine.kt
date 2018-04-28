@@ -92,6 +92,7 @@ class Engine {
     }
 
     fun draw() {
+        // transit scene
         val sceneFactory = this.sceneFactory
         if (sceneFactory != null) {
             currentScene?.destroyed()
@@ -105,6 +106,8 @@ class Engine {
         val millisPerFrame = now - beforeMillis
         beforeMillis = now
         val delta = millisPerFrame.toFloat() / 1000.0f
+
+        touchControllerEntity.update(delta)
 
         gl.viewPort(viewport.origin.x.toInt(), viewport.origin.y.toInt(), viewport.size.x.toInt(), viewport.size.y.toInt())
         animator.update(delta)
