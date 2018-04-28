@@ -24,7 +24,7 @@ class TileLayer(private val mapInfo: TileMapInfo, private val tileLayerInfo: Til
     private val texcoordsVbo: GLVBO
     private val size: Int
     private var changes: MutableMap<Int, HashSet<Int>>? = null
-    private val bias = Vector2(0.25f, 0.25f)
+    private val bias = Vector2(0.3f, 0.3f)
 
     init {
         val pBuffer: MutableList<Vector3> = mutableListOf()
