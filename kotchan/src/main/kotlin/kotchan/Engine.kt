@@ -4,19 +4,19 @@ import application.AppConfig
 import application.AppScene
 import interop.graphic.GL
 import interop.graphic.GLAttribLocation
-import kotchan.camera.Camera
+import kotchan.view.camera.Camera
 import interop.io.File
 import interop.time.Time
-import kotchan.animator.Animator
-import kotchan.camera.Camera2D
-import kotchan.camera.Camera3D
+import kotchan.view.animator.Animator
+import kotchan.view.camera.Camera2D
+import kotchan.view.camera.Camera3D
 import kotchan.constant.ScreenType
-import kotchan.controller.TouchEmitter
-import kotchan.controller.TouchController
-import kotchan.controller.TouchControllerEntity
+import kotchan.controller.touch.TouchEmitter
+import kotchan.controller.touch.TouchController
+import kotchan.controller.touch.TouchControllerEntity
 import kotchan.logger.*
-import kotchan.texture.TextureManager
-import kotchan.scene.Scene
+import kotchan.view.texture.TextureManager
+import kotchan.view.Scene
 import utility.type.Matrix4
 import utility.type.Rect
 import utility.type.Vector2
@@ -95,7 +95,7 @@ class Engine {
     }
 
     fun draw() {
-        // transit scene
+        // transit view
         val sceneFactory = this.sceneFactory
         if (sceneFactory != null) {
             currentScene?.destroyed()

@@ -11,7 +11,7 @@ import platform.gles3.*
 
 import application.AppConfig
 import kotchan.Engine
-import kotchan.controller.*
+import kotchan.controller.touch.*
 
 import utility.type.Vector2
 import extension.*

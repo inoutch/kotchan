@@ -1,6 +1,6 @@
 package application
 
-import kotchan.scene.Scene
+import kotchan.view.Scene
 
 class AppScene : Scene() {
     override fun draw(delta: Float) {}

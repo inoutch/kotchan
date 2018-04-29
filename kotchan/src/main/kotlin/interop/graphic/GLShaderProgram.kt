@@ -1,7 +1,6 @@
 package interop.graphic
 
 import kotchan.Engine
-import kotchan.camera.Camera
 import utility.type.Matrix4
 
 abstract class GLShaderProgram(val id: Int) {

@@ -5,7 +5,7 @@ import interop.data.json.JsonType
 import interop.graphic.GLTexture
 import kotchan.Engine
 import kotchan.logger.logger
-import kotchan.texture.TextureAtlas
+import kotchan.view.texture.TextureAtlas
 import utility.path.Path
 import utility.type.Rect
 import utility.type.*

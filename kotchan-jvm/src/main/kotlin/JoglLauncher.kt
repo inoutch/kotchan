@@ -6,9 +6,8 @@ import com.jogamp.newt.event.WindowEvent
 import com.jogamp.newt.opengl.GLWindow
 import com.jogamp.opengl.*
 import com.jogamp.opengl.util.FPSAnimator
-import interop.time.Time
 import kotchan.Engine
-import kotchan.controller.TouchEvent
+import kotchan.controller.touch.TouchEvent
 import utility.type.Vector2
 
 class JoglLauncher(title: String) : GLEventListener, MouseListener {
