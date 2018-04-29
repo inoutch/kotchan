@@ -1,1 +1,4 @@
-<resources></resources>
+<resources>
+    <string name="app_name">kotchan</string>
+    <string name="title_activity_main">kotchan</string>
+</resources>
