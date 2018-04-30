@@ -61,12 +61,16 @@ class TileConverter {
                             .reversed()
 
                     if (!output.hasKeys(outputScheme)) {
-                        logger.warn("[$filepath] out is invalid scheme")
+                        logger.warn("[$filepath] out is invalid scheme.")
                         return@mapNotNull null
                     }
                     val ox = output.toMap()["x"]?.toFloat()?.toInt() ?: return@mapNotNull null
                     val oy = output.toMap()["y"]?.toFloat()?.toInt() ?: return@mapNotNull null
                     val ov = output.toMap()["v"]?.toFloat()?.toInt() ?: return@mapNotNull null
+                    if (ox < -1 || ox >= x || oy < -1 || oy >= y) {
+                        logger.warn("[$filepath] x and y of out is invalid.")
+                        return@mapNotNull null
+                    }
                     ConversionData(
                             ConversionInputData(values, x, y),
                             ConversionOutputData(ox, oy, ov))
