@@ -64,7 +64,7 @@ class TileLayer(private val mapInfo: TileMapInfo, private val tileLayerInfo: Til
     }
 
     private fun updateMapIds() {
-        val map = changes ?: return
+        val map = changes?.toMap() ?: return
         map.forEach {
             // sorted hashset (like 1,2,3,5,6,7,11,12...)
             val list = it.value.sorted()
@@ -90,8 +90,15 @@ class TileLayer(private val mapInfo: TileMapInfo, private val tileLayerInfo: Til
             }
             updateTexcoords(begin, y, texcoords)
         }
-        map.clear()
+        changes?.clear()
         changes = null
+    }
+
+    fun mapId(x: Int, y: Int): Int? {
+        if (y < 0 || mapInfo.mapSize.y <= y || x < 0 || mapInfo.mapSize.x <= x) {
+            return null
+        }
+        return mapId[y][x]
     }
 
     fun mapId(x: Int, y: Int, id: Int) {
@@ -105,6 +112,15 @@ class TileLayer(private val mapInfo: TileMapInfo, private val tileLayerInfo: Til
 
         changes = map
         mapId[y][x] = id
+    }
+
+    fun fillAll(id: Int) {
+        val (mx, my) = mapInfo.mapSize.x.toInt() to mapInfo.mapSize.y.toInt()
+        for (y in 0 until my) {
+            for (x in 0 until mx) {
+                mapId(x, y, id)
+            }
+        }
     }
 
     fun draw() {

@@ -8,7 +8,7 @@ import kotchan.view.shader.NoColorsShaderProgram
 import utility.type.*
 import kotlin.math.floor
 
-class TileMap(private val mapInfo: TileMapInfo) {
+class TileMap(val mapInfo: TileMapInfo) {
     val size = mapInfo.mapSize * mapInfo.tileSize
     var position = Vector3()
 
