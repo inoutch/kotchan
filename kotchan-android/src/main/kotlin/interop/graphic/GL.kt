@@ -49,10 +49,15 @@ actual class GL {
         GLES30.glDeleteBuffers(1, IntBuffer.wrap(IntArray(1, { vboId })))
     }
 
-    actual fun vertexPointer(location: GLAttribLocation, dimension: Int, stride: Int, offset: Int, vbo: GLVBO) {
-        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vbo.id)
+    actual fun bindVBO(vboId: Int) {
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vboId)
+    }
+    actual fun vertexPointer(location: GLAttribLocation, dimension: Int, stride: Int, offset: Int) {
         GLES30.glEnableVertexAttribArray(location.value)
         GLES30.glVertexAttribPointer(location.value, dimension, GLES30.GL_FLOAT, false, stride * 4, offset * 4)
+    }
+    actual fun disableVertexPointer(location: GLAttribLocation) {
+        GLES30.glDisableVertexAttribArray(location.value)
     }
 
     actual fun compileShaderProgram(vertexShaderText: String, fragmentShaderText: String): Int {
@@ -84,8 +89,8 @@ actual class GL {
         GLES30.glDeleteProgram(shaderProgram.id)
     }
 
-    actual fun useProgram(shaderProgram: GLShaderProgram) {
-        GLES30.glUseProgram(shaderProgram.id)
+    actual fun useProgram(shaderProgramId: Int) {
+        GLES30.glUseProgram(shaderProgramId)
     }
 
     actual fun bindAttributeLocation(shaderProgram: GLShaderProgram, attributeLocation: GLAttribLocation, name: String) {
@@ -128,13 +133,6 @@ actual class GL {
     }
 
     // texture
-    actual fun enableTexture() {
-        GLES30.glEnable(GLES30.GL_TEXTURE_2D)
-    }
-
-    actual fun disableTexture() {
-        GLES30.glDisable(GLES30.GL_TEXTURE_2D)
-    }
 
     actual fun activeTexture(index: Int) {
         GLES30.glActiveTexture(GLES30.GL_TEXTURE0 + index)
@@ -175,10 +173,6 @@ actual class GL {
     actual fun enableBlend() {
         GLES30.glEnable(GLES30.GL_BLEND)
         GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
-    }
-
-    actual fun debug() {
-        GLES30.glDisable(GLES30.GL_CULL_FACE)
     }
 
     private fun compileShader(type: Int, text: String): Int {

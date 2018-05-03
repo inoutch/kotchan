@@ -11,10 +11,7 @@ class MainActivity : AppCompatActivity() {
         private var assetManager: AssetManager? = null
         fun getAssets() = assetManager
     }
-
-
     private var mySurfaceView: SurfaceView? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         assetManager = assets
         mySurfaceView = SurfaceView(this)
