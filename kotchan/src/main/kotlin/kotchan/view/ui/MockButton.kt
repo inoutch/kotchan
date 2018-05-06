@@ -14,7 +14,7 @@ class MockButton(camera: Camera, size: Vector2, onClick: () -> Unit) : Square(si
         color = normalColor
     }
 
-    val touchable = ButtonTouchListener(
+    val touchListener = ButtonTouchListener(
             { rect() },
             { color = normalColor },
             { color = pressedColor },

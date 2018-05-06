@@ -4,7 +4,7 @@ import interop.data.json.Json
 import interop.data.json.JsonType
 import kotchan.Engine
 import kotchan.logger.logger
-import kotchan.view.map.TileLayer
+import kotchan.view.map.TileLayerBase
 
 class TileConverter {
     private val converters: MutableMap<String, List<ConversionData>> = mutableMapOf()
@@ -77,7 +77,7 @@ class TileConverter {
                 }
     }
 
-    fun convert(name: String, x: Int, y: Int, inLayer: TileLayer, outLayer: TileLayer) {
+    fun convert(name: String, x: Int, y: Int, inLayer: TileLayerBase, outLayer: TileLayerBase) {
         val converters = this.converters[name] ?: return
         for (converter in converters) {
             val sx = x - converter.output.x

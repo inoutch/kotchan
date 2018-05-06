@@ -2,7 +2,7 @@ package kotchan.view.map
 
 import utility.type.Vector2
 
-data class TileLayerInfo(private val mapId: List<List<Int>> = mutableListOf()) {
+open class TileLayerInfo(private val mapId: List<List<Int>> = mutableListOf()) {
     val mapSize: Vector2 = Vector2(mapId.map { it.size }.max()?.toFloat() ?: 0.0f, mapId.size.toFloat())
     var visible = true
 
@@ -16,7 +16,7 @@ data class TileLayerInfo(private val mapId: List<List<Int>> = mutableListOf()) {
         return mapId[y][x]
     }
 
-    fun mapId(x: Int, y: Int, defaultValue: Int = 0): Int {
+    open fun mapId(x: Int, y: Int, defaultValue: Int = 0): Int {
         return mapIdOrigin(x, mapId.size - y - 1, defaultValue)
     }
 }

@@ -7,14 +7,13 @@ import kotchan.view.drawable.Square
 import utility.type.Vector2
 import utility.type.Vector3
 import utility.type.flatten
-import kotlin.math.floor
 
-class TileLayer(private val mapInfo: TileMapInfo, private val tileLayerInfo: TileLayerInfo) {
-    var mapId: MutableList<MutableList<Int>> = List(mapInfo.mapSize.y.toInt(), {
-        List(mapInfo.mapSize.x.toInt(), { 0 })
-    }).mapIndexed { y, list ->
-        list.mapIndexed { x, _ -> tileLayerInfo.mapId(x, y) }.toMutableList()
-    }.toMutableList()
+class TileLayer(
+        mapInfo: TileMapInfo,
+        private val tileLayerInfo: TileLayerInfo) : TileLayerBase(mapInfo) {
+    var mapId: MutableList<MutableList<Int>> = List(mapInfo.mapSize.y.toInt(), { List(mapInfo.mapSize.x.toInt(), { 0 }) })
+            .mapIndexed { y, list -> list.mapIndexed { x, _ -> tileLayerInfo.mapId(x, y) }.toMutableList() }
+            .toMutableList()
         private set
 
     var visible = tileLayerInfo.visible
@@ -24,7 +23,6 @@ class TileLayer(private val mapInfo: TileMapInfo, private val tileLayerInfo: Til
     private val texcoordsVbo: GLVBO
     private val size: Int
     private var changes: MutableMap<Int, HashSet<Int>>? = null
-    private val bias = Vector2(1.0f, 1.0f) / mapInfo.tileNumber * 0.01f
 
     init {
         val pBuffer: MutableList<Vector3> = mutableListOf()
@@ -41,20 +39,6 @@ class TileLayer(private val mapInfo: TileMapInfo, private val tileLayerInfo: Til
         size = pBuffer.size
         positionsVbo = gl.createVBO(pBuffer.flatten())
         texcoordsVbo = gl.createVBO(tBuffer.flatten())
-    }
-
-    private fun calcTexcoord(id: Int): Vector2 {
-        val u = (id % mapInfo.tileNumber.x.toInt()).toFloat()
-        val v = floor(id / mapInfo.tileNumber.x)
-        return Vector2(u, v) * mapInfo.tileTexcoordSize
-    }
-
-    private fun calcTexcoords(id: Int): List<Vector2> {
-        return Square.createSquareTexcoords(calcTexcoord(id) + bias, mapInfo.tileTexcoordSize - bias * 2.0f)
-    }
-
-    private fun calcOffset(x: Int, y: Int, stride: Int): Int {
-        return (y * mapInfo.mapSize.x.toInt() + x) * stride
     }
 
     private fun updateTexcoords(x: Int, y: Int, list: List<Vector2>) {
@@ -94,14 +78,14 @@ class TileLayer(private val mapInfo: TileMapInfo, private val tileLayerInfo: Til
         changes = null
     }
 
-    fun mapId(x: Int, y: Int): Int? {
+    override fun mapId(x: Int, y: Int): Int? {
         if (y < 0 || mapInfo.mapSize.y <= y || x < 0 || mapInfo.mapSize.x <= x) {
             return null
         }
         return mapId[y][x]
     }
 
-    fun mapId(x: Int, y: Int, id: Int) {
+    override fun mapId(x: Int, y: Int, mapId: Int) {
         if (y < 0 || mapInfo.mapSize.y <= y || x < 0 || mapInfo.mapSize.x <= x) {
             return
         }
@@ -111,10 +95,10 @@ class TileLayer(private val mapInfo: TileMapInfo, private val tileLayerInfo: Til
         map[y] = set
 
         changes = map
-        mapId[y][x] = id
+        this.mapId[y][x] = mapId
     }
 
-    fun fillAll(id: Int) {
+    override fun fillAll(id: Int) {
         val (mx, my) = mapInfo.mapSize.x.toInt() to mapInfo.mapSize.y.toInt()
         for (y in 0 until my) {
             for (x in 0 until mx) {
@@ -123,7 +107,10 @@ class TileLayer(private val mapInfo: TileMapInfo, private val tileLayerInfo: Til
         }
     }
 
-    fun draw() {
+    override fun draw(delta: Float) {
+        if (!visible) {
+            return
+        }
         updateMapIds()
         gl.bindVBO(positionsVbo.id)
         gl.vertexPointer(GLAttribLocation.ATTRIBUTE_POSITION, 3, 0, 0)
@@ -132,7 +119,7 @@ class TileLayer(private val mapInfo: TileMapInfo, private val tileLayerInfo: Til
         gl.drawTriangleArrays(0, size)
     }
 
-    fun destroy() {
+    override fun destroy() {
         positionsVbo.destroy()
         texcoordsVbo.destroy()
     }

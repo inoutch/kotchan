@@ -9,7 +9,7 @@ import kotlin.math.abs
 
 open class ScrollTouchListener(
         camera: Camera,
-        private val setVelocity: (position: Vector2) -> Unit) : TouchListener(camera) {
+        private val setVelocity: (velocity: Vector2) -> Unit) : TouchListener(camera) {
     // settings
     var accelerationEnable = false
 

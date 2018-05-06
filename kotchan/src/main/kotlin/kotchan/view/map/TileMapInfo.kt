@@ -3,7 +3,7 @@ package kotchan.view.map
 import interop.graphic.GLTexture
 import utility.type.Vector2
 
-data class TileMapInfo(
+open class TileMapInfo(
         val name: String,
         val tileSize: Vector2,
         val texture: GLTexture,
