@@ -40,7 +40,7 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
         view.context = this.context
         view.drawableDepthFormat = GLKViewDrawableDepthFormat16
 
-        this.preferredFramesPerSecond = 609
+        this.preferredFramesPerSecond = 60
         EAGLContext.setCurrentContext(this.context)
 
         UIScreen.mainScreen().bounds.useContents {
