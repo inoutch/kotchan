@@ -3,12 +3,17 @@ package interop.graphic
 import android.graphics.BitmapFactory
 import android.opengl.GLES30
 import android.opengl.GLUtils
+import android.renderscript.ScriptGroup
 import com.example.app.MainActivity
 
 import utility.type.*
+import java.io.FileInputStream
+import java.io.InputStream
 import java.nio.ByteBuffer
 import java.nio.FloatBuffer
 import java.nio.IntBuffer
+import java.io.File;
+
 
 
 actual class GL {
@@ -143,13 +148,20 @@ actual class GL {
     }
 
     actual fun loadTexture(filepath: String): GLTexture? {
-        val i = MainActivity.getAssets()?.open(filepath)
-        val bitmap = BitmapFactory.decodeStream(i) ?: return null
+        var inputstream = getInputStream(filepath)
+        val bitmap = BitmapFactory.decodeStream(inputstream) ?: return null
         val texture = IntBuffer.allocate(1)
         GLES30.glGenTextures(1, texture)
         GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, texture[0])
         GLUtils.texImage2D(GLES30.GL_TEXTURE_2D, 0, bitmap, 0)
         return GLTexture(texture[0], bitmap.width, bitmap.height)
+    }
+    private fun getInputStream(filepath: String): InputStream?{
+        return if(filepath.startsWith("@assets/"))
+           MainActivity.getAssets()?.open(filepath.removePrefix("@assets/"))
+        else
+            FileInputStream(File(filepath))
+
     }
 
     actual fun destroyTexture(textureId: Int) {
