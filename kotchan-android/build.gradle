@@ -26,7 +26,7 @@ android {
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
-        main { assets.srcDirs = ['src/main/assets', 'src/main/res/assets/', 'src/main/assets/'] }
+        main { assets.srcDirs = ['src/main/assets'] }
     }
 }
 
