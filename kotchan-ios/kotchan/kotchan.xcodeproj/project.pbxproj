@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		9529AE3C20769965003F6E1D /* textures in Resources */ = {isa = PBXBuildFile; fileRef = 9529AE3A20769965003F6E1D /* textures */; };
-		9529AE3D20769965003F6E1D /* sample.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9529AE3B20769965003F6E1D /* sample.txt */; };
 		95B2510020711F2800B001E5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 95B250FF20711F2800B001E5 /* AppDelegate.m */; };
 		95B2510F20711F2800B001E5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95B2510E20711F2800B001E5 /* Assets.xcassets */; };
 		95B2511520711F2800B001E5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 95B2511420711F2800B001E5 /* main.m */; };
@@ -21,7 +20,6 @@
 
 /* Begin PBXFileReference section */
 		9529AE3A20769965003F6E1D /* textures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = textures; path = "../../../kotchan-jvm/src/main/resources/textures"; sourceTree = "<group>"; };
-		9529AE3B20769965003F6E1D /* sample.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sample.txt; path = "../../../kotchan-jvm/src/main/resources/sample.txt"; sourceTree = "<group>"; };
 		95B250FB20711F2800B001E5 /* kotchan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = kotchan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		95B250FE20711F2800B001E5 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		95B250FF20711F2800B001E5 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -52,7 +50,6 @@
 		95611ACF2075AEED007ABEF2 /* resources */ = {
 			isa = PBXGroup;
 			children = (
-				9529AE3B20769965003F6E1D /* sample.txt */,
 				9529AE3A20769965003F6E1D /* textures */,
 			);
 			path = resources;
@@ -166,7 +163,6 @@
 				95B25128207124C900B001E5 /* Main.storyboard in Resources */,
 				95B251252071247A00B001E5 /* LaunchScreen.storyboard in Resources */,
 				95B2510F20711F2800B001E5 /* Assets.xcassets in Resources */,
-				9529AE3D20769965003F6E1D /* sample.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
