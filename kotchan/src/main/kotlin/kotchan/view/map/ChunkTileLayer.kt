@@ -16,13 +16,11 @@ class ChunkTileLayer(
         private val mapIdGetter: (x: Int, y: Int) -> Int) : TileLayerBase(chunkTileMapInfo) {
     private val gl = Engine.getInstance().gl
     private val bufferPointMap: MutableMap<Int, MutableMap<Int, Int>> = mutableMapOf()
-    private val chunkVertexSize = (chunkTileMapInfo.chunkSize.x * chunkTileMapInfo.chunkSize.y * 6).toInt()
     private val positionsVbo: GLVBO
     private val texcoordsVbo: GLVBO
     private val size: Int
 
     private var changes: MutableMap<Int, MutableMap<Int, Int>>? = null
-
 
     init {
         val pBuffer: MutableList<Vector3> = mutableListOf()
@@ -149,12 +147,14 @@ class ChunkTileLayer(
         val positions = mutableListOf<Vector3>()
         val texcoords = mutableListOf<Vector2>()
         val chunkCount = chunkTileMapInfo.chunkSize.x * chunkTileMapInfo.chunkSize.y
-        val base = Vector2(sx.toFloat(), sy.toFloat()) * chunkTileMapInfo.chunkSize * chunkTileMapInfo.tileSize
+        val baseTileX = sx * chunkTileMapInfo.chunkSize.x
+        val baseTileY = sy * chunkTileMapInfo.chunkSize.y
+        val base = Vector2(baseTileX, baseTileY) * chunkTileMapInfo.tileSize
         for (y in 0 until chunkTileMapInfo.chunkSize.y.toInt()) {
             for (x in 0 until chunkTileMapInfo.chunkSize.x.toInt()) {
                 val p = Vector2(x.toFloat(), y.toFloat()) * chunkTileMapInfo.tileSize
                 positions.addAll(Square.createSquarePositions(base + p, chunkTileMapInfo.tileSize))
-                texcoords.addAll(calcTexcoords(mapIdGetter(sx + x, sy + y)))
+                texcoords.addAll(calcTexcoords(mapIdGetter(baseTileX.toInt() + x, baseTileY.toInt() + y)))
             }
         }
         gl.updateVBO(positionsVbo, offset * 3 * 6 * chunkCount.toInt(), positions.flatten())
@@ -162,35 +162,35 @@ class ChunkTileLayer(
     }
 
     private fun updateMapIds() {
-        /*val map = changes?.toMap() ?: return
-        map.forEach {
-            // sorted map (like 1,2,3,5,6,7,11,12...)
-            val list = it.value.keys.sorted()
-            val y = it.key
-            // using by grouping ex. 1,2,3,5,6,7,11,12 -> (1,2,3), (5,6,7), (11,12)
-            var begin = list.first()
-            var end = begin
-            val mapId = it.value[begin] ?: return@forEach
-            // texcoord exists at least 1
-            val texcoord = calcTexcoords(mapId)
-            val texcoords = texcoord.toMutableList()
-            for (i in 1 until list.size) {
-                val x = list[i]
-                // next number or not
-                if (x == end + 1) {
-                    end++
-                } else {
-                    updateTexcoords(begin, y, texcoords)
-                    texcoords.clear()
-                    end = x
-                    begin = x
-                }
-                texcoords.addAll(calcTexcoords(mapId))
-            }
-            updateTexcoords(begin, y, texcoords)
-        }
-        changes?.clear()
-        changes = null*/
+//        val map = changes?.toMap() ?: return
+//        map.forEach {
+//            // sorted map (like 1,2,3,5,6,7,11,12...)
+//            val list = it.value.keys.sorted()
+//            val y = it.key
+//            // using by grouping ex. 1,2,3,5,6,7,11,12 -> (1,2,3), (5,6,7), (11,12)
+//            var begin = list.first()
+//            var end = begin
+//            val mapId = it.value[begin] ?: return@forEach
+//            // texcoord exists at least 1
+//            val texcoord = calcTexcoords(mapId)
+//            val texcoords = texcoord.toMutableList()
+//            for (i in 1 until list.size) {
+//                val x = list[i]
+//                // next number or not
+//                if (x == end + 1) {
+//                    end++
+//                } else {
+//                    updateTexcoords(begin, y, texcoords)
+//                    texcoords.clear()
+//                    end = x
+//                    begin = x
+//                }
+//                texcoords.addAll(calcTexcoords(mapId))
+//            }
+//            updateTexcoords(begin, y, texcoords)
+//        }
+//        changes?.clear()
+//        changes = null
     }
 
     private fun setBufferPoint(x: Int, y: Int, v: Int) {

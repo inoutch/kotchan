@@ -3,6 +3,7 @@ package kotchan.view.texture
 import interop.graphic.GL
 import interop.graphic.GLTexture
 import kotchan.Engine
+import kotchan.logger.logger
 import kotchan.view.drawable.Square
 import utility.type.Vector2
 
@@ -11,6 +12,7 @@ class TextureManager(private val gl: GL) {
 
     fun get(filepath: String?): GLTexture {
         if (filepath == null) {
+            logger.error("texture is not found[$filepath]")
             return GLTexture.empty
         }
         return textureMap[filepath] ?: gl.loadTexture(filepath) ?: GLTexture.empty

@@ -5,15 +5,15 @@ import kotlin.math.floor
 
 fun createChunkLayer(
         mapInfo: ChunkTileMapInfo,
-        mapIdGetter: (x: Int, y: Int, layer: Int) -> Int): List<ChunkTileLayer> {
+        mapIdGetter: (layer: Int, x: Int, y: Int) -> Int): List<ChunkTileLayer> {
     return mapInfo.chunkTileLayersInfo.mapIndexed { index, chunkTileLayerInfo ->
-        ChunkTileLayer(mapInfo, chunkTileLayerInfo) { x, y -> mapIdGetter(x, y, index) }
+        ChunkTileLayer(mapInfo, chunkTileLayerInfo) { x, y -> mapIdGetter(index, x, y) }
     }
 }
 
 class ChunkTileMap(
         val chunkTileMapInfo: ChunkTileMapInfo,
-        mapIdGetter: (x: Int, y: Int, layer: Int) -> Int) : TileMapBase(chunkTileMapInfo) {
+        mapIdGetter: (layer: Int, x: Int, y: Int) -> Int) : TileMapBase(chunkTileMapInfo) {
     private val layers = createChunkLayer(chunkTileMapInfo, mapIdGetter)
     private var beforeCenter = calcMapPosition(chunkTileMapInfo.center)
 
