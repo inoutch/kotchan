@@ -48,10 +48,12 @@ class SurfaceView(context: Context?) : GLSurfaceView(context) {
     }
 
     private fun onTouchesEnded(event: MotionEvent) {
-        val list = eventsToList(event).mapNotNull {
+        val events = eventsToList(event)
+        val list = events.mapNotNull {
             touchEvents[it.first]
         }
         renderer.engine?.touchEmitter?.onTouchesEnded(list)
+        events.forEach { touchEvents.remove(it.first) }
     }
 
     private fun onTouchesCancelled() {
@@ -60,12 +62,8 @@ class SurfaceView(context: Context?) : GLSurfaceView(context) {
     }
 
     private fun eventsToList(event: MotionEvent): List<Pair<Int, Vector2>> {
-        val list = mutableListOf<Pair<Int, Vector2>>()
-        val count = event.pointerCount
-        for (i in 0 until count) {
-            list.add(Pair(event.getPointerId(i), Vector2(event.getX(i), height - event.getY(i))))
-        }
-        return list
+        val actionIndex = event.actionIndex
+        val pid = event.findPointerIndex(actionIndex)
+        return listOf(Pair(pid, Vector2(event.getX(actionIndex), height - event.getY(actionIndex))))
     }
-
 }
