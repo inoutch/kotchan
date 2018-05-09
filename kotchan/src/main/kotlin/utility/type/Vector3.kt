@@ -29,6 +29,10 @@ data class Vector3(val x: Float, val y: Float, val z: Float) {
     operator fun plus(other: Vector3) = Vector3(x + other.x, y + other.y, z + other.z)
     operator fun times(other: Float) = Vector3(x * other, y * other, z * other)
     operator fun times(other: Vector3) = Vector3(x * other.x, y * other.y, z * other.z)
+
+    companion object {
+        val Zero = Vector3(0.0f, 0.0f, 0.0f)
+    }
 }
 
 fun List<Vector3>.flatten() = FloatArray(this.size * 3).also {
