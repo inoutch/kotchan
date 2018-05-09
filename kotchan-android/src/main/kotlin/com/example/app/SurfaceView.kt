@@ -2,33 +2,20 @@ package com.example.app
 
 import android.content.Context
 import android.opengl.GLSurfaceView
-import android.util.DisplayMetrics
 import android.view.MotionEvent
 import android.view.WindowManager
-import application.AppConfig
-import kotchan.Engine
 import kotchan.controller.touch.TouchEvent
 
 import utility.type.Vector2
 
-
 class SurfaceView(context: Context?) : GLSurfaceView(context) {
     private val touchEvents = mutableMapOf<Int, TouchEvent>()
-    private var engine: Engine = Engine()
-    private var width: Float
-    private var height: Float
+    private val windowManager = context?.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    private val renderer = Renderer(windowManager)
 
     init {
         setEGLContextClientVersion(3)
-
-        val winMan: WindowManager = context?.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val display = winMan.defaultDisplay
-        val dispMet = DisplayMetrics()
-        display.getRealMetrics(dispMet)
-        width = dispMet.widthPixels.toFloat()
-        height = dispMet.heightPixels.toFloat()
-        engine.init(Vector2(width, height), AppConfig.SCREEN_SIZE)
-        setRenderer(Renderer(engine))
+        setRenderer(renderer)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -50,25 +37,25 @@ class SurfaceView(context: Context?) : GLSurfaceView(context) {
             touchEvents[it.first] = touchEvent
             touchEvent
         }
-        engine.touchEmitter.onTouchesBegan(list)
+        renderer.engine?.touchEmitter?.onTouchesBegan(list)
     }
 
     private fun onTouchesMoved(event: MotionEvent) {
         val list = eventsToList(event).mapNotNull {
             touchEvents[it.first]
         }
-        engine.touchEmitter.onTouchesMoved(list)
+        renderer.engine?.touchEmitter?.onTouchesMoved(list)
     }
 
     private fun onTouchesEnded(event: MotionEvent) {
         val list = eventsToList(event).mapNotNull {
             touchEvents[it.first]
         }
-        engine.touchEmitter.onTouchesEnded(list)
+        renderer.engine?.touchEmitter?.onTouchesEnded(list)
     }
 
     private fun onTouchesCancelled() {
-        engine.touchEmitter.onTouchesCancelled()
+        renderer.engine?.touchEmitter?.onTouchesCancelled()
         touchEvents.clear()
     }
 
