@@ -11,11 +11,11 @@ import utility.type.*
 abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTexture.empty) {
     var size: Vector2 = Vector2()
         protected set
-    var isPositionsDirty = false
+    var isPositionsDirty = true
         protected set
-    var isColorsDirty = false
+    var isColorsDirty = true
         protected set
-    var isTexcoordsDirty = false
+    var isTexcoordsDirty = true
         protected set
 
     var visible = true

@@ -48,20 +48,12 @@ class JoglLauncher(title: String) : GLEventListener, MouseListener {
         JoglProvider.gl = drawable.gl as GL4ES3
         JoglProvider.gl?.glClear(GL4ES3.GL_COLOR_BUFFER_BIT)
         JoglProvider.gl?.glClearColor(0.0f, 0.0f, 0.0f, 0.0f)
+        engine = Engine()
+        engine?.init(windowSize, screenSize)
     }
 
     override fun reshape(drawable: GLAutoDrawable?, x: Int, y: Int, width: Int, height: Int) {
-        var engineTmp = this.engine
-        if (engineTmp == null) {
-            engineTmp = Engine()
-            engineTmp.init(
-                    Vector2(width.toFloat(), height.toFloat()),
-                    screenSize)
-            this.engine = engineTmp
-            return
-        }
-
-        engineTmp.reshape(x, y, width, height)
+        engine?.reshape(x, y, width, height)
     }
 
     override fun display(drawable: GLAutoDrawable?) {
