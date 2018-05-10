@@ -17,8 +17,6 @@ open class ScrollTouchListener(
     private var acceleration: Vector2 = Vector2()
     private var pointHistory = FixedStack<Vector2>(8)
 
-    override fun check(point: Vector2, camera: Camera): Boolean = true
-
     override fun callback(index: Int, point: Vector2, type: TouchType, check: Boolean, chain: Boolean): Boolean {
         if (index != 0) {
             // only single touch

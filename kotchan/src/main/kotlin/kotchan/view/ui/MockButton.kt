@@ -2,6 +2,7 @@ package kotchan.view.ui
 
 import kotchan.view.camera.Camera
 import kotchan.controller.touch.listener.ButtonTouchListener
+import kotchan.controller.touch.listener.decision.RectTouchDecision
 import kotchan.view.drawable.Square
 import utility.type.Vector2
 import utility.type.Vector4
@@ -15,10 +16,8 @@ class MockButton(camera: Camera, size: Vector2, onClick: () -> Unit) : Square(si
     }
 
     val touchListener = ButtonTouchListener(
-            { rect() },
             { color = normalColor },
             { color = pressedColor },
-            camera) {
-        onClick()
-    }
+            camera) { onClick() }
+            .apply { decision = RectTouchDecision({ rect() }) }
 }

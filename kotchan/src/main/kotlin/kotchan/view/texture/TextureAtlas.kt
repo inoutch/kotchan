@@ -57,4 +57,13 @@ data class TextureAtlas(private val frames: List<TextureFrame>, val texture: GLT
     fun frame(index: Int): TextureFrame? {
         return frames.getOrNull(index)
     }
+
+    fun indexOf(name: String): Int {
+        val frame = frame(name) ?: return -1
+        return indexOf(frame)
+    }
+
+    fun indexOf(frame: TextureFrame): Int {
+        return frames.indexOf(frame)
+    }
 }

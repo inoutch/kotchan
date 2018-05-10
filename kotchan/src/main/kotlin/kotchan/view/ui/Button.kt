@@ -2,6 +2,7 @@ package kotchan.view.ui
 
 import kotchan.view.camera.Camera
 import kotchan.controller.touch.listener.ButtonTouchListener
+import kotchan.controller.touch.listener.decision.RectTouchDecision
 import kotchan.view.drawable.Sprite
 import kotchan.view.texture.TextureAtlas
 
@@ -15,8 +16,8 @@ class Button(textureAtlas: TextureAtlas,
     }
 
     val touchListener = ButtonTouchListener(
-            { rect() },
             { setAtlas(normalName) },
             { setAtlas(pressedName) },
             camera) { onClick() }
+            .apply { decision = RectTouchDecision({ rect() }) }
 }

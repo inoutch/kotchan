@@ -2,15 +2,13 @@ package kotchan.controller.touch.listener
 
 import kotchan.view.camera.Camera
 import kotchan.controller.touch.TouchType
-import utility.type.Rect
 import utility.type.Vector2
 
 class ButtonTouchListener(
-        setRect: () -> Rect,
         private val setNormalView: () -> Unit,
         private val setPressedView: () -> Unit,
         camera: Camera, private val onClick: () -> Unit) :
-        RectTouchListener(setRect, camera, null) {
+        TouchListener(camera) {
     // this size is applied from normal texture atlas
     private var isBegan = false
 

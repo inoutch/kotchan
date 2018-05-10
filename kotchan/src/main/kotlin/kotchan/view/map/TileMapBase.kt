@@ -1,8 +1,9 @@
 package kotchan.view.map
 
 import kotchan.controller.touch.TouchType
-import kotchan.controller.touch.listener.RectTouchListener
+import kotchan.controller.touch.listener.ArgTouchListener
 import kotchan.controller.touch.listener.TouchListener
+import kotchan.controller.touch.listener.decision.RectTouchDecision
 import kotchan.view.camera.Camera
 import kotchan.view.shader.NoColorsShaderProgram
 import utility.type.*
@@ -38,7 +39,7 @@ abstract class TileMapBase(val mapInfo: TileMapInfo) {
     }
 
     fun enableTouch(camera: Camera, callback: (point: Vector2, tilePoint: Vector2, type: TouchType) -> Unit): TouchListener {
-        val touchListener = RectTouchListener({ Rect(Vector2(position.x, position.y), size) }, camera) { _, point, type, check, chain ->
+        val touchListener = ArgTouchListener(camera) { _, point, type, check, chain ->
             if (check && chain) {
                 val pointInView = camera.combine * Vector4(position, 1.0f)
                 val cameraInView = camera.combine * Vector4(camera.position, 1.0f)
@@ -51,8 +52,8 @@ abstract class TileMapBase(val mapInfo: TileMapInfo) {
                 val tileY = floor(pointInTileMap.y / mapInfo.tileSize.y)
                 callback(pointInTileMap, Vector2(tileX, tileY), type)
             }
-            return@RectTouchListener true
-        }
+            return@ArgTouchListener true
+        }.apply { decision = RectTouchDecision({ Rect(Vector2(position.x, position.y), size) }) }
         this.touchListener = touchListener
         return touchListener
     }

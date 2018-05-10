@@ -4,7 +4,6 @@ import interop.graphic.GLTexture
 import utility.type.Vector2
 
 open class TileMapInfo(
-        val name: String,
         val tileSize: Vector2,
         val texture: GLTexture,
         val layersInfo: List<TileLayerInfo>) {
