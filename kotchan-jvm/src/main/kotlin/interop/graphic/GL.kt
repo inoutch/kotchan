@@ -29,8 +29,8 @@ actual class GL {
     }
 
     actual fun clearColor(red: Float, green: Float, blue: Float, alpha: Float) {
-        gl.glClear(GL4ES3.GL_COLOR_BUFFER_BIT)
         gl.glClearColor(red, green, blue, alpha)
+        gl.glClear(GL4ES3.GL_COLOR_BUFFER_BIT.or(GL4ES3.GL_DEPTH_BUFFER_BIT))
     }
 
     actual fun viewPort(x: Int, y: Int, width: Int, height: Int) {
@@ -192,6 +192,16 @@ actual class GL {
     actual fun enableBlend() {
         gl.glEnable(GL4ES3.GL_BLEND)
         gl.glBlendFunc(GL4ES3.GL_SRC_ALPHA, GL4ES3.GL_ONE_MINUS_SRC_ALPHA)
+    }
+
+    // depth
+    actual fun enableDepth() {
+        gl.glDepthMask(true)
+        gl.glEnable(GL4ES3.GL_DEPTH_TEST)
+    }
+
+    actual fun disableDepth() {
+        gl.glDisable(GL4ES3.GL_DEPTH_TEST)
     }
 
     // private

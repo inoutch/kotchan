@@ -140,6 +140,16 @@ actual class GL {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
     }
 
+    // depth
+    actual fun enableDepth() {
+        glDepthMask(GL_TRUE.toByte())
+        glEnable(GL_DEPTH_TEST)
+    }
+
+    actual fun disableDepth() {
+        glDisable(GL_DEPTH_TEST)
+    }
+
     // texture
     actual fun activeTexture(index: Int) {
         glActiveTexture(GL_TEXTURE0 + index)

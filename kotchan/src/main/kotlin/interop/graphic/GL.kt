@@ -54,6 +54,11 @@ expect class GL() {
     // blend
     fun enableBlend()
 
+    // depth
+    fun enableDepth()
+
+    fun disableDepth()
+
     // texture
     fun activeTexture(index: Int)
 
