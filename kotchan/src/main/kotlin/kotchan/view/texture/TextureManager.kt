@@ -15,7 +15,12 @@ class TextureManager(private val gl: GL) {
             logger.error("texture is not found[$filepath]")
             return GLTexture.empty
         }
-        return textureMap[filepath] ?: gl.loadTexture(filepath) ?: GLTexture.empty
+        val texture = textureMap[filepath] ?: gl.loadTexture(filepath)
+        if (texture == null) {
+            logger.error("texture is not found[$filepath]")
+            return GLTexture.empty
+        }
+        return texture
     }
 
     fun getFromResource(filepath: String): GLTexture {
