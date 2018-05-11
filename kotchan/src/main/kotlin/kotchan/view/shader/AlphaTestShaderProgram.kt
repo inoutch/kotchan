@@ -1,10 +1,9 @@
 package kotchan.view.shader
 
-import interop.graphic.GLShaderProgram
-import kotchan.Engine
 import utility.type.Matrix4
 
-private const val SimpleVSource = """
+
+private const val AlphaTestVSource = """
 #ifdef GL_ES
 precision mediump float;
 precision mediump int;
@@ -26,7 +25,7 @@ void main(void){
 }
 """
 
-private const val SimpleFSource = """
+private const val AlphaTestFSource = """
 #ifdef GL_ES
 precision mediump float;
 precision mediump int;
@@ -38,23 +37,30 @@ in vec2 vTexcoord;
 uniform sampler2D u_texture0;
 uniform float u_timeDelta;
 uniform float u_textureEnable;
+uniform float u_alpha;
 
 out vec4 outColor;
 
 void main(void)
 {
-    outColor = vColor;
+    vec4 color = vColor;
     if (u_textureEnable >= 1.0) {
-        outColor = outColor * texture(u_texture0, vTexcoord);
+        color = color * texture(u_texture0, vTexcoord);
+    }
+    if (color.a >= u_alpha) {
+        outColor = color;
+    } else {
+        discard;
     }
 }
 """
 
-open class SimpleShaderProgram(vsh: String = SimpleVSource, fsh: String = SimpleFSource) : GLShaderProgram(Engine.getInstance().gl.compileShaderProgram(vsh, fsh)) {
-    private val texture0Location = gl.getUniform(this, "u_texture0")
+open class AlphaTestShaderProgram : SimpleShaderProgram(AlphaTestVSource, AlphaTestFSource) {
+    private val alphaLocation = gl.getUniform(this, "u_alpha")
+    var alpha = 0.01f
 
     override fun prepare(delta: Float, mvpMatrix: Matrix4) {
-        gl.uniform1i(texture0Location, 0)
+        gl.uniform1f(alphaLocation, alpha)
         super.prepare(delta, mvpMatrix)
     }
 }
