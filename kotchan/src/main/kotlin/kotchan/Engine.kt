@@ -129,7 +129,7 @@ class Engine {
     }
 
     fun createOrthographic(): Matrix4 {
-        return Camera.createOrthographic(0.0f, screenSize.x, 0.0f, screenSize.y, -1.0f, 1.0f)
+        return Camera.createOrthographic(0.0f, screenSize.x, 0.0f, screenSize.y, -10000.0f, 10000.0f)
     }
 
     fun createCamera2D() = Camera2D().apply {
