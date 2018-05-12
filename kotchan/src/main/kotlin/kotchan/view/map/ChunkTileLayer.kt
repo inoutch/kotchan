@@ -59,10 +59,6 @@ class ChunkTileLayer(
     }
 
     override fun mapId(x: Int, y: Int, mapId: Int) {
-        if (y < 0 || mapInfo.mapSize.y <= y || x < 0 || mapInfo.mapSize.x <= x) {
-            // ignore change
-            return
-        }
         val map = changes ?: mutableMapOf()
         val set = map[y] ?: mutableMapOf()
         set[x] = mapId
@@ -132,6 +128,19 @@ class ChunkTileLayer(
         }
     }
 
+    private fun updateTexcoords(x: Int, y: Int, list: List<Vector2>) {
+        val center = Vector2(x.toFloat(), y.toFloat()) * mapInfo.tileSize
+        val pointInChunk = ChunkTileMap.calcMapPosition(center, chunkTileMapInfo)
+        val chunkOffset = getChunkOffset(pointInChunk.first, pointInChunk.second) ?: return
+        val (cx, cy) = chunkTileMapInfo.chunkSize.x.toInt() to chunkTileMapInfo.chunkSize.y.toInt()
+        val tileOffset = calcOffset(x - pointInChunk.first * cx, y - pointInChunk.second * cy, 2 * 6)
+        gl.updateVBO(texcoordsVbo, chunkOffset * 2 * 6 + tileOffset, list.flatten())
+    }
+
+    private fun getChunkOffset(x: Int, y: Int): Int? {
+        return bufferPointMap[y]?.get(x)
+    }
+
     private fun shiftChunk(sx: Int, sy: Int, vx: Int, vy: Int, w: Int, h: Int) {
         for (y in 0 until h) {
             for (x in 0 until w) {
@@ -162,35 +171,15 @@ class ChunkTileLayer(
     }
 
     private fun updateMapIds() {
-//        val map = changes?.toMap() ?: return
-//        map.forEach {
-//            // sorted map (like 1,2,3,5,6,7,11,12...)
-//            val list = it.value.keys.sorted()
-//            val y = it.key
-//            // using by grouping ex. 1,2,3,5,6,7,11,12 -> (1,2,3), (5,6,7), (11,12)
-//            var begin = list.first()
-//            var end = begin
-//            val mapId = it.value[begin] ?: return@forEach
-//            // texcoord exists at least 1
-//            val texcoord = calcTexcoords(mapId)
-//            val texcoords = texcoord.toMutableList()
-//            for (i in 1 until list.size) {
-//                val x = list[i]
-//                // next number or not
-//                if (x == end + 1) {
-//                    end++
-//                } else {
-//                    updateTexcoords(begin, y, texcoords)
-//                    texcoords.clear()
-//                    end = x
-//                    begin = x
-//                }
-//                texcoords.addAll(calcTexcoords(mapId))
-//            }
-//            updateTexcoords(begin, y, texcoords)
-//        }
-//        changes?.clear()
-//        changes = null
+        changes?.forEach { rows ->
+            val y = rows.key
+            rows.value.forEach { cols ->
+                val x = cols.key
+                val v = cols.value
+                updateTexcoords(x, y, calcTexcoords(v))
+            }
+        }
+        changes = null
     }
 
     private fun setBufferPoint(x: Int, y: Int, v: Int) {
