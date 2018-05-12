@@ -31,6 +31,6 @@ class ButtonTouchListener(
             isBegan = false
             setNormalView()
         }
-        return !isBegan
+        return !isBegan and chain
     }
 }

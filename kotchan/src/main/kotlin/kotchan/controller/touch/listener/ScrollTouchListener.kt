@@ -43,7 +43,7 @@ open class ScrollTouchListener(
             }
             return false
         }
-        return true
+        return chain
     }
 
     override fun update(delta: Float) {
