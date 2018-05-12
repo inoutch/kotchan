@@ -54,6 +54,7 @@ class Batch {
     fun draw(delta: Float, camera: Camera) {
         var currentShaderProgram: GLShaderProgram? = null
         var currentTexture: GLTexture? = null
+        var currentTextureEnable = true
         nodes.keys.forEach shader@{ shaderProgram ->
             val nodesByTexture = nodes[shaderProgram] ?: return@shader
             if (currentShaderProgram != shaderProgram) {
@@ -65,6 +66,12 @@ class Batch {
                 if (currentTexture != texture) {
                     currentTexture = texture
                     texture.use()
+                    val enable = texture != GLTexture.empty
+                    if (enable != currentTextureEnable) {
+                        shaderProgram.textureEnable = enable
+                        currentTextureEnable = enable
+                        shaderProgram.prepare(delta, camera.combine)
+                    }
                 }
                 val batchBufferBundle = nodesByTexture[texture] ?: return@texture
 
