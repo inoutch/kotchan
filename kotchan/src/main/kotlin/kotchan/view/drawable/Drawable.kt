@@ -20,25 +20,29 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
 
     var visible = true
         set(value) {
-            isPositionsDirty = (field != value)
+            if (field != value)
+                isPositionsDirty = true
             field = value
         }
 
     var position: Vector3 = Vector3()
         set(value) {
-            isPositionsDirty = (field != value)
+            if (field != value)
+                isPositionsDirty = true
             field = value
         }
 
     var color: Vector4 = Vector4(1.0f, 1.0f, 1.0f, 1.0f)
         set(value) {
-            isColorsDirty = (field != value)
+            if (field != value)
+                isColorsDirty = true
             field = value
         }
 
     var anchorPoint = Vector2(0.5f, 0.5f)
         set(value) {
-            isPositionsDirty = (field != value)
+            if (field != value)
+                isPositionsDirty = true
             field = value
         }
 
