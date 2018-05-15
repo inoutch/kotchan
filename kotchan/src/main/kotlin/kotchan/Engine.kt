@@ -11,6 +11,8 @@ import kotchan.view.animator.Animator
 import kotchan.view.camera.Camera2D
 import kotchan.view.camera.Camera3D
 import kotchan.constant.ScreenType
+import kotchan.controller.event.listener.EventController
+import kotchan.controller.event.listener.TimerEventController
 import kotchan.controller.touch.TouchEmitter
 import kotchan.controller.touch.TouchController
 import kotchan.controller.touch.TouchControllerEntity
@@ -45,6 +47,8 @@ class Engine {
 
     val touchEmitter: TouchEmitter = touchControllerEntity
     val touchController: TouchController = touchControllerEntity
+    val eventController: EventController = EventController()
+    val timerEventController = TimerEventController()
     val animator = Animator()
 
     init {
@@ -111,6 +115,7 @@ class Engine {
         val delta = millisPerFrame.toFloat() / 1000.0f
 
         touchControllerEntity.update(delta)
+        timerEventController.update(delta)
 
         gl.viewPort(viewport.origin.x.toInt(), viewport.origin.y.toInt(), viewport.size.x.toInt(), viewport.size.y.toInt())
         animator.update(delta)
