@@ -4,14 +4,12 @@ import interop.graphic.GLAttribLocation
 import interop.graphic.GLVBO
 import kotchan.Engine
 import kotchan.view.drawable.Square
-import utility.type.Vector2
-import utility.type.Vector3
-import utility.type.flatten
+import utility.type.*
 
 class TileLayer(
         mapInfo: TileMapInfo,
         private val tileLayerInfo: TileLayerInfo) : TileLayerBase(mapInfo) {
-    var mapId: MutableList<MutableList<Int>> = List(mapInfo.mapSize.y.toInt(), { List(mapInfo.mapSize.x.toInt(), { 0 }) })
+    var mapId: MutableList<MutableList<Int>> = List(mapInfo.mapSize.y, { List(mapInfo.mapSize.x, { 0 }) })
             .mapIndexed { y, list -> list.mapIndexed { x, _ -> tileLayerInfo.mapId(x, y) }.toMutableList() }
             .toMutableList()
         private set
@@ -29,8 +27,9 @@ class TileLayer(
         val tBuffer: MutableList<Vector2> = mutableListOf()
         mapId.forEachIndexed { y, cols ->
             cols.forEachIndexed { x, id ->
-                val p = Vector2(x.toFloat(), y.toFloat()) * mapInfo.tileSize
-                val positions = Square.createSquarePositions(p, mapInfo.tileSize)
+                val positions = Square.createSquarePositions(
+                        Vector2(x, y) * mapInfo.tileSize,
+                        mapInfo.tileSize.toVector2())
                 val texcoords: List<Vector2> = calcTexcoords(id)
                 pBuffer.addAll(positions)
                 tBuffer.addAll(texcoords)

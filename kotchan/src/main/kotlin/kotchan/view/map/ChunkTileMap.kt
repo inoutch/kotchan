@@ -1,5 +1,6 @@
 package kotchan.view.map
 
+import utility.type.Point
 import utility.type.Vector2
 import kotlin.math.floor
 
@@ -15,10 +16,10 @@ class ChunkTileMap(
         val chunkTileMapInfo: ChunkTileMapInfo,
         mapIdGetter: (layer: Int, x: Int, y: Int) -> Int) : TileMapBase(chunkTileMapInfo) {
     companion object {
-        fun calcMapPosition(center: Vector2, mapInfo: ChunkTileMapInfo): Pair<Int, Int> {
+        fun calcMapPosition(center: Vector2, mapInfo: ChunkTileMapInfo): Point {
             val x = center.x / (mapInfo.chunkSize.x * mapInfo.tileSize.x)
             val y = center.y / (mapInfo.chunkSize.y * mapInfo.tileSize.y)
-            return (if (x > 0) x.toInt() else floor(x).toInt()) to (if (y > 0) y.toInt() else floor(y).toInt())
+            return Point(if (x > 0) x.toInt() else floor(x).toInt(), if (y > 0) y.toInt() else floor(y).toInt())
         }
     }
 
@@ -33,7 +34,7 @@ class ChunkTileMap(
         val (bx, by) = beforeCenter
         if (ax != bx || ay != by) {
             layers.forEach { it.updateVertices(bx, by, ax - bx, ay - by) }
-            beforeCenter = ax to ay
+            beforeCenter = Point(ax, ay)
         }
     }
 

@@ -5,9 +5,7 @@ import interop.graphic.GLVBO
 import kotchan.Engine
 import kotchan.logger.logger
 import kotchan.view.drawable.Square
-import utility.type.Vector2
-import utility.type.Vector3
-import utility.type.flatten
+import utility.type.*
 import kotlin.math.abs
 
 class ChunkTileLayer(
@@ -28,10 +26,10 @@ class ChunkTileLayer(
 
         val chunkSize = chunkTileMapInfo.chunkSize
         var offset = 0
-        for (sy in 0 until chunkTileMapInfo.chunkNumber.y.toInt()) {
-            for (sx in 0 until chunkTileMapInfo.chunkNumber.x.toInt()) {
+        for (sy in 0 until chunkTileMapInfo.chunkNumber.y) {
+            for (sx in 0 until chunkTileMapInfo.chunkNumber.x) {
                 setBufferPoint(sx, sy, offset++)
-                val ret = createChunkVertices(sx * chunkSize.x.toInt(), sy * chunkSize.y.toInt())
+                val ret = createChunkVertices(sx * chunkSize.x, sy * chunkSize.y)
                 pBuffer.addAll(ret.first)
                 tBuffer.addAll(ret.second)
             }
@@ -44,14 +42,14 @@ class ChunkTileLayer(
     private fun createChunkVertices(sx: Int, sy: Int): Pair<List<Vector3>, List<Vector2>> {
         val pBuffer: MutableList<Vector3> = mutableListOf()
         val tBuffer: MutableList<Vector2> = mutableListOf()
-        for (nx in 0 until chunkTileMapInfo.chunkSize.y.toInt()) {
-            for (ny in 0 until chunkTileMapInfo.chunkSize.x.toInt()) {
+        for (nx in 0 until chunkTileMapInfo.chunkSize.y) {
+            for (ny in 0 until chunkTileMapInfo.chunkSize.x) {
                 val x = sx + nx
                 val y = sy + ny
 
                 val id = mapIdGetter(x, y)
                 val p = Vector2(x.toFloat(), y.toFloat()) * chunkTileMapInfo.tileSize
-                pBuffer.addAll(Square.createSquarePositions(p, chunkTileMapInfo.tileSize))
+                pBuffer.addAll(Square.createSquarePositions(p, chunkTileMapInfo.tileSize.toVector2()))
                 tBuffer.addAll(calcTexcoords(id))
             }
         }
@@ -86,7 +84,8 @@ class ChunkTileLayer(
     }
 
     fun updateVertices(sx: Int, sy: Int, vx: Int, vy: Int) {
-        val (cx, cy) = chunkTileMapInfo.chunkNumber.x.toInt() to chunkTileMapInfo.chunkNumber.y.toInt()
+        val cx = chunkTileMapInfo.chunkNumber.x
+        val cy = chunkTileMapInfo.chunkNumber.y
         if (abs(vx) > cx || abs(vy) > cy) {
             shiftChunk(sx, sy, vx, vy, cx, cy)
             return
@@ -131,9 +130,10 @@ class ChunkTileLayer(
     private fun updateTexcoords(x: Int, y: Int, list: List<Vector2>) {
         val center = Vector2(x.toFloat(), y.toFloat()) * mapInfo.tileSize
         val pointInChunk = ChunkTileMap.calcMapPosition(center, chunkTileMapInfo)
-        val chunkOffset = getChunkOffset(pointInChunk.first, pointInChunk.second) ?: return
-        val (cx, cy) = chunkTileMapInfo.chunkSize.x.toInt() to chunkTileMapInfo.chunkSize.y.toInt()
-        val tileOffset = calcOffset(x - pointInChunk.first * cx, y - pointInChunk.second * cy, 2 * 6)
+        val chunkOffset = getChunkOffset(pointInChunk.x, pointInChunk.y) ?: return
+        val cx = chunkTileMapInfo.chunkSize.x
+        val cy = chunkTileMapInfo.chunkSize.y
+        val tileOffset = calcOffset(x - pointInChunk.x * cx, y - pointInChunk.y * cy, 2 * 6)
         gl.updateVBO(texcoordsVbo, chunkOffset * 2 * 6 + tileOffset, list.flatten())
     }
 
@@ -156,18 +156,17 @@ class ChunkTileLayer(
         val positions = mutableListOf<Vector3>()
         val texcoords = mutableListOf<Vector2>()
         val chunkCount = chunkTileMapInfo.chunkSize.x * chunkTileMapInfo.chunkSize.y
-        val baseTileX = sx * chunkTileMapInfo.chunkSize.x
-        val baseTileY = sy * chunkTileMapInfo.chunkSize.y
-        val base = Vector2(baseTileX, baseTileY) * chunkTileMapInfo.tileSize
-        for (y in 0 until chunkTileMapInfo.chunkSize.y.toInt()) {
-            for (x in 0 until chunkTileMapInfo.chunkSize.x.toInt()) {
+        val baseTile = Point(sx * chunkTileMapInfo.chunkSize.x, sy * chunkTileMapInfo.chunkSize.y)
+        val base = (baseTile * chunkTileMapInfo.tileSize).toVector2()
+        for (y in 0 until chunkTileMapInfo.chunkSize.y) {
+            for (x in 0 until chunkTileMapInfo.chunkSize.x) {
                 val p = Vector2(x.toFloat(), y.toFloat()) * chunkTileMapInfo.tileSize
-                positions.addAll(Square.createSquarePositions(base + p, chunkTileMapInfo.tileSize))
-                texcoords.addAll(calcTexcoords(mapIdGetter(baseTileX.toInt() + x, baseTileY.toInt() + y)))
+                positions.addAll(Square.createSquarePositions(base + p, chunkTileMapInfo.tileSize.toVector2()))
+                texcoords.addAll(calcTexcoords(mapIdGetter(baseTile.x + x, baseTile.y + y)))
             }
         }
-        gl.updateVBO(positionsVbo, offset * 3 * 6 * chunkCount.toInt(), positions.flatten())
-        gl.updateVBO(texcoordsVbo, offset * 2 * 6 * chunkCount.toInt(), texcoords.flatten())
+        gl.updateVBO(positionsVbo, offset * 3 * 6 * chunkCount, positions.flatten())
+        gl.updateVBO(texcoordsVbo, offset * 2 * 6 * chunkCount, texcoords.flatten())
     }
 
     private fun updateMapIds() {

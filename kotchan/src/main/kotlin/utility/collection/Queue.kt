@@ -1,6 +1,6 @@
 package utility.collection
 
-class Queue<T>(list: MutableList<T>) {
+class Queue<T>(list: MutableList<T> = mutableListOf()) {
 
     var items: MutableList<T> = list
 

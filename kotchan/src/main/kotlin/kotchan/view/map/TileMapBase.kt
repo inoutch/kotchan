@@ -37,7 +37,7 @@ abstract class TileMapBase(val mapInfo: TileMapInfo) {
         }
     }
 
-    fun enableTouch(camera: Camera, callback: (pointInTile: Pair<Int, Int>, type: TouchType) -> Boolean): TouchListener {
+    fun enableTouch(camera: Camera, callback: (pointInTile: Point, type: TouchType) -> Boolean): TouchListener {
         val touchListener = ArgTouchListener(camera) { _, point, type, check, chain ->
             if (check && chain) {
                 return@ArgTouchListener callback(convertToTilePoint(point, camera), type)
@@ -48,16 +48,14 @@ abstract class TileMapBase(val mapInfo: TileMapInfo) {
         return touchListener
     }
 
-    fun convertToTilePoint(point: Vector2, camera: Camera): Pair<Int, Int> {
+    fun convertToTilePoint(point: Vector2, camera: Camera): Point {
         val pointInView = camera.combine * Vector4(position, 1.0f)
         val cameraInView = camera.combine * Vector4(camera.position, 1.0f)
         val aInView = camera.combine * Vector4(Vector3(), 1.0f)
-        val bInView = camera.combine * Vector4(Vector3(mapInfo.tileSize, 0.0f), 1.0f)
+        val bInView = camera.combine * mapInfo.tileSize.toVector4(0.0f, 1.0f)
         val sizeInView = Vector2(bInView.x - aInView.x, bInView.y - aInView.y)
         val intervalInView = Vector2(cameraInView.x - pointInView.x, cameraInView.y - pointInView.y)
         val pointInTileMap = (intervalInView + point + 1.0f) / sizeInView * mapInfo.tileSize
-        val tileX = floor(pointInTileMap.x / mapInfo.tileSize.x)
-        val tileY = floor(pointInTileMap.y / mapInfo.tileSize.y)
-        return tileX.toInt() to tileY.toInt()
+        return Point(floor(pointInTileMap.x / mapInfo.tileSize.x), floor(pointInTileMap.y / mapInfo.tileSize.y))
     }
 }

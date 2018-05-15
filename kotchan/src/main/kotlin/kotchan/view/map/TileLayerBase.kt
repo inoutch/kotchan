@@ -2,7 +2,7 @@ package kotchan.view.map
 
 import kotchan.view.drawable.Square
 import kotchan.view.map.converter.TileConverterInterface
-import utility.type.Vector2
+import utility.type.*
 import kotlin.math.floor
 
 abstract class TileLayerBase(val mapInfo: TileMapInfo) : TileConverterInterface {
@@ -13,8 +13,8 @@ abstract class TileLayerBase(val mapInfo: TileMapInfo) : TileConverterInterface 
     abstract fun destroy()
 
     protected fun calcTexcoord(id: Int): Vector2 {
-        val u = (id % mapInfo.tileNumber.x.toInt()).toFloat()
-        val v = floor(id / mapInfo.tileNumber.x)
+        val u = (id % mapInfo.tileNumber.x).toFloat()
+        val v = floor((id / mapInfo.tileNumber.x).toFloat())
         return Vector2(u, v) * mapInfo.tileTexcoordSize
     }
 
