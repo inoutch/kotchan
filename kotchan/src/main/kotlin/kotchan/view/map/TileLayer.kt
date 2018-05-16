@@ -98,7 +98,7 @@ class TileLayer(
     }
 
     override fun fillAll(id: Int) {
-        val (mx, my) = mapInfo.mapSize.x.toInt() to mapInfo.mapSize.y.toInt()
+        val (mx, my) = mapInfo.mapSize.x to mapInfo.mapSize.y
         for (y in 0 until my) {
             for (x in 0 until mx) {
                 mapId(x, y, id)

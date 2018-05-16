@@ -23,6 +23,6 @@ abstract class TileLayerBase(val mapInfo: TileMapInfo) : TileConverterInterface 
     }
 
     protected fun calcOffset(x: Int, y: Int, stride: Int): Int {
-        return (y * mapInfo.mapSize.x.toInt() + x) * stride
+        return (y * mapInfo.mapSize.x + x) * stride
     }
 }
