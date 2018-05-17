@@ -15,12 +15,15 @@ class TextureManager(private val gl: GL) {
             logger.error("texture is not found[$filepath]")
             return GLTexture.empty
         }
-        val texture = textureMap[filepath] ?: gl.loadTexture(filepath)
-        if (texture == null) {
-            logger.error("texture is not found[$filepath]")
-            return GLTexture.empty
-        }
-        return texture
+        return textureMap.getOrPut(filepath, {
+            val texture = gl.loadTexture(filepath)
+            if (texture == null) {
+                logger.error("texture is not loaded[$filepath]")
+                GLTexture.empty
+            } else {
+                texture
+            }
+        })
     }
 
     fun getFromResource(filepath: String): GLTexture {
@@ -34,6 +37,7 @@ class TextureManager(private val gl: GL) {
     }
 
     fun clearAll() {
+        textureMap.forEach { it.value.destroy() }
         textureMap.clear()
     }
 }
