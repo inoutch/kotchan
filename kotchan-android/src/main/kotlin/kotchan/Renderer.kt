@@ -1,4 +1,4 @@
-package com.example.app
+package kotchan
 
 import android.opengl.GLSurfaceView
 import android.util.DisplayMetrics

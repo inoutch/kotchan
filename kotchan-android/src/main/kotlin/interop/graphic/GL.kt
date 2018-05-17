@@ -3,22 +3,17 @@ package interop.graphic
 import android.graphics.BitmapFactory
 import android.opengl.GLES30
 import android.opengl.GLUtils
-import android.renderscript.ScriptGroup
-import com.example.app.MainActivity
+import kotchan.MainActivity
 
 import utility.type.*
-import java.io.FileInputStream
-import java.io.InputStream
 import java.nio.ByteBuffer
 import java.nio.FloatBuffer
 import java.nio.IntBuffer
-import java.io.File;
-
 
 
 actual class GL {
     actual fun clearColor(red: Float, green: Float, blue: Float, alpha: Float) {
-        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT)
+        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
         GLES30.glClearColor(red, green, blue, alpha)
     }
 
@@ -57,10 +52,12 @@ actual class GL {
     actual fun bindVBO(vboId: Int) {
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vboId)
     }
+
     actual fun vertexPointer(location: GLAttribLocation, dimension: Int, stride: Int, offset: Int) {
         GLES30.glEnableVertexAttribArray(location.value)
         GLES30.glVertexAttribPointer(location.value, dimension, GLES30.GL_FLOAT, false, stride * 4, offset * 4)
     }
+
     actual fun disableVertexPointer(location: GLAttribLocation) {
         GLES30.glDisableVertexAttribArray(location.value)
     }
@@ -138,7 +135,6 @@ actual class GL {
     }
 
     // texture
-
     actual fun activeTexture(index: Int) {
         GLES30.glActiveTexture(GLES30.GL_TEXTURE0 + index)
     }
@@ -148,20 +144,15 @@ actual class GL {
     }
 
     actual fun loadTexture(filepath: String): GLTexture? {
-        var inputstream = getInputStream(filepath)
-        val bitmap = BitmapFactory.decodeStream(inputstream) ?: return null
-        val texture = IntBuffer.allocate(1)
-        GLES30.glGenTextures(1, texture)
-        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, texture[0])
-        GLUtils.texImage2D(GLES30.GL_TEXTURE_2D, 0, bitmap, 0)
-        return GLTexture(texture[0], bitmap.width, bitmap.height)
-    }
-    private fun getInputStream(filepath: String): InputStream?{
-        return if(filepath.startsWith("@assets/"))
-           MainActivity.getAssets()?.open(filepath.removePrefix("@assets/"))
-        else
-            FileInputStream(File(filepath))
-
+        MainActivity.getInputStream(filepath)?.use {
+            val bitmap = BitmapFactory.decodeStream(it) ?: return null
+            val texture = IntBuffer.allocate(1)
+            GLES30.glGenTextures(1, texture)
+            GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, texture[0])
+            GLUtils.texImage2D(GLES30.GL_TEXTURE_2D, 0, bitmap, 0)
+            return GLTexture(texture[0], bitmap.width, bitmap.height)
+        }
+        return null
     }
 
     actual fun destroyTexture(textureId: Int) {
@@ -185,6 +176,16 @@ actual class GL {
     actual fun enableBlend() {
         GLES30.glEnable(GLES30.GL_BLEND)
         GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
+    }
+
+    // depth
+    actual fun enableDepth() {
+        GLES30.glDepthMask(true)
+        GLES30.glEnable(GLES30.GL_DEPTH_TEST)
+    }
+
+    actual fun disableDepth() {
+        GLES30.glDisable(GLES30.GL_DEPTH_TEST)
     }
 
     private fun compileShader(type: Int, text: String): Int {

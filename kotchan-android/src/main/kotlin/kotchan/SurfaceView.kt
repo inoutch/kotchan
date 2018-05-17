@@ -1,4 +1,4 @@
-package com.example.app
+package kotchan
 
 import android.content.Context
 import android.opengl.GLSurfaceView
@@ -41,9 +41,11 @@ class SurfaceView(context: Context?) : GLSurfaceView(context) {
     }
 
     private fun onTouchesMoved(event: MotionEvent) {
-        val list = eventsToList(event).mapNotNull {
-            touchEvents[it.first]
-        }
+        val list = eventsToList(event)
+                .mapNotNull {
+                    touchEvents[it.first]?.point = it.second
+                    touchEvents[it.first]
+                }
         renderer.engine?.touchEmitter?.onTouchesMoved(list)
     }
 
