@@ -3,18 +3,18 @@ package extension
 import kotlinx.cinterop.*
 import platform.Foundation.*
 
-fun ObjCObject.isNSArray(): Boolean {
-    return this.reinterpret<NSArray>().isKindOfClass(NSArray)
+fun Any.isNSArray(): Boolean {
+    return this is NSArray
 }
 
-fun ObjCObject.isNSDictionary(): Boolean {
-    return this.reinterpret<NSDictionary>().isKindOfClass(NSDictionary)
+fun Any.isNSDictionary(): Boolean {
+    return this is NSDictionary
 }
 
-fun ObjCObject.isNSString(): Boolean {
-    return this.reinterpret<NSString>().isKindOfClass(NSString)
+fun Any.isNSString(): Boolean {
+    return this is NSString
 }
 
-fun ObjCObject.isNSNumber(): Boolean {
-    return this.reinterpret<NSNumber>().isKindOfClass(NSNumber)
+fun Any.isNSNumber(): Boolean {
+    return this is NSNumber
 }

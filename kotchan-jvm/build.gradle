@@ -51,4 +51,5 @@ dependencies {
 
 repositories {
     jcenter()
+    maven { url 'http://dl.bintray.com/kotlin/kotlin-dev' }
 }

@@ -7,15 +7,16 @@ class TimerEventController {
 
     fun update(delta: Float) {// 0.016
         val after = currentTime + (delta * magnificationForAccuracy).toLong()
-        for (n in currentTime + 1..after) {
+        for (n in currentTime + 0..after) {
             events[n]?.forEach { it() }
             events[n]?.clear()
+            events.remove(n)
         }
         currentTime = after
     }
 
     fun subscribeOnce(seconds: Float, callback: () -> Unit) {
         val time = currentTime + (seconds * magnificationForAccuracy).toLong()
-        events.getOrPut(time, { mutableListOf() }).add(callback)
+        events.getOrPut(time) { mutableListOf() }.add(callback)
     }
 }

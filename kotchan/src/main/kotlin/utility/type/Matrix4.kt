@@ -7,6 +7,12 @@ data class Matrix4(val col1: Vector4, val col2: Vector4, val col3: Vector4, val 
         fun createTranslation(vector: Vector3) = Matrix4(
                 Matrix3(),
                 Vector4(vector.x, vector.y, vector.z, 1.0f))
+
+        fun createScale(vector: Vector3) = Matrix4(
+                Vector4(vector.x, 0.0f, 0.0f, 0.0f),
+                Vector4(0.0f, vector.y, 0.0f, 0.0f),
+                Vector4(0.0f, 0.0f, vector.z, 0.0f),
+                Vector4(0.0f, 0.0f, 0.0f, 1.0f))
     }
 
     constructor() : this(

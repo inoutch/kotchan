@@ -20,10 +20,10 @@ class Dijkstra(private val layerBase: TileConverterInterface, private val isWall
         }
         val joints: MutableMap<Int, MutableMap<Int, Joint>> = mutableMapOf()
         val getJoint = { x: Int, y: Int ->
-            joints.getOrPut(y, { mutableMapOf() }).getOrElse(x, { null })
+            joints.getOrPut(y) { mutableMapOf() }.getOrElse(x) { null }
         }
         val setJoint = { x: Int, y: Int, joint: Joint ->
-            joints.getOrPut(y, { mutableMapOf() })[x] = joint
+            joints.getOrPut(y) { mutableMapOf() }[x] = joint
         }
 
         val queue: Queue<Point> = Queue()
@@ -71,7 +71,7 @@ class Dijkstra(private val layerBase: TileConverterInterface, private val isWall
                 lambda(current, p.x, p.y, -1, -1, slantingCost)?.let { queue.enqueue(it) }
         } while (true)
         var notNullEndpoint = endpoint ?: return emptyList()
-        val lists = MutableList(1, { notNullEndpoint })
+        val lists = MutableList(1) { notNullEndpoint }
         do {
             val joint = getJoint(notNullEndpoint.x, notNullEndpoint.y) ?: return emptyList()
             if (notNullEndpoint.equals(joint.p)) {

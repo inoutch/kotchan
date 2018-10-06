@@ -8,12 +8,7 @@ open class Square(size: Vector2, texture: GLTexture = GLTexture.empty) : Drawabl
         fun createSquareMesh(size: Vector2) = Mesh(
                 createSquarePositions(Vector2(), size),
                 createSquareTexcoords(Vector2(), Vector2(1.0f, 1.0f)),
-                listOf(Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-                        Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-                        Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-                        Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-                        Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-                        Vector4(1.0f, 1.0f, 1.0f, 1.0f))
+                List(6) { Vector4(1.0f, 1.0f, 1.0f, 1.0f) }
         )
 
         fun createSquarePositions(position: Vector2, size: Vector2) = listOf(

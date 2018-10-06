@@ -46,6 +46,14 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
             field = value
         }
 
+    var scale = Vector3(1.0f, 1.0f, 1.0f)
+        set(value) {
+            if (field != value) {
+                isPositionsDirty = true
+            }
+            field = value
+        }
+
     private val gl = Engine.getInstance().gl
     private var positionsBuffer = mesh.pos().flatten()
     private var texcoordsBuffer = mesh.tex().flatten()
@@ -54,7 +62,7 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
 
     open val positions = {
         if (isPositionsDirty) {
-            val modelMatrix = Matrix4.createTranslation(translate())
+            val modelMatrix = transform()
             val pos = mesh.pos()
             positionsBuffer = if (visible) {
                 pos.map { modelMatrix * Vector4(it, 1.0f) }.map { Vector3(it) }
@@ -85,13 +93,8 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
         texcoordsBuffer
     }
 
-    private fun translate(position: Vector3 = this.position): Vector3 {
-        return Vector3(
-                position.x - size.x * anchorPoint.x,
-                position.y - size.y * anchorPoint.y,
-                position.z
-        )
-    }
+    private fun transform() = Matrix4.createTranslation(position) *
+            Matrix4.createScale(scale) * Matrix4.createTranslation(Vector3(size * anchorPoint * -1.0f, 0.0f))
 
     private fun vertices(): FloatArray {
         val vertices: MutableList<Float> = mutableListOf()
@@ -119,7 +122,7 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
 
         val vbo = vbo ?: return
         shaderProgram.use()
-        shaderProgram.modelMatrix4 = Matrix4.createTranslation(translate())
+        shaderProgram.modelMatrix4 = transform()
         shaderProgram.prepare(delta, camera.combine)
         texture.use()
 

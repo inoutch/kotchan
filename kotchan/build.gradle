@@ -2,6 +2,10 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
+
+    repositories {
+        maven { url 'http://dl.bintray.com/kotlin/kotlin-dev' }
+    }
 }
 
 apply plugin: 'org.jetbrains.kotlin.platform.common'
@@ -12,4 +16,5 @@ dependencies {
 
 repositories {
     jcenter()
+    maven { url 'http://dl.bintray.com/kotlin/kotlin-dev' }
 }
