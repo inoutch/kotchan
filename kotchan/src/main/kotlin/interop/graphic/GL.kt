@@ -7,6 +7,8 @@ import utility.type.Vector4
 expect class GL() {
     fun clearColor(red: Float, green: Float, blue: Float, alpha: Float)
 
+    fun clearDepth(red: Float, green: Float, blue: Float, alpha: Float)
+
     fun viewPort(x: Int, y: Int, width: Int, height: Int)
 
     fun drawTriangleArrays(first: Int, count: Int)
@@ -69,4 +71,31 @@ expect class GL() {
     fun destroyTexture(textureId: Int)
 
     fun filterTexture(type: GLFilterType)
+
+    fun createTexture2d(width: Int, height: Int, internalFormat: GLInternalFormat, format: GLFormat): GLTexture
+
+    //
+    fun createRenderBuffer(): GLRenderBuffer
+
+    fun createFrameBuffer(): GLFrameBuffer
+
+    fun bindRenderBuffer(renderBuffer: GLRenderBuffer)
+
+    fun bindFrameBuffer(frameBuffer: GLFrameBuffer)
+
+    fun bindDefaultFrameBuffer()
+
+    fun renderbufferStorage(internalFormat: GLInternalFormat, width: Int, height: Int)
+
+    fun attachRenderBuffer(frameBuffer: GLFrameBuffer, attachType: GLFrameBufferAttachType, renderBuffer: GLRenderBuffer)
+
+    fun attachTexture2d(textureId: Int, attachType: GLFrameBufferAttachType)
+
+    fun destroyRenderBuffet(id: Int)
+
+    fun destroyFrameBuffer(id: Int)
+
+    fun frameBufferTexture(attachType: GLFrameBufferAttachType, texture: GLTexture)
+
+    fun checkFrameBufferStatus(): Int
 }

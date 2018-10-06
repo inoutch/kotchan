@@ -15,13 +15,17 @@ class MockToggleButton(
     var onColor = Vector4(0.5f, 0.5f, 1.0f, 1.0f)
     var offColor = Vector4(0.2f, 0.2f, 1.0f, 1.0f)
     var state = true
+        set(value) {
+            field = value
+            setColor()
+        }
 
     init {
         setColor()
     }
 
     val touchListener = ButtonTouchListener({ }, { }, camera) { click() }
-            .apply { decision = RectTouchDecision({ rect() }) }
+            .apply { decision = RectTouchDecision { rect() } }
 
     private fun click() {
         state = !state

@@ -39,6 +39,7 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
         val view = this.view.reinterpret<GLKView>()
         view.context = this.context
         view.drawableDepthFormat = GLKViewDrawableDepthFormat16
+        view.bindDrawable()
 
         this.preferredFramesPerSecond = 60
         EAGLContext.setCurrentContext(this.context)
@@ -67,22 +68,22 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
 
     override fun gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController) {}
 
-    override fun touchesBegan(touches: NSSet, withEvent: UIEvent?) {
+    override fun touchesBegan(touches: Set<*>, withEvent: UIEvent?) {
         super.touchesBegan(touches, withEvent)
 
-        val list = touches.objectEnumerator().toList<ObjCObject>().map {
-            val touch = it.reinterpret<UITouch>()
+        val castedTouches = touches as Set<UITouch>
+        val list = castedTouches.map { touch ->
             val point = touch.locationInView(this.view).useContents { Vector2(x.toFloat() * widthRatio, height - y.toFloat() * heightRatio) }
             TouchEvent(point).also { touchEvents[touch] = it }
         }
         engine.touchEmitter.onTouchesBegan(list)
     }
 
-    override fun touchesMoved(touches: NSSet, withEvent: UIEvent?) {
+    override fun touchesMoved(touches: Set<*>, withEvent: UIEvent?) {
         super.touchesMoved(touches, withEvent)
 
-        val list = touches.objectEnumerator().toList<ObjCObject>().mapNotNull {
-            val touch = it.reinterpret<UITouch>()
+        val castedTouches = touches as Set<UITouch>
+        val list = castedTouches.mapNotNull { touch ->
             val touchEvent = touchEvents[touch] ?: return@mapNotNull null
             touchEvent.point = touch.locationInView(this.view)
                     .useContents { Vector2(x.toFloat() * widthRatio, height - y.toFloat() * heightRatio) }
@@ -91,11 +92,11 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
         engine.touchEmitter.onTouchesMoved(list)
     }
 
-    override fun touchesEnded(touches: NSSet, withEvent: UIEvent?) {
+    override fun touchesEnded(touches: Set<*>, withEvent: UIEvent?) {
         super.touchesEnded(touches, withEvent)
 
-        val list = touches.objectEnumerator().toList<ObjCObject>().mapNotNull {
-            val touch = it.reinterpret<UITouch>()
+        val castedTouches = touches as Set<UITouch>
+        val list = castedTouches.mapNotNull { touch ->
             val touchEvent = touchEvents[touch] ?: return@mapNotNull null
             touchEvent.point = touch.locationInView(this.view)
                     .useContents { Vector2(x.toFloat() * widthRatio, height - y.toFloat() * heightRatio) }
@@ -104,7 +105,7 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
         engine.touchEmitter.onTouchesEnded(list)
     }
 
-    override fun touchesCancelled(touches: NSSet, withEvent: UIEvent?) {
+    override fun touchesCancelled(touches: Set<*>, withEvent: UIEvent?) {
         super.touchesCancelled(touches, withEvent)
         touchEvents.clear()
         engine.touchEmitter.onTouchesCancelled()

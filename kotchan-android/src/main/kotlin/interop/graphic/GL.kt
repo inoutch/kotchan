@@ -13,8 +13,13 @@ import java.nio.IntBuffer
 
 actual class GL {
     actual fun clearColor(red: Float, green: Float, blue: Float, alpha: Float) {
-        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
         GLES30.glClearColor(red, green, blue, alpha)
+        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
+    }
+
+    actual fun clearDepth(red: Float, green: Float, blue: Float, alpha: Float) {
+        GLES30.glClearColor(red, green, blue, alpha)
+        GLES30.glClear(GLES30.GL_DEPTH_BUFFER_BIT)
     }
 
     actual fun viewPort(x: Int, y: Int, width: Int, height: Int) {
@@ -37,7 +42,6 @@ actual class GL {
         GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, data.size * 4, vertexBuffer, GLES30.GL_DYNAMIC_DRAW)
         return GLVBO(id.first())
     }
-
 
     actual fun updateVBO(vbo: GLVBO, offset: Int, data: FloatArray) {
         val vertexBuffer = FloatBuffer.wrap(data)
@@ -156,7 +160,7 @@ actual class GL {
     }
 
     actual fun destroyTexture(textureId: Int) {
-        GLES30.glDeleteTextures(1, IntBuffer.wrap(IntArray(1, { textureId })))
+        GLES30.glDeleteTextures(1, IntBuffer.wrap(IntArray(1) { textureId }))
     }
 
     actual fun filterTexture(type: GLFilterType) {
@@ -170,6 +174,15 @@ actual class GL {
                 GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR)
             }
         }
+    }
+
+    actual fun createTexture2d(width: Int, height: Int, internalFormat: GLInternalFormat, format: GLFormat): GLTexture {
+        val id = IntBuffer.allocate(1)
+        GLES30.glGenTextures(1, id)
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, id.get(0))
+        GLES30.glTexImage2D(GLES30.GL_TEXTURE_2D, 0, getInternalFormat(internalFormat), width, height,
+                0, getFormat(format), GLES30.GL_UNSIGNED_BYTE, null)
+        return GLTexture(id.get(0), width, height)
     }
 
     // blend
@@ -188,6 +201,58 @@ actual class GL {
         GLES30.glDisable(GLES30.GL_DEPTH_TEST)
     }
 
+    actual fun bindRenderBuffer(renderBuffer: GLRenderBuffer) {
+        GLES30.glBindRenderbuffer(GLES30.GL_RENDERBUFFER, renderBuffer.id)
+    }
+
+    actual fun bindFrameBuffer(frameBuffer: GLFrameBuffer) {
+        GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, frameBuffer.id)
+    }
+
+    actual fun createRenderBuffer(): GLRenderBuffer {
+        val id = IntBuffer.wrap(IntArray(1))
+        GLES30.glGenRenderbuffers(1, id)
+        return GLRenderBuffer(id[0])
+    }
+
+    actual fun createFrameBuffer(): GLFrameBuffer {
+        val id = IntBuffer.wrap(IntArray(1))
+        GLES30.glGenFramebuffers(1, id)
+        return GLFrameBuffer(id[0])
+    }
+
+    actual fun frameBufferTexture(attachType: GLFrameBufferAttachType, texture: GLTexture) {
+        GLES30.glFramebufferTexture2D(GLES30.GL_FRAMEBUFFER, getFrameBufferAttachType(attachType), GLES30.GL_TEXTURE_2D, texture.id, 0)
+    }
+
+    actual fun bindDefaultFrameBuffer() {
+        bindFrameBuffer(GLFrameBuffer(0))
+    }
+
+    actual fun renderbufferStorage(internalFormat: GLInternalFormat, width: Int, height: Int) {
+        GLES30.glRenderbufferStorage(GLES30.GL_RENDERBUFFER, getInternalFormat(internalFormat), width, height)
+    }
+
+    actual fun attachRenderBuffer(frameBuffer: GLFrameBuffer, attachType: GLFrameBufferAttachType, renderBuffer: GLRenderBuffer) {
+        GLES30.glFramebufferRenderbuffer(GLES30.GL_FRAMEBUFFER, getFrameBufferAttachType(attachType), GLES30.GL_RENDERBUFFER, renderBuffer.id)
+    }
+
+    actual fun attachTexture2d(textureId: Int, attachType: GLFrameBufferAttachType) {
+        GLES30.glFramebufferTexture2D(GLES30.GL_FRAMEBUFFER, getFrameBufferAttachType(attachType), GLES30.GL_TEXTURE_2D, textureId, 0)
+    }
+
+    actual fun destroyRenderBuffet(id: Int) {
+        GLES30.glDeleteRenderbuffers(1, IntBuffer.wrap(IntArray(1) { id }))
+    }
+
+    actual fun destroyFrameBuffer(id: Int) {
+        GLES30.glDeleteFramebuffers(1, IntBuffer.wrap(IntArray(1) { id }))
+    }
+
+    actual fun checkFrameBufferStatus(): Int {
+        return GLES30.glCheckFramebufferStatus(GLES30.GL_FRAMEBUFFER)
+    }
+
     private fun compileShader(type: Int, text: String): Int {
         val shader = GLES30.glCreateShader(type)
         GLES30.glShaderSource(shader, text)
@@ -204,5 +269,25 @@ actual class GL {
             }
         }
         return shader
+    }
+
+    private fun getFrameBufferAttachType(attachType: GLFrameBufferAttachType): Int {
+        return when (attachType) {
+            GLFrameBufferAttachType.COLOR0 -> GLES30.GL_COLOR_ATTACHMENT0
+            GLFrameBufferAttachType.COLOR1 -> GLES30.GL_COLOR_ATTACHMENT1
+            GLFrameBufferAttachType.COLOR2 -> GLES30.GL_COLOR_ATTACHMENT2
+            GLFrameBufferAttachType.DEPTH -> GLES30.GL_DEPTH_ATTACHMENT
+            GLFrameBufferAttachType.STENCIL -> GLES30.GL_STENCIL_ATTACHMENT
+        }
+    }
+
+    private fun getInternalFormat(format: GLInternalFormat) = when (format) {
+        GLInternalFormat.RGBA8 -> GLES30.GL_RGBA8
+        GLInternalFormat.DEPTH -> GLES30.GL_DEPTH_COMPONENT
+        GLInternalFormat.DEPTH16 -> GLES30.GL_DEPTH_COMPONENT16
+    }
+
+    private fun getFormat(format: GLFormat) = when (format) {
+        GLFormat.RGBA -> GLES30.GL_RGBA
     }
 }

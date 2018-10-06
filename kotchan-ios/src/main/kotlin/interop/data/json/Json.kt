@@ -5,6 +5,7 @@ import platform.CoreFoundation.*
 import platform.Foundation.*
 
 import extension.*
+import kotchan.logger.*
 
 actual class Json {
     actual companion object {
@@ -18,7 +19,7 @@ actual class Json {
                 }
                 result!!
             }
-            return parse(jsonObject)
+            return parseNative(jsonObject)
         }
 
         actual fun write(jsonObject: JsonObject): String? {
@@ -31,45 +32,43 @@ actual class Json {
             return data.bytes!!.readBytes(data.length.toInt()).stringFromUtf8()
         }
 
-        private fun output(obj: JsonObject): ObjCObject? {
+        private fun output(obj: JsonObject): Any? {
             when {
-                obj.isFloat() -> return obj.toFloat()?.toNSNumber()
-                obj.isText() -> return obj.toText()?.toNSString()
-                obj.isList() -> return obj.toList().mapNotNull { output(it) }.toNSArray()
+                obj.isFloat() -> return obj.toFloat()
+                obj.isText() -> return obj.toText()
+                obj.isList() -> return obj.toList().mapNotNull { output(it) }
                 obj.isMap() -> {
-                    val mutableMap = mutableMapOf<String, ObjCObject>()
+                    val mutableMap = mutableMapOf<String, Any>()
                     obj.toMap().forEach {
                         mutableMap[it.key] = output(it.value) ?: return@forEach
                     }
-                    return mutableMap.toNSDictionary()
+                    return mutableMap
                 }
             }
             throw Error("output undefined type")
         }
 
-        private fun parse(value: ObjCObject): JsonObject {
-            when {
-                value.isNSNumber() -> {
-                    val nsnumber = value.reinterpret<NSNumber>()
-                    return JsonObject(nsnumber.floatValue)
+        @Suppress("UNCHECKED_CAST")
+        private fun parseNative(value: Any): JsonObject {
+            if (value is Boolean) {
+                return JsonObject(if (value) 1.0f else 0.0f)
+            } else if (value is Number) {
+                return JsonObject(value.toFloat())
+            } else if (value is String) {
+                return JsonObject(value.toString())
+            } else if (value is Map<*, *>) {
+                val map = value as Map<String, Any>
+                return JsonObject.createMap().also { j ->
+                    value.forEach { j.addAsMap(it.key, parseNative(it.value)) }
                 }
-                value.isNSString() -> {
-                    val nsstring = value.reinterpret<NSNumber>()
-                    return JsonObject(nsstring.toString())
+            } else if (value is List<*>) {
+                val array = value as List<Any>
+                return JsonObject.createList().also { j ->
+                    value.forEach { j.addAsList(parseNative(it)) }
                 }
-                value.isNSDictionary() -> {
-                    val nsdictionary = value.reinterpret<NSDictionary>()
-                    return JsonObject.createMap().also { j ->
-                        nsdictionary.toMap().forEach { j.addAsMap(it.key, parse(it.value)) }
-                    }
-                }
-                value.isNSArray() -> {
-                    val nsarray = value.reinterpret<NSArray>()
-                    return JsonObject.createList().also { j ->
-                        nsarray.toList().forEach { j.addAsList(parse(it)) }
-                    }
-                }
-                else -> throw Error("unknown json extension")
+            } else {
+                logger.error("invalid json object is " + value)
+                throw Error("unknown json extension")
             }
         }
     }

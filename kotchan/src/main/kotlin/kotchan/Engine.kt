@@ -2,10 +2,10 @@ package kotchan
 
 import application.AppConfig
 import application.AppScene
-import interop.graphic.GL
-import interop.graphic.GLAttribLocation
+import interop.graphic.*
 import kotchan.view.camera.Camera
 import interop.io.File
+import interop.singleton.Singleton
 import interop.time.Time
 import kotchan.view.animator.Animator
 import kotchan.view.camera.Camera2D
@@ -16,24 +16,30 @@ import kotchan.controller.event.listener.TimerEventController
 import kotchan.controller.touch.TouchEmitter
 import kotchan.controller.touch.TouchController
 import kotchan.controller.touch.TouchControllerEntity
-import kotchan.logger.*
 import kotchan.view.texture.TextureManager
 import kotchan.view.Scene
+import kotchan.view.drawable.Square
+import kotchan.view.shader.NoColorsShaderProgram
 import utility.type.Matrix4
 import utility.type.Rect
 import utility.type.Vector2
+import utility.type.Vector3
 
 // Do not create Engine instance!
 class Engine {
     companion object {
-        private var engine: Engine? = null
-        fun getInstance() = engine as Engine
+        fun getInstance() = Singleton.getInstance().get("engine") as Engine
     }
 
     private var currentScene: Scene? = null
     private var sceneFactory: (() -> Scene)? = null
     private val touchControllerEntity = TouchControllerEntity()
     private var beforeMillis: Long = 0
+
+    private var frameBuffer: GLFrameBuffer? = null
+    private var virtualView: Square? = null
+    private var virtualViewShaderProgram: NoColorsShaderProgram? = null
+    private var virtualCamera: Camera? = null
 
     val gl = GL()
     val file = File()
@@ -52,11 +58,7 @@ class Engine {
     val animator = Animator()
 
     init {
-        if (Engine.engine != null) {
-            logger.error("engine is already instanced.")
-            throw Error("Engine should be created only 1")
-        }
-        Engine.engine = this
+        Singleton.getInstance().add("engine", this)
     }
 
     fun init(windowSize: Vector2, screenSize: Vector2) {
@@ -94,6 +96,31 @@ class Engine {
                 }
             }
         }
+
+        frameBuffer = gl.createFrameBuffer().also {
+            gl.bindFrameBuffer(it)
+
+            val depthBuffer = gl.createRenderBuffer()
+
+            gl.bindRenderBuffer(depthBuffer)
+            gl.renderbufferStorage(GLInternalFormat.DEPTH16, this.screenSize.x.toInt(), this.screenSize.y.toInt())
+            gl.attachRenderBuffer(it, GLFrameBufferAttachType.DEPTH, depthBuffer)
+
+            val texture = gl.createTexture2d(this.screenSize.x.toInt(), this.screenSize.y.toInt(), GLInternalFormat.RGBA8, GLFormat.RGBA)
+            gl.filterTexture(GLFilterType.Nearest)
+            gl.attachTexture2d(texture.id, GLFrameBufferAttachType.COLOR0)
+
+            gl.frameBufferTexture(GLFrameBufferAttachType.COLOR0, texture)
+
+            virtualView = Square(this.screenSize, texture).also { square ->
+                square.position = Vector3(this.screenSize / 2.0f, 0.0f)
+                square.scale = Vector3(1.0f, -1.0f, 1.0f)
+                square.bind()
+            }
+        }
+        virtualViewShaderProgram = NoColorsShaderProgram()
+        virtualCamera = this.createCamera2D().also { }
+
         beforeMillis = Time.milliseconds()
         currentScene = AppScene()
     }
@@ -117,9 +144,20 @@ class Engine {
         touchControllerEntity.update(delta)
         timerEventController.update(delta)
 
-        gl.viewPort(viewport.origin.x.toInt(), viewport.origin.y.toInt(), viewport.size.x.toInt(), viewport.size.y.toInt())
+        frameBuffer?.let { gl.bindFrameBuffer(it) }
+        gl.viewPort(0, 0, screenSize.x.toInt(), screenSize.y.toInt())
         animator.update(delta)
         currentScene?.draw(delta)
+
+        gl.bindDefaultFrameBuffer()
+        gl.viewPort(viewport.origin.x.toInt(), viewport.origin.y.toInt(), viewport.size.x.toInt(), viewport.size.y.toInt())
+
+        val shaderProgram = virtualViewShaderProgram
+        val view = virtualView
+        val camera = virtualCamera
+        if (shaderProgram != null && view != null && camera != null) {
+            view.draw(delta, shaderProgram, camera)
+        }
 
         // release bindings
         gl.useProgram(0)

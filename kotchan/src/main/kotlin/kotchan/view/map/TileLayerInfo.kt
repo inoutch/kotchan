@@ -3,6 +3,12 @@ package kotchan.view.map
 import utility.type.Vector2
 
 open class TileLayerInfo(private val mapId: List<List<Int>> = mutableListOf()) {
+    companion object {
+        fun createEmpty(layer: Int, width: Int, height: Int, value: Int = 0): List<TileLayerInfo> {
+            return List(layer, { TileLayerInfo(List(height, { List(width, { value }) })) })
+        }
+    }
+
     val mapSize: Vector2 = Vector2(mapId.map { it.size }.max()?.toFloat() ?: 0.0f, mapId.size.toFloat())
     var visible = true
 

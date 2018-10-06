@@ -33,6 +33,11 @@ actual class GL {
         gl.glClear(GL4ES3.GL_COLOR_BUFFER_BIT.or(GL4ES3.GL_DEPTH_BUFFER_BIT))
     }
 
+    actual fun clearDepth(red: Float, green: Float, blue: Float, alpha: Float) {
+        gl.glClearColor(red, green, blue, alpha)
+        gl.glClear(GL4ES3.GL_DEPTH_BUFFER_BIT)
+    }
+
     actual fun viewPort(x: Int, y: Int, width: Int, height: Int) {
         gl.glViewport(x, y, width, height)
     }
@@ -188,6 +193,15 @@ actual class GL {
         }
     }
 
+    actual fun createTexture2d(width: Int, height: Int, internalFormat: GLInternalFormat, format: GLFormat): GLTexture {
+        val id = IntBuffer.allocate(1)
+        gl.glGenTextures(1, id)
+        gl.glBindTexture(GL4ES3.GL_TEXTURE_2D, id.get(0))
+        gl.glTexImage2D(GL4ES3.GL_TEXTURE_2D, 0, getInternalFormat(internalFormat), width, height,
+                0, getFormat(format), GL4ES3.GL_UNSIGNED_BYTE, null)
+        return GLTexture(id.get(0), width, height)
+    }
+
     // blend
     actual fun enableBlend() {
         gl.glEnable(GL4ES3.GL_BLEND)
@@ -202,6 +216,58 @@ actual class GL {
 
     actual fun disableDepth() {
         gl.glDisable(GL4ES3.GL_DEPTH_TEST)
+    }
+
+    actual fun bindRenderBuffer(renderBuffer: GLRenderBuffer) {
+        gl.glBindRenderbuffer(GL4ES3.GL_RENDERBUFFER, renderBuffer.id)
+    }
+
+    actual fun bindFrameBuffer(frameBuffer: GLFrameBuffer) {
+        gl.glBindFramebuffer(GL4ES3.GL_FRAMEBUFFER, frameBuffer.id)
+    }
+
+    actual fun createRenderBuffer(): GLRenderBuffer {
+        val id = IntBuffer.allocate(1)
+        gl.glGenRenderbuffers(1, id)
+        return GLRenderBuffer(id.get(0))
+    }
+
+    actual fun createFrameBuffer(): GLFrameBuffer {
+        val id = IntBuffer.allocate(1)
+        gl.glGenFramebuffers(1, id)
+        return GLFrameBuffer(id.get(0))
+    }
+
+    actual fun frameBufferTexture(attachType: GLFrameBufferAttachType, texture: GLTexture) {
+        gl.glFramebufferTexture2D(GL4ES3.GL_FRAMEBUFFER, getFrameBufferAttachType(attachType), GL4ES3.GL_TEXTURE_2D, texture.id, 0)
+    }
+
+    actual fun bindDefaultFrameBuffer() {
+        bindFrameBuffer(GLFrameBuffer(0))
+    }
+
+    actual fun renderbufferStorage(internalFormat: GLInternalFormat, width: Int, height: Int) {
+        gl.glRenderbufferStorage(GL4ES3.GL_RENDERBUFFER, getInternalFormat(internalFormat), width, height)
+    }
+
+    actual fun attachRenderBuffer(frameBuffer: GLFrameBuffer, attachType: GLFrameBufferAttachType, renderBuffer: GLRenderBuffer) {
+        gl.glFramebufferRenderbuffer(GL4ES3.GL_FRAMEBUFFER, getFrameBufferAttachType(attachType), GL4ES3.GL_RENDERBUFFER, renderBuffer.id)
+    }
+
+    actual fun attachTexture2d(textureId: Int, attachType: GLFrameBufferAttachType) {
+        gl.glFramebufferTexture2D(GL4ES3.GL_FRAMEBUFFER, getFrameBufferAttachType(attachType), GL4ES3.GL_TEXTURE_2D, textureId, 0)
+    }
+
+    actual fun destroyRenderBuffet(id: Int) {
+        gl.glDeleteRenderbuffers(1, IntBuffer.wrap(IntArray(1) { id }))
+    }
+
+    actual fun destroyFrameBuffer(id: Int) {
+        gl.glDeleteFramebuffers(1, IntBuffer.wrap(IntArray(1) { id }))
+    }
+
+    actual fun checkFrameBufferStatus(): Int {
+        return gl.glCheckFramebufferStatus(GL4ES3.GL_FRAMEBUFFER)
     }
 
     // private
@@ -236,5 +302,25 @@ actual class GL {
         } catch (e: IOException) {
             null
         }
+    }
+
+    private fun getFrameBufferAttachType(attachType: GLFrameBufferAttachType): Int {
+        return when (attachType) {
+            GLFrameBufferAttachType.COLOR0 -> GL4ES3.GL_COLOR_ATTACHMENT0
+            GLFrameBufferAttachType.COLOR1 -> GL4ES3.GL_COLOR_ATTACHMENT1
+            GLFrameBufferAttachType.COLOR2 -> GL4ES3.GL_COLOR_ATTACHMENT2
+            GLFrameBufferAttachType.DEPTH -> GL4ES3.GL_DEPTH_ATTACHMENT
+            GLFrameBufferAttachType.STENCIL -> GL4ES3.GL_STENCIL_ATTACHMENT
+        }
+    }
+
+    private fun getInternalFormat(format: GLInternalFormat) = when (format) {
+        GLInternalFormat.RGBA8 -> GL4ES3.GL_RGBA8
+        GLInternalFormat.DEPTH -> GL4ES3.GL_DEPTH_COMPONENT
+        GLInternalFormat.DEPTH16 -> GL4ES3.GL_DEPTH_COMPONENT16
+    }
+
+    private fun getFormat(format: GLFormat) = when (format) {
+        GLFormat.RGBA -> GL4ES3.GL_RGBA
     }
 }
