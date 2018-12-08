@@ -6,7 +6,7 @@ class Path {
             val prefix = if (dirs[0].startsWith("/")) "/" else ""
             return prefix + dirs.map { it.split("/") }
                     .flatten()
-                    .filter { it != "" }
+                    .filterNot { it == "" }
                     .joinToString("/")
         }
     }
