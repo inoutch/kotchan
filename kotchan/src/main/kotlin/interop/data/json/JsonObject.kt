@@ -8,8 +8,8 @@ class JsonObject {
 
     private var floatValue: Float? = null
     private var textValue: String? = null
-    private var listValue: MutableList<JsonObject> = mutableListOf()
-    private var mapValue: MutableMap<String, JsonObject> = mutableMapOf()
+    private var listValue = mutableListOf<JsonObject>()
+    private var mapValue = mutableMapOf<String, JsonObject>()
 
     constructor(value: Float) {
         floatValue = value
@@ -19,6 +19,16 @@ class JsonObject {
     constructor(value: String) {
         textValue = value
         type = JsonType.TextType
+    }
+
+    constructor(value: Int) {
+        floatValue = value.toFloat()
+        type = JsonType.FloatType
+    }
+
+    constructor(vararg items: JsonObject) {
+        this.type = JsonType.ListType
+        listValue.addAll(items)
     }
 
     private constructor(type: JsonType) {
@@ -48,6 +58,8 @@ class JsonObject {
     }
 
     fun toFloat() = floatValue
+
+    fun toInt() = floatValue?.toInt()
 
     fun toBoolean(): Boolean? {
         return (floatValue ?: return null) > 0.5f
@@ -114,5 +126,4 @@ class JsonObject {
             else -> throw Error("unknown type")
         }
     }
-
 }
