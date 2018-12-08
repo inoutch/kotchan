@@ -9,7 +9,7 @@ import utility.type.*
 class TileLayer(
         mapInfo: TileMapInfo,
         private val tileLayerInfo: TileLayerInfo) : TileLayerBase(mapInfo) {
-    var mapId: MutableList<MutableList<Int>> = List(mapInfo.mapSize.y, { List(mapInfo.mapSize.x, { 0 }) })
+    var mapId: MutableList<MutableList<Int>> = List(mapInfo.mapSize.y) { List(mapInfo.mapSize.x) { 0 } }
             .mapIndexed { y, list -> list.mapIndexed { x, _ -> tileLayerInfo.mapId(x, y) }.toMutableList() }
             .toMutableList()
         private set
@@ -77,31 +77,30 @@ class TileLayer(
         changes = null
     }
 
-    override fun mapId(x: Int, y: Int): Int? {
-        if (y < 0 || mapInfo.mapSize.y <= y || x < 0 || mapInfo.mapSize.x <= x) {
+    override fun mapId(point: Point): Int? {
+        if (point.y < 0 || mapInfo.mapSize.y <= point.y || point.x < 0 || mapInfo.mapSize.x <= point.x) {
             return null
         }
-        return mapId[y][x]
+        return mapId[point.y][point.x]
     }
 
-    override fun mapId(x: Int, y: Int, mapId: Int) {
-        if (y < 0 || mapInfo.mapSize.y <= y || x < 0 || mapInfo.mapSize.x <= x) {
+    override fun mapId(point: Point, id: Int) {
+        if (point.y < 0 || mapInfo.mapSize.y <= point.y || point.x < 0 || mapInfo.mapSize.x <= point.x) {
             return
         }
         val map = changes ?: mutableMapOf()
-        val set = map[y] ?: hashSetOf()
-        set.add(x)
-        map[y] = set
+        val set = map[point.y] ?: hashSetOf()
+        set.add(point.x)
+        map[point.y] = set
 
         changes = map
-        this.mapId[y][x] = mapId
+        this.mapId[point.y][point.x] = id
     }
 
     override fun fillAll(id: Int) {
-        val (mx, my) = mapInfo.mapSize.x to mapInfo.mapSize.y
-        for (y in 0 until my) {
-            for (x in 0 until mx) {
-                mapId(x, y, id)
+        for (y in 0 until mapInfo.mapSize.y) {
+            for (x in 0 until mapInfo.mapSize.x) {
+                mapId(Point(x, y), id)
             }
         }
     }

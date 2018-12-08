@@ -56,16 +56,16 @@ class ChunkTileLayer(
         return Pair(pBuffer, tBuffer)
     }
 
-    override fun mapId(x: Int, y: Int, mapId: Int) {
+    override fun mapId(point: Point, id: Int) {
         val map = changes ?: mutableMapOf()
-        val set = map[y] ?: mutableMapOf()
-        set[x] = mapId
-        map[y] = set
+        val set = map[point.y] ?: mutableMapOf()
+        set[point.x] = id
+        map[point.y] = set
 
         changes = map
     }
 
-    override fun mapId(x: Int, y: Int): Int? = mapIdGetter(x, y)
+    override fun mapId(point: Point): Int? = mapIdGetter(point.x, point.y)
 
     override fun fillAll(id: Int) {}
 

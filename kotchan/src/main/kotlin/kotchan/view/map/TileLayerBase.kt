@@ -1,16 +1,17 @@
 package kotchan.view.map
 
 import kotchan.view.drawable.Square
-import kotchan.view.map.converter.TileConverterInterface
 import utility.type.*
 import kotlin.math.floor
 
-abstract class TileLayerBase(val mapInfo: TileMapInfo) : TileConverterInterface {
+abstract class TileLayerBase(val mapInfo: TileMapInfo) {
     private val bias = Vector2(1.0f, 1.0f) / mapInfo.tileNumber * 0.01f
 
     abstract fun fillAll(id: Int)
     abstract fun draw(delta: Float)
     abstract fun destroy()
+    abstract fun mapId(point: Point, id: Int)
+    abstract fun mapId(point: Point): Int?
 
     protected fun calcTexcoord(id: Int): Vector2 {
         val u = (id % mapInfo.tileNumber.x).toFloat()

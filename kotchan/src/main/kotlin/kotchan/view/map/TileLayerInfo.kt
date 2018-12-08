@@ -5,7 +5,7 @@ import utility.type.Vector2
 open class TileLayerInfo(private val mapId: List<List<Int>> = mutableListOf()) {
     companion object {
         fun createEmpty(layer: Int, width: Int, height: Int, value: Int = 0): List<TileLayerInfo> {
-            return List(layer, { TileLayerInfo(List(height, { List(width, { value }) })) })
+            return List(layer) { TileLayerInfo(List(height) { List(width) { value } }) }
         }
     }
 

@@ -4,6 +4,7 @@ import interop.data.json.Json
 import interop.data.json.JsonType
 import kotchan.Engine
 import kotchan.logger.logger
+import utility.type.Point
 
 class TileConverter {
     private val converters: MutableMap<String, List<ConversionData>> = mutableMapOf()
@@ -76,15 +77,15 @@ class TileConverter {
                 }
     }
 
-    fun convert(name: String, x: Int, y: Int, inLayer: TileConverterInterface, outLayer: TileConverterInterface) {
+    fun convert(name: String, point: Point, input: (point: Point) -> Int, output: (point: Point, id: Int) -> Unit) {
         val converters = this.converters[name] ?: return
         for (converter in converters) {
-            val sx = x - converter.output.x
-            val sy = y - converter.output.y
+            val sx = point.x - converter.output.x
+            val sy = point.y - converter.output.y
             var flag = true
             for (my in 0 until converter.input.sizeY) {
                 for (mx in 0 until converter.input.sizeX) {
-                    val a = inLayer.mapId(mx + sx, my + sy) ?: 0
+                    val a = input(Point(mx + sx, my + sy))
                     val b = converter.input.input[my][mx]
                     if (b != -1 && a != b) {
                         flag = false
@@ -93,7 +94,7 @@ class TileConverter {
                 }
             }
             if (flag) {
-                outLayer.mapId(x, y, converter.output.v)
+                output(point, converter.output.v)
                 return
             }
         }
