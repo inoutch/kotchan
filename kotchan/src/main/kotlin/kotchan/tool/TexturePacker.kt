@@ -72,7 +72,7 @@ class TexturePacker {
                     }
             val meta = rootMap[1].byScheme(metaScheme) ?: return null
             val image = meta[0].toText() ?: return null
-            val imagePath = Path.dir(textureDir, image)
+            val imagePath = Path.resolve(textureDir, image)
             val texture = if (enableCache) {
                 Engine.getInstance().textureManager.get(imagePath)
             } else {
