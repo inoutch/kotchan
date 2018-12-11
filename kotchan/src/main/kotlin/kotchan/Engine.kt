@@ -36,11 +36,6 @@ class Engine {
     private val touchControllerEntity = TouchControllerEntity()
     private var beforeMillis: Long = 0
 
-    private var frameBuffer: GLFrameBuffer? = null
-    private var virtualView: Square? = null
-    private var virtualViewShaderProgram: NoColorsShaderProgram? = null
-    private var virtualCamera: Camera? = null
-
     val gl = GL()
     val file = File()
 
@@ -97,30 +92,6 @@ class Engine {
             }
         }
 
-        frameBuffer = gl.createFrameBuffer().also {
-            gl.bindFrameBuffer(it)
-
-            val depthBuffer = gl.createRenderBuffer()
-
-            gl.bindRenderBuffer(depthBuffer)
-            gl.renderbufferStorage(GLInternalFormat.DEPTH16, this.screenSize.x.toInt(), this.screenSize.y.toInt())
-            gl.attachRenderBuffer(it, GLFrameBufferAttachType.DEPTH, depthBuffer)
-
-            val texture = gl.createTexture2d(this.screenSize.x.toInt(), this.screenSize.y.toInt(), GLInternalFormat.RGBA8, GLFormat.RGBA)
-            gl.filterTexture(GLFilterType.Nearest)
-            gl.attachTexture2d(texture.id, GLFrameBufferAttachType.COLOR0)
-
-            gl.frameBufferTexture(GLFrameBufferAttachType.COLOR0, texture)
-
-            virtualView = Square(this.screenSize, texture).also { square ->
-                square.position = Vector3(this.screenSize / 2.0f, 0.0f)
-                square.scale = Vector3(1.0f, -1.0f, 1.0f)
-                square.bind()
-            }
-        }
-        virtualViewShaderProgram = NoColorsShaderProgram()
-        virtualCamera = this.createCamera2D().also { }
-
         beforeMillis = Time.milliseconds()
         currentScene = AppScene()
     }
@@ -144,20 +115,11 @@ class Engine {
         touchControllerEntity.update(delta)
         timerEventController.update(delta)
 
-        frameBuffer?.let { gl.bindFrameBuffer(it) }
-        gl.viewPort(0, 0, screenSize.x.toInt(), screenSize.y.toInt())
         animator.update(delta)
         currentScene?.draw(delta)
 
         gl.bindDefaultFrameBuffer()
         gl.viewPort(viewport.origin.x.toInt(), viewport.origin.y.toInt(), viewport.size.x.toInt(), viewport.size.y.toInt())
-
-        val shaderProgram = virtualViewShaderProgram
-        val view = virtualView
-        val camera = virtualCamera
-        if (shaderProgram != null && view != null && camera != null) {
-            view.draw(delta, shaderProgram, camera)
-        }
 
         // release bindings
         gl.useProgram(0)
