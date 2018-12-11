@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9529AE3C20769965003F6E1D /* textures in Resources */ = {isa = PBXBuildFile; fileRef = 9529AE3A20769965003F6E1D /* textures */; };
 		95B2510020711F2800B001E5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 95B250FF20711F2800B001E5 /* AppDelegate.m */; };
 		95B2510F20711F2800B001E5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95B2510E20711F2800B001E5 /* Assets.xcassets */; };
 		95B2511520711F2800B001E5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 95B2511420711F2800B001E5 /* main.m */; };
@@ -16,10 +15,10 @@
 		95B251212071228900B001E5 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 95B251202071228900B001E5 /* ViewController.m */; };
 		95B251252071247A00B001E5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 95B251232071247A00B001E5 /* LaunchScreen.storyboard */; };
 		95B25128207124C900B001E5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 95B25126207124C900B001E5 /* Main.storyboard */; };
+		95C41B4D21BF6E3B00CE900E /* textures in Resources */ = {isa = PBXBuildFile; fileRef = 95C41B4C21BF6E3B00CE900E /* textures */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		9529AE3A20769965003F6E1D /* textures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = textures; path = "../../../kotchan-jvm/src/main/resources/textures"; sourceTree = "<group>"; };
 		95B250FB20711F2800B001E5 /* kotchan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = kotchan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		95B250FE20711F2800B001E5 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		95B250FF20711F2800B001E5 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -32,6 +31,7 @@
 		95B25122207122BD00B001E5 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		95B251242071247A00B001E5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		95B25127207124C900B001E5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		95C41B4C21BF6E3B00CE900E /* textures */ = {isa = PBXFileReference; lastKnownFileType = folder; path = textures; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,18 +47,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		95611ACF2075AEED007ABEF2 /* resources */ = {
-			isa = PBXGroup;
-			children = (
-				9529AE3A20769965003F6E1D /* textures */,
-			);
-			path = resources;
-			sourceTree = "<group>";
-		};
 		95B250F220711F2800B001E5 = {
 			isa = PBXGroup;
 			children = (
-				95611ACF2075AEED007ABEF2 /* resources */,
+				95C41B4221BF6E2C00CE900E /* resources */,
 				95B250FD20711F2800B001E5 /* kotchan */,
 				95B250FC20711F2800B001E5 /* Products */,
 				95B2511B207121E900B001E5 /* Frameworks */,
@@ -96,6 +88,15 @@
 				95B2511C207121E900B001E5 /* GLKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		95C41B4221BF6E2C00CE900E /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				95C41B4C21BF6E3B00CE900E /* textures */,
+			);
+			name = resources;
+			path = ../../kotchan/src/main/resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -159,7 +160,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9529AE3C20769965003F6E1D /* textures in Resources */,
+				95C41B4D21BF6E3B00CE900E /* textures in Resources */,
 				95B25128207124C900B001E5 /* Main.storyboard in Resources */,
 				95B251252071247A00B001E5 /* LaunchScreen.storyboard in Resources */,
 				95B2510F20711F2800B001E5 /* Assets.xcassets in Resources */,
@@ -209,7 +210,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cp \"$SRCROOT/../build/konan/bin/iphone/app.kexe\" \"$TARGET_BUILD_DIR/$EXECUTABLE_PATH\"";
+			shellScript = "cp \"$SRCROOT/../build/konan/bin/ios_arm64/app.kexe\" \"$TARGET_BUILD_DIR/$EXECUTABLE_PATH\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

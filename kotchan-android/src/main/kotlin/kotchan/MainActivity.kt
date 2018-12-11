@@ -3,28 +3,35 @@ package  kotchan
 import android.app.Activity
 import android.content.res.AssetManager
 import android.os.Bundle
-import java.io.File
-import java.io.FileInputStream
-import java.io.InputStream
+import utility.path.Path
+import java.io.*
 
 class MainActivity : Activity() {
     companion object {
         private var assetManager: AssetManager? = null
-        fun getAssets() = assetManager
-        fun getInputStream(filepath: String): InputStream? {
-            return if (filepath.startsWith("@assets:")) {
-                assetManager?.open(filepath.removePrefix("@assets:"))
-            } else {
-                FileInputStream(File(filepath))
-            }
+        private var fileDirectory: String? = null
+
+        fun getInputStream(filepath: String) = if (filepath.startsWith("@assets:")) {
+            assetManager?.open(filepath.removePrefix("@assets:"))
+        } else {
+            FileInputStream(File(filepath))
         }
+
+        fun getOutputStream(filepath: String) = FileOutputStream(File(filepath))
+
+        fun getFilesDir(name: String) = Path.resolve(*listOfNotNull(fileDirectory, name).toTypedArray())
     }
 
     private lateinit var surfaceView: SurfaceView
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        assetManager = assets
         surfaceView = SurfaceView(this)
+
         super.onCreate(savedInstanceState)
         setContentView(surfaceView)
+
+        assetManager = assets
+        fileDirectory = applicationContext.filesDir.path
+
     }
 }
