@@ -30,6 +30,10 @@ class Logger(private val logLevel: LogLevel) {
             log(LogLevel.ERROR, message)
         }
     }
+
+    fun error(vararg messages: Any) {
+        error(listOf(messages))
+    }
 }
 
 val logger = Logger(AppConfig.LOG_LEVEL)
