@@ -11,6 +11,11 @@ class JsonObject {
     private var listValue = mutableListOf<JsonObject>()
     private var mapValue = mutableMapOf<String, JsonObject>()
 
+    constructor(value: Boolean) {
+        floatValue = if (value) 1.0f else 0.0f
+        type = JsonType.FloatType
+    }
+
     constructor(value: Float) {
         floatValue = value
         type = JsonType.FloatType
