@@ -12,7 +12,7 @@ import platform.GLKit.*
 import platform.UIKit.*
 
 @ExportObjCClass
-class KotchanViewController(aDecoder: NSCoder) : GLKViewController(aDecoder), GKGameCenterControllerDelegateProtocol {
+open class KotchanViewController : GLKViewController, GKGameCenterControllerDelegateProtocol {
 
     private lateinit var core: KotchanCore
 
@@ -31,6 +31,9 @@ class KotchanViewController(aDecoder: NSCoder) : GLKViewController(aDecoder), GK
     private var widthRatio = 0.0f
 
     private var heightRatio = 0.0f
+
+    @OverrideInit
+    constructor(coder: NSCoder) : super(coder)
 
     override fun viewDidLoad() {
         this.context = EAGLContext(kEAGLRenderingAPIOpenGLES3)
