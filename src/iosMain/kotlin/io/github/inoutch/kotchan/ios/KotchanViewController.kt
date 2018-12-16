@@ -1,7 +1,6 @@
 package io.github.inoutch.kotchan.ios
 
 import io.github.inoutch.kotchan.core.KotchanCore
-import io.github.inoutch.kotchan.core.KotchanInitializer
 import io.github.inoutch.kotchan.core.controller.touch.TouchEvent
 import io.github.inoutch.kotchan.utility.type.Point
 import kotlinx.cinterop.*
@@ -56,7 +55,7 @@ class KotchanViewController(aDecoder: NSCoder) : GLKViewController(aDecoder), GK
         widthRatio = width / viewWidth
         heightRatio = height / viewHeight
 
-        core = KotchanCore(KotchanInitializer.defaultConfig ?: throw Error("KotchanEngineConfig is not applied"))
+        core = KotchanCore(DefaultConfig.config ?: throw Error("KotchanEngineConfig is not applied"))
         core.init()
     }
 
