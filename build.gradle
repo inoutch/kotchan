@@ -114,3 +114,16 @@ publishing {
         }
     }
 }
+
+afterEvaluate {
+    publishing {
+        publications {
+            android(MavenPublication) {
+                artifactId "${rootProject.name}-android"
+                artifact("$buildDir/outputs/aar/${rootProject.name}-release.aar") {
+                    builtBy assembleRelease
+                }
+            }
+        }
+    }
+}
