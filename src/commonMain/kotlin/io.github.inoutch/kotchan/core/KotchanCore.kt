@@ -20,7 +20,8 @@ import io.github.inoutch.kotchan.core.view.texture.TextureManager
 class KotchanCore(private val config: KotchanEngine.Config, screenSize: Point? = null) {
 
     companion object {
-        val instance: KotchanCore get() = KotchanInstance.manager().get("engine") as KotchanCore
+        const val KOTCHAN_ENGINE_NAME = "kotchan-engine"
+        val instance: KotchanCore get() = KotchanInstance.manager().get(KOTCHAN_ENGINE_NAME) as KotchanCore
     }
 
     private var currentScene: Scene? = null
@@ -59,7 +60,7 @@ class KotchanCore(private val config: KotchanEngine.Config, screenSize: Point? =
     val logLevel = config.logLevel
 
     init {
-        KotchanInstance.manager().add("kotchan-engine", this)
+        KotchanInstance.manager().add(KOTCHAN_ENGINE_NAME, this)
     }
 
     fun init() {
