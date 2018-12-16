@@ -1,5 +1,7 @@
-version "0.0.1"
-group "io.github.inoutch"
+allprojects {
+    version "0.0.1"
+    group "io.github.inoutch"
+}
 
 buildscript {
     ext.kotlin_version = "1.3.11"
