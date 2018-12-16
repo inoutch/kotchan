@@ -1,7 +1,6 @@
-package io.github.inoutch.kotchan.ios
-
 import io.github.inoutch.kotchan.core.KotchanCore
 import io.github.inoutch.kotchan.core.controller.touch.TouchEvent
+import io.github.inoutch.kotchan.ios.DefaultConfig
 import io.github.inoutch.kotchan.utility.type.Point
 import kotlinx.cinterop.*
 import platform.CoreGraphics.*
@@ -12,7 +11,7 @@ import platform.GLKit.*
 import platform.UIKit.*
 
 @ExportObjCClass
-open class KotchanViewController : GLKViewController, GKGameCenterControllerDelegateProtocol {
+class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol {
 
     private lateinit var core: KotchanCore
 
