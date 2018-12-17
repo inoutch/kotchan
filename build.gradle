@@ -117,11 +117,16 @@ publishing {
             url "file://${repo.absolutePath}"
         }
     }
-    publications {
-        android(MavenPublication) {
-            artifactId "${rootProject.name}-android"
-            artifact("$buildDir/outputs/aar/${rootProject.name}-release.aar") {
-                builtBy assembleRelease
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            android(MavenPublication) {
+                artifactId "${rootProject.name}-android"
+                artifact("$buildDir/outputs/aar/${rootProject.name}-release.aar") {
+                    builtBy assembleRelease
+                }
             }
         }
     }
