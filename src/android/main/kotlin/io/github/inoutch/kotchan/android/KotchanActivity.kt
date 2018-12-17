@@ -31,7 +31,7 @@ abstract class KotchanActivity : Activity() {
 
     private lateinit var surfaceView: KotchanSurfaceView
 
-    override fun onCreate(savedInstanceState: Bundle) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         surfaceView = KotchanSurfaceView(config(), this)
 
         super.onCreate(savedInstanceState)
