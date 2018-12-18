@@ -1,7 +1,7 @@
 import io.github.inoutch.kotchan.core.KotchanCore
 import io.github.inoutch.kotchan.core.controller.touch.TouchEvent
 import io.github.inoutch.kotchan.ios.DefaultConfig
-import io.github.inoutch.kotchan.utility.type.Point
+import io.github.inoutch.kotchan.utility.type.*
 import kotlinx.cinterop.*
 import platform.CoreGraphics.*
 import platform.EAGL.*
@@ -19,17 +19,11 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
 
     private lateinit var context: EAGLContext
 
-    private var width: Float = 0.0f
+    private lateinit var windowSize: Point
 
-    private var height: Float = 0.0f
+    private lateinit var viewSize: Point
 
-    private var viewWidth = 0.0f
-
-    private var viewHeight = 0.0f
-
-    private var widthRatio = 0.0f
-
-    private var heightRatio = 0.0f
+    private lateinit var windowRatio: Vector2
 
     @OverrideInit
     constructor(coder: NSCoder) : super(coder)
@@ -45,19 +39,20 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
         this.preferredFramesPerSecond = 60
         EAGLContext.setCurrentContext(this.context)
 
-        UIScreen.mainScreen().bounds.useContents {
-            viewWidth = size.width.toFloat()
-            viewHeight = size.height.toFloat()
+        viewSize = UIScreen.mainScreen().bounds().useContents {
+            Point(size.width.toInt(), size.height.toInt())
         }
 
-        UIScreen.mainScreen().nativeBounds.useContents {
-            width = size.width.toFloat()
-            height = size.height.toFloat()
+        windowSize = UIScreen.mainScreen().nativeBounds().useContents {
+            Point(size.width.toInt(), size.height.toInt())
         }
-        widthRatio = width / viewWidth
-        heightRatio = height / viewHeight
 
-        core = KotchanCore(DefaultConfig.config ?: throw Error("KotchanEngineConfig is not applied"))
+        windowRatio = Vector2(
+            windowSize.x.toFloat() / viewSize.x,
+            windowSize.y.toFloat() / viewSize.y)
+
+        val config = DefaultConfig.config ?: throw Error("KotchanEngineConfig is not applied")
+        core = KotchanCore(config, windowSize)
         core.init()
     }
 
@@ -74,7 +69,8 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
             if (touch !is UITouch) {
                 return@mapNotNull null
             }
-            val point = touch.locationInView(this.view).useContents { Point(x.toFloat() * widthRatio, height - y.toFloat() * heightRatio) }
+            val point = touch.locationInView(this.view)
+                    .useContents { Point((x * windowRatio.x).toInt(), (windowSize.y - y * windowRatio.y).toInt()) }
             TouchEvent(point).also { touchEvents[touch] = it }
         }
         core.touchEmitter.onTouchesBegan(list)
@@ -89,7 +85,7 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
             }
             val touchEvent = touchEvents[touch] ?: return@mapNotNull null
             touchEvent.point = touch.locationInView(this.view)
-                    .useContents { Point(x.toFloat() * widthRatio, height - y.toFloat() * heightRatio) }
+                    .useContents { Point((x * windowRatio.x).toInt(), (windowSize.y - y * windowRatio.y).toInt()) }
             touchEvent
         }
         core.touchEmitter.onTouchesMoved(list)
@@ -104,7 +100,7 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
             }
             val touchEvent = touchEvents[touch] ?: return@mapNotNull null
             touchEvent.point = touch.locationInView(this.view)
-                    .useContents { Point(x.toFloat() * widthRatio, height - y.toFloat() * heightRatio) }
+                    .useContents { Point((x * windowRatio.x).toInt(), (windowSize.y - y * windowRatio.y).toInt()) }
             touchEvent
         }
         core.touchEmitter.onTouchesEnded(list)

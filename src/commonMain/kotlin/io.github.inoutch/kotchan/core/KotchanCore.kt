@@ -17,7 +17,7 @@ import io.github.inoutch.kotchan.core.view.camera.Camera2D
 import io.github.inoutch.kotchan.core.view.camera.Camera3D
 import io.github.inoutch.kotchan.core.view.texture.TextureManager
 
-class KotchanCore(private val config: KotchanEngine.Config, screenSize: Point? = null) {
+class KotchanCore(private val config: KotchanEngine.Config, windowSize: Point? = null) {
 
     companion object {
         const val KOTCHAN_ENGINE_NAME = "kotchan-engine"
@@ -48,10 +48,10 @@ class KotchanCore(private val config: KotchanEngine.Config, screenSize: Point? =
 
     val animator = Animator()
 
-    var windowSize = Point(0, 0)
+    var windowSize = windowSize ?: config.windowSize
         private set
 
-    var screenSize = screenSize ?: config.screenSize
+    var screenSize = config.screenSize
         private set
 
     var viewport = PointRect()
@@ -65,8 +65,6 @@ class KotchanCore(private val config: KotchanEngine.Config, screenSize: Point? =
 
     fun init() {
         logger.init(config.logLevel)
-
-        windowSize = config.windowSize
 
         this.screenSize = calcScreenSize()
         this.viewport = calcViewport()

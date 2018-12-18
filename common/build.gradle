@@ -23,7 +23,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
 }
 
-sourceSets.main.kotlin.srcDirs += "../src/commonMain"
+sourceSets.main.kotlin.srcDirs += "../src/commonMain/kotlin"
 
 def repo = new File(rootDir, "repository")
 uploadArchives {
