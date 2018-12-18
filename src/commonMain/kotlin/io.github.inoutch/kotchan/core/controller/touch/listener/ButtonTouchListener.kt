@@ -2,7 +2,7 @@ package io.github.inoutch.kotchan.core.controller.touch.listener
 
 import io.github.inoutch.kotchan.core.view.camera.Camera
 import io.github.inoutch.kotchan.core.controller.touch.TouchType
-import io.github.inoutch.kotchan.utility.type.Point
+import io.github.inoutch.kotchan.utility.type.Vector2
 
 class ButtonTouchListener(
         private val setNormalView: () -> Unit,
@@ -12,7 +12,7 @@ class ButtonTouchListener(
     // this size is applied from normal texture atlas
     private var isBegan = false
 
-    override fun callback(index: Int, point: Point, type: TouchType, check: Boolean, chain: Boolean): Boolean {
+    override fun callback(index: Int, normalizedPoint: Vector2, type: TouchType, check: Boolean, chain: Boolean): Boolean {
         if (index != 0) {
             return true
         }

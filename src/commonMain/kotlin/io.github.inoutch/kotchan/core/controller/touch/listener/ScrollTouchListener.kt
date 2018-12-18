@@ -4,7 +4,6 @@ import io.github.inoutch.kotchan.core.KotchanCore
 import io.github.inoutch.kotchan.core.view.camera.Camera
 import io.github.inoutch.kotchan.core.controller.touch.TouchType
 import io.github.inoutch.kotchan.utility.collection.FixedStack
-import io.github.inoutch.kotchan.utility.type.Point
 import io.github.inoutch.kotchan.utility.type.Vector2
 import kotlin.math.abs
 
@@ -20,13 +19,13 @@ open class ScrollTouchListener(
 
     private var pointHistory = FixedStack<Vector2>(8)
 
-    override fun callback(index: Int, point: Point, type: TouchType, check: Boolean, chain: Boolean): Boolean {
+    override fun callback(index: Int, normalizedPoint: Vector2, type: TouchType, check: Boolean, chain: Boolean): Boolean {
         if (index != 0) {
             // only single touch
             return true
         }
         // point is -1.0 ~ 1.0
-        val after = point * KotchanCore.instance.screenSize / 2.0f
+        val after = normalizedPoint * KotchanCore.instance.screenSize / 2.0f
         if (type == TouchType.Began && chain) {
             before = after
             return false
