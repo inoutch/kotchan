@@ -144,6 +144,7 @@ gradle-app.setting
 
 # Package Files #
 *.jar
+!repository/**/*.jar
 *.war
 *.ear
 *.zip
@@ -213,3 +214,6 @@ DerivedData/
 !default.perspectivev3
 
 *.iml
+*.module
+*.module.md5
+*.module.sha1

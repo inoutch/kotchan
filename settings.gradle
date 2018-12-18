@@ -1,2 +1,4 @@
-rootProject.name = 'Kotchan'
-include ':kotchan', ':kotchan-ios', ':kotchan-jvm', ':kotchan-android'
+rootProject.name = "kotchan"
+enableFeaturePreview("GRADLE_METADATA")
+
+include ":common", ":android"

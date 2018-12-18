@@ -1,0 +1,36 @@
+buildscript {
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+
+    repositories {
+        jcenter()
+        maven { url "https://dl.bintray.com/kotlin/kotlin-dev" }
+        maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
+    }
+}
+
+repositories {
+    jcenter()
+    maven { url "https://dl.bintray.com/kotlin/kotlin-dev" }
+    maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
+}
+
+apply plugin: "org.jetbrains.kotlin.platform.common"
+apply plugin: "maven"
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
+}
+
+sourceSets.main.kotlin.srcDirs += "../src/commonMain/kotlin"
+
+def repo = new File(rootDir, "repository")
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository url: "file://${repo.absolutePath}"
+            pom.artifactId = "kotchan-common"
+        }
+    }
+}
