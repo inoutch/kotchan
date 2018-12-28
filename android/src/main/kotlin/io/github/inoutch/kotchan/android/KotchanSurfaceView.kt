@@ -5,6 +5,7 @@ import android.content.Context
 import android.opengl.GLSurfaceView
 import android.view.MotionEvent
 import android.view.WindowManager
+import io.github.inoutch.kotchan.android.audio.KotchanSoundManager
 import io.github.inoutch.kotchan.core.KotchanEngine
 import io.github.inoutch.kotchan.core.controller.touch.TouchEvent
 import io.github.inoutch.kotchan.utility.type.Point
@@ -34,6 +35,14 @@ class KotchanSurfaceView(config: KotchanEngine.Config, context: Context) : GLSur
             MotionEvent.ACTION_CANCEL -> this.onTouchesCancelled()
         }
         return true
+    }
+
+    override fun onPause() {
+        KotchanSoundManager.instance.pauseAll()
+    }
+
+    override fun onResume() {
+        KotchanSoundManager.instance.playAll()
     }
 
     private fun onTouchesBegan(event: MotionEvent) {

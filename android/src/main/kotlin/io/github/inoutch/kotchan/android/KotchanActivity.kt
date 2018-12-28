@@ -27,6 +27,12 @@ abstract class KotchanActivity : Activity() {
         fun outputStream(filepath: String) = FileOutputStream(File(filepath))
 
         fun filesDir(name: String) = Path.resolve(*listOfNotNull(fileDirectory, name).toTypedArray())
+
+        fun assetFileDescriptor(filepath: String) = if (filepath.startsWith(ASSET_PREFIX)) {
+            assetManager?.openFd(filepath.removePrefix(ASSET_PREFIX))
+        } else {
+            null
+        }
     }
 
     private lateinit var surfaceView: KotchanSurfaceView
@@ -39,6 +45,16 @@ abstract class KotchanActivity : Activity() {
 
         assetManager = assets
         fileDirectory = applicationContext.filesDir.path
+    }
+
+    override fun onPause() {
+        super.onPause()
+        surfaceView.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        surfaceView.onResume()
     }
 
     abstract fun config(): KotchanEngine.Config
