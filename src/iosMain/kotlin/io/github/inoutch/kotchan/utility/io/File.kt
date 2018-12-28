@@ -8,6 +8,7 @@ import platform.Foundation.NSDataWritingAtomic
 import platform.Foundation.create
 import platform.Foundation.dataWithContentsOfFile
 
+@ExperimentalUnsignedTypes
 actual class File {
 
     actual fun readBytes(filepath: String): ByteArray? {
