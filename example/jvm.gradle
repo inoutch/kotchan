@@ -5,6 +5,10 @@ buildscript {
 apply plugin: "application"
 apply plugin: "kotlin-platform-jvm"
 
+processResources {
+    from "../common/src/main/resources"
+}
+
 sourceSets.main.kotlin.srcDirs += "../../src/jvmMain/kotlin"
 
 dependencies {
