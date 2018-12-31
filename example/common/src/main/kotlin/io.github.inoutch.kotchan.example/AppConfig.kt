@@ -1,3 +1,5 @@
+package io.github.inoutch.kotchan.example
+
 import io.github.inoutch.kotchan.core.KotchanEngine
 import io.github.inoutch.kotchan.core.constant.ScreenType
 import io.github.inoutch.kotchan.utility.type.Point
@@ -9,7 +11,7 @@ class AppConfig : KotchanEngine.Config() {
 
     override val logLevel = LogLevel.DEBUG
 
-    override val screenSize = Point(640, 1136) / 4
+    override val screenSize = Point(640, 1136) / 2
 
     override val screenType = ScreenType.EXTEND
 
