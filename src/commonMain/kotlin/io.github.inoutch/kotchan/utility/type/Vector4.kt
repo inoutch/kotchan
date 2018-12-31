@@ -1,6 +1,10 @@
 package io.github.inoutch.kotchan.utility.type
 
 data class Vector4(var x: Float, val y: Float, val z: Float, val w: Float) {
+    companion object {
+        val Zero = Vector4()
+    }
+
     constructor() : this(0.0f, 0.0f, 0.0f, 0.0f)
     constructor(vector3: Vector3, w: Float) : this(vector3.x, vector3.y, vector3.z, w)
 

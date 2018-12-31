@@ -1,13 +1,13 @@
 package io.github.inoutch.kotchan.core.view.batch
 
-import kotchan.view.drawable.Drawable
+import io.github.inoutch.kotchan.core.view.drawable.Drawable
 
 data class BatchBundle(
         val positionBuffer: BatchBuffer,
         val colorBuffer: BatchBuffer,
         val texcoordBuffer: BatchBuffer) {
 
-    val nodes: MutableMap<Drawable, BatchNode> = mutableMapOf()
+    val drawables: MutableMap<Drawable, BatchNode> = mutableMapOf()
 
     fun getSize(): Int {
         val p = positionBuffer.size / 3

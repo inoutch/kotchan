@@ -2,7 +2,6 @@ package io.github.inoutch.kotchan.core.view.drawable
 
 import io.github.inoutch.kotchan.utility.graphic.GLTexture
 import io.github.inoutch.kotchan.utility.type.*
-import kotchan.view.drawable.Drawable
 
 open class Square(size: Vector2, texture: GLTexture = GLTexture.empty) : Drawable(createSquareMesh(size), texture) {
     companion object {
@@ -20,6 +19,8 @@ open class Square(size: Vector2, texture: GLTexture = GLTexture.empty) : Drawabl
                 Vector3(position.x + size.x, position.y, 0.0f),
                 Vector3(position.x + size.x, position.y + size.y, 0.0f))
 
+        fun createSquarePositions(rect: Rect) = createSquarePositions(rect.origin, rect.size)
+
         fun createSquareTexcoords(position: Vector2, size: Vector2) = listOf(
                 Vector2(position.x, position.y + size.y),
                 Vector2(position.x + size.x, position.y),
@@ -27,6 +28,8 @@ open class Square(size: Vector2, texture: GLTexture = GLTexture.empty) : Drawabl
                 Vector2(position.x, position.y + size.y),
                 Vector2(position.x + size.x, position.y + size.y),
                 Vector2(position.x + size.x, position.y))
+
+        fun createSquareTexcoords(rect: Rect) = createSquareTexcoords(rect.origin, rect.size)
     }
 
     init {

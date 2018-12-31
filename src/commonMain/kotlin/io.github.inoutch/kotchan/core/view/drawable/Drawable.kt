@@ -1,4 +1,4 @@
-package kotchan.view.drawable
+package io.github.inoutch.kotchan.core.view.drawable
 
 import io.github.inoutch.kotchan.utility.graphic.GLAttribLocation
 import io.github.inoutch.kotchan.core.view.camera.Camera
@@ -8,9 +8,11 @@ import io.github.inoutch.kotchan.core.KotchanCore
 import io.github.inoutch.kotchan.core.view.shader.NoColorsShaderProgram
 import io.github.inoutch.kotchan.utility.type.*
 
-abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTexture.empty) {
+open class Drawable(initMesh: Mesh, var texture: GLTexture = GLTexture.empty) : DrawableBase {
+    var mesh = initMesh
+        protected set
 
-    var size = Vector2()
+    override var size = Vector2()
         protected set
 
     var isPositionsDirty = true
@@ -29,7 +31,7 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
             field = value
         }
 
-    var position = Vector3()
+    override var position = Vector3()
         set(value) {
             if (field != value)
                 isPositionsDirty = true
@@ -43,7 +45,7 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
             field = value
         }
 
-    var anchorPoint = Vector2(0.5f, 0.5f)
+    override var anchorPoint = Vector2(0.5f, 0.5f)
         set(value) {
             if (field != value)
                 isPositionsDirty = true
@@ -140,5 +142,12 @@ abstract class Drawable(protected val mesh: Mesh, var texture: GLTexture = GLTex
     fun destroy() {
         vbo?.destroy()
         texture.destroy()
+    }
+
+    fun replaceMesh(mesh: Mesh) {
+        this.mesh = mesh
+        isPositionsDirty = true
+        isTexcoordsDirty = true
+        isColorsDirty = true
     }
 }

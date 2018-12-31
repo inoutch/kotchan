@@ -24,6 +24,9 @@ class GLTexture(val id: Int, val width: Int, val height: Int) {
     }
 
     fun destroy() {
+        if (id == 0) {
+            return
+        }
         if (isDestroyed) {
             throw Error("already destroyed")
         }
