@@ -5,7 +5,8 @@ import io.github.inoutch.kotchan.utility.type.Rect
 import io.github.inoutch.kotchan.utility.type.Vector2
 import io.github.inoutch.kotchan.utility.type.Vector3
 import io.github.inoutch.kotchan.utility.type.Vector4
-import kotchan.view.drawable.Drawable
+import io.github.inoutch.kotchan.core.view.drawable.Drawable
+import io.github.inoutch.kotchan.core.view.drawable.DrawableBase
 
 class Template(val rect: Rect = Rect(Vector2(), KotchanCore.instance.screenSize.toVector2())) {
     companion object {
@@ -26,20 +27,14 @@ class Template(val rect: Rect = Rect(Vector2(), KotchanCore.instance.screenSize.
 
     private val fragments: MutableMap<TemplateType, Fragment> = mutableMapOf()
 
-    var visible = true
-        set(value) {
-            fragments.forEach { fragment -> fragment.value.drawables.forEach { it.first.visible = value } }
-            field = visible
-        }
-
-    fun add(type: TemplateType, appendType: TemplateAppendType, margin: Float, drawable: Drawable) {
+    fun add(type: TemplateType, appendType: TemplateAppendType, margin: Float, drawable: DrawableBase) {
         add(type, appendType, Vector4(margin, margin, margin, margin), drawable)
     }
 
     fun add(type: TemplateType,
             appendType: TemplateAppendType,
             margin: Vector4,
-            drawable: Drawable) {
+            drawable: DrawableBase) {
         val pair = this.fragments
                 .getOrPut(type) { Fragment(appendType) }
         pair.drawables.add(Pair(drawable, margin))

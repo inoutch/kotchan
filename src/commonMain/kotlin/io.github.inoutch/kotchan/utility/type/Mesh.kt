@@ -1,9 +1,9 @@
 package io.github.inoutch.kotchan.utility.type
 
 data class Mesh(
-        private var positions: List<Vector3>,
-        private var texcoords: List<Vector2>,
-        private var colors: List<Vector4>) {
+        private var positions: List<Vector3> = emptyList(),
+        private var texcoords: List<Vector2> = emptyList(),
+        private var colors: List<Vector4> = emptyList()) {
     val size: Int
 
     init {
@@ -44,6 +44,4 @@ data class Mesh(
         }
         return null
     }
-
-
 }
