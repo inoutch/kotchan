@@ -5,7 +5,8 @@ import io.github.inoutch.kotchan.core.view.camera.Camera
 import io.github.inoutch.kotchan.utility.graphic.GLShaderProgram
 import io.github.inoutch.kotchan.utility.graphic.GLTexture
 import io.github.inoutch.kotchan.core.KotchanCore
-import kotchan.view.drawable.Drawable
+import io.github.inoutch.kotchan.core.view.drawable.Drawable
+import io.github.inoutch.kotchan.core.view.drawable.DrawableGroup
 
 class Batch {
     companion object {
@@ -14,50 +15,63 @@ class Batch {
 
     private val gl = KotchanCore.instance.gl
 
-    private val nodes: MutableMap<GLShaderProgram, MutableMap<GLTexture, BatchBundle>> = mutableMapOf()
+    private val drawables: MutableMap<GLShaderProgram, MutableMap<GLTexture, BatchBundle>> = mutableMapOf()
+
+    private val groups: MutableList<DrawableGroup> = mutableListOf()
 
     private val shaders: MutableMap<Drawable, GLShaderProgram> = mutableMapOf()
 
-    fun add(node: Drawable, shaderProgram: GLShaderProgram) {
-        shaders[node] = shaderProgram
-        var nodesByShader = nodes[shaderProgram]
+    fun add(drawable: Drawable, shaderProgram: GLShaderProgram) {
+        shaders[drawable] = shaderProgram
+        var nodesByShader = drawables[shaderProgram]
         if (nodesByShader == null) {
             nodesByShader = mutableMapOf()
-            nodes[shaderProgram] = nodesByShader
+            drawables[shaderProgram] = nodesByShader
         }
-        var nodesByShaderAndTexture = nodesByShader[node.texture]
+        var nodesByShaderAndTexture = nodesByShader[drawable.texture]
         if (nodesByShaderAndTexture == null) {
             nodesByShaderAndTexture = BatchBundle(
                     BatchBuffer(defaultVertexSize * 3),
                     BatchBuffer(defaultVertexSize * 4),
                     BatchBuffer(defaultVertexSize * 2))
-            nodesByShader[node.texture] = nodesByShaderAndTexture
+            nodesByShader[drawable.texture] = nodesByShaderAndTexture
         }
         nodesByShaderAndTexture.apply {
-            val positionBufferData = positionBuffer.add(node.positions())
-            val texcoordBufferData = texcoordBuffer.add(node.texcoords())
-            val colorBufferData = colorBuffer.add(node.colors())
-            nodes[node] = BatchNode(positionBufferData, colorBufferData, texcoordBufferData)
+            val positionBufferData = positionBuffer.add(drawable.positions())
+            val texcoordBufferData = texcoordBuffer.add(drawable.texcoords())
+            val colorBufferData = colorBuffer.add(drawable.colors())
+            drawables[drawable] = BatchNode(positionBufferData, colorBufferData, texcoordBufferData)
         }
     }
 
-    fun remove(node: Drawable) {
-        val shaderProgram = shaders[node] ?: return
-        val nodesByShaderAndTexture = nodes[shaderProgram]?.get(node.texture) ?: return
-        val batchData = nodesByShaderAndTexture.nodes[node] ?: return
-        shaders.remove(node)
+    fun add(drawableGroup: DrawableGroup, shaderProgram: GLShaderProgram) {
+        groups.add(drawableGroup)
+        drawableGroup.nodes.forEach { this.add(it.drawable, shaderProgram) }
+    }
+
+    fun remove(drawable: Drawable) {
+        val shaderProgram = shaders[drawable] ?: return
+        val nodesByShaderAndTexture = drawables[shaderProgram]?.get(drawable.texture) ?: return
+        val batchData = nodesByShaderAndTexture.drawables[drawable] ?: return
+        shaders.remove(drawable)
         nodesByShaderAndTexture.positionBuffer.remove(batchData.positionBufferData)
         nodesByShaderAndTexture.colorBuffer.remove(batchData.colorBufferData)
         nodesByShaderAndTexture.texcoordBuffer.remove(batchData.texcoordBufferData)
-        nodesByShaderAndTexture.nodes.remove(node)
+        nodesByShaderAndTexture.drawables.remove(drawable)
+    }
+
+    fun remove(drawableGroup: DrawableGroup) {
+        drawableGroup.nodes.forEach { remove(it.drawable) }
+        groups.remove(drawableGroup)
     }
 
     fun draw(delta: Float, camera: Camera) {
         var currentShaderProgram: GLShaderProgram? = null
         var currentTexture: GLTexture? = null
         var currentTextureEnable = true
-        nodes.keys.forEach shader@{ shaderProgram ->
-            val nodesByTexture = nodes[shaderProgram] ?: return@shader
+
+        drawables.keys.forEach shader@{ shaderProgram ->
+            val nodesByTexture = drawables[shaderProgram] ?: return@shader
             if (currentShaderProgram != shaderProgram) {
                 currentShaderProgram = shaderProgram
                 shaderProgram.use()
@@ -80,15 +94,15 @@ class Batch {
                 batchBufferBundle.colorBuffer.flush()
                 batchBufferBundle.texcoordBuffer.flush()
 
-                batchBufferBundle.nodes
+                batchBufferBundle.drawables
                         .filterKeys { it.isPositionsDirty }
                         .forEach { batchBufferBundle.positionBuffer.update(it.value.positionBufferData, it.key.positions()) }
 
-                batchBufferBundle.nodes
+                batchBufferBundle.drawables
                         .filterKeys { it.isColorsDirty }
                         .forEach { batchBufferBundle.colorBuffer.update(it.value.colorBufferData, it.key.colors()) }
 
-                batchBufferBundle.nodes
+                batchBufferBundle.drawables
                         .filterKeys { it.isTexcoordsDirty }
                         .forEach { batchBufferBundle.texcoordBuffer.update(it.value.texcoordBufferData, it.key.texcoords()) }
 
@@ -104,16 +118,15 @@ class Batch {
         }
     }
 
-    fun clear() {
-        nodes.values.forEach {
-            node ->
+    fun destroy() {
+        drawables.values.forEach { node ->
             node.values.forEach {
                 it.positionBuffer.destroy()
                 it.colorBuffer.destroy()
                 it.texcoordBuffer.destroy()
             }
         }
-        nodes.clear()
+        drawables.clear()
         shaders.clear()
     }
 }

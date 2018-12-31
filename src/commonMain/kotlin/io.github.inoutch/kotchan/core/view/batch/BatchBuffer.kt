@@ -2,23 +2,31 @@ package io.github.inoutch.kotchan.core.view.batch
 
 import io.github.inoutch.kotchan.core.KotchanCore
 
-class BatchBuffer(var maxSize: Int) {
+class BatchBuffer(defaultSize: Int) {
 
     private val gl = KotchanCore.instance.gl
 
     private val data: ArrayList<BatchBufferData> = arrayListOf()
 
+    private var maxSize: Int = defaultSize
+
     var size: Int = 0
         private set
 
-    val vbo = gl.createVBO(maxSize)
+    var vbo = gl.createVBO(maxSize)
+        private set
 
     var isDirty = false
 
     fun add(vertices: FloatArray): BatchBufferData {
         val last = if (data.size > 0) data.last().end() else 0
         if (last + vertices.size > maxSize) {
-            throw RuntimeException("batch: overflow default vbo size")
+            // reallocate vbo
+            isDirty = true
+            maxSize *= 2
+
+            gl.destroyVBO(vbo.id)
+            vbo = gl.createVBO(maxSize)
         }
 
         val batchBufferData = BatchBufferData(last, vertices)
@@ -37,10 +45,10 @@ class BatchBuffer(var maxSize: Int) {
 
     fun update(batchBufferVertex: BatchBufferData, vertices: FloatArray, autoFlush: Boolean = true) {
         if (vertices.size != batchBufferVertex.vertices.size) {
-            throw Error("broken batch buffer vertex")
+            isDirty = true
         }
         batchBufferVertex.vertices = vertices
-        if (autoFlush) {
+        if (autoFlush && !isDirty) {
             gl.updateVBO(vbo, batchBufferVertex.start, vertices)
         }
     }
@@ -60,6 +68,7 @@ class BatchBuffer(var maxSize: Int) {
                 }
                 .toFloatArray()
         gl.updateVBO(vbo, 0, array)
+        size = array.size
     }
 
     fun destroy() {
