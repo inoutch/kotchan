@@ -57,6 +57,8 @@ expect class GL() {
     // blend
     fun enableBlend()
 
+    fun blendFunc(sfactor: GLFactor, dfactor: GLFactor)
+
     // depth
     fun enableDepth()
 

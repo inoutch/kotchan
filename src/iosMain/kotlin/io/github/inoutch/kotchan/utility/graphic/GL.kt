@@ -8,6 +8,7 @@ import platform.glescommon.*
 import platform.gles3.*
 import platform.GLKit.*
 
+@ExperimentalUnsignedTypes
 actual class GL {
     private var defaultFrameBufferId: Int = 0
 
@@ -155,6 +156,10 @@ actual class GL {
     actual fun enableBlend() {
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+    }
+
+    actual fun blendFunc(sfactor: GLFactor, dfactor: GLFactor) {
+        glBlendFunc(getFactor(sfactor).toUInt(), getFactor(dfactor).toUInt())
     }
 
     // depth
@@ -324,5 +329,22 @@ actual class GL {
 
     private fun getFormat(format: GLFormat) = when (format) {
         GLFormat.RGBA -> GL_RGBA
+    }
+
+    private fun getFactor(factor: GLFactor) = when (factor) {
+        GLFactor.GL_ZERO -> GL_ZERO
+        GLFactor.GL_ONE -> GL_ONE
+        GLFactor.GL_SRC_COLOR -> GL_SRC_COLOR
+        GLFactor.GL_ONE_MINUS_SRC_COLOR -> GL_ONE_MINUS_SRC_COLOR
+        GLFactor.GL_DST_COLOR -> GL_DST_COLOR
+        GLFactor.GL_ONE_MINUS_DST_COLOR -> GL_ONE_MINUS_DST_COLOR
+        GLFactor.GL_SRC_ALPHA -> GL_SRC_ALPHA
+        GLFactor.GL_ONE_MINUS_SRC_ALPHA -> GL_ONE_MINUS_SRC_ALPHA
+        GLFactor.GL_DST_ALPHA -> GL_DST_ALPHA
+        GLFactor.GL_ONE_MINUS_DST_ALPHA -> GL_ONE_MINUS_DST_ALPHA
+        GLFactor.GL_CONSTANT_COLOR -> GL_CONSTANT_COLOR
+        GLFactor.GL_ONE_MINUS_CONSTANT_COLOR -> GL_ONE_MINUS_CONSTANT_COLOR
+        GLFactor.GL_CONSTANT_ALPHA -> GL_CONSTANT_ALPHA
+        GLFactor.GL_ONE_MINUS_CONSTANT_ALPHA -> GL_ONE_MINUS_CONSTANT_ALPHA
     }
 }

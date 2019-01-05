@@ -208,6 +208,10 @@ actual class GL {
         gl.glBlendFunc(GL4ES3.GL_SRC_ALPHA, GL4ES3.GL_ONE_MINUS_SRC_ALPHA)
     }
 
+    actual fun blendFunc(sfactor: GLFactor, dfactor: GLFactor) {
+        gl.glBlendFunc(getFactor(sfactor), getFactor(dfactor))
+    }
+
     // depth
     actual fun enableDepth() {
         gl.glDepthMask(true)
@@ -322,5 +326,22 @@ actual class GL {
 
     private fun getFormat(format: GLFormat) = when (format) {
         GLFormat.RGBA -> GL4ES3.GL_RGBA
+    }
+
+    private fun getFactor(factor: GLFactor) = when (factor) {
+        GLFactor.GL_ZERO -> GL4ES3.GL_ZERO
+        GLFactor.GL_ONE -> GL4ES3.GL_ONE
+        GLFactor.GL_SRC_COLOR -> GL4ES3.GL_SRC_COLOR
+        GLFactor.GL_ONE_MINUS_SRC_COLOR -> GL4ES3.GL_ONE_MINUS_SRC_COLOR
+        GLFactor.GL_DST_COLOR -> GL4ES3.GL_DST_COLOR
+        GLFactor.GL_ONE_MINUS_DST_COLOR -> GL4ES3.GL_ONE_MINUS_DST_COLOR
+        GLFactor.GL_SRC_ALPHA -> GL4ES3.GL_SRC_ALPHA
+        GLFactor.GL_ONE_MINUS_SRC_ALPHA -> GL4ES3.GL_ONE_MINUS_SRC_ALPHA
+        GLFactor.GL_DST_ALPHA -> GL4ES3.GL_DST_ALPHA
+        GLFactor.GL_ONE_MINUS_DST_ALPHA -> GL4ES3.GL_ONE_MINUS_DST_ALPHA
+        GLFactor.GL_CONSTANT_COLOR -> GL4ES3.GL_CONSTANT_COLOR
+        GLFactor.GL_ONE_MINUS_CONSTANT_COLOR -> GL4ES3.GL_ONE_MINUS_CONSTANT_COLOR
+        GLFactor.GL_CONSTANT_ALPHA -> GL4ES3.GL_CONSTANT_ALPHA
+        GLFactor.GL_ONE_MINUS_CONSTANT_ALPHA -> GL4ES3.GL_ONE_MINUS_CONSTANT_ALPHA
     }
 }
