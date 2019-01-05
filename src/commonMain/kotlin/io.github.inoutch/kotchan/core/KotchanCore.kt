@@ -129,11 +129,11 @@ class KotchanCore(private val config: KotchanEngine.Config, windowSize: Point? =
     }
 
     private fun calcScreenSize(): Point {
-        val windowRatio = windowSize.y / windowSize.x
+        val windowRatio = windowSize.y.toFloat() / windowSize.x.toFloat()
         return when (config.screenType) {
             ScreenType.EXTEND -> screenSize
-            ScreenType.FIX_WIDTH -> Point(screenSize.x, screenSize.x * windowRatio)
-            ScreenType.FIX_HEIGHT -> Point(screenSize.y / windowRatio, screenSize.y)
+            ScreenType.FIX_WIDTH -> Point(screenSize.x, (screenSize.x * windowRatio).toInt())
+            ScreenType.FIX_HEIGHT -> Point((screenSize.y / windowRatio).toInt(), screenSize.y)
             ScreenType.BORDER -> screenSize
         }
     }
