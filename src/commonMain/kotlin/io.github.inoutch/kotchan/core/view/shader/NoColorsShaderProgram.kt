@@ -49,7 +49,10 @@ void main(void)
 }
 """
 
-class NoColorsShaderProgram : GLShaderProgram(KotchanCore.instance.gl.compileShaderProgram(NoColorsVSource, NoColorsFSource)) {
+open class NoColorsShaderProgram protected constructor(vsh: String, fsh: String)
+    : GLShaderProgram(KotchanCore.instance.gl.compileShaderProgram(vsh, fsh)) {
+
+    constructor() : this(NoColorsVSource, NoColorsFSource)
 
     var color = Vector4(1.0f, 1.0f, 1.0f, 1.0f)
 

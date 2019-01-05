@@ -6,11 +6,10 @@ import io.github.inoutch.kotchan.core.view.shader.NoColorsShaderProgram
 import io.github.inoutch.kotchan.utility.type.*
 import io.github.inoutch.kotchan.core.controller.touch.listener.ArgTouchListener
 import io.github.inoutch.kotchan.core.view.camera.Camera
+import io.github.inoutch.kotchan.utility.graphic.GLShaderProgram
 import kotlin.math.floor
 
-abstract class TileMapBase(val mapInfo: TileMapInfo) {
-
-    private val shaderProgram = NoColorsShaderProgram()
+abstract class TileMapBase(val mapInfo: TileMapInfo, private val shaderProgram: NoColorsShaderProgram = NoColorsShaderProgram()) {
 
     val size = mapInfo.mapSize * mapInfo.tileSize
 

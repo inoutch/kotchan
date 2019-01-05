@@ -54,7 +54,10 @@ void main(void)
 }
 """
 
-open class AlphaTestShaderProgram : SimpleShaderProgram(AlphaTestVSource, AlphaTestFSource) {
+open class AlphaTestShaderProgram protected constructor(vsh: String, fsh: String)
+    : SimpleShaderProgram(vsh, fsh) {
+
+    constructor() : this(AlphaTestVSource, AlphaTestFSource)
 
     var alpha = 0.01f
 
