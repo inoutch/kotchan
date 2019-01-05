@@ -61,6 +61,10 @@ class TouchControllerEntity : TouchEmitter, TouchController {
         touchListeners.add(touchListener)
     }
 
+    override fun remove(touchListener: TouchListener) {
+        touchListeners.remove(touchListener)
+    }
+
     override fun clearAll() {
         touchListeners.clear()
     }

@@ -13,7 +13,7 @@ class AppConfig : KotchanEngine.Config() {
 
     override val screenSize = Point(640, 1136) / 2
 
-    override val screenType = ScreenType.EXTEND
+    override val screenType = ScreenType.FIX_WIDTH
 
     override val windowSize = Point(640, 1136)
 
