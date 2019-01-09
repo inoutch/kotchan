@@ -1,13 +1,11 @@
 package io.github.inoutch.kotchan.utility.graphic
 
 import io.github.inoutch.kotchan.core.KotchanCore
+import io.github.inoutch.kotchan.core.destruction.StrictDestruction
 
-class GLTexture(val id: Int, val width: Int, val height: Int) {
+class GLTexture(val id: Int, val width: Int, val height: Int) : StrictDestruction() {
 
     private val gl = KotchanCore.instance.gl
-
-    var isDestroyed = false
-        private set
 
     var filterType: GLFilterType = GLFilterType.Nearest
 
@@ -16,21 +14,18 @@ class GLTexture(val id: Int, val width: Int, val height: Int) {
     }
 
     fun use() {
-        if (isDestroyed) {
-            throw Error("already destroyed")
-        }
+        check()
         gl.useTexture(this)
         gl.filterTexture(filterType)
     }
 
-    fun destroy() {
+    override fun destroy() {
         if (id == 0) {
+            // pass through empty texture
             return
         }
-        if (isDestroyed) {
-            throw Error("already destroyed")
-        }
-        isDestroyed = true
-        gl.destroyTexture(id)
+
+        super.destroy()
+        gl.deleteTexture(id)
     }
 }

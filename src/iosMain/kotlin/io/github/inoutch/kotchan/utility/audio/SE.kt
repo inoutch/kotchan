@@ -27,5 +27,5 @@ actual class SE actual constructor(filepath: String) : SoundBase() {
         audio.stop()
     }
 
-    actual override fun release() {}
+    actual override fun destroy() {}
 }

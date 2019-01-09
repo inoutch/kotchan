@@ -82,8 +82,4 @@ class Label(private val bmFont: BMFont, textureDir: String, initText: String)
         }
         return Pair(meshes, Vector2(x, y))
     }
-
-    fun destroy() {
-        nodes.forEach { it.drawable.destroy() }
-    }
 }

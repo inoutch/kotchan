@@ -5,11 +5,14 @@ import io.github.inoutch.kotchan.core.controller.touch.listener.TouchListener
 import io.github.inoutch.kotchan.core.view.shader.NoColorsShaderProgram
 import io.github.inoutch.kotchan.utility.type.*
 import io.github.inoutch.kotchan.core.controller.touch.listener.ArgTouchListener
+import io.github.inoutch.kotchan.core.destruction.StrictDestruction
 import io.github.inoutch.kotchan.core.view.camera.Camera
 import io.github.inoutch.kotchan.utility.graphic.GLShaderProgram
 import kotlin.math.floor
 
-abstract class TileMapBase(val mapInfo: TileMapInfo, private val shaderProgram: NoColorsShaderProgram = NoColorsShaderProgram()) {
+abstract class TileMapBase(
+        val mapInfo: TileMapInfo,
+        private val shaderProgram: NoColorsShaderProgram = NoColorsShaderProgram()) : StrictDestruction() {
 
     val size = mapInfo.mapSize * mapInfo.tileSize
 
@@ -21,13 +24,6 @@ abstract class TileMapBase(val mapInfo: TileMapInfo, private val shaderProgram: 
     abstract fun layer(index: Int): TileLayerBase?
 
     abstract fun layerSize(): Int
-
-    open fun destroy() {
-        for (i in 0..layerSize()) {
-            layer(i)?.destroy()
-        }
-        shaderProgram.destroy()
-    }
 
     open fun draw(delta: Float, camera: Camera, layerRange: IntRange = IntRange(0, layerSize() - 1)) {
         mapInfo.texture.use()
@@ -60,5 +56,12 @@ abstract class TileMapBase(val mapInfo: TileMapInfo, private val shaderProgram: 
         val intervalInView = Vector2(cameraInView.x - pointInView.x, cameraInView.y - pointInView.y)
         val pointInTileMap = (intervalInView + normalizedPoint + 1.0f) / sizeInView * mapInfo.tileSize
         return Point(floor(pointInTileMap.x / mapInfo.tileSize.x), floor(pointInTileMap.y / mapInfo.tileSize.y))
+    }
+
+    override fun destroy() {
+        super.destroy()
+        for (i in 0..layerSize()) {
+            layer(i)?.destroy()
+        }
     }
 }

@@ -1,4 +1,4 @@
-package io.github.inoutch.kotchan.core.view.ui.button
+package io.github.inoutch.kotchan.core.view.ui.button.toggle
 
 import io.github.inoutch.kotchan.core.model.Model
 

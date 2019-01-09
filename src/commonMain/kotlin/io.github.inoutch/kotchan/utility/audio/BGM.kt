@@ -8,7 +8,7 @@ expect class BGM(filepath: String) : SoundBase {
 
     override fun stop()
 
-    override fun release()
+    override fun destroy()
 
     fun reset()
 

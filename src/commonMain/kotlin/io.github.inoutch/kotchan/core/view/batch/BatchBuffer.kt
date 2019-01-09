@@ -1,8 +1,9 @@
 package io.github.inoutch.kotchan.core.view.batch
 
 import io.github.inoutch.kotchan.core.KotchanCore
+import io.github.inoutch.kotchan.core.destruction.StrictDestruction
 
-class BatchBuffer(defaultSize: Int) {
+class BatchBuffer(defaultSize: Int) : StrictDestruction() {
 
     private val gl = KotchanCore.instance.gl
 
@@ -25,7 +26,7 @@ class BatchBuffer(defaultSize: Int) {
             isDirty = true
             maxSize *= 2
 
-            gl.destroyVBO(vbo.id)
+            gl.deleteVBO(vbo.id)
             vbo = gl.createVBO(maxSize)
         }
 
@@ -71,7 +72,8 @@ class BatchBuffer(defaultSize: Int) {
         size = array.size
     }
 
-    fun destroy() {
+    override fun destroy() {
+        super.destroy()
         vbo.destroy()
     }
 }

@@ -1,19 +1,18 @@
 package io.github.inoutch.kotchan.core.view.map
 
+import io.github.inoutch.kotchan.core.destruction.StrictDestruction
 import io.github.inoutch.kotchan.utility.type.Point
 import io.github.inoutch.kotchan.utility.type.Vector2
 import io.github.inoutch.kotchan.core.view.drawable.Square
 import kotlin.math.floor
 
-abstract class TileLayerBase(val mapInfo: TileMapInfo) {
+abstract class TileLayerBase(val mapInfo: TileMapInfo) : StrictDestruction() {
 
     private val bias = Vector2(1.0f, 1.0f) / mapInfo.tileNumber * 0.01f
 
     abstract fun fillAll(id: Int)
 
     abstract fun draw(delta: Float)
-
-    abstract fun destroy()
 
     abstract fun mapId(point: Point, id: Int)
 

@@ -1,9 +1,10 @@
 package io.github.inoutch.kotchan.utility.graphic
 
 import io.github.inoutch.kotchan.core.KotchanCore
+import io.github.inoutch.kotchan.core.destruction.StrictDestruction
 import io.github.inoutch.kotchan.utility.type.Matrix4
 
-abstract class GLShaderProgram(val id: Int) {
+abstract class GLShaderProgram(val id: Int) : StrictDestruction() {
 
     var textureEnable = true
 
@@ -15,8 +16,6 @@ abstract class GLShaderProgram(val id: Int) {
 
     protected val textureEnableLocation = gl.getUniform(id, "u_textureEnable")
 
-    private var isDestroy = false
-
     open fun prepare(delta: Float, mvpMatrix: Matrix4) {
         gl.uniform1f(timeDeltaLocation, delta)
         gl.uniform1f(textureEnableLocation, if (textureEnable) 2.0f else 0.0f)
@@ -24,14 +23,12 @@ abstract class GLShaderProgram(val id: Int) {
     }
 
     fun use() {
-        if (isDestroy) {
-            throw Error("this shader is already deleted.")
-        }
+        check()
         gl.useProgram(this.id)
     }
 
-    fun destroy() {
-        isDestroy = true
+    override fun destroy() {
+        super.destroy()
         gl.deleteShaderProgram(this)
     }
 }
