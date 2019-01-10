@@ -15,6 +15,12 @@ class Template(val rect: Rect = Rect(Vector2(), KotchanCore.instance.screenSize.
         fun createMargin(left: Float, right: Float, top: Float, bottom: Float) = Vector4(left, right, top, bottom)
     }
 
+    var visible: Boolean = false
+        set(value) {
+            fragments.forEach { fragment -> fragment.value.drawables.forEach { visible = value } }
+            field = value
+        }
+
     private enum class HorizontalType {
         Left,
         Center,
