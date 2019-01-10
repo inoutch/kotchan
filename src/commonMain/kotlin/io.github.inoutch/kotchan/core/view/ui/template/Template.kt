@@ -1,6 +1,8 @@
 package io.github.inoutch.kotchan.core.view.ui.template
 
 import io.github.inoutch.kotchan.core.KotchanCore
+import io.github.inoutch.kotchan.core.destruction.StrictDestruction
+import io.github.inoutch.kotchan.core.model.Model
 import io.github.inoutch.kotchan.utility.type.Rect
 import io.github.inoutch.kotchan.utility.type.Vector2
 import io.github.inoutch.kotchan.utility.type.Vector3
@@ -8,7 +10,7 @@ import io.github.inoutch.kotchan.utility.type.Vector4
 import io.github.inoutch.kotchan.core.view.drawable.Drawable
 import io.github.inoutch.kotchan.core.view.drawable.DrawableBase
 
-class Template(val rect: Rect = Rect(Vector2(), KotchanCore.instance.screenSize.toVector2())) {
+class Template(val rect: Rect = Rect(Vector2(), KotchanCore.instance.screenSize.toVector2())) : StrictDestruction(), Model {
     companion object {
         fun createMargin(left: Float, right: Float, top: Float, bottom: Float) = Vector4(left, right, top, bottom)
     }
@@ -79,6 +81,15 @@ class Template(val rect: Rect = Rect(Vector2(), KotchanCore.instance.screenSize.
                 pair.first.anchorPoint = anchorPoint
             }
         }
+    }
+
+    override fun update(delta: Float) {
+        fragments.values.forEach { fragment -> fragment.drawables.forEach { it.first.update(delta) } }
+    }
+
+    override fun destroy() {
+        super.destroy()
+        fragments.values.forEach { fragment -> fragment.drawables.forEach { it.first.destroy() } }
     }
 
     private fun h(type: HorizontalType) = when (type) {
