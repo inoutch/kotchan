@@ -33,7 +33,7 @@ actual class SE actual constructor(filepath: String) : SoundBase() {
         soundPool.stop(sound)
     }
 
-    actual override fun release() {
+    actual override fun destroy() {
         soundPool.release()
     }
 }

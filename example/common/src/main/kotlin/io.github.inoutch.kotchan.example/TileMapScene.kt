@@ -10,7 +10,7 @@ import io.github.inoutch.kotchan.core.view.map.TileMap
 import io.github.inoutch.kotchan.core.view.map.TileMapInfo
 import io.github.inoutch.kotchan.core.view.shader.NoColorsShaderProgram
 import io.github.inoutch.kotchan.core.view.shader.SimpleShaderProgram
-import io.github.inoutch.kotchan.core.view.ui.MockButton
+import io.github.inoutch.kotchan.core.view.ui.button.MockButton
 import io.github.inoutch.kotchan.core.view.ui.template.Template
 import io.github.inoutch.kotchan.core.view.ui.template.TemplateAppendType
 import io.github.inoutch.kotchan.core.view.ui.template.TemplateType

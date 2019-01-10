@@ -61,7 +61,7 @@ actual class GL {
         glBufferSubData(GL_ARRAY_BUFFER, (offset * 4).toLong(), (data.size * 4).toLong(), data.refTo(0))
     }
 
-    actual fun destroyVBO(vboId: Int) {
+    actual fun deleteVBO(vboId: Int) {
         glDeleteBuffers(1, arrayOf(vboId).toIntArray().toUIntArray().refTo(0))
     }
 
@@ -225,11 +225,11 @@ actual class GL {
         checkError("AttachTexture2d")
     }
 
-    actual fun destroyRenderBuffet(id: Int) {
+    actual fun deleteRenderBuffer(id: Int) {
         glDeleteRenderbuffers(1, arrayOf(id).toIntArray().toUIntArray().refTo(0))
     }
 
-    actual fun destroyFrameBuffer(id: Int) {
+    actual fun deleteFrameBuffer(id: Int) {
         glDeleteFramebuffers(1, arrayOf(id).toIntArray().toUIntArray().refTo(0))
     }
 
@@ -251,7 +251,7 @@ actual class GL {
         return GLTexture(textureInfo.name.toInt(), textureInfo.width.toInt(), textureInfo.height.toInt())
     }
 
-    actual fun destroyTexture(textureId: Int) {
+    actual fun deleteTexture(textureId: Int) {
         glDeleteTextures(1, arrayOf(textureId).toIntArray().toUIntArray().refTo(0))
     }
 

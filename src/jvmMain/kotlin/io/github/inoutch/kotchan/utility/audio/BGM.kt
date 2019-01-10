@@ -30,7 +30,7 @@ actual class BGM actual constructor(filepath: String) : SoundBase() {
         mediaPlayer.stop()
     }
 
-    actual override fun release() {
+    actual override fun destroy() {
         mediaPlayer.dispose()
     }
 

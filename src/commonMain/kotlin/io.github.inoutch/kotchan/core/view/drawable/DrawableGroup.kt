@@ -1,10 +1,11 @@
 package io.github.inoutch.kotchan.core.view.drawable
 
+import io.github.inoutch.kotchan.core.destruction.StrictDestruction
 import io.github.inoutch.kotchan.utility.type.Vector2
 import io.github.inoutch.kotchan.utility.type.Vector3
 import io.github.inoutch.kotchan.utility.type.Vector4
 
-abstract class DrawableGroup : DrawableBase {
+abstract class DrawableGroup : StrictDestruction(), DrawableBase {
     abstract val nodes: List<Node>
 
     override var size = Vector2()
@@ -37,5 +38,15 @@ abstract class DrawableGroup : DrawableBase {
         nodes.forEach {
             it.drawable.position = position + it.offset + Vector3(size * anchorPoint * -1.0f, 0.0f)
         }
+    }
+
+    override fun update(delta: Float) {
+        nodes.forEach { it.drawable.update(delta) }
+    }
+
+    override fun destroy() {
+        super.destroy()
+
+        nodes.forEach { it.drawable.destroy() }
     }
 }

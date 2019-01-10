@@ -30,7 +30,7 @@ actual class BGM actual constructor(filepath: String) : SoundBase() {
         audio.stop()
     }
 
-    actual override fun release() {}
+    actual override fun destroy() {}
 
     actual fun reset() {
         audio.currentTime = 0.0

@@ -1,4 +1,4 @@
-package io.github.inoutch.kotchan.core.view.ui
+package io.github.inoutch.kotchan.core.view.ui.button
 
 import io.github.inoutch.kotchan.core.view.camera.Camera
 import io.github.inoutch.kotchan.core.controller.touch.listener.ButtonTouchListener

@@ -124,6 +124,7 @@ class TileLayer(
     }
 
     override fun destroy() {
+        super.destroy()
         positionsVbo.destroy()
         texcoordsVbo.destroy()
     }

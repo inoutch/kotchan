@@ -20,7 +20,7 @@ expect class GL() {
 
     fun updateVBO(vbo: GLVBO, offset: Int, data: FloatArray)
 
-    fun destroyVBO(vboId: Int)
+    fun deleteVBO(vboId: Int)
 
     fun bindVBO(vboId: Int)
 
@@ -71,7 +71,7 @@ expect class GL() {
 
     fun loadTexture(filepath: String): GLTexture?
 
-    fun destroyTexture(textureId: Int)
+    fun deleteTexture(textureId: Int)
 
     fun filterTexture(type: GLFilterType)
 
@@ -94,9 +94,9 @@ expect class GL() {
 
     fun attachTexture2d(textureId: Int, attachType: GLFrameBufferAttachType)
 
-    fun destroyRenderBuffet(id: Int)
+    fun deleteRenderBuffer(id: Int)
 
-    fun destroyFrameBuffer(id: Int)
+    fun deleteFrameBuffer(id: Int)
 
     fun frameBufferTexture(attachType: GLFrameBufferAttachType, texture: GLTexture)
 

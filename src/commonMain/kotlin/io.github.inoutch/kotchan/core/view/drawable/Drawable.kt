@@ -5,10 +5,12 @@ import io.github.inoutch.kotchan.core.view.camera.Camera
 import io.github.inoutch.kotchan.utility.graphic.GLTexture
 import io.github.inoutch.kotchan.utility.graphic.GLVBO
 import io.github.inoutch.kotchan.core.KotchanCore
+import io.github.inoutch.kotchan.core.destruction.StrictDestruction
+import io.github.inoutch.kotchan.core.model.Model
 import io.github.inoutch.kotchan.core.view.shader.NoColorsShaderProgram
 import io.github.inoutch.kotchan.utility.type.*
 
-open class Drawable(initMesh: Mesh, var texture: GLTexture = GLTexture.empty) : DrawableBase {
+open class Drawable(initMesh: Mesh, var texture: GLTexture = GLTexture.empty) : StrictDestruction(), DrawableBase {
     var mesh = initMesh
         protected set
 
@@ -139,7 +141,11 @@ open class Drawable(initMesh: Mesh, var texture: GLTexture = GLTexture.empty) : 
         gl.drawTriangleArrays(0, mesh.size)
     }
 
-    fun destroy() {
+    override fun update(delta: Float) {}
+
+    override fun destroy() {
+        super.destroy()
+
         vbo?.destroy()
         texture.destroy()
     }

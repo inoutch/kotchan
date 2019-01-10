@@ -65,7 +65,7 @@ actual class GL {
         gl.glBufferSubData(GL4ES3.GL_ARRAY_BUFFER, (offset * 4).toLong(), (data.size * 4).toLong(), vertexBuffer)
     }
 
-    actual fun destroyVBO(vboId: Int) {
+    actual fun deleteVBO(vboId: Int) {
         gl.glDeleteBuffers(1, IntBuffer.wrap(IntArray(1, { vboId })))
     }
 
@@ -176,7 +176,7 @@ actual class GL {
         }
     }
 
-    actual fun destroyTexture(textureId: Int) {
+    actual fun deleteTexture(textureId: Int) {
         gl.glDeleteTextures(1, IntBuffer.wrap(IntArray(1, { textureId })))
     }
 
@@ -262,11 +262,11 @@ actual class GL {
         gl.glFramebufferTexture2D(GL4ES3.GL_FRAMEBUFFER, getFrameBufferAttachType(attachType), GL4ES3.GL_TEXTURE_2D, textureId, 0)
     }
 
-    actual fun destroyRenderBuffet(id: Int) {
+    actual fun deleteRenderBuffer(id: Int) {
         gl.glDeleteRenderbuffers(1, IntBuffer.wrap(IntArray(1) { id }))
     }
 
-    actual fun destroyFrameBuffer(id: Int) {
+    actual fun deleteFrameBuffer(id: Int) {
         gl.glDeleteFramebuffers(1, IntBuffer.wrap(IntArray(1) { id }))
     }
 

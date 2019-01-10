@@ -42,7 +42,7 @@ actual class BGM actual constructor(filepath: String) : SoundBase() {
         mediaPlayer.seekTo(0)
     }
 
-    actual override fun release() {
+    actual override fun destroy() {
         mediaPlayer.release()
         KotchanSoundManager.instance.remove(this)
     }
