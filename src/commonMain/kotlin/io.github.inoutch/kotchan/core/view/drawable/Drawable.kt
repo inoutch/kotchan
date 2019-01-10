@@ -26,7 +26,7 @@ open class Drawable(initMesh: Mesh, var texture: GLTexture = GLTexture.empty) : 
     var isTexcoordsDirty = true
         protected set
 
-    var visible = true
+    override var visible = true
         set(value) {
             if (field != value)
                 isPositionsDirty = true

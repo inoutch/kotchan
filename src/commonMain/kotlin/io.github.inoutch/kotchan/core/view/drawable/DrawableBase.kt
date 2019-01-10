@@ -11,4 +11,6 @@ interface DrawableBase : Model {
     var position: Vector3
 
     var anchorPoint: Vector2
+
+    var visible: Boolean
 }

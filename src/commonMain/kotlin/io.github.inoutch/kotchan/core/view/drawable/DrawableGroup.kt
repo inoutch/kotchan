@@ -13,6 +13,12 @@ abstract class DrawableGroup : StrictDestruction(), DrawableBase {
 
     data class Node(val drawable: Drawable, val offset: Vector3)
 
+    override var visible: Boolean = true
+        set(value) {
+            nodes.forEach { it.drawable.visible = value }
+            field = value
+        }
+
     override var position = Vector3()
         set(value) {
             if (field != value)
