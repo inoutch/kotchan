@@ -56,31 +56,35 @@ class JoglLauncher(private val config: KotchanEngine.Config) : GLEventListener, 
         core.init()
     }
 
-    override fun reshape(drawable: GLAutoDrawable?, x: Int, y: Int, width: Int, height: Int) {
+    override fun reshape(drawable: GLAutoDrawable?, x: Int, y: Int, width: Int, height: Int) = synchronized(this) {
         core.reshape(x, y, width, height)
+        return@synchronized
     }
 
-    override fun display(drawable: GLAutoDrawable?) {
+    override fun display(drawable: GLAutoDrawable?) = synchronized(this) {
         core.draw()
     }
 
     override fun dispose(drawable: GLAutoDrawable?) {
     }
 
-    override fun mousePressed(e: MouseEvent) {
+    override fun mousePressed(e: MouseEvent) = synchronized(this) {
         val core = this.core
         singleTouchEvent = TouchEvent(Point(e.x, glWindow.surfaceHeight - e.y))
         singleTouchEvent?.let { core.touchEmitter.onTouchesBegan(listOf(it)) }
+        return@synchronized
     }
 
-    override fun mouseReleased(e: MouseEvent) {
+    override fun mouseReleased(e: MouseEvent) = synchronized(this) {
         singleTouchEvent?.point = Point(e.x, glWindow.surfaceHeight - e.y)
         singleTouchEvent?.let { core.touchEmitter.onTouchesEnded(listOf(it)) }
+        return@synchronized
     }
 
-    override fun mouseDragged(e: MouseEvent) {
+    override fun mouseDragged(e: MouseEvent) = synchronized(this) {
         singleTouchEvent?.point = Point(e.x, glWindow.surfaceHeight - e.y)
         singleTouchEvent?.let { core.touchEmitter.onTouchesMoved(listOf(it)) }
+        return@synchronized
     }
 
     override fun mouseClicked(e: MouseEvent?) {}

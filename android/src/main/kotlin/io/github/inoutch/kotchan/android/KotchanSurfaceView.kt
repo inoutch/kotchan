@@ -24,7 +24,8 @@ class KotchanSurfaceView(config: KotchanEngine.Config, context: Context) : GLSur
         setRenderer(renderer)
     }
 
-    override fun onTouchEvent(event: MotionEvent): Boolean {
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(event: MotionEvent) = synchronized(renderer) {
         val eventAction = event.actionMasked
         when (eventAction) {
             MotionEvent.ACTION_DOWN,
@@ -34,14 +35,14 @@ class KotchanSurfaceView(config: KotchanEngine.Config, context: Context) : GLSur
             MotionEvent.ACTION_POINTER_UP -> this.onTouchesEnded(event)
             MotionEvent.ACTION_CANCEL -> this.onTouchesCancelled()
         }
-        return true
+        true
     }
 
-    override fun onPause() {
+    override fun onPause() = synchronized(renderer) {
         KotchanSoundManager.instance.pauseAll()
     }
 
-    override fun onResume() {
+    override fun onResume() = synchronized(renderer) {
         KotchanSoundManager.instance.playAll()
     }
 
