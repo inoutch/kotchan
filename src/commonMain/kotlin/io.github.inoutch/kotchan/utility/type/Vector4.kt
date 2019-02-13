@@ -6,6 +6,7 @@ data class Vector4(var x: Float, val y: Float, val z: Float, val w: Float) {
     }
 
     constructor() : this(0.0f, 0.0f, 0.0f, 0.0f)
+    constructor(v: Float) : this(v, v, v, v)
     constructor(vector3: Vector3, w: Float) : this(vector3.x, vector3.y, vector3.z, w)
 
     fun copyCoordinatesTo(arr: MutableList<Float>) {
@@ -16,6 +17,7 @@ data class Vector4(var x: Float, val y: Float, val z: Float, val w: Float) {
     }
 
     operator fun times(other: Float) = Vector4(x * other, y * other, z * other, w * other)
+    operator fun times(other: Vector4) = Vector4(x * other.x, y * other.y, z * other.z, w * other.w)
 }
 
 fun List<Vector4>.flatten() = FloatArray(this.size * 4).also {

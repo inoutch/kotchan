@@ -1,6 +1,6 @@
 package io.github.inoutch.kotchan.core.controller.touch.listener
 
-import io.github.inoutch.kotchan.core.view.camera.Camera
+import io.github.inoutch.kotchan.core.graphic.camera.Camera
 import io.github.inoutch.kotchan.core.controller.touch.Touch
 import io.github.inoutch.kotchan.core.controller.touch.TouchControllerEntity
 import io.github.inoutch.kotchan.core.controller.touch.TouchType

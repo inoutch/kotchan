@@ -1,7 +1,7 @@
 package io.github.inoutch.kotchan.core
 
 import io.github.inoutch.kotchan.core.constant.ScreenType
-import io.github.inoutch.kotchan.core.view.Scene
+import io.github.inoutch.kotchan.core.graphic.Scene
 import io.github.inoutch.kotchan.utility.type.Point
 import kotchan.logger.LogLevel
 

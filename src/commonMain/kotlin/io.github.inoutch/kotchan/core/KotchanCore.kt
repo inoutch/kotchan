@@ -6,16 +6,16 @@ import io.github.inoutch.kotchan.core.controller.event.listener.EventController
 import io.github.inoutch.kotchan.core.controller.event.listener.TimerEventController
 import io.github.inoutch.kotchan.core.controller.touch.TouchControllerEntity
 import io.github.inoutch.kotchan.core.logger.logger
-import io.github.inoutch.kotchan.core.view.Scene
+import io.github.inoutch.kotchan.core.graphic.Scene
 import io.github.inoutch.kotchan.utility.graphic.GL
 import io.github.inoutch.kotchan.utility.io.File
 import io.github.inoutch.kotchan.utility.time.Timer
 import io.github.inoutch.kotchan.utility.type.*
-import io.github.inoutch.kotchan.core.view.animator.Animator
-import io.github.inoutch.kotchan.core.view.camera.Camera
-import io.github.inoutch.kotchan.core.view.camera.Camera2D
-import io.github.inoutch.kotchan.core.view.camera.Camera3D
-import io.github.inoutch.kotchan.core.view.texture.TextureManager
+import io.github.inoutch.kotchan.core.graphic.animator.Animator
+import io.github.inoutch.kotchan.core.graphic.camera.Camera
+import io.github.inoutch.kotchan.core.graphic.camera.Camera2D
+import io.github.inoutch.kotchan.core.graphic.camera.Camera3D
+import io.github.inoutch.kotchan.core.graphic.texture.TextureManager
 
 class KotchanCore(private val config: KotchanEngine.Config, windowSize: Point? = null) {
 

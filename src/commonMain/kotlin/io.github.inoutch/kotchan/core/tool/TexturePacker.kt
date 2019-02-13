@@ -5,7 +5,7 @@ import interop.data.json.JsonType
 import io.github.inoutch.kotchan.utility.graphic.GLTexture
 import io.github.inoutch.kotchan.core.KotchanCore
 import io.github.inoutch.kotchan.core.logger.logger
-import io.github.inoutch.kotchan.core.view.texture.TextureAtlas
+import io.github.inoutch.kotchan.core.graphic.texture.TextureAtlas
 import io.github.inoutch.kotchan.utility.path.Path
 import io.github.inoutch.kotchan.utility.type.*
 

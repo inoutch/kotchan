@@ -2,18 +2,18 @@ package io.github.inoutch.kotchan.example
 
 import io.github.inoutch.kotchan.core.KotchanCore
 import io.github.inoutch.kotchan.core.controller.touch.listener.ScrollTouchListener
-import io.github.inoutch.kotchan.core.view.Scene
-import io.github.inoutch.kotchan.core.view.batch.Batch
-import io.github.inoutch.kotchan.core.view.drawable.Label
-import io.github.inoutch.kotchan.core.view.map.TileLayerInfo
-import io.github.inoutch.kotchan.core.view.map.TileMap
-import io.github.inoutch.kotchan.core.view.map.TileMapInfo
-import io.github.inoutch.kotchan.core.view.shader.NoColorsShaderProgram
-import io.github.inoutch.kotchan.core.view.shader.SimpleShaderProgram
-import io.github.inoutch.kotchan.core.view.ui.button.MockButton
-import io.github.inoutch.kotchan.core.view.ui.template.Template
-import io.github.inoutch.kotchan.core.view.ui.template.TemplateAppendType
-import io.github.inoutch.kotchan.core.view.ui.template.TemplateType
+import io.github.inoutch.kotchan.core.graphic.Scene
+import io.github.inoutch.kotchan.core.graphic.batch.Batch
+import io.github.inoutch.kotchan.core.graphic.view.Label
+import io.github.inoutch.kotchan.core.graphic.map.TileLayerInfo
+import io.github.inoutch.kotchan.core.graphic.map.TileMap
+import io.github.inoutch.kotchan.core.graphic.map.TileMapInfo
+import io.github.inoutch.kotchan.core.graphic.shader.NoColorsShaderProgram
+import io.github.inoutch.kotchan.core.graphic.shader.SimpleShaderProgram
+import io.github.inoutch.kotchan.core.graphic.ui.button.MockButton
+import io.github.inoutch.kotchan.core.graphic.ui.template.Template
+import io.github.inoutch.kotchan.core.graphic.ui.template.TemplateAppendType
+import io.github.inoutch.kotchan.core.graphic.ui.template.TemplateType
 import io.github.inoutch.kotchan.utility.font.BMFont
 import io.github.inoutch.kotchan.utility.io.getResourcePathWithError
 import io.github.inoutch.kotchan.utility.io.readTextFromResourceWithError
@@ -72,7 +72,7 @@ class TileMapScene : Scene() {
         val template = Template(Rect(Vector2.Zero, screenSize.toVector2()))
 
         backLabel = Label(bmFont, file.getResourcePathWithError("font"), "Back")
-        batch.add(backLabel, noColorsShaderProgram)
+        batch.addViewBase(backLabel, noColorsShaderProgram)
         template.add(TemplateType.MiddleCenter, TemplateAppendType.Row, 24.0f, backLabel)
         template.updatePositions()
 
