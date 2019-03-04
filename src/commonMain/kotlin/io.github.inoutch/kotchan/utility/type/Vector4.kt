@@ -18,6 +18,13 @@ data class Vector4(var x: Float, val y: Float, val z: Float, val w: Float) {
 
     operator fun times(other: Float) = Vector4(x * other, y * other, z * other, w * other)
     operator fun times(other: Vector4) = Vector4(x * other.x, y * other.y, z * other.z, w * other.w)
+
+    fun flatten() = FloatArray(4).also {
+        it[0] = x
+        it[1] = y
+        it[2] = z
+        it[3] = w
+    }
 }
 
 fun List<Vector4>.flatten() = FloatArray(this.size * 4).also {

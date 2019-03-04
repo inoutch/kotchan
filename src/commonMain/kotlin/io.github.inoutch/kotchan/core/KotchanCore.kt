@@ -1,13 +1,11 @@
 package io.github.inoutch.kotchan.core
 
-import io.github.inoutch.kotchan.utility.graphic.GLAttribLocation
 import io.github.inoutch.kotchan.core.constant.ScreenType
 import io.github.inoutch.kotchan.core.controller.event.listener.EventController
 import io.github.inoutch.kotchan.core.controller.event.listener.TimerEventController
 import io.github.inoutch.kotchan.core.controller.touch.TouchControllerEntity
 import io.github.inoutch.kotchan.core.logger.logger
 import io.github.inoutch.kotchan.core.graphic.Scene
-import io.github.inoutch.kotchan.utility.graphic.GL
 import io.github.inoutch.kotchan.utility.io.File
 import io.github.inoutch.kotchan.utility.time.Timer
 import io.github.inoutch.kotchan.utility.type.*
@@ -15,9 +13,10 @@ import io.github.inoutch.kotchan.core.graphic.animator.Animator
 import io.github.inoutch.kotchan.core.graphic.camera.Camera
 import io.github.inoutch.kotchan.core.graphic.camera.Camera2D
 import io.github.inoutch.kotchan.core.graphic.camera.Camera3D
-import io.github.inoutch.kotchan.core.graphic.texture.TextureManager
 
-class KotchanCore(private val config: KotchanEngine.Config, windowSize: Point? = null) {
+class KotchanCore(
+        private val config: KotchanEngine.Config,
+        val vk: KotchanVk) {
 
     companion object {
         const val KOTCHAN_ENGINE_NAME = "kotchan-engine"
@@ -32,11 +31,9 @@ class KotchanCore(private val config: KotchanEngine.Config, windowSize: Point? =
 
     private var beforeMillis: Long = 0
 
-    val gl = GL()
+//    val textureManager = TextureManager(gl)
 
     val file = File()
-
-    val textureManager = TextureManager(gl)
 
     val touchEmitter = touchControllerEntity
 
@@ -48,8 +45,8 @@ class KotchanCore(private val config: KotchanEngine.Config, windowSize: Point? =
 
     val animator = Animator()
 
-    var windowSize = windowSize ?: config.windowSize
-        private set
+    val windowSize: Point
+        get() = vk.swapchainRecreator.extent
 
     var screenSize = config.screenSize
         private set
@@ -74,6 +71,7 @@ class KotchanCore(private val config: KotchanEngine.Config, windowSize: Point? =
     }
 
     fun draw() {
+
         // transit view
         this.sceneFactory?.let { clearScreenFactory(it) }
 
@@ -81,20 +79,23 @@ class KotchanCore(private val config: KotchanEngine.Config, windowSize: Point? =
         val delta = calcDelta()
 
         touchControllerEntity.update(delta)
-        timerEventController.update(delta)
+//        timerEventController.update(delta)
 
         animator.update(delta)
         currentScene?.draw(delta)
 
-        gl.bindDefaultFrameBuffer()
-        gl.viewPort(viewport.origin.x, viewport.origin.y, viewport.size.x, viewport.size.y)
+        vk.draw()
+        // TODO:
+//        gl.bindDefaultFrameBuffer()
+//        gl.viewPort(viewport.origin.x, viewport.origin.y, viewport.size.x, viewport.size.y)
 
         // release bindings
-        gl.useProgram(0)
-        gl.bindVBO(0)
-        gl.disableVertexPointer(GLAttribLocation.ATTRIBUTE_COLOR)
-        gl.disableVertexPointer(GLAttribLocation.ATTRIBUTE_TEXCOORD)
-        gl.disableVertexPointer(GLAttribLocation.ATTRIBUTE_POSITION)
+        // TODO:
+//        gl.useProgram(0)
+//        gl.bindVBO(0)
+//        gl.disableVertexPointer(GLAttribLocation.ATTRIBUTE_COLOR)
+//        gl.disableVertexPointer(GLAttribLocation.ATTRIBUTE_TEXCOORD)
+//        gl.disableVertexPointer(GLAttribLocation.ATTRIBUTE_POSITION)
     }
 
     fun reshape(x: Int, y: Int, width: Int, height: Int) {

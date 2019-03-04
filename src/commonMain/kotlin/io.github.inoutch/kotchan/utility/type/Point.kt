@@ -1,6 +1,10 @@
 package io.github.inoutch.kotchan.utility.type
 
 data class Point(val x: Int, val y: Int) {
+    companion object {
+        val ZERO = Point(0, 0)
+    }
+
     constructor() : this(0, 0)
     constructor(vector: Vector2) : this(vector.x.toInt(), vector.y.toInt())
     constructor(x: Float, y: Float) : this(x.toInt(), y.toInt())

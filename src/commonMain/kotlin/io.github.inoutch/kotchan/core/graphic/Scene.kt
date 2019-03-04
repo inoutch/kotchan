@@ -4,11 +4,11 @@ import io.github.inoutch.kotchan.core.KotchanCore
 
 abstract class Scene {
 
-    protected val gl = KotchanCore.instance.gl
+//    protected val gl = KotchanCore.instance.gl
 
     protected val file = KotchanCore.instance.file
 
-    protected val textureManager = KotchanCore.instance.textureManager
+//    protected val textureManager = KotchanCore.instance.textureManager
 
     protected val touchController = KotchanCore.instance.touchController
 

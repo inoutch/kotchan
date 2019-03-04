@@ -41,6 +41,8 @@ project(":common") {
 project(":jvm") {
     apply from: rootProject.file("jvm.gradle")
 
+    /* LWJGL settings */
+    applicationDefaultJvmArgs = ["-XstartOnFirstThread"]
     mainClassName = "io.github.inoutch.kotchan.example.Main"
     defaultTasks "run"
 
