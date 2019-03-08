@@ -14,9 +14,9 @@ actual class MappedMemory actual constructor(size: Long) : Disposable {
 
     private lateinit var device: VkDevice
 
-    private lateinit var memory: VkMemory
+    private lateinit var memory: VkDeviceMemory
 
-    fun init(native: Long, device: VkDevice, memory: VkMemory) {
+    fun init(native: Long, device: VkDevice, memory: VkDeviceMemory) {
         this.native = native
         this.device = device
         this.memory = memory

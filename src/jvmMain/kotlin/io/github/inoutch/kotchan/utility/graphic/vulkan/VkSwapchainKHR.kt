@@ -32,19 +32,19 @@ actual fun vkCreateSwapchainKHR(device: VkDevice, createInfo: VkSwapchainCreateI
     VkSwapchainKHR().apply { init(native.get(0), device) }
 }
 
-actual fun vkGetSwapchainImagesKHR(device: VkDevice, swapchainKHR: VkSwapchainKHR) = memScoped {
+actual fun vkGetSwapchainImagesKHR(device: VkDevice, swapchain: VkSwapchainKHR) = memScoped {
     val imageCount = allocInt()
 
     checkError(KHRSwapchain.vkGetSwapchainImagesKHR(
             device.native,
-            swapchainKHR.native,
+            swapchain.native,
             imageCount,
             null))
 
     val native = allocLong(imageCount.get(0))
     checkError(KHRSwapchain.vkGetSwapchainImagesKHR(
             device.native,
-            swapchainKHR.native,
+            swapchain.native,
             imageCount,
             native))
 

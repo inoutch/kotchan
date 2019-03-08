@@ -5,7 +5,7 @@ import org.lwjgl.vulkan.VK10
 
 fun org.lwjgl.vulkan.VkQueueFamilyProperties.toOrigin(): VkQueueFamilyProperties {
     return VkQueueFamilyProperties(queueFlags(), queueCount(), timestampValidBits(),
-            minImageTransferGranularity().let { VkExtend3D(it.width(), it.height(), it.depth()) })
+            minImageTransferGranularity().let { VkExtent3D(it.width(), it.height(), it.depth()) })
 }
 
 actual fun vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice: VkPhysicalDevice) = memScoped {

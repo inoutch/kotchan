@@ -20,10 +20,10 @@ actual class VkPipelineCache : Disposable {
     }
 }
 
-actual fun vkCreatePipelineCache(device: VkDevice, pipelineCacheCreateInfo: VkPipelineCacheCreateInfo) = memScoped {
+actual fun vkCreatePipelineCache(device: VkDevice, createInfo: VkPipelineCacheCreateInfo) = memScoped {
     val native = LongBuffer.allocate(1)
 
-    checkError(VK10.vkCreatePipelineCache(device.native, pipelineCacheCreateInfo.toNative(this), null, native))
+    checkError(VK10.vkCreatePipelineCache(device.native, createInfo.toNative(this), null, native))
 
     VkPipelineCache().apply { init(native.get(0), device) }
 }
