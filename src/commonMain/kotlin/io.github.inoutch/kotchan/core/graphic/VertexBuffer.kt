@@ -12,7 +12,7 @@ class VertexBuffer(
                         VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)) : Disposable {
 
     val buffer: VkBuffer
-    val memory: VkMemory
+    val memory: VkDeviceMemory
 
     init {
         val bufferCreateInfo = VkBufferCreateInfo(

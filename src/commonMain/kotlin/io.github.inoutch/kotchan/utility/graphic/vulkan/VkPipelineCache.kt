@@ -4,4 +4,4 @@ import io.github.inoutch.kotchan.utility.Disposable
 
 expect class VkPipelineCache : Disposable
 
-expect fun vkCreatePipelineCache(device: VkDevice, pipelineCacheCreateInfo: VkPipelineCacheCreateInfo): VkPipelineCache
+expect fun vkCreatePipelineCache(device: VkDevice, createInfo: VkPipelineCacheCreateInfo): VkPipelineCache

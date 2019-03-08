@@ -1,23 +1,26 @@
 import io.github.inoutch.kotchan.core.KotchanCore
+import io.github.inoutch.kotchan.core.KotchanVk
 import io.github.inoutch.kotchan.core.controller.touch.TouchEvent
 import io.github.inoutch.kotchan.ios.DefaultConfig
+import io.github.inoutch.kotchan.utility.graphic.vulkan.VkInstance
+import io.github.inoutch.kotchan.utility.graphic.vulkan.vkCreateIOSSurfaceMVK
 import io.github.inoutch.kotchan.utility.type.*
 import kotlinx.cinterop.*
-import platform.CoreGraphics.*
-import platform.EAGL.*
 import platform.Foundation.*
-import platform.GameKit.*
-import platform.GLKit.*
+import platform.QuartzCore.CADisplayLink
 import platform.UIKit.*
+import vulkan.VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK
+import vulkan.VkIOSSurfaceCreateInfoMVK
 
+@ExperimentalUnsignedTypes
 @ExportObjCClass
-class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol {
+class ViewController : UIViewController {
+
+    private lateinit var displayLink: CADisplayLink
 
     private lateinit var core: KotchanCore
 
     private val touchEvents = mutableMapOf<ObjCObject, TouchEvent>()
-
-    private lateinit var context: EAGLContext
 
     private lateinit var windowSize: Point
 
@@ -29,15 +32,12 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
     constructor(coder: NSCoder) : super(coder)
 
     override fun viewDidLoad() {
-        this.context = EAGLContext(kEAGLRenderingAPIOpenGLES3)
 
-        val view = this.view as GLKView
-        view.context = this.context
-        view.drawableDepthFormat = GLKViewDrawableDepthFormat16
-        view.bindDrawable()
+        this.view.contentScaleFactor = UIScreen.mainScreen.nativeScale
 
-        this.preferredFramesPerSecond = 60
-        EAGLContext.setCurrentContext(this.context)
+        displayLink = CADisplayLink.displayLinkWithTarget(this, NSSelectorFromString("render:"))
+        displayLink.frameInterval = 1
+        displayLink.addToRunLoop(NSRunLoop.currentRunLoop, NSDefaultRunLoopMode)
 
         viewSize = UIScreen.mainScreen().bounds().useContents {
             Point(size.width.toInt(), size.height.toInt())
@@ -48,19 +48,20 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
         }
 
         windowRatio = Vector2(
-            windowSize.x.toFloat() / viewSize.x,
-            windowSize.y.toFloat() / viewSize.y)
+                windowSize.x.toFloat() / viewSize.x,
+                windowSize.y.toFloat() / viewSize.y)
 
         val config = DefaultConfig.config ?: throw Error("KotchanEngineConfig is not applied")
-        core = KotchanCore(config, windowSize)
+        val vk = KotchanVk(config, windowSize, listOf(), listOf(), listOf(), listOf()) { createSurface(it) }
+        core = KotchanCore(config, vk)
+
         core.init()
     }
 
-    override fun glkView(view: GLKView, drawInRect: CValue<CGRect>) {
+    @ObjCAction
+    fun render(sender: CADisplayLink) {
         core.draw()
     }
-
-    override fun gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController) {}
 
     override fun touchesBegan(touches: Set<*>, withEvent: UIEvent?) {
         super.touchesBegan(touches, withEvent)
@@ -110,5 +111,15 @@ class ViewController : GLKViewController, GKGameCenterControllerDelegateProtocol
         super.touchesCancelled(touches, withEvent)
         touchEvents.clear()
         core.touchEmitter.onTouchesCancelled()
+    }
+
+    private fun createSurface(instance: VkInstance) = memScoped {
+        val nativeCreateInfo = alloc<VkIOSSurfaceCreateInfoMVK>()
+        nativeCreateInfo.sType = VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK
+        nativeCreateInfo.pNext = null
+        nativeCreateInfo.flags = 0u
+        nativeCreateInfo.pView = StableRef.create(view).asCPointer()
+
+        vkCreateIOSSurfaceMVK(instance, nativeCreateInfo)
     }
 }

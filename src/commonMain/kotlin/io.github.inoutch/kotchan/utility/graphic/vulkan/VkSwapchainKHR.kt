@@ -6,7 +6,7 @@ expect class VkSwapchainKHR : Disposable
 
 expect fun vkCreateSwapchainKHR(device: VkDevice, createInfo: VkSwapchainCreateInfoKHR): VkSwapchainKHR
 
-expect fun vkGetSwapchainImagesKHR(device: VkDevice, swapchainKHR: VkSwapchainKHR): List<VkImage>
+expect fun vkGetSwapchainImagesKHR(device: VkDevice, swapchain: VkSwapchainKHR): List<VkImage>
 
 expect fun vkAcquireNextImageKHR(
         device: VkDevice,
