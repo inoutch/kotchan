@@ -175,7 +175,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/../../../gradlew -p $SRCROOT/../../../ \"build\" --stacktrace -Pdisable.android=true\n";
+			shellScript = "$SRCROOT/../../../gradlew \"build\" --stacktrace -Pdisable.android=true\n";
 		};
 		95B2512B2071282100B001E5 /* Replace Original Binary */ = {
 			isa = PBXShellScriptBuildPhase;
