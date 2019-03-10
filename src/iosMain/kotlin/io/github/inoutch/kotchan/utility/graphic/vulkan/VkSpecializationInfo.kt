@@ -10,7 +10,7 @@ fun VkSpecializationInfo.copyToNative(
     native.mapEntryCount = mapEntities.size.toUInt()
     native.pMapEntries = mapEntities.toNative(scope)
     native.dataSize = data.size.toULong()
-    native.pData = data.refTo(0) as COpaquePointer
+    native.pData = data.refTo(0).getPointer(scope).rawValue.toLong().toCPointer()
 }
 
 @ExperimentalUnsignedTypes

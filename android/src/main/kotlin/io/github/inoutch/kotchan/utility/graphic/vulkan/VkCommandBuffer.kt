@@ -1,6 +1,7 @@
 package io.github.inoutch.kotchan.utility.graphic.vulkan
 
 import io.github.inoutch.kotchan.utility.Disposable
+import io.github.inoutch.kotchan.utility.type.Vector4
 
 actual class VkCommandBuffer : Disposable {
     override fun dispose() {
@@ -40,4 +41,7 @@ actual fun vkCmdDraw(commandBuffer: VkCommandBuffer, vertexCount: Int, instanceC
 }
 
 actual fun vkCmdPipelineBarrier(commandBuffer: VkCommandBuffer, srcStageMask: List<VkPipelineStageFlagBits>, dstStageMask: List<VkPipelineStageFlagBits>, dependencyFlags: List<VkDependencyFlagBits>, memoryBarriers: List<VkMemoryBarrier>, bufferMemoryBarriers: List<VkBufferMemoryBarrier>, imageMemoryBarriers: List<VkImageMemoryBarrier>) {
+}
+
+actual fun vkCmdClearColorImage(commandBuffer: VkCommandBuffer, image: VkImage, imageLayout: VkImageLayout, clearColor: Vector4, ranges: List<VkImageSubresourceRange>) {
 }

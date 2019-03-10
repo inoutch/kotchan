@@ -19,6 +19,7 @@ actual class VkSwapchainKHR : Disposable {
     }
 }
 
+@ExperimentalUnsignedTypes
 actual fun vkCreateSwapchainKHR(
         device: VkDevice,
         createInfo: VkSwapchainCreateInfoKHR) = memScoped {

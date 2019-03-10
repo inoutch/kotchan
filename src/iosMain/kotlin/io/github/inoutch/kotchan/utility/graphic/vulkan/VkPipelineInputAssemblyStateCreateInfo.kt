@@ -9,7 +9,7 @@ fun VkPipelineInputAssemblyStateCreateInfo.copyToNative(native: vulkan.VkPipelin
     native.pNext = null
     native.flags = flags.toUInt()
     native.topology = topology.value.toUInt()
-    native.primitiveRestartEnable = if (primitiveRestartEnable) 1u else 0u
+    native.primitiveRestartEnable = primitiveRestartEnable.toVkBool32()
 }
 
 @ExperimentalUnsignedTypes

@@ -16,11 +16,9 @@ actual class VkPhysicalDevice actual constructor() {
 @ExperimentalUnsignedTypes
 actual fun vkEnumeratePhysicalDevices(instance: VkInstance) = memScoped {
     val count = alloc<UIntVar>()
-
     checkError(vulkan.vkEnumeratePhysicalDevices(instance.native, count.ptr, null))
 
     val natives = allocArray<vulkan.VkPhysicalDeviceVar>(count.value.toInt())
-
     checkError(vulkan.vkEnumeratePhysicalDevices(instance.native, count.ptr, natives))
 
     List(count.value.toInt()) {

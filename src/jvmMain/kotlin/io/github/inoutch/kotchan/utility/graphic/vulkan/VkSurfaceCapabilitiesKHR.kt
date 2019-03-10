@@ -26,5 +26,6 @@ actual fun vkGetPhysicalDeviceSurfaceCapabilitiesKHR(
             physicalDevice.native,
             surface.native,
             native))
+
     native.toOrigin()
 }

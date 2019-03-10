@@ -19,6 +19,7 @@ actual class VkShaderModule : Disposable {
     }
 }
 
+@ExperimentalUnsignedTypes
 actual fun vkCreateShaderModule(device: VkDevice, shaderModuleCreateInfo: VkShaderModuleCreateInfo) = memScoped {
     val native = alloc<vulkan.VkShaderModuleVar>()
 

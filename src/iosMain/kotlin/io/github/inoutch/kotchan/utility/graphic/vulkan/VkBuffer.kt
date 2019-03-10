@@ -20,12 +20,7 @@ actual class VkBuffer : Disposable {
     }
 }
 
-fun List<VkBuffer>.toNative(scope: MemScope): CArrayPointer<VkBufferVar> {
-    val natives = scope.allocArray<VkBufferVar>(size)
-    map { it.native }.forEachIndexed { index, x -> natives[index] = x }
-    return natives
-}
-
+@ExperimentalUnsignedTypes
 actual fun vkCreateBuffer(device: VkDevice, createInfo: VkBufferCreateInfo) = memScoped {
     val native = alloc<VkBufferVar>()
 

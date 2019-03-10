@@ -10,7 +10,7 @@ fun org.lwjgl.vulkan.VkPhysicalDeviceProperties.toOrigin(): VkPhysicalDeviceProp
             vendorID(),
             deviceID(),
             VkPhysicalDeviceType.values().find { it.value == deviceType() }
-                    ?: VkPhysicalDeviceType.VK_PHYSICAL_DEVICE_TYPE_OTHER,
+                    ?: throw VkNullError("deviceType"),
             deviceName().toString(),
             pipelineCacheUUID().asIntBuffer().array().asList(),
             VkPhysicalDeviceLimits(),
@@ -24,6 +24,8 @@ fun org.lwjgl.vulkan.VkPhysicalDeviceProperties.toOrigin(): VkPhysicalDeviceProp
 
 actual fun vkGetPhysicalDeviceProperties(physicalDevice: VkPhysicalDevice) = memScoped {
     val native = add(org.lwjgl.vulkan.VkPhysicalDeviceProperties.calloc())
+
     VK10.vkGetPhysicalDeviceProperties(physicalDevice.native, native)
+
     native.toOrigin()
 }

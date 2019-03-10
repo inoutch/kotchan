@@ -16,6 +16,7 @@ import io.github.inoutch.kotchan.core.graphic.camera.Camera3D
 
 class KotchanCore(
         private val config: KotchanEngine.Config,
+        private val actualSizeWindowSize: Point,
         val vk: KotchanVk) {
 
     companion object {
@@ -45,8 +46,7 @@ class KotchanCore(
 
     val animator = Animator()
 
-    val windowSize: Point
-        get() = vk.swapchainRecreator.extent
+    val windowSize = actualSizeWindowSize
 
     var screenSize = config.screenSize
         private set

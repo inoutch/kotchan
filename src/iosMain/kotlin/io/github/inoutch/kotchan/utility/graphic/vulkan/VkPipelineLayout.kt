@@ -19,6 +19,7 @@ actual class VkPipelineLayout : Disposable {
     }
 }
 
+@ExperimentalUnsignedTypes
 actual fun vkCreatePipelineLayout(device: VkDevice, createInfo: VkPipelineLayoutCreateInfo) = memScoped {
     val native = alloc<vulkan.VkPipelineLayoutVar>()
 

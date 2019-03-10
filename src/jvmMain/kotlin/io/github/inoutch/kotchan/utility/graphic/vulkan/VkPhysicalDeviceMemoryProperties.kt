@@ -11,6 +11,8 @@ fun org.lwjgl.vulkan.VkPhysicalDeviceMemoryProperties.toOrigin(): VkPhysicalDevi
 
 actual fun vkGetPhysicalDeviceMemoryProperties(physicalDevice: VkPhysicalDevice) = memScoped {
     val native = add(org.lwjgl.vulkan.VkPhysicalDeviceMemoryProperties.calloc())
+
     VK10.vkGetPhysicalDeviceMemoryProperties(physicalDevice.native, native)
+
     native.toOrigin()
 }

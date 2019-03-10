@@ -7,7 +7,8 @@ fun VkPipelineMultisampleStateCreateInfo.copyToNative(
         native: org.lwjgl.vulkan.VkPipelineMultisampleStateCreateInfo,
         scope: MemScope) {
     native.sType(VK10.VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO)
-            .pNext(VK10.VK_NULL_HANDLE).flags(flags)
+            .pNext(VK10.VK_NULL_HANDLE)
+            .flags(flags)
             .rasterizationSamples(rasterizationSamples.sumBy { it.value })
             .sampleShadingEnable(sampleShadingEnable)
             .minSampleShading(minSampleShading)

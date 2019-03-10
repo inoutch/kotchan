@@ -64,7 +64,7 @@ class SwapchainRecreator(
                     vk.renderPass,
                     framebuffers[index],
                     VkRect2D(Point.ZERO, extent),
-                    listOf(VkClearValue(Vector4.Zero, VkClearDepthStencilValue(0.0f, 0))))
+                    listOf(VkClearValue(Vector4(1.0f, 0.0f, 0.0f, 1.0f)), VkClearValue(VkClearDepthStencilValue(0.0f, 0))))
             vkCmdBeginRenderPass(commandBuffer, renderPassBeginInfo, VkSubpassContents.VK_SUBPASS_CONTENTS_INLINE)
 
             vkCmdBindPipeline(commandBuffer, VkPipelineBindPoint.VK_PIPELINE_BIND_POINT_GRAPHICS, vk.graphicsPipeline)

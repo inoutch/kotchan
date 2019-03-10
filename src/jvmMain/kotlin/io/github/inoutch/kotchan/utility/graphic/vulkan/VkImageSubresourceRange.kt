@@ -13,3 +13,7 @@ fun VkImageSubresourceRange.copyToNative(native: org.lwjgl.vulkan.VkImageSubreso
 fun VkImageSubresourceRange.toNative(scope: MemScope): org.lwjgl.vulkan.VkImageSubresourceRange =
         scope.add(org.lwjgl.vulkan.VkImageSubresourceRange.calloc()
                 .also { copyToNative(it) })
+
+fun List<VkImageSubresourceRange>.toNative(scope: MemScope): org.lwjgl.vulkan.VkImageSubresourceRange.Buffer =
+        scope.add(org.lwjgl.vulkan.VkImageSubresourceRange.calloc(size)
+                .also { forEachIndexed { index, x -> x.copyToNative(it[index]) } })

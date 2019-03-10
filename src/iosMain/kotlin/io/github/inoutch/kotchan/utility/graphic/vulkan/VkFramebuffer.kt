@@ -19,7 +19,6 @@ actual class VkFramebuffer : Disposable {
     }
 }
 
-
 @ExperimentalUnsignedTypes
 actual fun vkCreateFramebuffer(device: VkDevice, createInfo: VkFramebufferCreateInfo) = memScoped {
     val native = alloc<vulkan.VkFramebufferVar>()

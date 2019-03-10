@@ -47,7 +47,7 @@ class GLFWLauncher(config: KotchanEngine.Config) : GLFWKeyCallback() {
             }
         }
 
-        core = KotchanCore(config, vk)
+        core = KotchanCore(config, nativeSize, vk)
 
         glfwShowWindow(window)
     }

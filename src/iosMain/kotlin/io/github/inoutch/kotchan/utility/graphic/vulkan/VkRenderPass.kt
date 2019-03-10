@@ -20,6 +20,7 @@ actual class VkRenderPass : Disposable {
 }
 
 
+@ExperimentalUnsignedTypes
 actual fun vkCreateRenderPass(device: VkDevice, createInfo: VkRenderPassCreateInfo) = memScoped {
     val native = alloc<VkRenderPassVar>()
 

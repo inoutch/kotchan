@@ -2,6 +2,7 @@ package io.github.inoutch.kotchan.utility.graphic.vulkan
 
 import io.github.inoutch.kotchan.extension.toNative
 import io.github.inoutch.kotchan.utility.Disposable
+import io.github.inoutch.kotchan.utility.type.Vector4
 import kotlinx.cinterop.*
 import vulkan.VkCommandBufferVar
 
@@ -91,7 +92,7 @@ actual fun vkCmdBindVertexBuffers(
             commandBuffer.native,
             firstBinding.toUInt(),
             buffers.size.toUInt(),
-            buffers.toNative(this),
+            buffers.map { it.native }.toNative(this),
             offsets.map { it.toULong() }.toNative(this))
 }
 
@@ -121,4 +122,20 @@ actual fun vkCmdPipelineBarrier(
             bufferMemoryBarriers.toNative(this),
             imageMemoryBarriers.size.toUInt(),
             imageMemoryBarriers.toNative(this))
+}
+
+@ExperimentalUnsignedTypes
+actual fun vkCmdClearColorImage(
+        commandBuffer: VkCommandBuffer,
+        image: VkImage,
+        imageLayout: VkImageLayout,
+        clearColor: Vector4,
+        ranges: List<VkImageSubresourceRange>) = memScoped {
+    vulkan.vkCmdClearColorImage(
+            commandBuffer.native,
+            image.native,
+            imageLayout.value.toUInt(),
+            clearColor.toNative(this),
+            ranges.size.toUInt(),
+            ranges.toNative(this))
 }

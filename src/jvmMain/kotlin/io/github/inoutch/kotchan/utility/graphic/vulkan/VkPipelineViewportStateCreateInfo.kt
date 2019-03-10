@@ -7,7 +7,8 @@ fun VkPipelineViewportStateCreateInfo.copyToNative(
         native: org.lwjgl.vulkan.VkPipelineViewportStateCreateInfo,
         scope: MemScope) {
     native.sType(VK10.VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO)
-            .pNext(VK10.VK_NULL_HANDLE).flags(flags)
+            .pNext(VK10.VK_NULL_HANDLE)
+            .flags(flags)
             .viewportCount(viewportCount)
             .pViewports(viewports.toNative(scope))
             .scissorCount(scissorCount)

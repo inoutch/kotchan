@@ -2,6 +2,7 @@ package io.github.inoutch.kotchan.utility.graphic.vulkan
 
 import io.github.inoutch.kotchan.utility.Disposable
 import io.github.inoutch.kotchan.utility.memScoped
+import io.github.inoutch.kotchan.utility.type.Vector4
 import org.lwjgl.vulkan.VK10
 import org.lwjgl.vulkan.VK10.vkFreeCommandBuffers
 
@@ -123,4 +124,18 @@ actual fun vkCmdPipelineBarrier(
             memoryBarriers.toNative(this),
             bufferMemoryBarriers.toNative(this),
             imageMemoryBarriers.toNative(this))
+}
+
+actual fun vkCmdClearColorImage(
+        commandBuffer: VkCommandBuffer,
+        image: VkImage,
+        imageLayout: VkImageLayout,
+        clearColor: Vector4,
+        ranges: List<VkImageSubresourceRange>) = memScoped {
+    VK10.vkCmdClearColorImage(
+            commandBuffer.native,
+            image.native,
+            imageLayout.value,
+            clearColor.toNative(this),
+            ranges.toNative(this))
 }

@@ -10,7 +10,7 @@ fun VkCommandBufferInheritanceInfo.copyToNative(native: vulkan.VkCommandBufferIn
     native.renderPass = renderPass.native
     native.subpass = subpass.toUInt()
     native.framebuffer = framebuffer.native
-    native.occlusionQueryEnable = if (occlusionQueryEnable) 1u else 0u
+    native.occlusionQueryEnable = occlusionQueryEnable.toVkBool32()
     native.queryFlags = queryFlags.sumBy { it.value }.toUInt()
     native.pipelineStatistics = pipelineStatistics.sumBy { it.value }.toUInt()
 }

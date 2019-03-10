@@ -8,8 +8,8 @@ fun VkPipelineCacheCreateInfo.copyToNative(
         native: org.lwjgl.vulkan.VkPipelineCacheCreateInfo,
         scope: MemScope) {
     native.sType(VK10.VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO)
-            .flags(flags)
             .pNext(VK10.VK_NULL_HANDLE)
+            .flags(flags)
             .pInitialData(initialData.toNative(scope))
 }
 

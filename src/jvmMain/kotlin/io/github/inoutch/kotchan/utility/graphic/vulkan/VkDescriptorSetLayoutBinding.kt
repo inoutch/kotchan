@@ -1,5 +1,6 @@
 package io.github.inoutch.kotchan.utility.graphic.vulkan
 
+import io.github.inoutch.kotchan.extension.toNative
 import io.github.inoutch.kotchan.utility.MemScope
 
 fun VkDescriptorSetLayoutBinding.toNative(memScope: MemScope): org.lwjgl.vulkan.VkDescriptorSetLayoutBinding =
@@ -9,13 +10,13 @@ fun VkDescriptorSetLayoutBinding.toNative(memScope: MemScope): org.lwjgl.vulkan.
 
 fun VkDescriptorSetLayoutBinding.copyToNative(
         native: org.lwjgl.vulkan.VkDescriptorSetLayoutBinding,
-        memScope: MemScope) {
+        scope: MemScope) {
     native.binding(binding)
             .descriptorType(descriptorType.value)
             .descriptorCount(descriptorCount)
             .stageFlags(stageFlags.sumBy { it.value })
+            .pImmutableSamplers(immutableSamplers?.let { longArrayOf(it.native).toNative(scope) })
 }
-// TODO: implement immutable sampler
 
 fun List<VkDescriptorSetLayoutBinding>.toNative(memScope: MemScope):
         org.lwjgl.vulkan.VkDescriptorSetLayoutBinding.Buffer =

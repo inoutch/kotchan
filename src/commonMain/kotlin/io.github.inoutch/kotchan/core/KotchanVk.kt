@@ -13,7 +13,7 @@ import io.github.inoutch.kotchan.utility.type.Version
 
 class KotchanVk(
         private val config: KotchanEngine.Config,
-        private val windowSize: Point,
+        private val actualWindowSize: Point,
         private val physicalDeviceLayerNames: List<String>,
         private val physicalDeviceExtensionNames: List<String>,
         private val deviceLayerNames: List<String>,
@@ -70,7 +70,6 @@ class KotchanVk(
                 applicationInfo,
                 physicalDeviceLayerNames,
                 physicalDeviceExtensionNames)
-
         instance = vkCreateInstance(instanceCreateInfo)
 
         surface = surfaceCreateCallback(instance)
@@ -112,7 +111,7 @@ class KotchanVk(
 
     fun draw() {
         if (swapchainRecreator.mustBeRecreate) {
-            swapchainRecreator.recreate(windowSize)
+            swapchainRecreator.recreate(actualWindowSize)
         }
 
         val swapchain = swapchainRecreator.currentSwapchain ?: return

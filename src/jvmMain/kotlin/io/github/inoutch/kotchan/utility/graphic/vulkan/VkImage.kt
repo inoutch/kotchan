@@ -15,10 +15,7 @@ actual class VkImage : Disposable {
     }
 
     override fun dispose() {
-        val device = this.device
-        if (device != null) {
-            VK10.vkDestroyImage(device.native, native, null)
-        }
+        device?.let { VK10.vkDestroyImage(it.native, native, null) }
     }
 }
 

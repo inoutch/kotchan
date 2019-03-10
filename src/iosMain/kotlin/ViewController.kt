@@ -28,6 +28,7 @@ class ViewController : UIViewController {
 
     private lateinit var windowRatio: Vector2
 
+    @Suppress("ConvertSecondaryConstructorToPrimary")
     @OverrideInit
     constructor(coder: NSCoder) : super(coder)
 
@@ -52,12 +53,19 @@ class ViewController : UIViewController {
                 windowSize.y.toFloat() / viewSize.y)
 
         val config = DefaultConfig.config ?: throw Error("KotchanEngineConfig is not applied")
-        val vk = KotchanVk(config, windowSize, listOf(), listOf(), listOf(), listOf()) { createSurface(it) }
-        core = KotchanCore(config, vk)
+        val vk = KotchanVk(
+                config,
+                windowSize,
+                listOf(),
+                listOf("VK_KHR_surface", "VK_MVK_ios_surface"),
+                listOf(),
+                listOf("VK_KHR_swapchain")) { createSurface(it) }
+        core = KotchanCore(config, windowSize, vk)
 
         core.init()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @ObjCAction
     fun render(sender: CADisplayLink) {
         core.draw()
@@ -118,7 +126,7 @@ class ViewController : UIViewController {
         nativeCreateInfo.sType = VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK
         nativeCreateInfo.pNext = null
         nativeCreateInfo.flags = 0u
-        nativeCreateInfo.pView = StableRef.create(view).asCPointer()
+        nativeCreateInfo.pView = view.objcPtr().toLong().toCPointer()
 
         vkCreateIOSSurfaceMVK(instance, nativeCreateInfo)
     }

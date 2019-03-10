@@ -22,11 +22,9 @@ fun vulkan.VkQueueFamilyProperties.toOrigin(): VkQueueFamilyProperties {
 @ExperimentalUnsignedTypes
 actual fun vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice: VkPhysicalDevice) = memScoped {
     val count = alloc<UIntVar>()
-
     vulkan.vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice.native, count.ptr, null)
 
     val properties = allocArray<vulkan.VkQueueFamilyProperties>(count.value.toInt())
-
     vulkan.vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice.native, count.ptr, properties)
 
     List(count.value.toInt()) { properties[it].toOrigin() }

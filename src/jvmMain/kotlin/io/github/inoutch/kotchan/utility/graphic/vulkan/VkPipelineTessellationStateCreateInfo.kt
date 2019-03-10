@@ -1,9 +1,12 @@
 package io.github.inoutch.kotchan.utility.graphic.vulkan
 
 import io.github.inoutch.kotchan.utility.MemScope
+import org.lwjgl.vulkan.VK10
 
 fun VkPipelineTessellationStateCreateInfo.copyToNative(native: org.lwjgl.vulkan.VkPipelineTessellationStateCreateInfo) {
-    native.flags(flags)
+    native.sType(VK10.VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO)
+            .pNext(VK10.VK_NULL_HANDLE)
+            .flags(flags)
             .patchControlPoints(patchControlPoints)
 }
 
