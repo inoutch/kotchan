@@ -8,6 +8,6 @@ actual class VkPipelineCache : Disposable {
     }
 }
 
-actual fun vkCreatePipelineCache(device: VkDevice, pipelineCacheCreateInfo: VkPipelineCacheCreateInfo): VkPipelineCache {
+actual fun vkCreatePipelineCache(device: VkDevice, createInfo: VkPipelineCacheCreateInfo): VkPipelineCache {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 }

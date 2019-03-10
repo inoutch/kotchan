@@ -11,6 +11,3 @@ actual class VkRenderPass : Disposable {
 actual fun vkCreateRenderPass(device: VkDevice, createInfo: VkRenderPassCreateInfo): VkRenderPass {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 }
-
-actual fun vkCmdBeginRenderPass(commandBuffer: VkCommandBuffer, beginInfo: VkRenderPassBeginInfo) {
-}

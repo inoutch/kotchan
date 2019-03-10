@@ -8,6 +8,6 @@ actual class VkDevice : Disposable {
     }
 }
 
-actual fun vkCreateDevice(physicalDevice: VkPhysicalDevice, deviceCreateInfo: VkDeviceCreateInfo): VkDevice {
+actual fun vkCreateDevice(physicalDevice: VkPhysicalDevice, createInfo: VkDeviceCreateInfo): VkDevice {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 }

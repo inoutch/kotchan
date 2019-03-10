@@ -8,6 +8,6 @@ actual class VkDescriptorSetLayout : Disposable {
     }
 }
 
-actual fun vkCreateDescriptorSetLayout(device: VkDevice, descriptionSetLayoutCreateInfo: VkDescriptorSetLayoutCreateInfo): VkDescriptorSetLayout {
+actual fun vkCreateDescriptorSetLayout(device: VkDevice, createInfo: VkDescriptorSetLayoutCreateInfo): VkDescriptorSetLayout {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 }

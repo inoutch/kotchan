@@ -20,12 +20,16 @@ class KotchanRenderer(
         val dispMet = DisplayMetrics()
         display.getRealMetrics(dispMet)
 
-        core = KotchanCore(this.config, Point(dispMet.widthPixels, dispMet.heightPixels))
-        core.init()
+//        core = KotchanCore(this.config, Point(dispMet.widthPixels, dispMet.heightPixels))
+//        core.init()
         return@synchronized
     }
 
-    override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) = core.reshape(0, 0, width, height)
+    override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
+//        core.reshape(0, 0, width, height)
+    }
 
-    override fun onDrawFrame(gl: GL10?) = core.draw()
+    override fun onDrawFrame(gl: GL10?) {
+//        core.draw()
+    }
 }

@@ -12,10 +12,10 @@ actual fun vkCreateSwapchainKHR(device: VkDevice, createInfo: VkSwapchainCreateI
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 }
 
-actual fun vkGetSwapchainImagesKHR(device: VkDevice, swapchainKHR: VkSwapchainKHR): List<VkImage> {
+actual fun vkGetSwapchainImagesKHR(device: VkDevice, swapchain: VkSwapchainKHR): List<VkImage> {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 }
 
-actual fun vkAcquireNextImageKHR(device: VkDevice, swapchainKHR: VkSwapchainKHR, timeout: Long, semaphore: VkSemaphore, fence: VkFence?): Int {
+actual fun vkAcquireNextImageKHR(device: VkDevice, swapchain: VkSwapchainKHR, timeout: Long, semaphore: VkSemaphore, fence: VkFence?): Int {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 }

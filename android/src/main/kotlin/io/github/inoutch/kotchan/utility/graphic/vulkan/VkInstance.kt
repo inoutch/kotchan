@@ -8,6 +8,6 @@ actual class VkInstance actual constructor() : Disposable {
     }
 }
 
-actual fun vkCreateInstance(vkInstanceCreateInfo: VkInstanceCreateInfo): VkInstance {
+actual fun vkCreateInstance(createInfo: VkInstanceCreateInfo): VkInstance {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 }

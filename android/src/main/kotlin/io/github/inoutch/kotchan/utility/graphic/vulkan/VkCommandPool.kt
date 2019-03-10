@@ -8,6 +8,6 @@ actual class VkCommandPool : Disposable {
     }
 }
 
-actual fun vkCreateCommandPool(device: VkDevice, commandPoolCreateInfo: VkCommandPoolCreateInfo): VkCommandPool {
+actual fun vkCreateCommandPool(device: VkDevice, createInfo: VkCommandPoolCreateInfo): VkCommandPool {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 }
