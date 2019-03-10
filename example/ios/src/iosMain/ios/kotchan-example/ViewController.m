@@ -21,3 +21,10 @@
 - (IBAction)handlePanGesture:(UIPanGestureRecognizer *)sender {
 }
 @end
+
+@implementation View
+
+/** Returns a Metal-compatible layer. */
++(Class) layerClass { return [CAMetalLayer class]; }
+
+@end

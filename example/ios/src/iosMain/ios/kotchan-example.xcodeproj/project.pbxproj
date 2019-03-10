@@ -7,36 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9523004B21D4EF9800F684F0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9523004121D4EF9800F684F0 /* Assets.xcassets */; };
-		9523004C21D4EF9800F684F0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9523004221D4EF9800F684F0 /* ViewController.m */; };
-		9523004D21D4EF9800F684F0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9523004321D4EF9800F684F0 /* LaunchScreen.storyboard */; };
-		9523004E21D4EF9800F684F0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9523004521D4EF9800F684F0 /* Main.storyboard */; };
-		9523004F21D4EF9800F684F0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9523004721D4EF9800F684F0 /* main.m */; };
-		9523005021D4EF9800F684F0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9523004821D4EF9800F684F0 /* AppDelegate.m */; };
-		9523005121D4EF9800F684F0 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9523004921D4EF9800F684F0 /* Info.plist */; };
-		9523005721D6450D00F684F0 /* sample.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 9523005621D6450D00F684F0 /* sample.mp3 */; };
-		95B2511D207121E900B001E5 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95B2511C207121E900B001E5 /* GLKit.framework */; };
-		95B2511F207121F500B001E5 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95B2511E207121F500B001E5 /* OpenGLES.framework */; };
-		95B8D06F21DA390E00D5A2D6 /* font in Resources */ = {isa = PBXBuildFile; fileRef = 95B8D06E21DA390E00D5A2D6 /* font */; };
-		95B8D07121DA6C6200D5A2D6 /* tiles in Resources */ = {isa = PBXBuildFile; fileRef = 95B8D07021DA6C6200D5A2D6 /* tiles */; };
+		951B502321E0DD2700B01C37 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 951B501921E0DD2700B01C37 /* Assets.xcassets */; };
+		951B502421E0DD2700B01C37 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 951B501A21E0DD2700B01C37 /* ViewController.m */; };
+		951B502521E0DD2700B01C37 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 951B501B21E0DD2700B01C37 /* Main.storyboard */; };
+		951B502721E0DD2700B01C37 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 951B501F21E0DD2700B01C37 /* main.m */; };
+		951B502821E0DD2700B01C37 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 951B502021E0DD2700B01C37 /* AppDelegate.m */; };
+		95FD4D292214537B00A65BF6 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 95FD4D282214537B00A65BF6 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		9523004021D4EF9800F684F0 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		9523004121D4EF9800F684F0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		9523004221D4EF9800F684F0 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		9523004421D4EF9800F684F0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		9523004621D4EF9800F684F0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		9523004721D4EF9800F684F0 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		9523004821D4EF9800F684F0 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		9523004921D4EF9800F684F0 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9523004A21D4EF9800F684F0 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		9523005621D6450D00F684F0 /* sample.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = sample.mp3; sourceTree = "<group>"; };
+		951B501821E0DD2700B01C37 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		951B501921E0DD2700B01C37 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		951B501A21E0DD2700B01C37 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		951B501C21E0DD2700B01C37 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		951B501F21E0DD2700B01C37 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		951B502021E0DD2700B01C37 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		951B502121E0DD2700B01C37 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		951B502221E0DD2700B01C37 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		95B250FB20711F2800B001E5 /* kotchan-example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "kotchan-example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		95B2511C207121E900B001E5 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
-		95B2511E207121F500B001E5 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
-		95B8D06E21DA390E00D5A2D6 /* font */ = {isa = PBXFileReference; lastKnownFileType = folder; path = font; sourceTree = "<group>"; };
-		95B8D07021DA6C6200D5A2D6 /* tiles */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tiles; sourceTree = "<group>"; };
+		95FD4D282214537B00A65BF6 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,46 +33,32 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				95B2511F207121F500B001E5 /* OpenGLES.framework in Frameworks */,
-				95B2511D207121E900B001E5 /* GLKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		9523003F21D4EF9800F684F0 /* kotchan-example */ = {
+		951B501721E0DD2700B01C37 /* kotchan-example */ = {
 			isa = PBXGroup;
 			children = (
-				9523004021D4EF9800F684F0 /* AppDelegate.h */,
-				9523004121D4EF9800F684F0 /* Assets.xcassets */,
-				9523004221D4EF9800F684F0 /* ViewController.m */,
-				9523004321D4EF9800F684F0 /* LaunchScreen.storyboard */,
-				9523004521D4EF9800F684F0 /* Main.storyboard */,
-				9523004721D4EF9800F684F0 /* main.m */,
-				9523004821D4EF9800F684F0 /* AppDelegate.m */,
-				9523004921D4EF9800F684F0 /* Info.plist */,
-				9523004A21D4EF9800F684F0 /* ViewController.h */,
+				951B501821E0DD2700B01C37 /* AppDelegate.h */,
+				951B501921E0DD2700B01C37 /* Assets.xcassets */,
+				951B501A21E0DD2700B01C37 /* ViewController.m */,
+				951B501B21E0DD2700B01C37 /* Main.storyboard */,
+				951B501F21E0DD2700B01C37 /* main.m */,
+				951B502021E0DD2700B01C37 /* AppDelegate.m */,
+				951B502121E0DD2700B01C37 /* Info.plist */,
+				951B502221E0DD2700B01C37 /* ViewController.h */,
 			);
 			path = "kotchan-example";
-			sourceTree = "<group>";
-		};
-		9523005521D6450D00F684F0 /* resources */ = {
-			isa = PBXGroup;
-			children = (
-				95B8D07021DA6C6200D5A2D6 /* tiles */,
-				95B8D06E21DA390E00D5A2D6 /* font */,
-				9523005621D6450D00F684F0 /* sample.mp3 */,
-			);
-			name = resources;
-			path = ../../common/src/main/resources;
 			sourceTree = "<group>";
 		};
 		95B250F220711F2800B001E5 = {
 			isa = PBXGroup;
 			children = (
-				9523005521D6450D00F684F0 /* resources */,
-				9523003F21D4EF9800F684F0 /* kotchan-example */,
+				95FD4D282214537B00A65BF6 /* Default-568h@2x.png */,
+				951B501721E0DD2700B01C37 /* kotchan-example */,
 				95B250FC20711F2800B001E5 /* Products */,
 				95B2511B207121E900B001E5 /* Frameworks */,
 			);
@@ -100,8 +75,6 @@
 		95B2511B207121E900B001E5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				95B2511E207121F500B001E5 /* OpenGLES.framework */,
-				95B2511C207121E900B001E5 /* GLKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -167,13 +140,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9523005121D4EF9800F684F0 /* Info.plist in Resources */,
-				9523004E21D4EF9800F684F0 /* Main.storyboard in Resources */,
-				9523004B21D4EF9800F684F0 /* Assets.xcassets in Resources */,
-				95B8D07121DA6C6200D5A2D6 /* tiles in Resources */,
-				95B8D06F21DA390E00D5A2D6 /* font in Resources */,
-				9523004D21D4EF9800F684F0 /* LaunchScreen.storyboard in Resources */,
-				9523005721D6450D00F684F0 /* sample.mp3 in Resources */,
+				951B502521E0DD2700B01C37 /* Main.storyboard in Resources */,
+				95FD4D292214537B00A65BF6 /* Default-568h@2x.png in Resources */,
+				951B502321E0DD2700B01C37 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,7 +175,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/../../../gradlew -p $SRCROOT/../../ \":ios:build\" --stacktrace -Pdisable.android=true\n";
+			shellScript = "$SRCROOT/../../../gradlew -p $SRCROOT/../../../ \"build\" --stacktrace -Pdisable.android=true\n";
 		};
 		95B2512B2071282100B001E5 /* Replace Original Binary */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -220,7 +189,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "STAGE=$(tr '[A-Z]' '[a-z]' <<<\"$CONFIGURATION\")\ncp \"$SRCROOT/../build/exe/main/$STAGE/ios.kexe\" \"$TARGET_BUILD_DIR/$EXECUTABLE_PATH\"\n";
+			shellScript = "STAGE=$(tr '[A-Z]' '[a-z]' <<<\"$CONFIGURATION\")\ncp \"$SRCROOT/../../../build/bin/ios/main${STAGE}Executable/main.kexe\" \"$TARGET_BUILD_DIR/$EXECUTABLE_PATH\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -229,27 +198,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9523004F21D4EF9800F684F0 /* main.m in Sources */,
-				9523004C21D4EF9800F684F0 /* ViewController.m in Sources */,
-				9523005021D4EF9800F684F0 /* AppDelegate.m in Sources */,
+				951B502721E0DD2700B01C37 /* main.m in Sources */,
+				951B502421E0DD2700B01C37 /* ViewController.m in Sources */,
+				951B502821E0DD2700B01C37 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		9523004321D4EF9800F684F0 /* LaunchScreen.storyboard */ = {
+		951B501B21E0DD2700B01C37 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				9523004421D4EF9800F684F0 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		9523004521D4EF9800F684F0 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				9523004621D4EF9800F684F0 /* Base */,
+				951B501C21E0DD2700B01C37 /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -367,10 +328,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 2T94R583UT;
+				DEVELOPMENT_TEAM = AY7CGGXMN5;
 				INFOPLIST_FILE = "kotchan-example/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = inoutch.kotchan.example;
+				PRODUCT_BUNDLE_IDENTIFIER = "inoutch.kotchan-example";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -383,10 +344,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 2T94R583UT;
+				DEVELOPMENT_TEAM = AY7CGGXMN5;
 				INFOPLIST_FILE = "kotchan-example/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = inoutch.kotchan.example;
+				PRODUCT_BUNDLE_IDENTIFIER = "inoutch.kotchan-example";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";

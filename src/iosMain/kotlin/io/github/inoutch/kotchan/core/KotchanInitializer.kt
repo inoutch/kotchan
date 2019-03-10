@@ -1,6 +1,5 @@
 package io.github.inoutch.kotchan.core
 
-
 import io.github.inoutch.kotchan.ios.AppDelegate
 import io.github.inoutch.kotchan.ios.DefaultConfig
 import kotlinx.cinterop.*

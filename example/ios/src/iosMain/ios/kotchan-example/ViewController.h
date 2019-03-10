@@ -7,3 +7,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *gameCenterButton;
 
 @end
+
+/** The Metal-compatibile view for the demo Storyboard. */
+@interface View : UIView
+@end

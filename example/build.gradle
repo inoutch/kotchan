@@ -18,6 +18,14 @@ buildscript {
     }
 }
 
+repositories {
+    google()
+    jcenter()
+    mavenCentral()
+    maven { url "https://dl.bintray.com/kotlin/kotlin-dev" }
+    maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
+}
+
 subprojects {
     repositories {
         google()
@@ -47,18 +55,6 @@ project(":jvm") {
     defaultTasks "run"
 
     sourceSets.main.resources.srcDirs += "../common/src/main/resources"
-
-    dependencies {
-        expectedBy project(":common")
-    }
-}
-
-project(":ios") {
-    apply from: rootProject.file("ios.gradle")
-
-    sourceSets.main {
-        kotlin.srcDirs += "src/main/kotlin"
-    }
 
     dependencies {
         expectedBy project(":common")
