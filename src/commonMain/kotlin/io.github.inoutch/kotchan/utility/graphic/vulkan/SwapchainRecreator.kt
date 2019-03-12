@@ -1,44 +1,52 @@
-package io.github.inoutch.kotchan.core.graphic
+package io.github.inoutch.kotchan.utility.graphic.vulkan
 
-import io.github.inoutch.kotchan.core.KotchanVk
+import io.github.inoutch.kotchan.core.graphic.DeviceQueueFamilyIndices
+import io.github.inoutch.kotchan.core.graphic.SwapchainSupportDetails
 import io.github.inoutch.kotchan.utility.Disposable
-import io.github.inoutch.kotchan.utility.graphic.vulkan.*
 import io.github.inoutch.kotchan.utility.type.Point
-import io.github.inoutch.kotchan.utility.type.Vector4
 
 class SwapchainRecreator(
-        private val vk: KotchanVk,
+        private val vk: VK,
+        private val newExtent: Point,
         private val swapchainSupportDetails: SwapchainSupportDetails,
         private val deviceQueueFamilyIndices: DeviceQueueFamilyIndices) : Disposable {
 
-    var mustBeRecreate = true
+    data class ResultBundle(
+            val swapchainKHR: VkSwapchainKHR,
+            val framebuffers: List<VkFramebuffer>,
+            val commandBuffers: List<VkCommandBuffer>)
+
+    var mustBeRecreate = false
 
     var extent: Point = Point()
         private set
 
-    var currentSwapchain: VkSwapchainKHR? = null
+    var currentSwapchain: VkSwapchainKHR
         private set
 
-    var commandBuffers: List<VkCommandBuffer>? = null
+    var commandBuffers: List<VkCommandBuffer>
+        private set
+
+    var framebuffers: List<VkFramebuffer>
         private set
 
     private val surfaceFormat = swapchainSupportDetails.chooseSwapSurfaceFormat()
 
     private val commandPool: VkCommandPool
 
-    private var framebuffers: List<VkFramebuffer> = listOf()
-
     private var swapchainImages: List<VkImage> = listOf()
 
     private var swapchainImageViews: List<VkImageView> = listOf()
 
-    private val vertexBuffer = VertexBuffer(vk, floatArrayOf(-0.5f, -0.5f, 0.5f, -0.5f, 0.0f, 0.5f))
-
     init {
         commandPool = createCommandPool(vk.device, deviceQueueFamilyIndices.graphicsQueueFamilyIndex)
+        val result = recreate(newExtent, true)
+        currentSwapchain = result.swapchainKHR
+        framebuffers = result.framebuffers
+        commandBuffers = result.commandBuffers
     }
 
-    fun recreate(newExtent: Point) {
+    fun recreate(newExtent: Point, firstInit: Boolean = false): ResultBundle {
         // prepare
         this.extent = swapchainSupportDetails.chooseSwapExtent(newExtent)
 
@@ -50,51 +58,29 @@ class SwapchainRecreator(
         swapchainImageViews = swapchainImages.map { createImageView(it) }
 
         // create frame buffers
-        framebuffers.forEach { it.dispose() }
         val framebuffers = swapchainImageViews.map { createFramebuffer(it, extent) }
 
         // create command buffers
         val commandBuffers = createRenderCommandBuffer(commandPool, framebuffers)
 
-        commandBuffers.forEachIndexed { index, commandBuffer ->
-            val usage = listOf(VkCommandBufferUsageFlagBits.VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT)
-            vkBeginCommandBuffer(commandBuffer, VkCommandBufferBeginInfo(usage, null))
+        if (!firstInit) {
+            this.currentSwapchain.dispose()
+            this.commandBuffers.forEach { it.dispose() }
+            this.framebuffers.forEach { it.dispose() }
 
-            val renderPassBeginInfo = VkRenderPassBeginInfo(
-                    vk.renderPass,
-                    framebuffers[index],
-                    VkRect2D(Point.ZERO, extent),
-                    listOf(VkClearValue(Vector4(1.0f, 0.0f, 0.0f, 1.0f)), VkClearValue(VkClearDepthStencilValue(0.0f, 0))))
-            vkCmdBeginRenderPass(commandBuffer, renderPassBeginInfo, VkSubpassContents.VK_SUBPASS_CONTENTS_INLINE)
-
-            vkCmdBindPipeline(commandBuffer, VkPipelineBindPoint.VK_PIPELINE_BIND_POINT_GRAPHICS, vk.graphicsPipeline)
-
-            vkCmdBindVertexBuffers(commandBuffer, 0, listOf(vertexBuffer.buffer), listOf(0))
-
-            vkCmdSetViewport(commandBuffer,
-                    0,
-                    listOf(VkViewport(0.0f, 0.0f, extent.x.toFloat(), extent.y.toFloat(), 0.0f, 1.0f)))
-
-            vkCmdSetScissor(commandBuffer, 0, listOf(VkRect2D(Point.ZERO, extent)))
-
-            vkCmdDraw(commandBuffer, 3, 1, 0, 0)
-
-            vkCmdEndRenderPass(commandBuffer)
-
-            vkEndCommandBuffer(commandBuffer)
+            this.currentSwapchain = swapchain
+            this.commandBuffers = commandBuffers
+            this.framebuffers = framebuffers
         }
-
-        this.currentSwapchain = swapchain
-        this.commandBuffers = commandBuffers
-        this.framebuffers = framebuffers
         mustBeRecreate = false
+        return ResultBundle(swapchain, framebuffers, commandBuffers)
     }
 
     override fun dispose() {
-        vertexBuffer.dispose()
+        commandPool.dispose()
         framebuffers.forEach { it.dispose() }
         swapchainImageViews.forEach { it.dispose() }
-        currentSwapchain?.dispose()
+        currentSwapchain.dispose()
     }
 
     private fun createSwapchain(

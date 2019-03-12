@@ -66,3 +66,7 @@ expect fun vkCmdClearColorImage(
         imageLayout: VkImageLayout,
         clearColor: Vector4,
         ranges: List<VkImageSubresourceRange>)
+
+expect fun vkResetCommandBuffer(
+        commandBuffer: VkCommandBuffer,
+        flags: List<VkCommandBufferResetFlagBits>)

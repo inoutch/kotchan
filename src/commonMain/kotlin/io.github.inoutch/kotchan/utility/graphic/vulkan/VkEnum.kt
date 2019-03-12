@@ -675,6 +675,14 @@ enum class VkMemoryPropertyFlagBits(val value: Int) {
     VK_MEMORY_PROPERTY_PROTECTED_BIT(0x00000020),
 }
 
+enum class VkFenceCreateFlagBits(val value: Int) {
+    VK_FENCE_CREATE_SIGNALED_BIT(0x00000001),
+}
+
+enum class VkCommandBufferResetFlagBits(val value: Int) {
+    VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT(0x00000001),
+}
+
 fun checkError(err: Int, free: (() -> Unit)? = null) {
     if (err != VkResult.VK_SUCCESS.value) {
         free?.invoke()
