@@ -6,3 +6,6 @@ data class VkMemoryRequirements(
         val memoryTypeBits: Int)
 
 expect fun vkGetBufferMemoryRequirements(device: VkDevice, buffer: VkBuffer): VkMemoryRequirements
+
+expect fun vkGetImageMemoryRequirements(device: VkDevice, image: VkImage): VkMemoryRequirements
+

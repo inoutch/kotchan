@@ -29,3 +29,7 @@ actual fun vkCreateDevice(
         init(org.lwjgl.vulkan.VkDevice(native.get(0), physicalDevice.native, nativeCreateInfo))
     }
 }
+
+actual fun vkDeviceWaitIdle(device: VkDevice) {
+    checkError(VK10.vkDeviceWaitIdle(device.native))
+}

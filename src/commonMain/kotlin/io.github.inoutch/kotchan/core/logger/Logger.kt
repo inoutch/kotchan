@@ -2,38 +2,39 @@ package io.github.inoutch.kotchan.core.logger
 
 import kotchan.logger.LogLevel
 
-class Logger {
+open class Logger {
+
     private lateinit var logLevel: LogLevel
 
-    fun init(logLevel: LogLevel) {
+    open fun init(logLevel: LogLevel) {
         this.logLevel = logLevel
     }
 
-    fun info(message: Any) {
+    open fun info(message: Any) {
         if (logLevel.value <= LogLevel.INFO.value) {
             log(LogLevel.INFO, message)
         }
     }
 
-    fun debug(message: Any) {
+    open fun debug(message: Any) {
         if (logLevel.value <= LogLevel.DEBUG.value) {
             log(LogLevel.DEBUG, message)
         }
     }
 
-    fun warn(message: Any) {
+    open fun warn(message: Any) {
         if (logLevel.value <= LogLevel.WARN.value) {
             log(LogLevel.WARN, message)
         }
     }
 
-    fun error(message: Any) {
+    open fun error(message: Any) {
         if (logLevel.value <= LogLevel.ERROR.value) {
             log(LogLevel.ERROR, message)
         }
     }
 
-    fun error(vararg messages: Any) {
+    open fun error(vararg messages: Any) {
         error(listOf(messages))
     }
 
@@ -41,5 +42,3 @@ class Logger {
         println(level.name + "\t" + message)
     }
 }
-
-val logger = Logger()

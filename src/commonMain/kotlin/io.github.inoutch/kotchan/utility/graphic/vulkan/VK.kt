@@ -2,8 +2,6 @@ package io.github.inoutch.kotchan.utility.graphic.vulkan
 
 import io.github.inoutch.kotchan.core.graphic.DeviceQueueFamilyIndices
 import io.github.inoutch.kotchan.core.graphic.SwapchainSupportDetails
-import io.github.inoutch.kotchan.core.shader.triangleFragCode
-import io.github.inoutch.kotchan.core.shader.triangleVertCode
 import io.github.inoutch.kotchan.utility.Disposable
 import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.*
 import io.github.inoutch.kotchan.utility.type.Point
@@ -11,10 +9,10 @@ import io.github.inoutch.kotchan.utility.type.Version
 
 class VK(appName: String,
          private val actualWindowSize: Point,
-         private val physicalDeviceLayerNames: List<String>,
-         private val physicalDeviceExtensionNames: List<String>,
-         private val deviceLayerNames: List<String>,
-         private val deviceExtensionNames: List<String>,
+         physicalDeviceLayerNames: List<String>,
+         physicalDeviceExtensionNames: List<String>,
+         deviceLayerNames: List<String>,
+         deviceExtensionNames: List<String>,
          surfaceCreateCallback: (instance: VkInstance) -> VkSurface) : Disposable {
 
     companion object {
@@ -35,8 +33,7 @@ class VK(appName: String,
 
     val renderPass: VkRenderPass
 
-    // vars
-    val graphicsPipeline: VkPipeline
+//    val graphicsPipeline: VkPipeline
 
     var currentCommandBuffer: VkCommandBuffer
         private set
@@ -44,8 +41,13 @@ class VK(appName: String,
     var currentFrameBuffer: VkFramebuffer
         private set
 
-    private val commandBuffers: List<VkCommandBuffer>
+    val commandBuffers: List<VkCommandBuffer>
         get() = swapchainRecreator.commandBuffers
+
+    var currentImageIndex = 0
+        private set
+
+    val descriptorPool: VkDescriptorPool
 
     private val instance: VkInstance
 
@@ -57,12 +59,11 @@ class VK(appName: String,
 
     private val surfaceFormat: VkSurfaceFormatKHR
 
-    // Temporary
-    private val vertShaderModule: VkShaderModule
-
-    private val fragShaderModule: VkShaderModule
-
-    private val pipelineLayout: VkPipelineLayout
+//    private val vertShaderModule: VkShaderModule
+//
+//    private val fragShaderModule: VkShaderModule
+//
+//    private val pipelineLayout: VkPipelineLayout
 
     private val imageAvailableSemaphores: List<VkSemaphore>
 
@@ -71,8 +72,6 @@ class VK(appName: String,
     private var currentFrame = 0
 
     private val inFlightFences: List<VkFence>
-
-    private var currentImageIndex = 0
 
     init {
         val applicationInfo = VkApplicationInfo(
@@ -100,28 +99,30 @@ class VK(appName: String,
         deviceQueueFamilyIndices = DeviceQueueFamilyIndices.find(physicalDevice, surface)
 
         // Logical Device Configurations ===============================================================================
-        device = createDevice(physicalDevice, deviceQueueFamilyIndices, deviceLayerNames, deviceExtensionNames)
+        device = Helper.createDevice(physicalDevice, deviceQueueFamilyIndices, deviceLayerNames, deviceExtensionNames)
 
         swapchainSupportDetails = SwapchainSupportDetails.querySwapchainSupport(physicalDevice, surface)
         surfaceFormat = swapchainSupportDetails.chooseSwapSurfaceFormat()
 
         //
-        vertShaderModule = createShaderModule(device, triangleVertCode)
-        fragShaderModule = createShaderModule(device, triangleFragCode)
+//        vertShaderModule = createShaderModule(device, triangleVertCode)
+//        fragShaderModule = createShaderModule(device, triangleFragCode)
 
         // Command Pool Configurations =================================================================================
 
         queue = vkGetDeviceQueue(device, deviceQueueFamilyIndices.graphicsQueueFamilyIndex, 0)
 
-        renderPass = createRenderPass(device, surfaceFormat)
+        renderPass = Helper.createRenderPass(device, surfaceFormat)
 
-        pipelineLayout = createPipelineLayout(device)
-
-        graphicsPipeline = createGraphicsPipeline(device, renderPass, pipelineLayout, vertShaderModule, fragShaderModule)
+//        pipelineLayout = createPipelineLayout(device)
+//
+//        graphicsPipeline = createGraphicsPipeline(device, renderPass, pipelineLayout, vertShaderModule, fragShaderModule)
 
         swapchainRecreator = SwapchainRecreator(this, actualWindowSize, swapchainSupportDetails, deviceQueueFamilyIndices)
         currentCommandBuffer = swapchainRecreator.commandBuffers.first()
         currentFrameBuffer = swapchainRecreator.framebuffers.first()
+
+        descriptorPool = createDescriptorPool(device, swapchainRecreator.commandBuffers.size)
 
         imageAvailableSemaphores = List(MAX_FRAMES_IN_FLIGHT) { vkCreateSemaphore(device, VkSemaphoreCreateInfo(0)) }
         renderCompleteSemaphores = List(MAX_FRAMES_IN_FLIGHT) { vkCreateSemaphore(device, VkSemaphoreCreateInfo(0)) }
@@ -190,20 +191,101 @@ class VK(appName: String,
     }
 
     override fun dispose() {
-//        vkDeviceWaitIdle(device)
+        vkDeviceWaitIdle(device)
+
+        descriptorPool.dispose()
 
         imageAvailableSemaphores.forEach { it.dispose() }
         renderCompleteSemaphores.forEach { it.dispose() }
         inFlightFences.forEach { it.dispose() }
 
-        graphicsPipeline.dispose()
-        pipelineLayout.dispose()
-
-        vertShaderModule.dispose()
-        fragShaderModule.dispose()
+//        graphicsPipeline.dispose()
+//        pipelineLayout.dispose()
+//
+//        vertShaderModule.dispose()
+//        fragShaderModule.dispose()
 
         device.dispose()
 
         instance.dispose()
+    }
+
+    fun transitionImageLayout(
+            image: VkImage,
+            format: VkFormat,
+            oldLayout: VkImageLayout,
+            newLayout: VkImageLayout) {
+        val srcAccessMask: List<VkAccessFlagBits>
+        val dstAccessMask: List<VkAccessFlagBits>
+        val sourceStage: List<VkPipelineStageFlagBits>
+        val destinationStage: List<VkPipelineStageFlagBits>
+
+        if (oldLayout == VkImageLayout.VK_IMAGE_LAYOUT_UNDEFINED &&
+                newLayout == VkImageLayout.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL) {
+            srcAccessMask = listOf()
+            dstAccessMask = listOf(VkAccessFlagBits.VK_ACCESS_TRANSFER_WRITE_BIT)
+
+            sourceStage = listOf(VkPipelineStageFlagBits.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT)
+            destinationStage = listOf(VkPipelineStageFlagBits.VK_PIPELINE_STAGE_TRANSFER_BIT)
+        } else if (oldLayout == VkImageLayout.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL &&
+                newLayout == VkImageLayout.VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL) {
+            srcAccessMask = listOf(VkAccessFlagBits.VK_ACCESS_TRANSFER_WRITE_BIT)
+            dstAccessMask = listOf(VkAccessFlagBits.VK_ACCESS_SHADER_READ_BIT)
+
+            sourceStage = listOf(VkPipelineStageFlagBits.VK_PIPELINE_STAGE_TRANSFER_BIT)
+            destinationStage = listOf(VkPipelineStageFlagBits.VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT)
+        } else {
+            throw Error("unsupported layout transition")
+        }
+
+        val barrier = VkImageMemoryBarrier(
+                srcAccessMask,
+                dstAccessMask,
+                oldLayout,
+                newLayout,
+                VK_QUEUE_FAMILY_IGNORED,
+                VK_QUEUE_FAMILY_IGNORED,
+                image,
+                VkImageSubresourceRange(
+                        listOf(VkImageAspectFlagBits.VK_IMAGE_ASPECT_COLOR_BIT),
+                        0, 1, 0, 1))
+
+        vkCmdPipelineBarrier(
+                currentCommandBuffer,
+                sourceStage, destinationStage,
+                listOf(),
+                listOf(),
+                listOf(),
+                listOf(barrier))
+    }
+
+    fun copyImageBuffer(size: Point, buffer: VkBuffer, image: VkImage) {
+        val region = VkBufferImageCopy(
+                0, 0, 0,
+                VkImageSubresourceLayers(listOf(VkImageAspectFlagBits.VK_IMAGE_ASPECT_COLOR_BIT), 0, 0, 1),
+                VkOffset3D(0, 0, 0),
+                VkExtent3D(size.x, size.y, 1))
+        vkCmdCopyBufferToImage(
+                currentCommandBuffer,
+                buffer,
+                image,
+                VkImageLayout.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                listOf(region))
+    }
+
+    fun createDescriptorPool(device: VkDevice, size: Int): VkDescriptorPool {
+        val poolSize = VkDescriptorPoolSize(VkDescriptorType.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, size)
+        val createInfo = VkDescriptorPoolCreateInfo(listOf(), size, listOf(poolSize))
+        return vkCreateDescriptorPool(device, createInfo)
+    }
+
+    fun createDescriptorSets(
+            device: VkDevice,
+            descriptorPool: VkDescriptorPool,
+            size: Int,
+            layout: VkDescriptorSetLayout): List<VkDescriptorSet> {
+
+        val allocateInfo = VkDescriptorSetAllocateInfo(descriptorPool, size, List(size) { layout })
+        return vkAllocateDescriptorSets(device, allocateInfo)
     }
 }

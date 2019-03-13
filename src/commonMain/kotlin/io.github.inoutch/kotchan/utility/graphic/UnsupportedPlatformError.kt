@@ -1,3 +1,3 @@
 package io.github.inoutch.kotchan.utility.graphic
 
-class UnsupportedError : Error("unsupported this functions")
+class UnsupportedPlatformError : Error("unsupported this functions")

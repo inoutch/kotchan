@@ -5,10 +5,10 @@ import io.github.inoutch.kotchan.utility.MemScope
 fun VkSubpassDependency.copyToNative(native: org.lwjgl.vulkan.VkSubpassDependency) {
     native.srcSubpass(srcSubpassIndex)
             .dstSubpass(dstSubpassIndex)
-            .srcStageMask(srcStageMask.value)
-            .dstStageMask(dstStageMask.value)
-            .srcAccessMask(srcAccessMask.value)
-            .dstAccessMask(dstAccessMask.value)
+            .srcStageMask(srcStageMask.sumBy { it.value })
+            .dstStageMask(dstStageMask.sumBy { it.value })
+            .srcAccessMask(srcAccessMask.sumBy { it.value })
+            .dstAccessMask(dstAccessMask.sumBy { it.value })
             .dependencyFlags(dependencyFlags.sumBy { it.value })
 }
 

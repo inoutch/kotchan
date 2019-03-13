@@ -1,7 +1,7 @@
 import io.github.inoutch.kotchan.core.KotchanCore
-import io.github.inoutch.kotchan.core.KotchanVk
 import io.github.inoutch.kotchan.core.controller.touch.TouchEvent
 import io.github.inoutch.kotchan.ios.DefaultConfig
+import io.github.inoutch.kotchan.utility.graphic.vulkan.VK
 import io.github.inoutch.kotchan.utility.graphic.vulkan.VkInstance
 import io.github.inoutch.kotchan.utility.graphic.vulkan.vkCreateIOSSurfaceMVK
 import io.github.inoutch.kotchan.utility.type.*
@@ -37,7 +37,7 @@ class ViewController : UIViewController {
         this.view.contentScaleFactor = UIScreen.mainScreen.nativeScale
 
         displayLink = CADisplayLink.displayLinkWithTarget(this, NSSelectorFromString("render:"))
-        displayLink.frameInterval = 1
+        displayLink.preferredFramesPerSecond = 30
         displayLink.addToRunLoop(NSRunLoop.currentRunLoop, NSDefaultRunLoopMode)
 
         viewSize = UIScreen.mainScreen().bounds().useContents {
@@ -53,14 +53,14 @@ class ViewController : UIViewController {
                 windowSize.y.toFloat() / viewSize.y)
 
         val config = DefaultConfig.config ?: throw Error("KotchanEngineConfig is not applied")
-        val vk = KotchanVk(
-                config,
+
+        core = KotchanCore(config, windowSize)
+        core.vk = VK(config.appName,
                 windowSize,
                 listOf(),
                 listOf("VK_KHR_surface", "VK_MVK_ios_surface"),
                 listOf(),
                 listOf("VK_KHR_swapchain")) { createSurface(it) }
-        core = KotchanCore(config, windowSize, vk)
 
         core.init()
     }

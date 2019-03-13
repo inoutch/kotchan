@@ -7,7 +7,7 @@ import vulkan.VK_STRUCTURE_TYPE_FENCE_CREATE_INFO
 fun VkFenceCreateInfo.copyToNative(native: vulkan.VkFenceCreateInfo) {
     native.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO
     native.pNext = null
-    native.flags = flags.toUInt()
+    native.flags = flags.sumBy { it.value }.toUInt()
 }
 
 @ExperimentalUnsignedTypes

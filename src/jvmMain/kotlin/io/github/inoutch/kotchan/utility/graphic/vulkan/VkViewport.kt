@@ -3,7 +3,9 @@ package io.github.inoutch.kotchan.utility.graphic.vulkan
 import io.github.inoutch.kotchan.utility.MemScope
 
 fun VkViewport.copyToNative(native: org.lwjgl.vulkan.VkViewport) {
-    native.width(width)
+    native.x(x)
+            .y(y)
+            .width(width)
             .height(height)
             .maxDepth(maxDepth)
             .minDepth(minDepth)

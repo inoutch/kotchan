@@ -1,11 +1,11 @@
 package io.github.inoutch.kotchan.core.graphic
 
-import io.github.inoutch.kotchan.core.KotchanVk
+import io.github.inoutch.kotchan.utility.graphic.vulkan.VK
 import io.github.inoutch.kotchan.utility.Disposable
 import io.github.inoutch.kotchan.utility.graphic.vulkan.*
 
 class VertexBuffer(
-        vk: KotchanVk,
+        vk: VK,
         vertices: FloatArray,
         memoryTypes: List<VkMemoryPropertyFlagBits> =
                 listOf(VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
@@ -13,6 +13,7 @@ class VertexBuffer(
 
     val buffer: VkBuffer
     val memory: VkDeviceMemory
+    val allocateSize: Long
 
     init {
         val bufferCreateInfo = VkBufferCreateInfo(
@@ -34,6 +35,8 @@ class VertexBuffer(
         val mappedMemory = vkMapMemory(vk.device, memory, 0, memoryAllocateInfo.allocationSize, listOf())
         mappedMemory.copy(0, vertices.size.toLong(), vertices)
         mappedMemory.dispose()
+
+        allocateSize = memoryAllocateInfo.allocationSize
     }
 
     override fun dispose() {

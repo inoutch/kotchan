@@ -1,5 +1,6 @@
 package io.github.inoutch.kotchan.utility.graphic.vulkan
 
+import io.github.inoutch.kotchan.extension.toNative
 import io.github.inoutch.kotchan.utility.Disposable
 import io.github.inoutch.kotchan.utility.memScoped
 import io.github.inoutch.kotchan.utility.type.Vector4
@@ -138,4 +139,38 @@ actual fun vkCmdClearColorImage(
             imageLayout.value,
             clearColor.toNative(this),
             ranges.toNative(this))
+}
+
+actual fun vkResetCommandBuffer(commandBuffer: VkCommandBuffer, flags: List<VkCommandBufferResetFlagBits>) {
+    VK10.vkResetCommandBuffer(commandBuffer.native, flags.sumBy { it.value })
+}
+
+actual fun vkCmdCopyBufferToImage(
+        commandBuffer: VkCommandBuffer,
+        srcBuffer: VkBuffer,
+        srcImage: VkImage,
+        dstImageLayout: VkImageLayout,
+        regions: List<VkBufferImageCopy>) = memScoped {
+    VK10.vkCmdCopyBufferToImage(
+            commandBuffer.native,
+            srcBuffer.native,
+            srcImage.native,
+            dstImageLayout.value,
+            regions.toNative(this))
+}
+
+actual fun vkCmdBindDescriptorSets(
+        commandBuffer: VkCommandBuffer,
+        pipelineBindPoint: VkPipelineBindPoint,
+        layout: VkDescriptorSetLayout,
+        firstSet: Int,
+        descriptorSets: List<VkDescriptorSet>,
+        dynamicOffsets: List<Int>) = memScoped {
+    VK10.vkCmdBindDescriptorSets(
+            commandBuffer.native,
+            pipelineBindPoint.value,
+            layout.native,
+            firstSet,
+            descriptorSets.map { it.native }.toLongArray().toNative(this),
+            dynamicOffsets.toIntArray().toNative(this))
 }

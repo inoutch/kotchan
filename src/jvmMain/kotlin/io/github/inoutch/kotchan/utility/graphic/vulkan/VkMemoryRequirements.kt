@@ -13,3 +13,11 @@ actual fun vkGetBufferMemoryRequirements(device: VkDevice, buffer: VkBuffer) = m
 
     native.toOrigin()
 }
+
+actual fun vkGetImageMemoryRequirements(device: VkDevice, image: VkImage): VkMemoryRequirements = memScoped {
+    val native = org.lwjgl.vulkan.VkMemoryRequirements.calloc()
+
+    VK10.vkGetImageMemoryRequirements(device.native, image.native, native)
+
+    native.toOrigin()
+}

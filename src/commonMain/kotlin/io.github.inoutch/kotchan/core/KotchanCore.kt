@@ -4,7 +4,6 @@ import io.github.inoutch.kotchan.core.constant.ScreenType
 import io.github.inoutch.kotchan.core.controller.event.listener.EventController
 import io.github.inoutch.kotchan.core.controller.event.listener.TimerEventController
 import io.github.inoutch.kotchan.core.controller.touch.TouchControllerEntity
-import io.github.inoutch.kotchan.core.logger.logger
 import io.github.inoutch.kotchan.core.graphic.Scene
 import io.github.inoutch.kotchan.utility.io.File
 import io.github.inoutch.kotchan.utility.time.Timer
@@ -13,15 +12,20 @@ import io.github.inoutch.kotchan.core.graphic.animator.Animator
 import io.github.inoutch.kotchan.core.graphic.camera.Camera
 import io.github.inoutch.kotchan.core.graphic.camera.Camera2D
 import io.github.inoutch.kotchan.core.graphic.camera.Camera3D
+import io.github.inoutch.kotchan.core.graphic.compatible.Api
+import io.github.inoutch.kotchan.core.logger.Logger
+import io.github.inoutch.kotchan.utility.graphic.gl.GL
+import io.github.inoutch.kotchan.utility.graphic.vulkan.VK
 
 class KotchanCore(
         private val config: KotchanEngine.Config,
-        private val actualSizeWindowSize: Point,
-        val vk: KotchanVk) {
+        actualSizeWindowSize: Point) {
 
     companion object {
         const val KOTCHAN_ENGINE_NAME = "kotchan-engine"
+        const val KOTCHAN_LOGGER = "kotchan-logger"
         val instance: KotchanCore get() = KotchanInstance.manager().get(KOTCHAN_ENGINE_NAME) as KotchanCore
+        val logger: Logger get() = KotchanInstance.manager().get(KOTCHAN_LOGGER) as Logger
     }
 
     private var currentScene: Scene? = null
@@ -32,9 +36,16 @@ class KotchanCore(
 
     private var beforeMillis: Long = 0
 
-//    val textureManager = TextureManager(gl)
+//    val textureManager = TextureManager()
 
+    // external utilities
     val file = File()
+
+    var gl: GL? = null
+
+    var vk: VK? = null
+
+    lateinit var graphicsApi: Api
 
     val touchEmitter = touchControllerEntity
 
@@ -54,14 +65,15 @@ class KotchanCore(
     var viewport = PointRect()
         private set
 
-    val logLevel = config.logLevel
-
     init {
+        // add engine instance to manager
         KotchanInstance.manager().add(KOTCHAN_ENGINE_NAME, this)
+        KotchanInstance.manager().add(KOTCHAN_LOGGER, config.loggerFactory?.create() ?: Logger())
     }
 
     fun init() {
         logger.init(config.logLevel)
+        graphicsApi = Api(this.vk, this.gl)
 
         this.screenSize = calcScreenSize()
         this.viewport = calcViewport()
@@ -79,12 +91,16 @@ class KotchanCore(
         val delta = calcDelta()
 
         touchControllerEntity.update(delta)
-//        timerEventController.update(delta)
+        timerEventController.update(delta)
 
         animator.update(delta)
+
+        vk?.begin()
+
         currentScene?.draw(delta)
 
-        vk.draw()
+        vk?.end()
+
         // TODO:
 //        gl.bindDefaultFrameBuffer()
 //        gl.viewPort(viewport.origin.x, viewport.origin.y, viewport.size.x, viewport.size.y)
@@ -98,6 +114,7 @@ class KotchanCore(
 //        gl.disableVertexPointer(GLAttribLocation.ATTRIBUTE_POSITION)
     }
 
+    // TODO: implement reshape
     fun reshape(x: Int, y: Int, width: Int, height: Int) {
         currentScene?.reshape(x, y, width, height)
     }
@@ -140,6 +157,7 @@ class KotchanCore(
     }
 
     private fun calcViewport(): PointRect {
+        val windowSize = vk?.swapchainRecreator?.extent ?: windowSize
         val windowRatio = windowSize.y / windowSize.x
         return when (config.screenType) {
             ScreenType.EXTEND -> PointRect(Point(), windowSize)

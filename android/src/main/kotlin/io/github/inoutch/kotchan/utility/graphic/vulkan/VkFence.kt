@@ -11,3 +11,9 @@ actual class VkFence : Disposable {
 actual fun vkCreateFence(device: VkDevice, createInfo: VkFenceCreateInfo): VkFence {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 }
+
+actual fun vkWaitForFences(device: VkDevice, fences: List<VkFence>, waitAll: Boolean, timeout: Long) {
+}
+
+actual fun vkResetFences(device: VkDevice, fences: List<VkFence>) {
+}

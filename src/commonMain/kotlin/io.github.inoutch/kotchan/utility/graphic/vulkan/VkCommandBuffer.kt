@@ -70,3 +70,18 @@ expect fun vkCmdClearColorImage(
 expect fun vkResetCommandBuffer(
         commandBuffer: VkCommandBuffer,
         flags: List<VkCommandBufferResetFlagBits>)
+
+expect fun vkCmdCopyBufferToImage(
+        commandBuffer: VkCommandBuffer,
+        srcBuffer: VkBuffer,
+        srcImage: VkImage,
+        dstImageLayout: VkImageLayout,
+        regions: List<VkBufferImageCopy>)
+
+expect fun vkCmdBindDescriptorSets(
+        commandBuffer: VkCommandBuffer,
+        pipelineBindPoint: VkPipelineBindPoint,
+        layout: VkDescriptorSetLayout,
+        firstSet: Int,
+        descriptorSets: List<VkDescriptorSet>,
+        dynamicOffsets: List<Int>)

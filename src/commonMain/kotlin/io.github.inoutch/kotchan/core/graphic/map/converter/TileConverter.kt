@@ -2,8 +2,8 @@ package io.github.inoutch.kotchan.core.graphic.map.converter
 
 import io.github.inoutch.kotchan.utility.data.json.Json
 import interop.data.json.JsonType
-import io.github.inoutch.kotchan.core.KotchanCore
-import io.github.inoutch.kotchan.core.logger.logger
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.logger
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
 import io.github.inoutch.kotchan.utility.type.Point
 
 class TileConverter {
@@ -11,7 +11,7 @@ class TileConverter {
     private val converters: MutableMap<String, List<ConversionData>> = mutableMapOf()
 
     fun load(filepath: String, name: String) {
-        val json = KotchanCore.instance.file.readText(filepath)
+        val json = instance.file.readText(filepath)
         if (json == null) {
             logger.error("$filepath is not found.")
             return

@@ -28,7 +28,7 @@ fun File.readTextFromResource(filepath: String) =
         KotchanCore.instance.file.getResourcePath(filepath)?.let { KotchanCore.instance.file.readText(it) }
 
 fun File.readBytesFromResource(filepath: String) =
-        KotchanCore.instance.file.getResourcePath(filepath)?.let { KotchanCore.instance.file.readText(it) }
+        KotchanCore.instance.file.getResourcePath(filepath)?.let { KotchanCore.instance.file.readBytes(it) }
 
 fun File.readTextFromResourceWithError(filepath: String) =
         readTextFromResource(filepath) ?: throw NoSuchFileError(filepath)

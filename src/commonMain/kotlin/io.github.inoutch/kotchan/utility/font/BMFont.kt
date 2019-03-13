@@ -1,6 +1,6 @@
 package io.github.inoutch.kotchan.utility.font
 
-import io.github.inoutch.kotchan.core.logger.logger
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.logger
 import io.github.inoutch.kotchan.extension.splitWithEscaping
 import io.github.inoutch.kotchan.utility.type.Point
 import io.github.inoutch.kotchan.utility.type.PointRect

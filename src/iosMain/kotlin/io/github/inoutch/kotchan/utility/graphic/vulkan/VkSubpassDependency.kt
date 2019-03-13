@@ -6,10 +6,10 @@ import kotlinx.cinterop.*
 fun VkSubpassDependency.copyToNative(native: vulkan.VkSubpassDependency) {
     native.srcSubpass = srcSubpassIndex.toUInt()
     native.dstSubpass = dstSubpassIndex.toUInt()
-    native.srcStageMask = srcStageMask.value.toUInt()
-    native.dstStageMask = dstStageMask.value.toUInt()
-    native.srcAccessMask = srcAccessMask.value.toUInt()
-    native.dstAccessMask = dstAccessMask.value.toUInt()
+    native.srcStageMask = srcStageMask.sumBy { it.value }.toUInt()
+    native.dstStageMask = dstStageMask.sumBy { it.value }.toUInt()
+    native.srcAccessMask = srcAccessMask.sumBy { it.value }.toUInt()
+    native.dstAccessMask = dstAccessMask.sumBy { it.value }.toUInt()
     native.dependencyFlags = dependencyFlags.sumBy { it.value }.toUInt()
 }
 

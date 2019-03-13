@@ -25,3 +25,7 @@ actual fun vkCreateDevice(physicalDevice: VkPhysicalDevice, createInfo: VkDevice
 
     VkDevice().apply { init(native.value ?: throw VkNullError("device")) }
 }
+
+actual fun vkDeviceWaitIdle(device: VkDevice) {
+    checkError(vulkan.vkDeviceWaitIdle(device.native))
+}

@@ -139,3 +139,24 @@ actual fun vkCmdClearColorImage(
             ranges.size.toUInt(),
             ranges.toNative(this))
 }
+
+@ExperimentalUnsignedTypes
+actual fun vkResetCommandBuffer(commandBuffer: VkCommandBuffer, flags: List<VkCommandBufferResetFlagBits>) {
+    vulkan.vkResetCommandBuffer(commandBuffer.native, flags.sumBy { it.value }.toUInt())
+}
+
+@ExperimentalUnsignedTypes
+actual fun vkCmdCopyBufferToImage(
+        commandBuffer: VkCommandBuffer,
+        srcBuffer: VkBuffer,
+        srcImage: VkImage,
+        dstImageLayout: VkImageLayout,
+        regions: List<VkBufferImageCopy>) = memScoped {
+    vulkan.vkCmdCopyImageToBuffer(
+            commandBuffer.native,
+            srcImage.native,
+            dstImageLayout.value.toUInt(),
+            srcBuffer.native,
+            regions.size.toUInt(),
+            regions.toNative(this))
+}
