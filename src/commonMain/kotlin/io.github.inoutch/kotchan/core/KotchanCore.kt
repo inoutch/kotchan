@@ -79,10 +79,12 @@ class KotchanCore(
         this.viewport = calcViewport()
 
         beforeMillis = Timer.milliseconds()
-        currentScene = config.initScene()
+        sceneFactory = { config.initScene() }
     }
 
     fun draw() {
+
+        vk?.begin()
 
         // transit view
         this.sceneFactory?.let { clearScreenFactory(it) }
@@ -94,8 +96,6 @@ class KotchanCore(
         timerEventController.update(delta)
 
         animator.update(delta)
-
-        vk?.begin()
 
         currentScene?.draw(delta)
 

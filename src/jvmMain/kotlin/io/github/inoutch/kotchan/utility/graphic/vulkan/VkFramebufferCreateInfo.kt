@@ -8,7 +8,7 @@ fun VkFramebufferCreateInfo.copyToNative(
         native: org.lwjgl.vulkan.VkFramebufferCreateInfo,
         scope: MemScope) {
 
-    native.sType(VK10.VK_STRUCTURE_TYPE_FENCE_CREATE_INFO)
+    native.sType(VK10.VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO)
             .pNext(VK10.VK_NULL_HANDLE)
             .flags(flags)
             .renderPass(renderPass.native)

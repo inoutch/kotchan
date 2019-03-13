@@ -156,7 +156,8 @@ class SwapchainRecreator(
     }
 
     private fun createCommandPool(device: VkDevice, queryFamilyIndex: Int): VkCommandPool {
-        return vkCreateCommandPool(device, VkCommandPoolCreateInfo(0, queryFamilyIndex))
+        // TODO: type flags
+        return vkCreateCommandPool(device, VkCommandPoolCreateInfo(0x00000002, queryFamilyIndex))
     }
 
     private fun createRenderCommandBuffer(

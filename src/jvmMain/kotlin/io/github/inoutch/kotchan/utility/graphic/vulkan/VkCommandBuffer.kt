@@ -162,7 +162,7 @@ actual fun vkCmdCopyBufferToImage(
 actual fun vkCmdBindDescriptorSets(
         commandBuffer: VkCommandBuffer,
         pipelineBindPoint: VkPipelineBindPoint,
-        layout: VkDescriptorSetLayout,
+        layout: VkPipelineLayout,
         firstSet: Int,
         descriptorSets: List<VkDescriptorSet>,
         dynamicOffsets: List<Int>) = memScoped {

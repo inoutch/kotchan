@@ -22,9 +22,9 @@ class AppScene : Scene() {
 
     private var transform = 0.0f
 
-    private val path = instance.file.getResourcePath("sprites/spritesheet.png")
-            ?: throw NoSuchFileError("sprites/spritesheet.png")
-    private val image = instance.graphicsApi.loadTexture(path)
+//    private val path = instance.file.getResourcePath("sprites/spritesheet.png")
+//            ?: throw NoSuchFileError("sprites/spritesheet.png")
+//    private val image = instance.graphicsApi.loadTexture(path)
 
     private val shaderProgram: SimpleShaderProgram = SimpleShaderProgram()
 
@@ -37,9 +37,9 @@ class AppScene : Scene() {
         val vk = instance.vk
         if (vk != null) {
             pos = VertexBuffer(vk, floatArrayOf(
-                    -0.5f, -0.5f, 0.0f,
-                    0.5f, -0.5f, 0.0f,
-                    0.0f, 0.5f, 0.0f))
+                    0.0f, 0.0f, 0.0f,
+                    50.0f, 0.0f, 0.0f,
+                    0.0f, 50.0f, 0.0f))
             col = VertexBuffer(vk, floatArrayOf(
                     1.0f, 1.0f, 1.0f, 1.0f,
                     1.0f, 1.0f, 1.0f, 1.0f,
@@ -80,7 +80,7 @@ class AppScene : Scene() {
         vkCmdBindDescriptorSets(
                 vk.currentCommandBuffer,
                 VkPipelineBindPoint.VK_PIPELINE_BIND_POINT_GRAPHICS,
-                descriptor.descriptorSetLayout,
+                descriptor.pipelineLayout,
                 0,
                 listOf(descriptor.descriptorSets[vk.currentImageIndex]),
                 listOf())

@@ -22,6 +22,6 @@ class SimpleShaderProgram(
     }
 
     fun update(delta: Float, camera: Camera) {
-        uniformMatrix4fv.set(Matrix4())
+        uniformMatrix4fv.set(camera.combine)
     }
 }

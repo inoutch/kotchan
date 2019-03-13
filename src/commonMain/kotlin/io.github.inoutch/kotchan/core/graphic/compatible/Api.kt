@@ -122,7 +122,7 @@ class Api(private val vk: VK?, private val gl: GL?) {
                     val descriptorWrite = VkWriteDescriptorSet(
                             descriptorSets[index],
                             uniform.binding,
-                            1,
+                            0,
                             VkDescriptorType.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
                             listOf(), listOf(bufferInfo), listOf())
                     vkUpdateDescriptorSets(it.device, listOf(descriptorWrite), listOf())

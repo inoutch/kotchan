@@ -81,7 +81,7 @@ expect fun vkCmdCopyBufferToImage(
 expect fun vkCmdBindDescriptorSets(
         commandBuffer: VkCommandBuffer,
         pipelineBindPoint: VkPipelineBindPoint,
-        layout: VkDescriptorSetLayout,
+        layout: VkPipelineLayout,
         firstSet: Int,
         descriptorSets: List<VkDescriptorSet>,
         dynamicOffsets: List<Int>)
