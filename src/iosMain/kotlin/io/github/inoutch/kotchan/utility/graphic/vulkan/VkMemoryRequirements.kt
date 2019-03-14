@@ -17,3 +17,12 @@ actual fun vkGetBufferMemoryRequirements(device: VkDevice, buffer: VkBuffer) = m
 
     native.toOrigin()
 }
+
+@ExperimentalUnsignedTypes
+actual fun vkGetImageMemoryRequirements(device: VkDevice, image: VkImage) = memScoped {
+    val native = alloc<vulkan.VkMemoryRequirements>()
+
+    vulkan.vkGetImageMemoryRequirements(device.native, image.native, native.ptr)
+
+    native.toOrigin()
+}

@@ -160,3 +160,22 @@ actual fun vkCmdCopyBufferToImage(
             regions.size.toUInt(),
             regions.toNative(this))
 }
+
+@ExperimentalUnsignedTypes
+actual fun vkCmdBindDescriptorSets(
+        commandBuffer: VkCommandBuffer,
+        pipelineBindPoint: VkPipelineBindPoint,
+        layout: VkPipelineLayout,
+        firstSet: Int,
+        descriptorSets: List<VkDescriptorSet>,
+        dynamicOffsets: List<Int>) = memScoped {
+    vulkan.vkCmdBindDescriptorSets(
+            commandBuffer.native,
+            pipelineBindPoint.value.toUInt(),
+            layout.native,
+            firstSet.toUInt(),
+            descriptorSets.size.toUInt(),
+            descriptorSets.map { it.native }.toNative(this),
+            dynamicOffsets.size.toUInt(),
+            dynamicOffsets.map { it.toUInt() }.toNative(this))
+}

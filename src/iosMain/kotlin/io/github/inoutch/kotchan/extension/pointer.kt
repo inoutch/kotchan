@@ -45,3 +45,9 @@ fun ByteArray.copyToUIntPointer(scope: MemScope): CPointer<UIntVar> {
     memcpy(p, refTo(0), size.toULong())
     return p
 }
+
+fun CPointer<ByteVar>.toByteArray(size: Int) = ByteArray(size).also {
+    for (i in 0 until size) {
+        it[i] = this[i]
+    }
+}
