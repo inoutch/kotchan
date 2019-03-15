@@ -37,8 +37,8 @@ class AppScene : Scene() {
         if (vk != null) {
             pos = VertexBuffer(vk, floatArrayOf(
                     0.0f, 0.0f, 0.0f,
-                    50.0f, 0.0f, 0.0f,
-                    0.0f, 50.0f, 0.0f))
+                    200.0f, 0.0f, 0.0f,
+                    0.0f, 200.0f, 0.0f))
             col = VertexBuffer(vk, floatArrayOf(
                     1.0f, 1.0f, 1.0f, 1.0f,
                     1.0f, 1.0f, 1.0f, 1.0f,
