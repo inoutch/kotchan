@@ -19,6 +19,7 @@ actual class VkImage : Disposable {
     }
 }
 
+@ExperimentalUnsignedTypes
 actual fun vkCreateImage(device: VkDevice, createInfo: VkImageCreateInfo) = memScoped {
     val native = alloc<vulkan.VkImageVar>()
 

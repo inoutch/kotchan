@@ -2,7 +2,6 @@ package io.github.inoutch.kotchan.utility.graphic.vulkan
 
 import io.github.inoutch.kotchan.core.graphic.DeviceQueueFamilyIndices
 import io.github.inoutch.kotchan.core.graphic.SwapchainSupportDetails
-import io.github.inoutch.kotchan.core.graphic.shader.Descriptor
 import io.github.inoutch.kotchan.utility.Disposable
 import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.*
 import io.github.inoutch.kotchan.utility.type.Point

@@ -211,11 +211,10 @@ class Helper {
             return vkCreateImage(device, createInfo)
         }
 
-        fun createMemory(device: VkDevice, image: VkImage, properties: List<VkMemoryPropertyFlagBits>): VkDeviceMemory {
+        fun createImageMemory(device: VkDevice, image: VkImage, properties: List<VkMemoryPropertyFlagBits>): VkDeviceMemory {
             val requirements = vkGetImageMemoryRequirements(device, image)
             val allocateInfo = VkMemoryAllocateInfo(
-                    requirements.size,
-                    getMemoryTypeIndex(requirements.memoryTypeBits, properties))
+                    requirements.size, getMemoryTypeIndex(requirements.memoryTypeBits, properties))
             return vkAllocateMemory(device, allocateInfo)
         }
 
@@ -254,7 +253,7 @@ class Helper {
                     0, magFilter, minFilter,
                     VkSamplerMipmapMode.VK_SAMPLER_MIPMAP_MODE_LINEAR,
                     VkSamplerAddressMode.VK_SAMPLER_ADDRESS_MODE_REPEAT,
-                    VkSamplerAddressMode.VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT,
+                    VkSamplerAddressMode.VK_SAMPLER_ADDRESS_MODE_REPEAT,
                     VkSamplerAddressMode.VK_SAMPLER_ADDRESS_MODE_REPEAT,
                     0.0f, false, 1.0f,
                     false, VkCompareOp.VK_COMPARE_OP_ALWAYS,

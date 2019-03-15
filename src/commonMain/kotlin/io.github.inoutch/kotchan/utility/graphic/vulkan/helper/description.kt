@@ -12,8 +12,8 @@ fun create2DDescriptions(): List<VkVertexInputBindingDescription> {
 
 fun create2DAttributes(): List<VkVertexInputAttributeDescription> {
     return listOf(
-            VkVertexInputAttributeDescription(0, 0, VkFormat.VK_FORMAT_R32G32_SFLOAT, 0),
-            VkVertexInputAttributeDescription(1, 1, VkFormat.VK_FORMAT_R32G32_SFLOAT, 0),
+            VkVertexInputAttributeDescription(0, 0, VkFormat.VK_FORMAT_R32G32B32_SFLOAT, 0),
+            VkVertexInputAttributeDescription(1, 1, VkFormat.VK_FORMAT_R32G32B32A32_SFLOAT, 0),
             VkVertexInputAttributeDescription(2, 2, VkFormat.VK_FORMAT_R32G32_SFLOAT, 0))
 }
 

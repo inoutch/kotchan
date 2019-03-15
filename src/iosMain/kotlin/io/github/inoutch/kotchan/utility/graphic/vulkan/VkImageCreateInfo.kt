@@ -25,6 +25,7 @@ fun VkImageCreateInfo.copyToNative(
     native.initialLayout = initialLayout.value.toUInt()
 }
 
+@ExperimentalUnsignedTypes
 fun VkImageCreateInfo.toNative(scope: MemScope) =
         scope.alloc<vulkan.VkImageCreateInfo>()
                 .also { copyToNative(it, scope) }.ptr

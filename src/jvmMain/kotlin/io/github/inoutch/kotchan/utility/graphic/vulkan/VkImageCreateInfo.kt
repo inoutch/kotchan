@@ -8,6 +8,7 @@ fun VkImageCreateInfo.copyToNative(
         native: org.lwjgl.vulkan.VkImageCreateInfo,
         scope: MemScope) {
     native.sType(VK10.VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO)
+            .pNext(VK10.VK_NULL_HANDLE)
             .flags(flags)
             .imageType(imageType.value)
             .extent(extent.toNative(scope))

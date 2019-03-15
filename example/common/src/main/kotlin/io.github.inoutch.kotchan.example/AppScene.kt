@@ -21,7 +21,7 @@ class AppScene : Scene() {
     private lateinit var tex: VertexBuffer
     private val graphicsPipeline: GraphicsPipeline
 
-    private val path = instance.file.getResourcePath("sprites/spritesheet.png")
+    private val path = instance.file.getResourcePath("tiles/sample.png")
             ?: throw NoSuchFileError("sprites/spritesheet.png")
     private val image = instance.graphicsApi.loadTexture(path)
 
