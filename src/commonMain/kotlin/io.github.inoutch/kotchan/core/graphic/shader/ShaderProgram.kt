@@ -1,13 +1,11 @@
 package io.github.inoutch.kotchan.core.graphic.shader
 
-import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
-import io.github.inoutch.kotchan.core.graphic.shader.unform.Uniform
 import io.github.inoutch.kotchan.utility.Disposable
 import io.github.inoutch.kotchan.utility.type.Matrix4
 
 abstract class ShaderProgram(
         val shader: Shader,
-        initUniforms: List<Uniform>) : Disposable {
+        initDescriptors: List<Descriptor>) : Disposable {
 
     class ShaderSource(
             val text: String,
@@ -15,7 +13,7 @@ abstract class ShaderProgram(
 
     var textureEnable = true
 
-    val uniforms = initUniforms
+    val descriptors = initDescriptors
 
 //    protected val viewProjectionMatrixLocation = gl.getUniform(id, "u_viewProjectionMatrix")
 //
@@ -30,7 +28,7 @@ abstract class ShaderProgram(
     }
 
     override fun dispose() {
-        uniforms.forEach { it.dispose() }
+        descriptors.forEach { it.dispose() }
 //        gl.deleteShaderProgram(this)
     }
 }

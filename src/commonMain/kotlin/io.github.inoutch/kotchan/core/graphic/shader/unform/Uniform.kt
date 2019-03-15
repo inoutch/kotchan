@@ -1,9 +1,9 @@
 package io.github.inoutch.kotchan.core.graphic.shader.unform
 
-import io.github.inoutch.kotchan.utility.Disposable
-import io.github.inoutch.kotchan.utility.graphic.vulkan.VKUniformBuffer
+import io.github.inoutch.kotchan.core.graphic.shader.Descriptor
+import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.VKUniformBuffer
 
-abstract class Uniform(val binding: Int, val uniformName: String) : Disposable {
+abstract class Uniform(binding: Int, uniformName: String) : Descriptor(binding, uniformName) {
     var vkUniform: VKUniformBuffer? = null
     var glUniform: Int? = null
 

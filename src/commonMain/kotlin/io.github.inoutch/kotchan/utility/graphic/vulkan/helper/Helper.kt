@@ -248,5 +248,18 @@ class Helper {
                             0, 1, 0, 1))
             return vkCreateImageView(device, createInfo)
         }
+
+        fun createSampler(device: VkDevice, magFilter: VkFilter, minFilter: VkFilter): VkSampler {
+            val createInfo = VkSamplerCreateInfo(
+                    0, magFilter, minFilter,
+                    VkSamplerMipmapMode.VK_SAMPLER_MIPMAP_MODE_LINEAR,
+                    VkSamplerAddressMode.VK_SAMPLER_ADDRESS_MODE_REPEAT,
+                    VkSamplerAddressMode.VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT,
+                    VkSamplerAddressMode.VK_SAMPLER_ADDRESS_MODE_REPEAT,
+                    0.0f, false, 1.0f,
+                    false, VkCompareOp.VK_COMPARE_OP_ALWAYS,
+                    0.0f, 0.0f, VkBorderColor.VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK, false)
+            return vkCreateSampler(device, createInfo)
+        }
     }
 }

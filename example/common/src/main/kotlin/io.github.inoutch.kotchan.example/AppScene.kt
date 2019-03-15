@@ -11,6 +11,7 @@ import io.github.inoutch.kotchan.utility.graphic.loadFromResource
 import io.github.inoutch.kotchan.utility.graphic.vulkan.*
 import io.github.inoutch.kotchan.utility.io.readBytesFromResourceWithError
 import io.github.inoutch.kotchan.utility.type.Point
+import io.github.inoutch.kotchan.utility.type.Vector3
 import io.github.inoutch.kotchan.utility.type.Vector4
 
 class AppScene : Scene() {
@@ -20,20 +21,18 @@ class AppScene : Scene() {
     private lateinit var tex: VertexBuffer
     private val graphicsPipeline: GraphicsPipeline
 
-    private var transform = 0.0f
-
-//    private val path = instance.file.getResourcePath("sprites/spritesheet.png")
-//            ?: throw NoSuchFileError("sprites/spritesheet.png")
-//    private val image = instance.graphicsApi.loadTexture(path)
+    private val path = instance.file.getResourcePath("sprites/spritesheet.png")
+            ?: throw NoSuchFileError("sprites/spritesheet.png")
+    private val image = instance.graphicsApi.loadTexture(path)
 
     private val shaderProgram: SimpleShaderProgram = SimpleShaderProgram()
 
     private val camera = instance.createCamera2D()
 
     init {
-
         val createInfo = GraphicsPipeline.CreateInfo(shaderProgram)
         graphicsPipeline = instance.graphicsApi.createGraphicsPipeline(createInfo)
+
         val vk = instance.vk
         if (vk != null) {
             pos = VertexBuffer(vk, floatArrayOf(
@@ -52,10 +51,10 @@ class AppScene : Scene() {
     }
 
     override fun draw(delta: Float) {
-        transform += delta * 0.1f
+        camera.position -= Vector3(delta, 0.0f, 0.0f)
+        camera.update()
 
         val vk = instance.vk ?: return
-        val descriptor = graphicsPipeline.vkBundle ?: return
 
         val extent = vk.swapchainRecreator.extent
 
@@ -66,9 +65,9 @@ class AppScene : Scene() {
                 listOf(VkClearValue(Vector4(0.0f, 0.0f, 0.0f, 1.0f)),
                         VkClearValue(VkClearDepthStencilValue(0.0f, 0))))
 
-        instance.graphicsApi.bindGraphicsPipeline(graphicsPipeline)
         shaderProgram.update(delta, camera)
-
+        instance.graphicsApi.setSampler(shaderProgram.sampler, image)
+        instance.graphicsApi.bindGraphicsPipeline(graphicsPipeline)
         instance.graphicsApi.setViewport(instance.viewport)
 
         vkCmdBindVertexBuffers(
@@ -76,14 +75,6 @@ class AppScene : Scene() {
                 0,
                 listOf(pos.buffer, col.buffer, tex.buffer),
                 listOf(0, 0, 0))
-
-        vkCmdBindDescriptorSets(
-                vk.currentCommandBuffer,
-                VkPipelineBindPoint.VK_PIPELINE_BIND_POINT_GRAPHICS,
-                descriptor.pipelineLayout,
-                0,
-                listOf(descriptor.descriptorSets[vk.currentImageIndex]),
-                listOf())
 
         vkCmdBeginRenderPass(vk.currentCommandBuffer, renderPassBeginInfo, VkSubpassContents.VK_SUBPASS_CONTENTS_INLINE)
 

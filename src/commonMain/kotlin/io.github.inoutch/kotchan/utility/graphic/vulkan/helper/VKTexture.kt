@@ -1,8 +1,8 @@
-package io.github.inoutch.kotchan.utility.graphic.vulkan
+package io.github.inoutch.kotchan.utility.graphic.vulkan.helper
 
 import io.github.inoutch.kotchan.utility.Disposable
 import io.github.inoutch.kotchan.utility.graphic.Image
-import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.Helper
+import io.github.inoutch.kotchan.utility.graphic.vulkan.*
 
 class VKTexture(val vk: VK, rawImage: Image) : Disposable {
 
@@ -60,25 +60,7 @@ class VKTexture(val vk: VK, rawImage: Image) : Disposable {
 
         imageView = Helper.createImageView(vk.device, image, VkFormat.VK_FORMAT_R8G8B8A8_UNORM)
 
-        val samplerCreateInfo = VkSamplerCreateInfo(
-                0,
-                VkFilter.VK_FILTER_LINEAR,
-                VkFilter.VK_FILTER_LINEAR,
-                VkSamplerMipmapMode.VK_SAMPLER_MIPMAP_MODE_LINEAR,
-                VkSamplerAddressMode.VK_SAMPLER_ADDRESS_MODE_REPEAT,
-                VkSamplerAddressMode.VK_SAMPLER_ADDRESS_MODE_REPEAT,
-                VkSamplerAddressMode.VK_SAMPLER_ADDRESS_MODE_REPEAT,
-                0.0f,
-                false,
-                1.0f,
-                true,
-                VkCompareOp.VK_COMPARE_OP_ALWAYS,
-                0.0f,
-                0.0f,
-                VkBorderColor.VK_BORDER_COLOR_INT_OPAQUE_BLACK,
-                false)
-
-        sampler = vkCreateSampler(vk.device, samplerCreateInfo)
+        sampler = Helper.createSampler(vk.device, VkFilter.VK_FILTER_NEAREST, VkFilter.VK_FILTER_NEAREST)
     }
 
     override fun dispose() {

@@ -2,6 +2,7 @@ package io.github.inoutch.kotchan.utility.graphic.vulkan
 
 import io.github.inoutch.kotchan.core.graphic.DeviceQueueFamilyIndices
 import io.github.inoutch.kotchan.core.graphic.SwapchainSupportDetails
+import io.github.inoutch.kotchan.core.graphic.shader.Descriptor
 import io.github.inoutch.kotchan.utility.Disposable
 import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.*
 import io.github.inoutch.kotchan.utility.type.Point
@@ -46,8 +47,6 @@ class VK(appName: String,
 
     var currentImageIndex = 0
         private set
-
-    val descriptorPool: VkDescriptorPool
 
     private val instance: VkInstance
 
@@ -104,25 +103,15 @@ class VK(appName: String,
         swapchainSupportDetails = SwapchainSupportDetails.querySwapchainSupport(physicalDevice, surface)
         surfaceFormat = swapchainSupportDetails.chooseSwapSurfaceFormat()
 
-        //
-//        vertShaderModule = createShaderModule(device, triangleVertCode)
-//        fragShaderModule = createShaderModule(device, triangleFragCode)
-
         // Command Pool Configurations =================================================================================
 
         queue = vkGetDeviceQueue(device, deviceQueueFamilyIndices.graphicsQueueFamilyIndex, 0)
 
         renderPass = Helper.createRenderPass(device, surfaceFormat)
 
-//        pipelineLayout = createPipelineLayout(device)
-//
-//        graphicsPipeline = createGraphicsPipeline(device, renderPass, pipelineLayout, vertShaderModule, fragShaderModule)
-
         swapchainRecreator = SwapchainRecreator(this, actualWindowSize, swapchainSupportDetails, deviceQueueFamilyIndices)
         currentCommandBuffer = swapchainRecreator.commandBuffers.first()
         currentFrameBuffer = swapchainRecreator.framebuffers.first()
-
-        descriptorPool = createDescriptorPool(device, swapchainRecreator.commandBuffers.size)
 
         imageAvailableSemaphores = List(MAX_FRAMES_IN_FLIGHT) { vkCreateSemaphore(device, VkSemaphoreCreateInfo(0)) }
         renderCompleteSemaphores = List(MAX_FRAMES_IN_FLIGHT) { vkCreateSemaphore(device, VkSemaphoreCreateInfo(0)) }
@@ -193,17 +182,9 @@ class VK(appName: String,
     override fun dispose() {
         vkDeviceWaitIdle(device)
 
-        descriptorPool.dispose()
-
         imageAvailableSemaphores.forEach { it.dispose() }
         renderCompleteSemaphores.forEach { it.dispose() }
         inFlightFences.forEach { it.dispose() }
-
-//        graphicsPipeline.dispose()
-//        pipelineLayout.dispose()
-//
-//        vertShaderModule.dispose()
-//        fragShaderModule.dispose()
 
         device.dispose()
 
@@ -257,6 +238,17 @@ class VK(appName: String,
                 listOf(),
                 listOf(),
                 listOf(barrier))
+
+        vkEndCommandBuffer(currentCommandBuffer)
+
+        vkQueueSubmit(queue, listOf(VkSubmitInfo(listOf(), listOf(), listOf(currentCommandBuffer), listOf())), null)
+
+        vkQueueWaitIdle(queue)
+
+        vkResetCommandBuffer(currentCommandBuffer, listOf())
+
+        val usage = listOf(VkCommandBufferUsageFlagBits.VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT)
+        vkBeginCommandBuffer(currentCommandBuffer, VkCommandBufferBeginInfo(usage, null))
     }
 
     fun copyImageBuffer(size: Point, buffer: VkBuffer, image: VkImage) {
@@ -271,12 +263,6 @@ class VK(appName: String,
                 image,
                 VkImageLayout.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                 listOf(region))
-    }
-
-    fun createDescriptorPool(device: VkDevice, size: Int): VkDescriptorPool {
-        val poolSize = VkDescriptorPoolSize(VkDescriptorType.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, size)
-        val createInfo = VkDescriptorPoolCreateInfo(listOf(), size, listOf(poolSize))
-        return vkCreateDescriptorPool(device, createInfo)
     }
 
     fun createDescriptorSets(

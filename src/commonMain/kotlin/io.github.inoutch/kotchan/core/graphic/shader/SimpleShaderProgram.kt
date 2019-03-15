@@ -10,8 +10,9 @@ import io.github.inoutch.kotchan.core.shader.simpleVertText
 import io.github.inoutch.kotchan.utility.type.Matrix4
 
 class SimpleShaderProgram(
-        private val uniformMatrix4fv: UniformMatrix4fv = UniformMatrix4fv(0, "viewProjectionMatrix")) :
-        ShaderProgram(createShader(), listOf(uniformMatrix4fv)) {
+        private val uniformMatrix4fv: UniformMatrix4fv = UniformMatrix4fv(0, "u_viewProjectionMatrix"),
+        val sampler: Sampler = Sampler(1, "u_texture0")) :
+        ShaderProgram(createShader(), listOf(uniformMatrix4fv, sampler)) {
 
     companion object {
         fun createShader(): Shader {
