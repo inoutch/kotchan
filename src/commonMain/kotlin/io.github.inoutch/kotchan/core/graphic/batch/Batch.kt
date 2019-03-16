@@ -53,27 +53,21 @@ class Batch : Disposable {
         batchPolygonBundle.polygons.remove(bundle)
     }
 
-    fun update(delta: Float, camera: Camera) {
+    fun draw(delta: Float, camera: Camera) {
         polygons.forEach { pair ->
             val material = pair.key
-            // TODO: change graphics pipeline
-//            material.shaderProgram.use()
-//            material.shaderProgram.prepare(delta, camera.combine)
             material.graphicsPipeline.bind()
+            material.graphicsPipeline.createInfo.shaderProgram.prepare(delta, camera.combine, material.texture)
 
-//            (material.texture ?: Texture.Empty).use()
             val polygonBundle = pair.value
-
             polygonBundle.positionBuffer.flush()
             polygonBundle.texcoordBuffer.flush()
             polygonBundle.colorBuffer.flush()
 
             polygonBundle.polygons.filter { it.polygon.isPositionsDirty }
                     .forEach { polygonBundle.positionBuffer.copy(it.positionBufferData, it.polygon.positions()) }
-
             polygonBundle.polygons.filter { it.polygon.isColorsDirty }
                     .forEach { polygonBundle.colorBuffer.copy(it.colorBufferData, it.polygon.colors()) }
-
             polygonBundle.polygons.filter { it.polygon.isTexcoordsDirty }
                     .forEach { polygonBundle.texcoordBuffer.copy(it.texcoordBufferData, it.polygon.texcoords()) }
 

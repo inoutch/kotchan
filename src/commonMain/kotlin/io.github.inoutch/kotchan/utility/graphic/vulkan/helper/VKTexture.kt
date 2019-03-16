@@ -24,6 +24,7 @@ class VKTexture(val vk: VK, rawImage: Image) : Disposable {
                 .linearTilingFeatures.contains(VkFormatFeatureFlagBits.VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT)
 
         if (!noStaging) {
+            // TODO: fix bug for ios
             val stagingBuffer = VKBufferMemory(
                     vk, imageSize, listOf(VkBufferUsageFlagBits.VK_BUFFER_USAGE_TRANSFER_SRC_BIT),
                     listOf(VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,

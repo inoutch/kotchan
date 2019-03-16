@@ -9,10 +9,7 @@ import io.github.inoutch.kotchan.core.shader.simpleVertCode
 import io.github.inoutch.kotchan.core.shader.simpleVertText
 import io.github.inoutch.kotchan.utility.type.Matrix4
 
-class SimpleShaderProgram(
-        private val uniformMatrix4fv: UniformMatrix4fv = UniformMatrix4fv(0, "u_viewProjectionMatrix"),
-        val sampler: Sampler = Sampler(1, "u_texture0")) :
-        ShaderProgram(createShader(), listOf(uniformMatrix4fv, sampler)) {
+class SimpleShaderProgram : ShaderProgram(createShader()) {
 
     companion object {
         fun createShader(): Shader {
@@ -20,9 +17,5 @@ class SimpleShaderProgram(
             val frag = ShaderProgram.ShaderSource(simpleFragText, simpleFragCode)
             return KotchanCore.instance.graphicsApi.createShader(vert, frag)
         }
-    }
-
-    fun update(delta: Float, camera: Camera) {
-        uniformMatrix4fv.set(camera.combine)
     }
 }

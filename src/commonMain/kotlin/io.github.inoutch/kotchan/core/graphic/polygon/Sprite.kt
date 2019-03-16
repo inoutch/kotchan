@@ -1,9 +1,8 @@
 package io.github.inoutch.kotchan.core.graphic.polygon
 
-import io.github.inoutch.kotchan.core.graphic.Material
 import io.github.inoutch.kotchan.utility.type.*
 
-open class Sprite(material: Material, size: Vector2) : Polygon2D(createSquareMesh(size), material, size) {
+open class Sprite(size: Vector2) : Polygon2D(createSquareMesh(size), size) {
     companion object {
         fun createSquareMesh(size: Vector2) = Mesh(
                 createSquarePositions(Vector2(), size),

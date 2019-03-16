@@ -1,5 +1,6 @@
 package io.github.inoutch.kotchan.core.graphic.compatible
 
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
 import io.github.inoutch.kotchan.core.graphic.shader.ShaderProgram
 import io.github.inoutch.kotchan.utility.Disposable
 import io.github.inoutch.kotchan.utility.graphic.vulkan.VkDescriptorSet
@@ -27,5 +28,6 @@ class GraphicsPipeline(
     }
 
     fun bind() {
+        instance.graphicsApi.bindGraphicsPipeline(this)
     }
 }

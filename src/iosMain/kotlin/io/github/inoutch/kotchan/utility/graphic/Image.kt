@@ -8,7 +8,7 @@ import platform.Foundation.NSData
 import platform.Foundation.dataWithBytes
 
 @ExperimentalUnsignedTypes
-actual class Image private actual constructor(actual val byteArray: ByteArray, actual val size: Point) {
+actual class Image actual constructor(actual val byteArray: ByteArray, actual val size: Point) {
     actual companion object {
         actual fun load(byteArray: ByteArray): Image {
             val ret = byteArray.usePinned {

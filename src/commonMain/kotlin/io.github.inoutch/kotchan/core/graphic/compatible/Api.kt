@@ -9,43 +9,45 @@ import io.github.inoutch.kotchan.core.graphic.shader.Sampler
 import io.github.inoutch.kotchan.core.graphic.shader.Shader
 import io.github.inoutch.kotchan.core.graphic.shader.unform.*
 import io.github.inoutch.kotchan.core.graphic.texture.Texture
+import io.github.inoutch.kotchan.extension.getOrCreate
 import io.github.inoutch.kotchan.utility.graphic.Image
 import io.github.inoutch.kotchan.utility.graphic.gl.GL
 import io.github.inoutch.kotchan.utility.graphic.gl.GLAttribLocation
 import io.github.inoutch.kotchan.utility.graphic.gl.GLShader
+import io.github.inoutch.kotchan.utility.graphic.gl.GLTexture
 import io.github.inoutch.kotchan.utility.graphic.vulkan.*
 import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.Helper
 import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.VKSampler
 import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.VKTexture
 import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.VKUniformBuffer
-import io.github.inoutch.kotchan.utility.type.Matrix4
-import io.github.inoutch.kotchan.utility.type.PointRect
-import io.github.inoutch.kotchan.utility.type.Vector3
-import io.github.inoutch.kotchan.utility.type.Vector4
+import io.github.inoutch.kotchan.utility.io.getResourcePathWithError
+import io.github.inoutch.kotchan.utility.type.*
 
 class Api(private val vk: VK?, private val gl: GL?) {
 
-    val allocateBuffer = checkSupportGraphics({
+    private var sharedEmptyTexture: Texture? = null
+
+    val allocateBuffer = checkSupportGraphics({ vk ->
         { size: Int ->
-            val device = it.device
+            val device = vk.device
             val bufferCreateInfo = VkBufferCreateInfo(
-                    0,
-                    4L * size,
+                    0, 4L * size,
                     listOf(VkBufferUsageFlagBits.VK_BUFFER_USAGE_VERTEX_BUFFER_BIT),
                     VkSharingMode.VK_SHARING_MODE_EXCLUSIVE,
                     null)
+
             val buffer = vkCreateBuffer(device, bufferCreateInfo)
 
-            val memoryTypes = listOf(VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+            val memoryTypes = listOf(
+                    VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
                     VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)
             val requirements = vkGetBufferMemoryRequirements(device, buffer)
             val memoryAllocateInfo = VkMemoryAllocateInfo(
                     requirements.size,
-                    it.getMemoryTypeIndex(requirements.memoryTypeBits, memoryTypes))
+                    vk.getMemoryTypeIndex(requirements.memoryTypeBits, memoryTypes))
             val memory = vkAllocateMemory(device, memoryAllocateInfo)
 
             vkBindBufferMemory(device, buffer, memory, 0)
-
             Buffer(Buffer.VKBundle(buffer, memory, memoryAllocateInfo.allocationSize), null)
         }
     }, {
@@ -78,13 +80,25 @@ class Api(private val vk: VK?, private val gl: GL?) {
             val posBuffer = batchBufferBundle.positionBuffer.buffer.vkBuffer ?: return@draw
             val colBuffer = batchBufferBundle.colorBuffer.buffer.vkBuffer ?: return@draw
             val texBuffer = batchBufferBundle.texcoordBuffer.buffer.vkBuffer ?: return@draw
+
+            val renderPassBeginInfo = VkRenderPassBeginInfo(
+                    it.renderPass,
+                    it.currentFrameBuffer,
+                    VkRect2D(Point.ZERO, it.swapchainRecreator.extent),
+                    listOf(VkClearValue(Vector4(0.5f, 0.5f, 0.5f, 1.0f)),
+                            VkClearValue(VkClearDepthStencilValue(0.0f, 0))))
+
             vkCmdBindVertexBuffers(
                     it.currentCommandBuffer,
                     0,
                     listOf(posBuffer.buffer, colBuffer.buffer, texBuffer.buffer),
                     listOf(0, 0, 0))
 
+            vkCmdBeginRenderPass(it.currentCommandBuffer, renderPassBeginInfo, VkSubpassContents.VK_SUBPASS_CONTENTS_INLINE)
+
             vkCmdDraw(it.currentCommandBuffer, batchBufferBundle.size, 1, 0, 0)
+
+            vkCmdEndRenderPass(it.currentCommandBuffer)
         }
     }, {
         { batchBufferBundle: BatchPolygonBundle ->
@@ -208,17 +222,20 @@ class Api(private val vk: VK?, private val gl: GL?) {
     })
 
     val loadTexture = checkSupportGraphics({
-        { filepath: String ->
-            val data = instance.file.readBytes(filepath) ?: throw NoSuchFileError(filepath)
+        loadTexture@{ filepath: String ->
+            val data = instance.file.readBytes(filepath) ?: return@loadTexture null
             val tex = VKTexture(it, Image.load(data))
             Texture(tex, null)
         }
     }, {
-        { filepath: String ->
-            val tex = it.loadTexture(filepath) ?: throw NoSuchFileError(filepath)
+        loadTexture@{ filepath: String ->
+            val tex = it.loadTexture(filepath) ?: return@loadTexture null
             Texture(null, tex)
         }
     })
+
+    fun loadTextureFromResource(filepath: String) =
+            loadTexture(instance.file.getResourcePathWithError(filepath))
 
     val setUniform1f = checkSupportGraphics({
         { uniform: Uniform1f, value: Float ->
@@ -277,6 +294,22 @@ class Api(private val vk: VK?, private val gl: GL?) {
             it.uniform1i(sampler.glSampler ?: 0, sampler.binding)
             it.activeTexture(sampler.binding)
             it.useTexture(texture.glTexture)
+        }
+    })
+
+    val emptyTexture = checkSupportGraphics({
+        {
+            sharedEmptyTexture.getOrCreate {
+                Texture(VKTexture(it, Image(byteArrayOf(-1, -1, -1, -1), Point(1, 1))))
+                        .also { sharedEmptyTexture = it }
+            }
+        }
+    }, {
+        {
+            sharedEmptyTexture.getOrCreate {
+                Texture(null, GLTexture.empty)
+                        .also { sharedEmptyTexture = it }
+            }
         }
     })
 

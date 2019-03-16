@@ -22,6 +22,8 @@ class BatchBuffer(defaultSize: Int) : Disposable {
         buffer.dispose()
     }
 
+    var nn = 0
+
     fun add(vertices: FloatArray): BatchBufferData {
         val last = if (data.size > 0) data.last().end() else 0
         if (last + vertices.size > maxSize) {
@@ -45,6 +47,8 @@ class BatchBuffer(defaultSize: Int) : Disposable {
     fun copy(target: BatchBufferData, vertices: FloatArray) {
         if (vertices.size != target.vertices.size) {
             isDirty = true
+        } else {
+            instance.graphicsApi.copyToBuffer(buffer, vertices, target.start)
         }
         target.vertices = vertices
     }

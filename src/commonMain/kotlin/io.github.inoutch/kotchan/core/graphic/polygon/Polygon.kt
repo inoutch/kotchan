@@ -1,9 +1,8 @@
 package io.github.inoutch.kotchan.core.graphic.polygon
 
-import io.github.inoutch.kotchan.core.graphic.Material
 import io.github.inoutch.kotchan.utility.type.*
 
-open class Polygon(initMesh: Mesh, val material: Material) {
+open class Polygon(initMesh: Mesh) {
     var mesh = initMesh
         protected set
 

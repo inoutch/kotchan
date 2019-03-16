@@ -1,15 +1,13 @@
 package io.github.inoutch.kotchan.core.graphic.polygon
 
-import io.github.inoutch.kotchan.core.graphic.Material
 import io.github.inoutch.kotchan.core.graphic.texture.TextureAtlas
 import io.github.inoutch.kotchan.utility.Updatable
 
 open class AnimatedSpriteAtlas(
-        material: Material,
         textureAtlas: TextureAtlas,
-        val config: Config) : SpriteAtlas(material, textureAtlas), Updatable {
+        val config: Config) : SpriteAtlas(textureAtlas), Updatable {
 
-    data class AnimationSet(val ids: List<Int>, val interval: Float, val count: Int = -1)
+    data class AnimationSet(val ids: List<Int>, val intervalSec: Float, val count: Int = -1)
 
     data class Config(val animations: List<AnimationSet>,
                       val defaultAnimationId: Int = 0)
@@ -18,6 +16,8 @@ open class AnimatedSpriteAtlas(
         private set
 
     private var currentAnimationIndex = 0
+
+    private var elapsedMilliseconds = 0
 
     private var done: (() -> Unit)? = null
 
@@ -40,12 +40,13 @@ open class AnimatedSpriteAtlas(
     }
 
     override fun update(delta: Float) {
-        val m = (delta * 1000).toInt()
-        val i = (m % (config.animations[animationStateId].interval * 1000).toInt()) / 1000
+        elapsedMilliseconds += (delta * 1000.0f).toInt()
+        val animation = config.animations.getOrNull(animationStateId) ?: return
+        val i = (elapsedMilliseconds / (animation.intervalSec * 1000).toInt()) % animation.ids.size
 
         if (currentAnimationIndex != i) {
-            config.animations[i]
-            if (currentAnimationIndex > i) {
+            setAtlas(animation.ids[i])
+            if (currentAnimationIndex == animation.ids.size - 1) {
                 done?.invoke()
             }
             currentAnimationIndex = i

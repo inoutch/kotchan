@@ -6,7 +6,7 @@ import io.github.inoutch.kotchan.utility.memScoped
 import io.github.inoutch.kotchan.utility.type.Point
 import org.lwjgl.stb.STBImage
 
-actual class Image private actual constructor(actual val byteArray: ByteArray, actual val size: Point) {
+actual class Image actual constructor(actual val byteArray: ByteArray, actual val size: Point) {
     actual companion object {
         actual fun load(byteArray: ByteArray) = memScoped {
             val w = allocInt()
