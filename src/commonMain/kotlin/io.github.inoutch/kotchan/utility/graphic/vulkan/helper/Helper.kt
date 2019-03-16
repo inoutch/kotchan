@@ -144,11 +144,11 @@ class Helper {
                     0.0f)
 
             val colorWriteMask = VkPipelineColorBlendAttachmentState(
-                    false,
-                    VkBlendFactor.VK_BLEND_FACTOR_ZERO,
-                    VkBlendFactor.VK_BLEND_FACTOR_ZERO,
+                    true,
+                    VkBlendFactor.VK_BLEND_FACTOR_SRC_ALPHA,
+                    VkBlendFactor.VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
                     VkBlendOp.VK_BLEND_OP_ADD,
-                    VkBlendFactor.VK_BLEND_FACTOR_ZERO,
+                    VkBlendFactor.VK_BLEND_FACTOR_ONE,
                     VkBlendFactor.VK_BLEND_FACTOR_ZERO,
                     VkBlendOp.VK_BLEND_OP_ADD,
                     listOf(VkColorComponentFlagBits.VK_COLOR_COMPONENT_R_BIT,
@@ -206,16 +206,17 @@ class Helper {
                     usage,
                     VkSharingMode.VK_SHARING_MODE_EXCLUSIVE,
                     listOf(),
-                    VkImageLayout.VK_IMAGE_LAYOUT_UNDEFINED)
+                    VkImageLayout.VK_IMAGE_LAYOUT_PREINITIALIZED)
 
             return vkCreateImage(device, createInfo)
         }
 
-        fun createImageMemory(device: VkDevice, image: VkImage, properties: List<VkMemoryPropertyFlagBits>): VkDeviceMemory {
+        fun createImageMemory(device: VkDevice, image: VkImage, properties: List<VkMemoryPropertyFlagBits>)
+                : Pair<VkDeviceMemory, Long> {
             val requirements = vkGetImageMemoryRequirements(device, image)
             val allocateInfo = VkMemoryAllocateInfo(
                     requirements.size, getMemoryTypeIndex(requirements.memoryTypeBits, properties))
-            return vkAllocateMemory(device, allocateInfo)
+            return vkAllocateMemory(device, allocateInfo) to allocateInfo.allocationSize
         }
 
         fun getMemoryTypeIndex(typeFilter: Int, memoryTypes: List<VkMemoryPropertyFlagBits>): Int {

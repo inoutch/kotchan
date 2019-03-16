@@ -26,7 +26,8 @@ actual class MappedMemory actual constructor(size: Long) : Disposable {
     @ExperimentalUnsignedTypes
     actual fun copy(offset: Long, size: Long, array: FloatArray) = memScoped {
         array.usePinned {
-            memcpy(native, it.addressOf(offset.toInt()), (size * FLOAT_SIZE).toULong())
+            val p = (native.rawValue.toLong() + offset * FLOAT_SIZE).toCPointer<FloatVar>()
+            memcpy(p, it.addressOf(0), (size * FLOAT_SIZE).toULong())
         }
         Unit
     }
@@ -34,7 +35,8 @@ actual class MappedMemory actual constructor(size: Long) : Disposable {
     @ExperimentalUnsignedTypes
     actual fun copy(offset: Long, size: Long, array: IntArray) = memScoped {
         array.usePinned {
-            memcpy(native, it.addressOf(offset.toInt()), (size * INT_SIZE).toULong())
+            val p = (native.rawValue.toLong() + offset * INT_SIZE).toCPointer<IntVar>()
+            memcpy(p, it.addressOf(0), (size * INT_SIZE).toULong())
         }
         Unit
     }
@@ -42,7 +44,8 @@ actual class MappedMemory actual constructor(size: Long) : Disposable {
     @ExperimentalUnsignedTypes
     actual fun copy(offset: Long, size: Long, array: ByteArray) = memScoped {
         array.usePinned {
-            memcpy(native, it.addressOf(offset.toInt()), size.toULong())
+            val p = (native.rawValue.toLong() + offset).toCPointer<ByteVar>()
+            memcpy(p, it.addressOf(0), size.toULong())
         }
         Unit
     }

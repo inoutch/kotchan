@@ -38,13 +38,22 @@ class AppScene : Scene() {
             pos = VertexBuffer(vk, floatArrayOf(
                     0.0f, 0.0f, 0.0f,
                     200.0f, 0.0f, 0.0f,
+                    0.0f, 200.0f, 0.0f,
+                    200.0f, 200.0f, 0.0f,
+                    200.0f, 0.0f, 0.0f,
                     0.0f, 200.0f, 0.0f))
             col = VertexBuffer(vk, floatArrayOf(
+                    1.0f, 1.0f, 1.0f, 1.0f,
+                    1.0f, 1.0f, 1.0f, 1.0f,
+                    1.0f, 1.0f, 1.0f, 1.0f,
                     1.0f, 1.0f, 1.0f, 1.0f,
                     1.0f, 1.0f, 1.0f, 1.0f,
                     1.0f, 1.0f, 1.0f, 1.0f))
             tex = VertexBuffer(vk, floatArrayOf(
                     0.0f, 1.0f,
+                    1.0f, 1.0f,
+                    0.0f, 0.0f,
+                    1.0f, 0.0f,
                     1.0f, 1.0f,
                     0.0f, 0.0f))
         }
@@ -62,7 +71,7 @@ class AppScene : Scene() {
                 vk.renderPass,
                 vk.currentFrameBuffer,
                 VkRect2D(Point.ZERO, extent),
-                listOf(VkClearValue(Vector4(0.0f, 1.0f, 0.0f, 1.0f)),
+                listOf(VkClearValue(Vector4(0.5f, 0.5f, 0.5f, 1.0f)),
                         VkClearValue(VkClearDepthStencilValue(0.0f, 0))))
 
         shaderProgram.update(delta, camera)
@@ -78,7 +87,7 @@ class AppScene : Scene() {
 
         vkCmdBeginRenderPass(vk.currentCommandBuffer, renderPassBeginInfo, VkSubpassContents.VK_SUBPASS_CONTENTS_INLINE)
 
-        vkCmdDraw(vk.currentCommandBuffer, 3, 1, 0, 0)
+        vkCmdDraw(vk.currentCommandBuffer, 6, 1, 0, 0)
 
         vkCmdEndRenderPass(vk.currentCommandBuffer)
     }
