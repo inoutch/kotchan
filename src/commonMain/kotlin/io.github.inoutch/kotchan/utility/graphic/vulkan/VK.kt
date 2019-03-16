@@ -19,6 +19,8 @@ class VK(appName: String,
         const val MAX_FRAMES_IN_FLIGHT = 2
     }
 
+    val physicalDevice: VkPhysicalDevice
+
     val device: VkDevice
 
     val physicalDeviceMemoryProperties: VkPhysicalDeviceMemoryProperties
@@ -48,8 +50,6 @@ class VK(appName: String,
         private set
 
     private val instance: VkInstance
-
-    private val physicalDevice: VkPhysicalDevice
 
     private val physicalDevices: List<VkPhysicalDevice>
 
@@ -192,7 +192,6 @@ class VK(appName: String,
 
     fun transitionImageLayout(
             image: VkImage,
-            format: VkFormat,
             oldLayout: VkImageLayout,
             newLayout: VkImageLayout) {
         val srcAccessMask: List<VkAccessFlagBits>
@@ -200,7 +199,7 @@ class VK(appName: String,
         val sourceStage: List<VkPipelineStageFlagBits>
         val destinationStage: List<VkPipelineStageFlagBits>
 
-        if (oldLayout == VkImageLayout.VK_IMAGE_LAYOUT_UNDEFINED &&
+        if (oldLayout == VkImageLayout.VK_IMAGE_LAYOUT_PREINITIALIZED &&
                 newLayout == VkImageLayout.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL) {
             srcAccessMask = listOf()
             dstAccessMask = listOf(VkAccessFlagBits.VK_ACCESS_TRANSFER_WRITE_BIT)
@@ -213,6 +212,13 @@ class VK(appName: String,
             dstAccessMask = listOf(VkAccessFlagBits.VK_ACCESS_SHADER_READ_BIT)
 
             sourceStage = listOf(VkPipelineStageFlagBits.VK_PIPELINE_STAGE_TRANSFER_BIT)
+            destinationStage = listOf(VkPipelineStageFlagBits.VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT)
+        } else if (oldLayout == VkImageLayout.VK_IMAGE_LAYOUT_PREINITIALIZED &&
+                newLayout == VkImageLayout.VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL) {
+            srcAccessMask = listOf()
+            dstAccessMask = listOf(VkAccessFlagBits.VK_ACCESS_SHADER_READ_BIT)
+
+            sourceStage = listOf(VkPipelineStageFlagBits.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT)
             destinationStage = listOf(VkPipelineStageFlagBits.VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT)
         } else {
             throw Error("unsupported layout transition")
