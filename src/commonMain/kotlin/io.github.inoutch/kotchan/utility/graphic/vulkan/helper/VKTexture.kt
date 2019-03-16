@@ -25,9 +25,7 @@ class VKTexture(val vk: VK, rawImage: Image) : Disposable {
 
         if (needStaging) {
             val stagingBuffer = VKBufferMemory(
-                    vk,
-                    imageSize,
-                    listOf(VkBufferUsageFlagBits.VK_BUFFER_USAGE_TRANSFER_SRC_BIT),
+                    vk, imageSize, listOf(VkBufferUsageFlagBits.VK_BUFFER_USAGE_TRANSFER_SRC_BIT),
                     listOf(VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
                             VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT))
 
@@ -46,7 +44,7 @@ class VKTexture(val vk: VK, rawImage: Image) : Disposable {
 
             vk.transitionImageLayout(
                     image,
-                    VkImageLayout.VK_IMAGE_LAYOUT_PREINITIALIZED,
+                    VkImageLayout.VK_IMAGE_LAYOUT_UNDEFINED,
                     VkImageLayout.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
 
             vk.copyImageBuffer(size, stagingBuffer.buffer, image)
@@ -73,12 +71,11 @@ class VKTexture(val vk: VK, rawImage: Image) : Disposable {
 
             vk.transitionImageLayout(
                     image,
-                    VkImageLayout.VK_IMAGE_LAYOUT_PREINITIALIZED,
+                    VkImageLayout.VK_IMAGE_LAYOUT_UNDEFINED,
                     VkImageLayout.VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
         }
 
         imageView = Helper.createImageView(vk.device, image, format)
-
         sampler = Helper.createSampler(vk.device, VkFilter.VK_FILTER_NEAREST, VkFilter.VK_FILTER_NEAREST)
     }
 

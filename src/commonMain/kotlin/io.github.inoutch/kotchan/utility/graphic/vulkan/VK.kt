@@ -199,7 +199,7 @@ class VK(appName: String,
         val sourceStage: List<VkPipelineStageFlagBits>
         val destinationStage: List<VkPipelineStageFlagBits>
 
-        if (oldLayout == VkImageLayout.VK_IMAGE_LAYOUT_PREINITIALIZED &&
+        if (oldLayout == VkImageLayout.VK_IMAGE_LAYOUT_UNDEFINED &&
                 newLayout == VkImageLayout.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL) {
             srcAccessMask = listOf()
             dstAccessMask = listOf(VkAccessFlagBits.VK_ACCESS_TRANSFER_WRITE_BIT)
@@ -213,7 +213,7 @@ class VK(appName: String,
 
             sourceStage = listOf(VkPipelineStageFlagBits.VK_PIPELINE_STAGE_TRANSFER_BIT)
             destinationStage = listOf(VkPipelineStageFlagBits.VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT)
-        } else if (oldLayout == VkImageLayout.VK_IMAGE_LAYOUT_PREINITIALIZED &&
+        } else if (oldLayout == VkImageLayout.VK_IMAGE_LAYOUT_UNDEFINED &&
                 newLayout == VkImageLayout.VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL) {
             srcAccessMask = listOf()
             dstAccessMask = listOf(VkAccessFlagBits.VK_ACCESS_SHADER_READ_BIT)
@@ -239,10 +239,7 @@ class VK(appName: String,
         vkCmdPipelineBarrier(
                 currentCommandBuffer,
                 sourceStage, destinationStage,
-                listOf(),
-                listOf(),
-                listOf(),
-                listOf(barrier))
+                listOf(), listOf(), listOf(), listOf(barrier))
 
         vkEndCommandBuffer(currentCommandBuffer)
 
