@@ -1,7 +1,7 @@
 package io.github.inoutch.kotchan.utility.graphic.vulkan
 
-import io.github.inoutch.kotchan.core.graphic.DeviceQueueFamilyIndices
-import io.github.inoutch.kotchan.core.graphic.SwapchainSupportDetails
+import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.DeviceQueueFamilyIndices
+import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.SwapchainSupportDetails
 import io.github.inoutch.kotchan.utility.Disposable
 import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.*
 import io.github.inoutch.kotchan.utility.type.Point
@@ -157,6 +157,7 @@ class VK(appName: String,
 
         vkQueuePresentKHR(queue, presentInfo)
         currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT
+        vkQueueWaitIdle(queue)
     }
 
     override fun dispose() {
@@ -354,6 +355,11 @@ class VK(appName: String,
             }
         }
         throw VkInvalidStateError("memoryTypes")
+    }
+
+    fun createPipelineLayout(descriptorSets: List<VkDescriptorSetLayout>): VkPipelineLayout {
+        val pipelineLayoutCreateInfo = VkPipelineLayoutCreateInfo(0, descriptorSets, listOf())
+        return vkCreatePipelineLayout(device, pipelineLayoutCreateInfo)
     }
 
     private fun createCommandPool(device: VkDevice, queryFamilyIndex: Int): VkCommandPool {

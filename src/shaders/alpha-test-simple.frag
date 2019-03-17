@@ -8,5 +8,10 @@ layout(location=1) in vec2 texcoord;
 layout(location=0) out vec4 outColor;
 
 void main(void) {
-    outColor = texture(texSampler, texcoord) * color;
+    vec4 c = texture(texSampler, texcoord) * color;
+    if (c.a > 0.01) {
+        outColor = c;
+    } else {
+        discard;
+    }
 }

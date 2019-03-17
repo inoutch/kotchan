@@ -1,9 +1,7 @@
-package io.github.inoutch.kotchan.utility.graphic.vulkan
+package io.github.inoutch.kotchan.utility.graphic.vulkan.helper
 
-import io.github.inoutch.kotchan.core.graphic.DeviceQueueFamilyIndices
-import io.github.inoutch.kotchan.core.graphic.SwapchainSupportDetails
 import io.github.inoutch.kotchan.utility.Disposable
-import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.Helper
+import io.github.inoutch.kotchan.utility.graphic.vulkan.*
 import io.github.inoutch.kotchan.utility.type.Point
 
 class SwapchainRecreator(
@@ -19,7 +17,7 @@ class SwapchainRecreator(
 
     var mustBeRecreate = false
 
-    var extent: Point = Point()
+    var extent: Point
         private set
 
     var currentSwapchain: VkSwapchainKHR
@@ -44,7 +42,9 @@ class SwapchainRecreator(
     private val depthImageMemory: VkDeviceMemory
 
     init {
-        val resources = createDepthResources(newExtent)
+        extent = swapchainSupportDetails.chooseSwapExtent(newExtent)
+
+        val resources = createDepthResources(this.extent)
         depthImage = resources.depthImage
         depthImageView = resources.depthImageView
         depthImageMemory = resources.depthImageMemory

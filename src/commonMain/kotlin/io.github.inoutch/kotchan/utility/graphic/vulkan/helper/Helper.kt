@@ -1,6 +1,5 @@
 package io.github.inoutch.kotchan.utility.graphic.vulkan.helper
 
-import io.github.inoutch.kotchan.core.graphic.DeviceQueueFamilyIndices
 import io.github.inoutch.kotchan.utility.graphic.vulkan.*
 import io.github.inoutch.kotchan.utility.type.Point
 import io.github.inoutch.kotchan.utility.type.Vector4
@@ -86,15 +85,6 @@ class Helper {
             return vkCreateRenderPass(device, renderCreateInfo)
         }
 
-        fun createPipelineLayout(device: VkDevice): VkPipelineLayout {
-            val pipelineLayoutCreateInfo = VkPipelineLayoutCreateInfo(
-                    0,
-                    listOf(),
-                    listOf())
-
-            return vkCreatePipelineLayout(device, pipelineLayoutCreateInfo)
-        }
-
         fun createGraphicsPipeline(
                 device: VkDevice,
                 renderPass: VkRenderPass,
@@ -124,7 +114,7 @@ class Helper {
                     VkCullMode.VK_CULL_MODE_NONE,
                     VkFrontFace.VK_FRONT_FACE_COUNTER_CLOCKWISE,
                     false,
-                    false,
+                    true,
                     false,
                     0.0f,
                     0.0f,
@@ -256,5 +246,24 @@ class Helper {
                     0.0f, 0.0f, VkBorderColor.VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK, false)
             return vkCreateSampler(device, createInfo)
         }
+
+        fun createShaderStages(vertShaderModule: VkShaderModule, fragShaderModule: VkShaderModule):
+                List<VkPipelineShaderStageCreateInfo> {
+            val vertShaderState = VkPipelineShaderStageCreateInfo(
+                    0,
+                    listOf(VkShaderStageFlagBits.VK_SHADER_STAGE_VERTEX_BIT),
+                    vertShaderModule,
+                    "main",
+                    null)
+            val fragShaderStage = VkPipelineShaderStageCreateInfo(
+                    0,
+                    listOf(VkShaderStageFlagBits.VK_SHADER_STAGE_FRAGMENT_BIT),
+                    fragShaderModule,
+                    "main",
+                    null)
+            return listOf(vertShaderState, fragShaderStage)
+        }
+
+
     }
 }

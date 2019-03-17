@@ -1,4 +1,4 @@
-package io.github.inoutch.kotchan.core.graphic.compatible
+package io.github.inoutch.kotchan.core.graphic
 
 import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
 import io.github.inoutch.kotchan.core.graphic.shader.ShaderProgram
@@ -15,10 +15,7 @@ import io.github.inoutch.kotchan.utility.graphic.gl.GLAttribLocation
 import io.github.inoutch.kotchan.utility.graphic.gl.GLShader
 import io.github.inoutch.kotchan.utility.graphic.gl.GLTexture
 import io.github.inoutch.kotchan.utility.graphic.vulkan.*
-import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.Helper
-import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.VKSampler
-import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.VKTexture
-import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.VKUniformBuffer
+import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.*
 import io.github.inoutch.kotchan.utility.io.getResourcePathWithError
 import io.github.inoutch.kotchan.utility.type.*
 
@@ -26,38 +23,24 @@ class Api(private val vk: VK?, private val gl: GL?) {
 
     private var sharedEmptyTexture: Texture? = null
 
-    val allocateBuffer = checkSupportGraphics({ vk ->
+    val allocateVertexBuffer = checkSupportGraphics({ vk ->
         { size: Int ->
-            val device = vk.device
-            val bufferCreateInfo = VkBufferCreateInfo(
-                    0, 4L * size,
-                    listOf(VkBufferUsageFlagBits.VK_BUFFER_USAGE_VERTEX_BUFFER_BIT),
-                    VkSharingMode.VK_SHARING_MODE_EXCLUSIVE,
-                    null)
-
-            val buffer = vkCreateBuffer(device, bufferCreateInfo)
-
-            val memoryTypes = listOf(
+            val memTypes = listOf(
                     VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
                     VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)
-            val requirements = vkGetBufferMemoryRequirements(device, buffer)
-            val memoryAllocateInfo = VkMemoryAllocateInfo(
-                    requirements.size,
-                    vk.findMemoryTypeIndex(requirements.memoryTypeBits, memoryTypes))
-            val memory = vkAllocateMemory(device, memoryAllocateInfo)
-
-            vkBindBufferMemory(device, buffer, memory, 0)
-            Buffer(Buffer.VKBundle(buffer, memory, memoryAllocateInfo.allocationSize), null)
+            val vertexBuffer = VKBufferMemory(
+                    vk, size.toLong(), listOf(VkBufferUsageFlagBits.VK_BUFFER_USAGE_VERTEX_BUFFER_BIT), memTypes)
+            VertexBuffer(vertexBuffer, null)
         }
     }, {
         { size: Int ->
-            Buffer(null, Buffer.GLBundle(it.createVBO(size)))
+            VertexBuffer(null, VertexBuffer.GLBundle(it.createVBO(size)))
         }
     })
 
     val copyToBuffer = checkSupportGraphics({
-        copy@{ buffer: Buffer, vertices: FloatArray, offset: Int ->
-            val vkBuffer = buffer.vkBuffer ?: return@copy
+        copy@{ vertexBuffer: VertexBuffer, vertices: FloatArray, offset: Int ->
+            val vkBuffer = vertexBuffer.vkBuffer ?: return@copy
             val mappedMemory = vkMapMemory(
                     it.device,
                     vkBuffer.memory,
@@ -68,17 +51,17 @@ class Api(private val vk: VK?, private val gl: GL?) {
             mappedMemory.dispose() // unmap
         }
     }, {
-        copy@{ buffer: Buffer, vertices: FloatArray, offset: Int ->
-            val glBuffer = buffer.glBuffer ?: return@copy
+        copy@{ vertexBuffer: VertexBuffer, vertices: FloatArray, offset: Int ->
+            val glBuffer = vertexBuffer.glBuffer ?: return@copy
             it.updateVBO(glBuffer.vbo, offset, vertices)
         }
     })
 
     val drawTriangles = checkSupportGraphics({
         draw@{ batchBufferBundle: BatchPolygonBundle ->
-            val posBuffer = batchBufferBundle.positionBuffer.buffer.vkBuffer ?: return@draw
-            val colBuffer = batchBufferBundle.colorBuffer.buffer.vkBuffer ?: return@draw
-            val texBuffer = batchBufferBundle.texcoordBuffer.buffer.vkBuffer ?: return@draw
+            val posBuffer = batchBufferBundle.positionBuffer.vertexBuffer.vkBuffer ?: return@draw
+            val colBuffer = batchBufferBundle.colorBuffer.vertexBuffer.vkBuffer ?: return@draw
+            val texBuffer = batchBufferBundle.texcoordBuffer.vertexBuffer.vkBuffer ?: return@draw
 
             val renderPassBeginInfo = VkRenderPassBeginInfo(
                     it.renderPass,
@@ -101,11 +84,11 @@ class Api(private val vk: VK?, private val gl: GL?) {
         }
     }, {
         { batchBufferBundle: BatchPolygonBundle ->
-            it.bindVBO(batchBufferBundle.positionBuffer.buffer.glBuffer?.vbo?.id ?: 0)
+            it.bindVBO(batchBufferBundle.positionBuffer.vertexBuffer.glBuffer?.vbo?.id ?: 0)
             it.vertexPointer(GLAttribLocation.ATTRIBUTE_POSITION, 3, 0, 0)
-            it.bindVBO(batchBufferBundle.texcoordBuffer.buffer.glBuffer?.vbo?.id ?: 0)
+            it.bindVBO(batchBufferBundle.texcoordBuffer.vertexBuffer.glBuffer?.vbo?.id ?: 0)
             it.vertexPointer(GLAttribLocation.ATTRIBUTE_TEXCOORD, 2, 0, 0)
-            it.bindVBO(batchBufferBundle.colorBuffer.buffer.glBuffer?.vbo?.id ?: 0)
+            it.bindVBO(batchBufferBundle.colorBuffer.vertexBuffer.glBuffer?.vbo?.id ?: 0)
             it.vertexPointer(GLAttribLocation.ATTRIBUTE_COLOR, 4, 0, 0)
 
             it.drawTriangleArrays(0, batchBufferBundle.size)
@@ -133,31 +116,9 @@ class Api(private val vk: VK?, private val gl: GL?) {
             val descriptorSets = it.createDescriptorSets(
                     it.device, descriptorPool, it.commandBuffers.size, descriptorSetLayout)
 
-            // set native data to each descriptors
-            createInfo.shaderProgram.descriptors.forEach { descriptor ->
-                when (descriptor) {
-                    is Uniform -> {
-                        val uniformBuffer = VKUniformBuffer(it, descriptor.binding, descriptor.size)
-                        uniformBuffer.buffers.forEachIndexed { index, buffer ->
-                            val bufferInfo = VkDescriptorBufferInfo(buffer.buffer, 0, descriptor.size)
-                            val descriptorWrite = VkWriteDescriptorSet(
-                                    descriptorSets[index],
-                                    descriptor.binding,
-                                    0,
-                                    VkDescriptorType.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-                                    listOf(), listOf(bufferInfo), listOf())
-                            vkUpdateDescriptorSets(it.device, listOf(descriptorWrite), listOf())
-                        }
-                        descriptor.vkUniform = uniformBuffer
-                    }
-                    is Sampler -> {
-                        descriptor.vkSampler = VKSampler(descriptorSets, descriptor.binding)
-                    }
-                    else -> throw Error("unsupported descriptor type")
-                }
-            }
+            updateDescriptors(it, createInfo.shaderProgram.descriptors, descriptorSets)
 
-            val pipelineLayout = createPipelineLayout(it, listOf(descriptorSetLayout))
+            val pipelineLayout = it.createPipelineLayout(listOf(descriptorSetLayout))
             val pipeline = Helper.createGraphicsPipeline(
                     it.device, it.renderPass, pipelineLayout, shader.vert, shader.frag)
 
@@ -312,6 +273,31 @@ class Api(private val vk: VK?, private val gl: GL?) {
         }
     })
 
+    private fun updateDescriptors(vk: VK, descriptors: List<Descriptor>, descriptorSets: List<VkDescriptorSet>) {
+        descriptors.forEach { descriptor ->
+            when (descriptor) {
+                is Uniform -> {
+                    val uniformBuffer = VKUniformBuffer(vk, descriptor.binding, descriptor.size)
+                    uniformBuffer.buffers.forEachIndexed { index, buffer ->
+                        val bufferInfo = VkDescriptorBufferInfo(buffer.buffer, 0, descriptor.size)
+                        val descriptorWrite = VkWriteDescriptorSet(
+                                descriptorSets[index],
+                                descriptor.binding,
+                                0,
+                                VkDescriptorType.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+                                listOf(), listOf(bufferInfo), listOf())
+                        vkUpdateDescriptorSets(vk.device, listOf(descriptorWrite), listOf())
+                    }
+                    descriptor.vkUniform = uniformBuffer
+                }
+                is Sampler -> {
+                    descriptor.vkSampler = VKSampler(descriptorSets, descriptor.binding)
+                }
+                else -> throw Error("unsupported descriptor type")
+            }
+        }
+    }
+
     private fun <T> checkSupportGraphics(vkScope: (vk: VK) -> T, glScope: (gl: GL) -> T): T {
         val vk = this.vk
         if (vk != null) {
@@ -347,17 +333,12 @@ class Api(private val vk: VK?, private val gl: GL?) {
         throw Error("unsupported descriptor type")
     }
 
-    private fun createPipelineLayout(vk: VK, descriptorSets: List<VkDescriptorSetLayout>): VkPipelineLayout {
-        val pipelineLayoutCreateInfo = VkPipelineLayoutCreateInfo(0, descriptorSets, listOf())
-        return vkCreatePipelineLayout(vk.device, pipelineLayoutCreateInfo)
-    }
-
-    private fun createDescriptorPoolSize(vk: VK, descriptorType: VkDescriptorType): VkDescriptorPoolSize {
-        return VkDescriptorPoolSize(descriptorType, vk.commandBuffers.size)
-    }
-
     private fun createDescriptorPool(vk: VK, descriptors: List<Descriptor>): VkDescriptorPool {
-        val sizes = descriptors.map { createDescriptorPoolSize(vk, getDescriptorType(it)) }
+        val sizes = descriptors.map {
+            VkDescriptorPoolSize(getDescriptorType(it), vk.commandBuffers.size)
+        }
         return vkCreateDescriptorPool(vk.device, VkDescriptorPoolCreateInfo(listOf(), vk.commandBuffers.size, sizes))
     }
+
+
 }

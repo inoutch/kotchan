@@ -1,4 +1,4 @@
-package io.github.inoutch.kotchan.core.graphic.compatible
+package io.github.inoutch.kotchan.core.graphic
 
 import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
 import io.github.inoutch.kotchan.core.graphic.shader.ShaderProgram

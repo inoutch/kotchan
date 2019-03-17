@@ -1,4 +1,4 @@
-package io.github.inoutch.kotchan.core.graphic
+package io.github.inoutch.kotchan.utility.graphic.vulkan.helper
 
 import io.github.inoutch.kotchan.utility.graphic.vulkan.*
 

@@ -29,11 +29,6 @@ actual class MappedMemory actual constructor(size: Long) : Disposable {
     actual fun copy(offset: Long, size: Long, array: FloatArray) = memScoped {
         val buffer = array.toNative(this)
         MemoryUtil.memCopy(MemoryUtil.memAddress(buffer), native + offset * FLOAT_SIZE, size * FLOAT_SIZE)
-        if (array.size == 12) {
-            val f = allocFloat(12)
-            MemoryUtil.memCopy(MemoryUtil.memAddress(f), native + offset * FLOAT_SIZE, 12 * FLOAT_SIZE)
-            println("${f.get(0)}, ${f.get(1)}")
-        }
     }
 
     actual fun copy(offset: Long, size: Long, array: IntArray) = memScoped {

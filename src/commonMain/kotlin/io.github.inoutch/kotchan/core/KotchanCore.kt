@@ -12,7 +12,7 @@ import io.github.inoutch.kotchan.core.graphic.animator.Animator
 import io.github.inoutch.kotchan.core.graphic.camera.Camera
 import io.github.inoutch.kotchan.core.graphic.camera.Camera2D
 import io.github.inoutch.kotchan.core.graphic.camera.Camera3D
-import io.github.inoutch.kotchan.core.graphic.compatible.Api
+import io.github.inoutch.kotchan.core.graphic.Api
 import io.github.inoutch.kotchan.core.logger.Logger
 import io.github.inoutch.kotchan.core.tool.TextureCacheManager
 import io.github.inoutch.kotchan.utility.graphic.gl.GL

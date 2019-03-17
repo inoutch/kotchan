@@ -30,7 +30,7 @@ class Batch : Disposable {
             val positionBufferData = positionBuffer.add(polygon.positions())
             val texcoordBufferData = texcoordBuffer.add(polygon.texcoords())
             val colorBufferData = colorBuffer.add(polygon.colors())
-            val bundle = BatchBundle(polygon, positionBufferData, texcoordBufferData, colorBufferData)
+            val bundle = BatchBundle(polygon, positionBufferData, colorBufferData, texcoordBufferData)
             invPolygonBundleCache[polygon] = bundle
             polygons.add(bundle)
         }

@@ -1,12 +1,12 @@
 package io.github.inoutch.kotchan.core.graphic.batch
 
 import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
-import io.github.inoutch.kotchan.core.graphic.compatible.Buffer
+import io.github.inoutch.kotchan.core.graphic.VertexBuffer
 import io.github.inoutch.kotchan.utility.Disposable
 
 class BatchBuffer(defaultSize: Int) : Disposable {
 
-    var buffer: Buffer = instance.graphicsApi.allocateBuffer(defaultSize)
+    var vertexBuffer: VertexBuffer = instance.graphicsApi.allocateVertexBuffer(defaultSize)
 
     var maxSize = defaultSize
         private set
@@ -19,10 +19,8 @@ class BatchBuffer(defaultSize: Int) : Disposable {
     private val data = arrayListOf<BatchBufferData>()
 
     override fun dispose() {
-        buffer.dispose()
+        vertexBuffer.dispose()
     }
-
-    var nn = 0
 
     fun add(vertices: FloatArray): BatchBufferData {
         val last = if (data.size > 0) data.last().end() else 0
@@ -31,13 +29,13 @@ class BatchBuffer(defaultSize: Int) : Disposable {
             isDirty = true
             maxSize = (last + vertices.size) * 2
 
-            buffer.dispose()
-            buffer = instance.graphicsApi.allocateBuffer(maxSize)
+            vertexBuffer.dispose()
+            vertexBuffer = instance.graphicsApi.allocateVertexBuffer(maxSize)
         }
 
         val batchBufferData = BatchBufferData(last, vertices)
 
-        instance.graphicsApi.copyToBuffer(buffer, vertices, last)
+        instance.graphicsApi.copyToBuffer(vertexBuffer, vertices, last)
         this.data.add(batchBufferData)
 
         size += vertices.size
@@ -48,7 +46,7 @@ class BatchBuffer(defaultSize: Int) : Disposable {
         if (vertices.size != target.vertices.size) {
             isDirty = true
         } else {
-            instance.graphicsApi.copyToBuffer(buffer, vertices, target.start)
+            instance.graphicsApi.copyToBuffer(vertexBuffer, vertices, target.start)
         }
         target.vertices = vertices
     }
@@ -67,7 +65,7 @@ class BatchBuffer(defaultSize: Int) : Disposable {
                     it.vertices.asIterable()
                 }
                 .toFloatArray()
-        instance.graphicsApi.copyToBuffer(buffer, array, 0)
+        instance.graphicsApi.copyToBuffer(vertexBuffer, array, 0)
         size = array.size
     }
 

@@ -67,6 +67,7 @@ class GLFWLauncher(config: KotchanEngine.Config) {
             point = Point(xpos.toInt(), ypos.toInt())
             val t = touch ?: return@glfwSetCursorPosCallback
             t.point = point
+            core.touchEmitter.onTouchesMoved(listOf(t))
         }
         glfwSetMouseButtonCallback(window) { _: Long, button: Int, action: Int, _: Int ->
             if (button == GLFW_MOUSE_BUTTON_LEFT) {
