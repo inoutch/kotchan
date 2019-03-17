@@ -157,7 +157,6 @@ class VK(appName: String,
 
         vkQueuePresentKHR(queue, presentInfo)
         currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT
-        vkQueueWaitIdle(queue)
     }
 
     override fun dispose() {

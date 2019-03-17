@@ -23,6 +23,8 @@ class Api(private val vk: VK?, private val gl: GL?) {
 
     private var sharedEmptyTexture: Texture? = null
 
+    private var currentPipeline: GraphicsPipeline? = null
+
     val allocateVertexBuffer = checkSupportGraphics({ vk ->
         { size: Int ->
             val memTypes = listOf(
@@ -59,6 +61,8 @@ class Api(private val vk: VK?, private val gl: GL?) {
 
     val drawTriangles = checkSupportGraphics({
         draw@{ batchBufferBundle: BatchPolygonBundle ->
+            val currentPipeline = this.currentPipeline ?: throw Error("must bind graphic pipeline")
+            val vkPipeline = currentPipeline.vkBundle ?: return@draw
             val posBuffer = batchBufferBundle.positionBuffer.vertexBuffer.vkBuffer ?: return@draw
             val colBuffer = batchBufferBundle.colorBuffer.vertexBuffer.vkBuffer ?: return@draw
             val texBuffer = batchBufferBundle.texcoordBuffer.vertexBuffer.vkBuffer ?: return@draw
@@ -75,6 +79,14 @@ class Api(private val vk: VK?, private val gl: GL?) {
                     0,
                     listOf(posBuffer.buffer, colBuffer.buffer, texBuffer.buffer),
                     listOf(0, 0, 0))
+
+            vkCmdBindDescriptorSets(
+                    it.currentCommandBuffer,
+                    VkPipelineBindPoint.VK_PIPELINE_BIND_POINT_GRAPHICS,
+                    vkPipeline.pipelineLayout,
+                    0,
+                    listOf(vkPipeline.descriptorSetStacks[it.currentImageIndex].get()),
+                    listOf())
 
             vkCmdBeginRenderPass(it.currentCommandBuffer, renderPassBeginInfo, VkSubpassContents.VK_SUBPASS_CONTENTS_INLINE)
 
@@ -107,21 +119,22 @@ class Api(private val vk: VK?, private val gl: GL?) {
         }
     })
 
-    val createGraphicsPipeline = checkSupportGraphics({
+    val createGraphicsPipeline = checkSupportGraphics({ vk ->
         pipeline@{ createInfo: GraphicsPipeline.CreateInfo ->
             val shader = createInfo.shaderProgram.shader.vkShader ?: throw Error("no vulkan shader module")
 
-            val descriptorSetLayout = createDescriptorSetLayout(it, createInfo.shaderProgram.descriptors)
-            val descriptorPool = createDescriptorPool(it, createInfo.shaderProgram.descriptors)
-            val descriptorSets = it.createDescriptorSets(
-                    it.device, descriptorPool, it.commandBuffers.size, descriptorSetLayout)
+            val descriptorSetLayout = createDescriptorSetLayout(vk, createInfo.shaderProgram.descriptors)
+            val descriptorPool = createDescriptorPool(vk, createInfo.shaderProgram.descriptors)
+            val descriptorSets = List(vk.commandBuffers.size) {
+                VKDescriptorSetStack(vk, descriptorPool, descriptorSetLayout)
+            }
 
-            updateDescriptors(it, createInfo.shaderProgram.descriptors, descriptorSets)
+            updateDescriptors(vk, createInfo.shaderProgram.descriptors, descriptorSets)
 
-            val pipelineLayout = it.createPipelineLayout(listOf(descriptorSetLayout))
+            val pipelineLayout = vk.createPipelineLayout(listOf(descriptorSetLayout))
             val pipeline = Helper.createGraphicsPipeline(
-                    it.device,
-                    it.renderPass,
+                    vk.device,
+                    vk.renderPass,
                     pipelineLayout,
                     shader.vert, shader.frag,
                     createInfo.depthTest,
@@ -154,13 +167,8 @@ class Api(private val vk: VK?, private val gl: GL?) {
                     VkPipelineBindPoint.VK_PIPELINE_BIND_POINT_GRAPHICS,
                     vkPipeline.pipeline)
 
-            vkCmdBindDescriptorSets(
-                    it.currentCommandBuffer,
-                    VkPipelineBindPoint.VK_PIPELINE_BIND_POINT_GRAPHICS,
-                    vkPipeline.pipelineLayout,
-                    0,
-                    listOf(vkPipeline.descriptorSets[it.currentImageIndex]),
-                    listOf())
+            pipeline.vkBundle.descriptorSetStacks[it.currentImageIndex].clear()
+            currentPipeline = pipeline
         }
     }, {
         pipeline@{ pipeline: GraphicsPipeline ->
@@ -279,28 +287,36 @@ class Api(private val vk: VK?, private val gl: GL?) {
         }
     })
 
-    private fun updateDescriptors(vk: VK, descriptors: List<Descriptor>, descriptorSets: List<VkDescriptorSet>) {
+    fun updateDescriptors(vk: VK, descriptors: List<Descriptor>, descriptorSetStacks: List<VKDescriptorSetStack>) {
         descriptors.forEach { descriptor ->
             when (descriptor) {
                 is Uniform -> {
                     val uniformBuffer = VKUniformBuffer(vk, descriptor.binding, descriptor.size)
-                    uniformBuffer.buffers.forEachIndexed { index, buffer ->
-                        val bufferInfo = VkDescriptorBufferInfo(buffer.buffer, 0, descriptor.size)
-                        val descriptorWrite = VkWriteDescriptorSet(
-                                descriptorSets[index],
-                                descriptor.binding,
-                                0,
-                                VkDescriptorType.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-                                listOf(), listOf(bufferInfo), listOf())
-                        vkUpdateDescriptorSets(vk.device, listOf(descriptorWrite), listOf())
-                    }
+                    updateUniforms(vk, descriptor, uniformBuffer, descriptorSetStacks)
                     descriptor.vkUniform = uniformBuffer
                 }
                 is Sampler -> {
-                    descriptor.vkSampler = VKSampler(descriptorSets, descriptor.binding)
+                    descriptor.vkSampler = VKSampler(
+                            descriptorSetStacks, descriptor.binding, descriptors.filter { it != descriptor })
                 }
                 else -> throw Error("unsupported descriptor type")
             }
+        }
+    }
+
+    private fun updateUniforms(
+            vk: VK, uniform: Uniform,
+            uniformBuffer: VKUniformBuffer,
+            descriptorSetStacks: List<VKDescriptorSetStack>) {
+        uniformBuffer.buffers.forEachIndexed { index, buffer ->
+            val bufferInfo = VkDescriptorBufferInfo(buffer.buffer, 0, uniform.size)
+            val descriptorWrites = descriptorSetStacks[index].all.map {
+                VkWriteDescriptorSet(
+                        it, uniform.binding, 0,
+                        VkDescriptorType.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+                        listOf(), listOf(bufferInfo), listOf())
+            }
+            vkUpdateDescriptorSets(vk.device, descriptorWrites, listOf())
         }
     }
 
@@ -343,7 +359,7 @@ class Api(private val vk: VK?, private val gl: GL?) {
         val sizes = descriptors.map {
             VkDescriptorPoolSize(getDescriptorType(it), vk.commandBuffers.size)
         }
-        return vkCreateDescriptorPool(vk.device, VkDescriptorPoolCreateInfo(listOf(), vk.commandBuffers.size, sizes))
+        return vkCreateDescriptorPool(vk.device, VkDescriptorPoolCreateInfo(listOf(), 100, sizes))
     }
 
     private fun convertVkCullMode(cullMode: CullMode) = when (cullMode) {
