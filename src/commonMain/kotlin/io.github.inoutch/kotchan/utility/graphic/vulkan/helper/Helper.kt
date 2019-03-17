@@ -1,6 +1,5 @@
 package io.github.inoutch.kotchan.utility.graphic.vulkan.helper
 
-import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
 import io.github.inoutch.kotchan.core.graphic.DeviceQueueFamilyIndices
 import io.github.inoutch.kotchan.utility.graphic.vulkan.*
 import io.github.inoutch.kotchan.utility.type.Point
@@ -26,8 +25,11 @@ class Helper {
             return vkCreateDevice(physicalDevice, deviceCreateInfo)
         }
 
-        fun createRenderPass(device: VkDevice, surfaceFormat: VkSurfaceFormatKHR): VkRenderPass {
-            val attachment = VkAttachmentDescription(
+        fun createRenderPass(
+                device: VkDevice,
+                surfaceFormat: VkSurfaceFormatKHR,
+                depthFormat: VkFormat): VkRenderPass {
+            val colorAttachment = VkAttachmentDescription(
                     0,
                     surfaceFormat.format,
                     listOf(VkSampleFlagBits.VK_SAMPLE_COUNT_1_BIT),
@@ -38,7 +40,22 @@ class Helper {
                     initialLayout = VkImageLayout.VK_IMAGE_LAYOUT_UNDEFINED,
                     finalLayout = VkImageLayout.VK_IMAGE_LAYOUT_PRESENT_SRC_KHR)
 
+            val depthAttachment = VkAttachmentDescription(
+                    0,
+                    depthFormat,
+                    listOf(VkSampleFlagBits.VK_SAMPLE_COUNT_1_BIT),
+                    VkAttachmentLoadOp.VK_ATTACHMENT_LOAD_OP_CLEAR,
+                    VkAttachmentStoreOp.VK_ATTACHMENT_STORE_OP_STORE,
+                    VkAttachmentLoadOp.VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+                    VkAttachmentStoreOp.VK_ATTACHMENT_STORE_OP_DONT_CARE,
+                    initialLayout = VkImageLayout.VK_IMAGE_LAYOUT_UNDEFINED,
+                    finalLayout = VkImageLayout.VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL)
+
             val colorReference = VkAttachmentReference(0, VkImageLayout.VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+
+            val depthAttachmentRef = VkAttachmentReference(
+                    1,
+                    VkImageLayout.VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
 
             val subpass = VkSubpassDescription(
                     0,
@@ -46,7 +63,7 @@ class Helper {
                     listOf(),
                     listOf(colorReference),
                     listOf(),
-                    null,
+                    depthAttachmentRef,
                     listOf())
 
             val dependency = VkSubpassDependency(
@@ -61,7 +78,7 @@ class Helper {
 
             val renderCreateInfo = VkRenderPassCreateInfo(
                     0,
-                    listOf(attachment),
+                    listOf(colorAttachment, depthAttachment),
                     listOf(subpass),
                     listOf(dependency),
                     listOf())
@@ -133,15 +150,15 @@ class Helper {
                     0)
             val depthStencilStateCreateInfo = VkPipelineDepthStencilStateCreateInfo(
                     0,
-                    false,
-                    false,
-                    VkCompareOp.VK_COMPARE_OP_ALWAYS,
+                    true,
+                    true,
+                    VkCompareOp.VK_COMPARE_OP_LESS,
                     false,
                     false,
                     stencilOpState,
                     stencilOpState,
                     0.0f,
-                    0.0f)
+                    1.0f)
 
             val colorWriteMask = VkPipelineColorBlendAttachmentState(
                     true,
@@ -209,28 +226,6 @@ class Helper {
                     VkImageLayout.VK_IMAGE_LAYOUT_PREINITIALIZED)
 
             return vkCreateImage(device, createInfo)
-        }
-
-        fun createImageMemory(device: VkDevice, image: VkImage, properties: List<VkMemoryPropertyFlagBits>)
-                : Pair<VkDeviceMemory, Long> {
-            val requirements = vkGetImageMemoryRequirements(device, image)
-            val allocateInfo = VkMemoryAllocateInfo(
-                    requirements.size, getMemoryTypeIndex(requirements.memoryTypeBits, properties))
-            return vkAllocateMemory(device, allocateInfo) to allocateInfo.allocationSize
-        }
-
-        fun getMemoryTypeIndex(typeFilter: Int, memoryTypes: List<VkMemoryPropertyFlagBits>): Int {
-            val properties = memoryTypes.sumBy { it.value }
-            val supportedMemoryTypes = instance.vk?.physicalDeviceMemoryProperties?.memoryTypes
-                    ?: throw Error("vk not supported")
-
-            for (i in 0 until supportedMemoryTypes.size) {
-                val type = supportedMemoryTypes[i]
-                if (typeFilter and (1 shl i) != 0 && (type.propertyFlags and properties) == properties) {
-                    return i
-                }
-            }
-            throw VkInvalidStateError("memoryTypes")
         }
 
         fun createImageView(device: VkDevice, image: VkImage, format: VkFormat): VkImageView {

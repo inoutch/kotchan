@@ -1,7 +1,6 @@
 package io.github.inoutch.kotchan.core.graphic.compatible
 
 import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
-import io.github.inoutch.kotchan.core.error.NoSuchFileError
 import io.github.inoutch.kotchan.core.graphic.shader.ShaderProgram
 import io.github.inoutch.kotchan.core.graphic.batch.BatchPolygonBundle
 import io.github.inoutch.kotchan.core.graphic.shader.Descriptor
@@ -44,7 +43,7 @@ class Api(private val vk: VK?, private val gl: GL?) {
             val requirements = vkGetBufferMemoryRequirements(device, buffer)
             val memoryAllocateInfo = VkMemoryAllocateInfo(
                     requirements.size,
-                    vk.getMemoryTypeIndex(requirements.memoryTypeBits, memoryTypes))
+                    vk.findMemoryTypeIndex(requirements.memoryTypeBits, memoryTypes))
             val memory = vkAllocateMemory(device, memoryAllocateInfo)
 
             vkBindBufferMemory(device, buffer, memory, 0)
@@ -62,8 +61,8 @@ class Api(private val vk: VK?, private val gl: GL?) {
             val mappedMemory = vkMapMemory(
                     it.device,
                     vkBuffer.memory,
-                    offset.toLong(),
-                    vkBuffer.allocationSize,
+                    offset.toLong() * FLOAT_SIZE,
+                    vertices.size.toLong(),
                     listOf())
             mappedMemory.copy(0, vertices.size.toLong(), vertices)
             mappedMemory.dispose() // unmap
@@ -86,7 +85,7 @@ class Api(private val vk: VK?, private val gl: GL?) {
                     it.currentFrameBuffer,
                     VkRect2D(Point.ZERO, it.swapchainRecreator.extent),
                     listOf(VkClearValue(Vector4(0.5f, 0.5f, 0.5f, 1.0f)),
-                            VkClearValue(VkClearDepthStencilValue(0.0f, 0))))
+                            VkClearValue(VkClearDepthStencilValue(1.0f, 0))))
 
             vkCmdBindVertexBuffers(
                     it.currentCommandBuffer,

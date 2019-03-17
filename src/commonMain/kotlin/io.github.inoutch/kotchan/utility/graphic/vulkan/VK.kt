@@ -27,6 +27,8 @@ class VK(appName: String,
 
     val swapchainSupportDetails: SwapchainSupportDetails
 
+    val commandPool: VkCommandPool
+
     val swapchainRecreator: SwapchainRecreator
 
     val surface: VkSurface
@@ -34,8 +36,6 @@ class VK(appName: String,
     val queue: VkQueue
 
     val renderPass: VkRenderPass
-
-//    val graphicsPipeline: VkPipeline
 
     var currentCommandBuffer: VkCommandBuffer
         private set
@@ -56,12 +56,6 @@ class VK(appName: String,
     private val deviceQueueFamilyIndices: DeviceQueueFamilyIndices
 
     private val surfaceFormat: VkSurfaceFormatKHR
-
-//    private val vertShaderModule: VkShaderModule
-//
-//    private val fragShaderModule: VkShaderModule
-//
-//    private val pipelineLayout: VkPipelineLayout
 
     private val imageAvailableSemaphores: List<VkSemaphore>
 
@@ -102,12 +96,11 @@ class VK(appName: String,
         swapchainSupportDetails = SwapchainSupportDetails.querySwapchainSupport(physicalDevice, surface)
         surfaceFormat = swapchainSupportDetails.chooseSwapSurfaceFormat()
 
-        // Command Pool Configurations =================================================================================
-
         queue = vkGetDeviceQueue(device, deviceQueueFamilyIndices.graphicsQueueFamilyIndex, 0)
 
-        renderPass = Helper.createRenderPass(device, surfaceFormat)
+        renderPass = Helper.createRenderPass(device, surfaceFormat, findDepthFormat())
 
+        commandPool = createCommandPool(device, deviceQueueFamilyIndices.graphicsQueueFamilyIndex)
         swapchainRecreator = SwapchainRecreator(this, actualWindowSize, swapchainSupportDetails, deviceQueueFamilyIndices)
         currentCommandBuffer = swapchainRecreator.commandBuffers.first()
         currentFrameBuffer = swapchainRecreator.framebuffers.first()
@@ -166,38 +159,40 @@ class VK(appName: String,
         currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT
     }
 
-    fun getMemoryTypeIndex(typeFilter: Int, memoryTypes: List<VkMemoryPropertyFlagBits>): Int {
-        val properties = memoryTypes.sumBy { it.value }
-
-        for (i in 0 until physicalDeviceMemoryProperties.memoryTypes.size) {
-            val type = physicalDeviceMemoryProperties.memoryTypes[i]
-            if (typeFilter and (1 shl i) != 0 && (type.propertyFlags and properties) == properties) {
-                return i
-            }
-        }
-        throw VkInvalidStateError("memoryTypes")
-    }
-
     override fun dispose() {
         vkDeviceWaitIdle(device)
+
+        renderPass.dispose()
+        swapchainRecreator.dispose()
+        commandPool.dispose()
 
         imageAvailableSemaphores.forEach { it.dispose() }
         renderCompleteSemaphores.forEach { it.dispose() }
         inFlightFences.forEach { it.dispose() }
 
         device.dispose()
-
         instance.dispose()
     }
 
     fun transitionImageLayout(
             image: VkImage,
+            format: VkFormat,
             oldLayout: VkImageLayout,
             newLayout: VkImageLayout) {
         val srcAccessMask: List<VkAccessFlagBits>
         val dstAccessMask: List<VkAccessFlagBits>
         val sourceStage: List<VkPipelineStageFlagBits>
         val destinationStage: List<VkPipelineStageFlagBits>
+        val aspectMask = mutableListOf<VkImageAspectFlagBits>()
+
+        if (newLayout == VkImageLayout.VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL) {
+            aspectMask.add(VkImageAspectFlagBits.VK_IMAGE_ASPECT_DEPTH_BIT)
+            if (hasStencilComponent(format)) {
+                aspectMask.add(VkImageAspectFlagBits.VK_IMAGE_ASPECT_STENCIL_BIT)
+            }
+        } else {
+            aspectMask.add(VkImageAspectFlagBits.VK_IMAGE_ASPECT_COLOR_BIT)
+        }
 
         if (oldLayout == VkImageLayout.VK_IMAGE_LAYOUT_UNDEFINED &&
                 newLayout == VkImageLayout.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL) {
@@ -220,6 +215,15 @@ class VK(appName: String,
 
             sourceStage = listOf(VkPipelineStageFlagBits.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT)
             destinationStage = listOf(VkPipelineStageFlagBits.VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT)
+        } else if (oldLayout == VkImageLayout.VK_IMAGE_LAYOUT_UNDEFINED &&
+                newLayout == VkImageLayout.VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL) {
+            srcAccessMask = listOf()
+            dstAccessMask = listOf(
+                    VkAccessFlagBits.VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT,
+                    VkAccessFlagBits.VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT)
+
+            sourceStage = listOf(VkPipelineStageFlagBits.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT)
+            destinationStage = listOf(VkPipelineStageFlagBits.VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT)
         } else {
             throw Error("unsupported layout transition")
         }
@@ -232,25 +236,13 @@ class VK(appName: String,
                 VK_QUEUE_FAMILY_IGNORED,
                 VK_QUEUE_FAMILY_IGNORED,
                 image,
-                VkImageSubresourceRange(
-                        listOf(VkImageAspectFlagBits.VK_IMAGE_ASPECT_COLOR_BIT),
-                        0, 1, 0, 1))
+                VkImageSubresourceRange(aspectMask, 0, 1, 0, 1))
 
-        vkCmdPipelineBarrier(
-                currentCommandBuffer,
-                sourceStage, destinationStage,
-                listOf(), listOf(), listOf(), listOf(barrier))
-
-        vkEndCommandBuffer(currentCommandBuffer)
-
-        vkQueueSubmit(queue, listOf(VkSubmitInfo(listOf(), listOf(), listOf(currentCommandBuffer), listOf())), null)
-
-        vkQueueWaitIdle(queue)
-
-        vkResetCommandBuffer(currentCommandBuffer, listOf())
-
-        val usage = listOf(VkCommandBufferUsageFlagBits.VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT)
-        vkBeginCommandBuffer(currentCommandBuffer, VkCommandBufferBeginInfo(usage, null))
+        submitSingleCommandBuffer {
+            vkCmdPipelineBarrier(
+                    it, sourceStage, destinationStage,
+                    listOf(), listOf(), listOf(), listOf(barrier))
+        }
     }
 
     fun copyImageBuffer(size: Point, buffer: VkBuffer, image: VkImage) {
@@ -275,5 +267,82 @@ class VK(appName: String,
 
         val allocateInfo = VkDescriptorSetAllocateInfo(descriptorPool, size, List(size) { layout })
         return vkAllocateDescriptorSets(device, allocateInfo)
+    }
+
+    fun findSupportedFormat(
+            candidates: List<VkFormat>,
+            tiling: VkImageTiling,
+            features: List<VkFormatFeatureFlagBits>): VkFormat {
+        val featuresValue = features.sumBy { it.value }
+        return candidates.find { format ->
+            val props = vkGetPhysicalDeviceFormatProperties(physicalDevice, format)
+            if (tiling == VkImageTiling.VK_IMAGE_TILING_LINEAR &&
+                    (props.linearTilingFeatures.sumBy { it.value } and featuresValue != featuresValue)) {
+                return@find true
+            } else if (tiling == VkImageTiling.VK_IMAGE_TILING_OPTIMAL &&
+                    (props.optimalTilingFeatures.sumBy { it.value } and featuresValue != featuresValue)) {
+                return@find true
+            }
+            return@find false
+        } ?: throw Error("failed to find supported format")
+    }
+
+    fun findDepthFormat(): VkFormat {
+        return findSupportedFormat(
+                listOf(VkFormat.VK_FORMAT_D32_SFLOAT,
+                        VkFormat.VK_FORMAT_D32_SFLOAT_S8_UINT,
+                        VkFormat.VK_FORMAT_D24_UNORM_S8_UINT),
+                VkImageTiling.VK_IMAGE_TILING_OPTIMAL,
+                listOf(VkFormatFeatureFlagBits.VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT))
+    }
+
+    fun hasStencilComponent(format: VkFormat): Boolean {
+        return format == VkFormat.VK_FORMAT_D32_SFLOAT_S8_UINT || format == VkFormat.VK_FORMAT_D24_UNORM_S8_UINT
+    }
+
+    fun createImageMemory(device: VkDevice, image: VkImage, properties: List<VkMemoryPropertyFlagBits>)
+            : Pair<VkDeviceMemory, Long> {
+        val requirements = vkGetImageMemoryRequirements(device, image)
+        val allocateInfo = VkMemoryAllocateInfo(
+                requirements.size, findMemoryTypeIndex(requirements.memoryTypeBits, properties))
+        return vkAllocateMemory(device, allocateInfo) to allocateInfo.allocationSize
+    }
+
+    fun submitSingleCommandBuffer(scope: (commandBuffer: VkCommandBuffer) -> Unit) {
+        val allocateInfo = VkCommandBufferAllocateInfo(commandPool, 0, 1)
+        val commandBuffer = vkAllocateCommandBuffers(device, allocateInfo).first()
+
+        val beginInfo = VkCommandBufferBeginInfo(
+                listOf(VkCommandBufferUsageFlagBits.VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT), null)
+        vkBeginCommandBuffer(commandBuffer, beginInfo)
+
+        try {
+            scope(commandBuffer)
+        } catch (e: Error) {
+
+            vkEndCommandBuffer(commandBuffer)
+            throw e
+        }
+        vkQueueSubmit(queue, listOf(VkSubmitInfo(listOf(), listOf(), listOf(commandBuffer), listOf())), null)
+        vkQueueWaitIdle(queue)
+
+        vkEndCommandBuffer(commandBuffer)
+    }
+
+    fun findMemoryTypeIndex(typeFilter: Int, memoryTypes: List<VkMemoryPropertyFlagBits>): Int {
+        val properties = memoryTypes.sumBy { it.value }
+        val supportedMemoryTypes = physicalDeviceMemoryProperties.memoryTypes
+        for (i in 0 until supportedMemoryTypes.size) {
+            val type = supportedMemoryTypes[i]
+            if (typeFilter and (1 shl i) != 0 && (type.propertyFlags and properties) == properties) {
+                return i
+            }
+        }
+        throw VkInvalidStateError("memoryTypes")
+    }
+
+    private fun createCommandPool(device: VkDevice, queryFamilyIndex: Int): VkCommandPool {
+        // TODO: type flags
+        return vkCreateCommandPool(device, VkCommandPoolCreateInfo(0x00000002, queryFamilyIndex))
     }
 }

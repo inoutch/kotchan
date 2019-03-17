@@ -22,7 +22,7 @@ class AppScene : Scene() {
 
     private val camera = instance.createCamera2D()
 
-//    private val sprite: AnimatedSpriteAtlas
+    private val sprite: AnimatedSpriteAtlas
 
     private val batch = Batch()
 
@@ -33,21 +33,22 @@ class AppScene : Scene() {
         val texturePackerBundle = TexturePacker.loadFileFromResource("sprites", "sprites/spritesheet.json")
         material = Material(pipeline, texturePackerBundle.texture)
 
-        batch.add(Sprite(texturePackerBundle.texture.size.toVector2()), material)
-        batch.add(Sprite(texturePackerBundle.texture.size.toVector2()), material)
+        val s1 = Sprite(texturePackerBundle.texture.size.toVector2())
+        s1.position = Vector3(0.0f, 0.0f, -0.5f)
         val walkAnimationSet = AnimatedSpriteAtlas.AnimationSet(List(7) { it }, 0.1f)
-//        sprite = AnimatedSpriteAtlas(texturePackerBundle.textureAtlas,
-//                AnimatedSpriteAtlas.Config(listOf(walkAnimationSet)))
-//        sprite.anchorPoint = Vector2.Zero
-//        sprite.position = Vector3(100.0f, 50.0f, 1.0f)
-//        batch.add(sprite, material)
+        sprite = AnimatedSpriteAtlas(texturePackerBundle.textureAtlas,
+                AnimatedSpriteAtlas.Config(listOf(walkAnimationSet)))
+        sprite.anchorPoint = Vector2.Zero
+        sprite.position = Vector3(0.0f, 50.0f, 0.5f)
+        batch.add(s1, material)
+        batch.add(sprite, material)
     }
 
     override fun draw(delta: Float) {
         camera.position -= Vector3(delta, 0.0f, 0.0f)
         camera.update()
 
-//        sprite.update(delta)
+        sprite.update(delta)
 
         instance.graphicsApi.setViewport(instance.viewport)
         batch.draw(delta, camera)

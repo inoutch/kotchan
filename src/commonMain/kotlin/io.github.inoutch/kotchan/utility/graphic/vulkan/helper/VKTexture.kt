@@ -38,21 +38,21 @@ class VKTexture(val vk: VK, rawImage: Image) : Disposable {
                     vk.device, rawImage.size, format, VkImageTiling.VK_IMAGE_TILING_OPTIMAL,
                     listOf(VkImageUsageFlagBits.VK_IMAGE_USAGE_TRANSFER_DST_BIT,
                             VkImageUsageFlagBits.VK_IMAGE_USAGE_SAMPLED_BIT))
-            val imageMemoryBundle = Helper.createImageMemory(
+            val imageMemoryBundle = vk.createImageMemory(
                     vk.device, image,
                     listOf(VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT))
             imageMemory = imageMemoryBundle.first
             vkBindImageMemory(vk.device, image, imageMemory, 0)
 
             vk.transitionImageLayout(
-                    image,
+                    image, VkFormat.VK_FORMAT_R8G8B8A8_UNORM,
                     VkImageLayout.VK_IMAGE_LAYOUT_UNDEFINED,
                     VkImageLayout.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
 
             vk.copyImageBuffer(size, stagingBuffer.buffer, image)
 
             vk.transitionImageLayout(
-                    image,
+                    image, VkFormat.VK_FORMAT_R8G8B8A8_UNORM,
                     VkImageLayout.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                     VkImageLayout.VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
 
@@ -61,7 +61,7 @@ class VKTexture(val vk: VK, rawImage: Image) : Disposable {
             image = Helper.createImage(
                     vk.device, rawImage.size, format, VkImageTiling.VK_IMAGE_TILING_LINEAR,
                     listOf(VkImageUsageFlagBits.VK_IMAGE_USAGE_SAMPLED_BIT))
-            val imageMemoryBundle = Helper.createImageMemory(
+            val imageMemoryBundle = vk.createImageMemory(
                     vk.device, image,
                     listOf(VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
                             VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT))
@@ -79,7 +79,7 @@ class VKTexture(val vk: VK, rawImage: Image) : Disposable {
             data.dispose()
 
             vk.transitionImageLayout(
-                    image,
+                    image, VkFormat.VK_FORMAT_R8G8B8A8_UNORM,
                     VkImageLayout.VK_IMAGE_LAYOUT_UNDEFINED,
                     VkImageLayout.VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
         }

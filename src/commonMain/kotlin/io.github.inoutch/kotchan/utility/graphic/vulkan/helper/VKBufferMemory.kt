@@ -25,7 +25,7 @@ class VKBufferMemory(
         val requirements = vkGetBufferMemoryRequirements(vk.device, buffer)
         val memoryAllocateInfo = VkMemoryAllocateInfo(
                 requirements.size,
-                vk.getMemoryTypeIndex(requirements.memoryTypeBits, memoryTypes))
+                vk.findMemoryTypeIndex(requirements.memoryTypeBits, memoryTypes))
         memory = vkAllocateMemory(vk.device, memoryAllocateInfo)
 
         vkBindBufferMemory(vk.device, buffer, memory, 0)
