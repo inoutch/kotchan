@@ -1,12 +1,16 @@
 package io.github.inoutch.kotchan.core.graphic.polygon
 
+import io.github.inoutch.kotchan.core.graphic.Material
 import io.github.inoutch.kotchan.core.graphic.texture.TextureAtlas
 import io.github.inoutch.kotchan.core.tool.TextureFrame
 import io.github.inoutch.kotchan.utility.type.Vector2
 import io.github.inoutch.kotchan.utility.type.Vector3
 
-open class SpriteAtlas(private val textureAtlas: TextureAtlas, size: Vector2? = null)
-    : Sprite(size ?: textureAtlas.frame(0)?.frame?.size ?: throw Error("no frame at texture atlas")) {
+open class SpriteAtlas(
+        material: Material?,
+        private val textureAtlas: TextureAtlas, size: Vector2? = null)
+    : Sprite(material, size ?: textureAtlas.frame(0)
+        ?.frame?.size ?: throw Error("no frame at texture atlas")) {
 
     init {
         setAtlas(0)

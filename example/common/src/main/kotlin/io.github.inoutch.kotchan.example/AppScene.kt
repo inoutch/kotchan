@@ -8,6 +8,7 @@ import io.github.inoutch.kotchan.core.graphic.batch.Batch
 import io.github.inoutch.kotchan.core.graphic.GraphicsPipeline
 import io.github.inoutch.kotchan.core.graphic.polygon.AnimatedSpriteAtlas
 import io.github.inoutch.kotchan.core.graphic.polygon.Sprite
+import io.github.inoutch.kotchan.core.graphic.polygon.TextLabel
 import io.github.inoutch.kotchan.core.graphic.shader.AlphaTestSimpleShaderProgram
 import io.github.inoutch.kotchan.core.graphic.shader.SimpleShaderProgram
 import io.github.inoutch.kotchan.core.graphic.template.Template
@@ -31,21 +32,27 @@ class AppScene : Scene() {
     private val sprite2: Sprite
     private val sprite3: Sprite
 
+    private val label: TextLabel
+
     private val batch = Batch()
 
     init {
-        val bmFont = BMFont.loadFromResource("font/sample.fnt")
 
         val graphicsApi = instance.graphicsApi
         val pipeline = graphicsApi.createGraphicsPipeline(GraphicsPipeline.CreateInfo(shaderProgram))
 
+        label = TextLabel.loadFromResource(
+                "font/sample.fnt", "font", pipeline, "Kotchan Examples")
+        label.position = Vector3(100.0f, 100.0f, 0.0f)
+//        batch.add(label)
+
         material = Material(pipeline, graphicsApi.loadTextureFromResource("tiles/sample.png"))
 
-        sprite1 = Sprite(Vector2(45, 32))
-        sprite2 = Sprite(Vector2(32, 45))
-        sprite3 = Sprite(Vector2(53, 101))
+        sprite1 = Sprite(label.materials[0], Vector2(45, 32))
+        sprite2 = Sprite(material, Vector2(32, 45))
+        sprite3 = Sprite(material, Vector2(53, 101))
 
-        batch.add(material, sprite1, sprite2, sprite3)
+        batch.add(sprite1, sprite2)
 
         val template = Template()
         template.add(TemplateType.BottomCenter,

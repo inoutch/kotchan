@@ -1,8 +1,9 @@
 package io.github.inoutch.kotchan.core.graphic.polygon
 
+import io.github.inoutch.kotchan.core.graphic.Material
 import io.github.inoutch.kotchan.utility.type.*
 
-open class Polygon(initMesh: Mesh) {
+open class Polygon(initMesh: Mesh, val material: Material?) {
     var mesh = initMesh
         protected set
 
@@ -21,21 +22,21 @@ open class Polygon(initMesh: Mesh) {
             field = value
         }
 
-    var position = Vector3()
+    open var position = Vector3()
         set(value) {
             if (field != value)
                 isPositionsDirty = true
             field = value
         }
 
-    var color = Vector4(1.0f, 1.0f, 1.0f, 1.0f)
+    open var color = Vector4(1.0f, 1.0f, 1.0f, 1.0f)
         set(value) {
             if (field != value)
                 isColorsDirty = true
             field = value
         }
 
-    var scale = Vector3(1.0f, 1.0f, 1.0f)
+    open var scale = Vector3(1.0f, 1.0f, 1.0f)
         set(value) {
             if (field != value) {
                 isPositionsDirty = true
@@ -82,7 +83,7 @@ open class Polygon(initMesh: Mesh) {
             throw Error("$polygon: this view was already had a parent view")
         }
         polygon.parent = this
-        children.add(polygon)
+        privateChildren.add(polygon)
     }
 
     open fun addChildren(polygons: List<Polygon>) {
@@ -94,7 +95,7 @@ open class Polygon(initMesh: Mesh) {
             throw Error("$polygon: doesn't have this view")
         }
         polygon.parent = null
-        children.remove(polygon)
+        privateChildren.remove(polygon)
     }
 
     fun replaceMesh(mesh: Mesh) {
@@ -105,9 +106,12 @@ open class Polygon(initMesh: Mesh) {
         isNormalsDirty = true
     }
 
+    val children: List<Polygon>
+        get() = privateChildren
+
     private var parent: Polygon? = null
 
-    private val children = mutableListOf<Polygon>()
+    private val privateChildren = mutableListOf<Polygon>()
 
     private var positionArray = mesh.pos().flatten()
 

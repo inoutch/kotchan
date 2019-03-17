@@ -1,18 +1,17 @@
 package io.github.inoutch.kotchan.core.graphic.polygon
 
+import io.github.inoutch.kotchan.core.graphic.Material
 import io.github.inoutch.kotchan.utility.type.Matrix4
 import io.github.inoutch.kotchan.utility.type.Mesh
 import io.github.inoutch.kotchan.utility.type.Vector2
 import io.github.inoutch.kotchan.utility.type.Vector3
 
-open class Polygon2D(
-        initMesh: Mesh,
-        size: Vector2) : Polygon(initMesh) {
+open class Polygon2D(initMesh: Mesh, material: Material?, size: Vector2) : Polygon(initMesh, material) {
 
-    var size = size
+    open var size = size
         protected set
 
-    var anchorPoint = Vector2(0.5f, 0.5f)
+    open var anchorPoint = Vector2(0.5f, 0.5f)
         set(value) {
             if (field != value)
                 isPositionsDirty = true

@@ -4,7 +4,6 @@ import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
 import io.github.inoutch.kotchan.core.graphic.Material
 import io.github.inoutch.kotchan.core.graphic.camera.Camera
 import io.github.inoutch.kotchan.core.graphic.polygon.Polygon
-import io.github.inoutch.kotchan.core.graphic.texture.Texture
 import io.github.inoutch.kotchan.utility.Disposable
 
 class Batch : Disposable {
@@ -19,11 +18,22 @@ class Batch : Disposable {
 
     private val invPolygonBundleCache = mutableMapOf<Polygon, BatchBundle>()
 
-    fun add(material: Material, vararg polygons: Polygon) {
-        polygons.forEach { add(it, material) }
+    fun add(vararg polygons: Polygon) {
+        polygons.forEach { add(it) }
     }
 
-    fun add(polygon: Polygon, material: Material) {
+    fun add(polygons: List<Polygon>) {
+        polygons.forEach { add(it) }
+    }
+
+    fun add(polygon: Polygon) {
+        if (invPolygonCache[polygon] != null) {
+            return
+        }
+
+        add(polygon.children)
+
+        val material = polygon.material ?: return
         val batchPolygonBundle = polygons.getOrPut(material) {
             BatchPolygonBundle(
                     BatchBuffer(BATCH_BUFFER_SIZE * 3),

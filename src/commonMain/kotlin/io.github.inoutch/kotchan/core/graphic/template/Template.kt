@@ -110,9 +110,10 @@ class Template(val rect: Rect = Rect(Vector2.Zero, instance.screenSize.toVector2
                         TemplateAppendType.Row -> Vector2((width - polygonSize.x - marginWidth) / 2.0f, 0.0f)
                         TemplateAppendType.Column -> Vector2(0.0f, (height - polygonSize.y - marginHeight) / 2.0f)
                     }
+                    val margin = Vector2(fragment.margin.w, fragment.margin.z)
                     fragment.polygon.position =
-                            Vector3(p + Vector2(fragment.margin.w, fragment.margin.z) + offset, 0.0f)
-                    fragment.polygon.anchorPoint = Vector2.Zero
+                            Vector3(p + margin + offset + polygonSize / 2.0f, 0.0f)
+                    fragment.polygon.anchorPoint = Vector2(0.5f, 0.5f)
                     p += when (templateAppendType) {
                         TemplateAppendType.Row -> Vector2(0.0f, fragment.polygon.size.y + marginHeight)
                         TemplateAppendType.Column -> Vector2(fragment.polygon.size.x + marginWidth, 0.0f)
