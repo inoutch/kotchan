@@ -44,7 +44,7 @@ class SwapchainRecreator(
     private val depthImageMemory: VkDeviceMemory
 
     init {
-        val resources = createDepthResources()
+        val resources = createDepthResources(newExtent)
         depthImage = resources.depthImage
         depthImageView = resources.depthImageView
         depthImageMemory = resources.depthImageMemory
@@ -65,7 +65,7 @@ class SwapchainRecreator(
         // create image views
         swapchainImages = vkGetSwapchainImagesKHR(vk.device, swapchain)
         swapchainImageViews = swapchainImages.map {
-            createImageView(it, listOf(VkImageAspectFlagBits.VK_IMAGE_ASPECT_COLOR_BIT))
+            createImageView(it, surfaceFormat.format, listOf(VkImageAspectFlagBits.VK_IMAGE_ASPECT_COLOR_BIT))
         }
 
         // create frame buffers
@@ -138,12 +138,12 @@ class SwapchainRecreator(
                 .also { oldSwapchainKHR?.dispose() }
     }
 
-    private fun createImageView(image: VkImage, aspectFlags: List<VkImageAspectFlagBits>): VkImageView {
+    private fun createImageView(image: VkImage, surfaceFormat: VkFormat, aspectFlags: List<VkImageAspectFlagBits>): VkImageView {
         val createInfo = VkImageViewCreateInfo(
                 0,
                 image,
                 VkImageViewType.VK_IMAGE_VIEW_TYPE_2D,
-                surfaceFormat.format,
+                surfaceFormat,
                 VkComponentMapping(
                         VkComponentSwizzle.VK_COMPONENT_SWIZZLE_IDENTITY, // use default color mapping
                         VkComponentSwizzle.VK_COMPONENT_SWIZZLE_IDENTITY,
@@ -180,7 +180,7 @@ class SwapchainRecreator(
                               val depthImageMemory: VkDeviceMemory,
                               val depthImageView: VkImageView)
 
-    private fun createDepthResources(): DepthResources {
+    private fun createDepthResources(extent: Point): DepthResources {
         val depthFormat = vk.findDepthFormat()
         val depthImage = Helper.createImage(
                 vk.device,
@@ -192,11 +192,13 @@ class SwapchainRecreator(
                 vk.device,
                 depthImage,
                 listOf(VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT))
-        val ret = createImageView(depthImage, listOf(VkImageAspectFlagBits.VK_IMAGE_ASPECT_DEPTH_BIT))
+        vkBindImageMemory(vk.device, depthImage, imageMemoryBundle.first, 0)
+        val ret = createImageView(depthImage, depthFormat, listOf(VkImageAspectFlagBits.VK_IMAGE_ASPECT_DEPTH_BIT))
 
         vk.transitionImageLayout(depthImage, depthFormat,
                 VkImageLayout.VK_IMAGE_LAYOUT_UNDEFINED,
-                VkImageLayout.VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
+                VkImageLayout.VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+                null)
         return DepthResources(depthImage, imageMemoryBundle.first, ret)
     }
 }

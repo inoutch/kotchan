@@ -178,7 +178,8 @@ class VK(appName: String,
             image: VkImage,
             format: VkFormat,
             oldLayout: VkImageLayout,
-            newLayout: VkImageLayout) {
+            newLayout: VkImageLayout,
+            currentCommandBuffer: VkCommandBuffer?) {
         val srcAccessMask: List<VkAccessFlagBits>
         val dstAccessMask: List<VkAccessFlagBits>
         val sourceStage: List<VkPipelineStageFlagBits>
@@ -238,7 +239,7 @@ class VK(appName: String,
                 image,
                 VkImageSubresourceRange(aspectMask, 0, 1, 0, 1))
 
-        submitSingleCommandBuffer {
+        submitSingleCommandBuffer(currentCommandBuffer) {
             vkCmdPipelineBarrier(
                     it, sourceStage, destinationStage,
                     listOf(), listOf(), listOf(), listOf(barrier))
@@ -277,10 +278,10 @@ class VK(appName: String,
         return candidates.find { format ->
             val props = vkGetPhysicalDeviceFormatProperties(physicalDevice, format)
             if (tiling == VkImageTiling.VK_IMAGE_TILING_LINEAR &&
-                    (props.linearTilingFeatures.sumBy { it.value } and featuresValue != featuresValue)) {
+                    (props.linearTilingFeatures.sumBy { it.value } and featuresValue == featuresValue)) {
                 return@find true
             } else if (tiling == VkImageTiling.VK_IMAGE_TILING_OPTIMAL &&
-                    (props.optimalTilingFeatures.sumBy { it.value } and featuresValue != featuresValue)) {
+                    (props.optimalTilingFeatures.sumBy { it.value } and featuresValue == featuresValue)) {
                 return@find true
             }
             return@find false
@@ -308,25 +309,39 @@ class VK(appName: String,
         return vkAllocateMemory(device, allocateInfo) to allocateInfo.allocationSize
     }
 
-    fun submitSingleCommandBuffer(scope: (commandBuffer: VkCommandBuffer) -> Unit) {
-        val allocateInfo = VkCommandBufferAllocateInfo(commandPool, 0, 1)
-        val commandBuffer = vkAllocateCommandBuffers(device, allocateInfo).first()
+    fun submitSingleCommandBuffer(currentCommandBuffer: VkCommandBuffer?, scope: (commandBuffer: VkCommandBuffer) -> Unit) {
+        val commandBuffer = currentCommandBuffer
+                ?: VkCommandBufferAllocateInfo(commandPool, 0, 1).let {
+                    vkAllocateCommandBuffers(device, it).first()
+                }
 
-        val beginInfo = VkCommandBufferBeginInfo(
+        val prevBeginInfo = VkCommandBufferBeginInfo(
                 listOf(VkCommandBufferUsageFlagBits.VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT), null)
-        vkBeginCommandBuffer(commandBuffer, beginInfo)
+
+        if (currentCommandBuffer == null) {
+            vkBeginCommandBuffer(commandBuffer, prevBeginInfo)
+        }
 
         try {
             scope(commandBuffer)
         } catch (e: Error) {
-
-            vkEndCommandBuffer(commandBuffer)
+            if (currentCommandBuffer == null) {
+                vkEndCommandBuffer(commandBuffer)
+            }
             throw e
         }
+
+        vkEndCommandBuffer(commandBuffer)
         vkQueueSubmit(queue, listOf(VkSubmitInfo(listOf(), listOf(), listOf(commandBuffer), listOf())), null)
         vkQueueWaitIdle(queue)
 
-        vkEndCommandBuffer(commandBuffer)
+        if (currentCommandBuffer != null) {
+            val nextBeginInfo = VkCommandBufferBeginInfo(
+                    listOf(VkCommandBufferUsageFlagBits.VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT), null)
+
+            vkResetCommandBuffer(currentCommandBuffer, listOf())
+            vkBeginCommandBuffer(currentCommandBuffer, nextBeginInfo)
+        }
     }
 
     fun findMemoryTypeIndex(typeFilter: Int, memoryTypes: List<VkMemoryPropertyFlagBits>): Int {

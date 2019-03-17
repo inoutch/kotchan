@@ -62,7 +62,7 @@ class Api(private val vk: VK?, private val gl: GL?) {
                     it.device,
                     vkBuffer.memory,
                     offset.toLong() * FLOAT_SIZE,
-                    vertices.size.toLong(),
+                    vertices.size.toLong() * FLOAT_SIZE,
                     listOf())
             mappedMemory.copy(0, vertices.size.toLong(), vertices)
             mappedMemory.dispose() // unmap

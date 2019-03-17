@@ -47,14 +47,16 @@ class VKTexture(val vk: VK, rawImage: Image) : Disposable {
             vk.transitionImageLayout(
                     image, VkFormat.VK_FORMAT_R8G8B8A8_UNORM,
                     VkImageLayout.VK_IMAGE_LAYOUT_UNDEFINED,
-                    VkImageLayout.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
+                    VkImageLayout.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                    vk.currentCommandBuffer)
 
             vk.copyImageBuffer(size, stagingBuffer.buffer, image)
 
             vk.transitionImageLayout(
                     image, VkFormat.VK_FORMAT_R8G8B8A8_UNORM,
                     VkImageLayout.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-                    VkImageLayout.VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+                    VkImageLayout.VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+                    vk.currentCommandBuffer)
 
             stagingBuffer.dispose()
         } else {
@@ -81,7 +83,8 @@ class VKTexture(val vk: VK, rawImage: Image) : Disposable {
             vk.transitionImageLayout(
                     image, VkFormat.VK_FORMAT_R8G8B8A8_UNORM,
                     VkImageLayout.VK_IMAGE_LAYOUT_UNDEFINED,
-                    VkImageLayout.VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+                    VkImageLayout.VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+                    vk.currentCommandBuffer)
         }
 
         imageView = Helper.createImageView(vk.device, image, format)
