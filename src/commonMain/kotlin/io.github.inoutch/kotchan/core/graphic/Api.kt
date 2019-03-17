@@ -120,7 +120,13 @@ class Api(private val vk: VK?, private val gl: GL?) {
 
             val pipelineLayout = it.createPipelineLayout(listOf(descriptorSetLayout))
             val pipeline = Helper.createGraphicsPipeline(
-                    it.device, it.renderPass, pipelineLayout, shader.vert, shader.frag)
+                    it.device,
+                    it.renderPass,
+                    pipelineLayout,
+                    shader.vert, shader.frag,
+                    createInfo.depthTest,
+                    convertVkCullMode(createInfo.cullMode),
+                    convertVkPolygonMode(createInfo.polygonMode))
 
             return@pipeline GraphicsPipeline(createInfo,
                     GraphicsPipeline.VKBundle(pipeline, descriptorSetLayout, descriptorSets, pipelineLayout))
@@ -340,5 +346,15 @@ class Api(private val vk: VK?, private val gl: GL?) {
         return vkCreateDescriptorPool(vk.device, VkDescriptorPoolCreateInfo(listOf(), vk.commandBuffers.size, sizes))
     }
 
+    private fun convertVkCullMode(cullMode: CullMode) = when (cullMode) {
+        CullMode.None -> VkCullMode.VK_CULL_MODE_NONE
+        CullMode.Front -> VkCullMode.VK_CULL_MODE_FRONT_BIT
+        CullMode.Back -> VkCullMode.VK_CULL_MODE_BACK_BIT
+    }
 
+    private fun convertVkPolygonMode(polygonMode: PolygonMode) = when (polygonMode) {
+        PolygonMode.Fill -> VkPolygonMode.VK_POLYGON_MODE_FILL
+        PolygonMode.Line -> VkPolygonMode.VK_POLYGON_MODE_LINE
+        PolygonMode.Point -> VkPolygonMode.VK_POLYGON_MODE_POINT
+    }
 }

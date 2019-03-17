@@ -12,7 +12,11 @@ class GraphicsPipeline(
         val createInfo: CreateInfo,
         val vkBundle: VKBundle? = null) : Disposable {
 
-    data class CreateInfo(val shaderProgram: ShaderProgram)
+    data class CreateInfo(
+            val shaderProgram: ShaderProgram,
+            val depthTest: Boolean = true,
+            val cullMode: CullMode = CullMode.Back,
+            val polygonMode: PolygonMode = PolygonMode.Fill)
 
     data class VKBundle(
             val pipeline: VkPipeline,

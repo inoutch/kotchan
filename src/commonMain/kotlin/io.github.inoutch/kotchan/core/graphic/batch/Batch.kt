@@ -19,6 +19,10 @@ class Batch : Disposable {
 
     private val invPolygonBundleCache = mutableMapOf<Polygon, BatchBundle>()
 
+    fun add(material: Material, vararg polygons: Polygon) {
+        polygons.forEach { add(it, material) }
+    }
+
     fun add(polygon: Polygon, material: Material) {
         val batchPolygonBundle = polygons.getOrPut(material) {
             BatchPolygonBundle(

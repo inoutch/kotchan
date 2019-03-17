@@ -184,11 +184,11 @@ class KotchanCore(
     }
 
     private fun clearScreenFactory(sceneFactory: () -> Scene) {
-        currentScene?.destroyed()
+        currentScene?.dispose()
+
         touchController.clearAll()
 
         currentScene = sceneFactory.invoke()
-
         this.sceneFactory = null
     }
 }

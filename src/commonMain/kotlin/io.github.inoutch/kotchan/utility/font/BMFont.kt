@@ -1,7 +1,10 @@
 package io.github.inoutch.kotchan.utility.font
 
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
 import io.github.inoutch.kotchan.core.KotchanCore.Companion.logger
+import io.github.inoutch.kotchan.core.error.NoSuchFileError
 import io.github.inoutch.kotchan.extension.splitWithEscaping
+import io.github.inoutch.kotchan.utility.io.readTextFromResource
 import io.github.inoutch.kotchan.utility.type.Point
 import io.github.inoutch.kotchan.utility.type.PointRect
 
@@ -14,6 +17,11 @@ class BMFont private constructor(
         val kernings: Map<Int, Map<Int, Int>>) {
 
     companion object {
+        fun load(filepath: String) = instance.file.readText(filepath)?.let { parse(it) }
+
+        fun loadFromResource(filepath: String) = instance.file.readTextFromResource(filepath)?.let { parse(it) }
+                ?: throw NoSuchFileError(filepath)
+
         fun parse(text: String): BMFont {
             val lines = text.split("\n")
             val chunks = lines

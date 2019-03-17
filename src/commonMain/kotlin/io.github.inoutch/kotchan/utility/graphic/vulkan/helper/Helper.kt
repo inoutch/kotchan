@@ -90,7 +90,10 @@ class Helper {
                 renderPass: VkRenderPass,
                 pipelineLayout: VkPipelineLayout,
                 vertShaderModule: VkShaderModule,
-                fragShaderModule: VkShaderModule): VkPipeline {
+                fragShaderModule: VkShaderModule,
+                depthTest: Boolean,
+                cullMode: VkCullMode,
+                polygonMode: VkPolygonMode): VkPipeline {
 
             val shaderStages = createShaderStages(vertShaderModule, fragShaderModule)
 
@@ -110,8 +113,8 @@ class Helper {
 
             val rasterizationStateCreateInfo = VkPipelineRasterizationStateCreateInfo(
                     0,
-                    VkPolygonMode.VK_POLYGON_MODE_FILL,
-                    VkCullMode.VK_CULL_MODE_NONE,
+                    polygonMode,
+                    cullMode,
                     VkFrontFace.VK_FRONT_FACE_COUNTER_CLOCKWISE,
                     false,
                     false,
@@ -140,8 +143,8 @@ class Helper {
                     0)
             val depthStencilStateCreateInfo = VkPipelineDepthStencilStateCreateInfo(
                     0,
-                    true,
-                    true,
+                    depthTest,
+                    depthTest,
                     VkCompareOp.VK_COMPARE_OP_LESS,
                     false,
                     false,
@@ -263,7 +266,5 @@ class Helper {
                     null)
             return listOf(vertShaderState, fragShaderStage)
         }
-
-
     }
 }

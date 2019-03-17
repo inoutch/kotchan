@@ -1,14 +1,13 @@
 package io.github.inoutch.kotchan.core.graphic
 
 import io.github.inoutch.kotchan.core.KotchanCore
+import io.github.inoutch.kotchan.utility.Disposable
 
-abstract class Scene {
-
-//    protected val gl = KotchanCore.instance.gl
+abstract class Scene : Disposable {
 
     protected val file = KotchanCore.instance.file
 
-//    protected val textureManager = KotchanCore.instance.textureManager
+    protected val textureCacheManager = KotchanCore.instance.textureCacheManager
 
     protected val touchController = KotchanCore.instance.touchController
 
@@ -25,6 +24,4 @@ abstract class Scene {
     abstract fun pause()
 
     abstract fun resume()
-
-    abstract fun destroyed()
 }
