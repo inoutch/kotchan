@@ -114,7 +114,7 @@ class Helper {
                     VkCullMode.VK_CULL_MODE_NONE,
                     VkFrontFace.VK_FRONT_FACE_COUNTER_CLOCKWISE,
                     false,
-                    true,
+                    false,
                     false,
                     0.0f,
                     0.0f,
