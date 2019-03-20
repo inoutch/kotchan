@@ -85,7 +85,7 @@ class TexturePacker {
                 if (enableCache) {
                     it.textureCacheManager.load(imagePath)
                 } else {
-                    it.graphicsApi.loadTexture(imagePath)
+                    Texture.load(imagePath)
                 }
             }
             if (texture == null) {

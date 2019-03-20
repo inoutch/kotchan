@@ -5,20 +5,15 @@ import io.github.inoutch.kotchan.core.controller.touch.listener.ScrollTouchListe
 import io.github.inoutch.kotchan.core.graphic.Material
 import io.github.inoutch.kotchan.core.graphic.Scene
 import io.github.inoutch.kotchan.core.graphic.batch.Batch
-import io.github.inoutch.kotchan.core.graphic.GraphicsPipeline
-import io.github.inoutch.kotchan.core.graphic.polygon.AnimatedSpriteAtlas
 import io.github.inoutch.kotchan.core.graphic.polygon.Sprite
 import io.github.inoutch.kotchan.core.graphic.polygon.TextLabel
 import io.github.inoutch.kotchan.core.graphic.shader.AlphaTestSimpleShaderProgram
-import io.github.inoutch.kotchan.core.graphic.shader.SimpleShaderProgram
 import io.github.inoutch.kotchan.core.graphic.template.Template
 import io.github.inoutch.kotchan.core.graphic.template.TemplateAppendType
 import io.github.inoutch.kotchan.core.graphic.template.TemplateType
-import io.github.inoutch.kotchan.core.tool.TexturePacker
-import io.github.inoutch.kotchan.utility.font.BMFont
+import io.github.inoutch.kotchan.core.graphic.texture.Texture
 import io.github.inoutch.kotchan.utility.type.Vector2
 import io.github.inoutch.kotchan.utility.type.Vector3
-import io.github.inoutch.kotchan.utility.type.Vector4
 
 class AppScene : Scene() {
 
@@ -32,23 +27,21 @@ class AppScene : Scene() {
     private val sprite2: Sprite
     private val sprite3: Sprite
 
-    private val label: TextLabel
+//    private val label: TextLabel
 
     private val batch = Batch()
 
     init {
-
-        val graphicsApi = instance.graphicsApi
-        val pipeline = graphicsApi.createGraphicsPipeline(GraphicsPipeline.CreateInfo(shaderProgram))
-
-        label = TextLabel.loadFromResource(
-                "font/sample.fnt", "font", pipeline, "Kotchan Examples")
-        label.position = Vector3(100.0f, 100.0f, 0.0f)
+//        val textLabelMaterialConfig = Material.Config(shaderProgram)
+//        label = TextLabel.loadFromResource(
+//                "font/sample.fnt", "font", textLabelMaterialConfig, "Kotchan Examples")
+//        label.position = Vector3(100.0f, 100.0f, 0.0f)
 //        batch.add(label)
 
-        material = Material(pipeline, graphicsApi.loadTextureFromResource("tiles/sample.png"))
+        val spriteMaterialConfig = Material.Config(shaderProgram, Texture.loadFromResource("tiles/sample.png"))
+        material = Material(spriteMaterialConfig)
 
-        sprite1 = Sprite(label.materials[0], Vector2(45, 32))
+        sprite1 = Sprite(material, Vector2(45, 32))
         sprite2 = Sprite(material, Vector2(32, 45))
         sprite3 = Sprite(material, Vector2(53, 101))
 

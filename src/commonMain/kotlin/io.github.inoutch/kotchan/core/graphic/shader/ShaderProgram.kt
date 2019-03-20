@@ -1,14 +1,11 @@
 package io.github.inoutch.kotchan.core.graphic.shader
 
-import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
 import io.github.inoutch.kotchan.core.graphic.shader.unform.UniformMatrix4fv
 import io.github.inoutch.kotchan.core.graphic.texture.Texture
 import io.github.inoutch.kotchan.utility.Disposable
 import io.github.inoutch.kotchan.utility.type.Matrix4
 
-abstract class ShaderProgram(
-        val shader: Shader,
-        initDescriptors: List<Descriptor> = listOf()) : Disposable {
+abstract class ShaderProgram(val shader: Shader, initDescriptorSets: List<DescriptorSet> = listOf()) : Disposable {
 
     class ShaderSource(
             val text: String,
@@ -16,18 +13,16 @@ abstract class ShaderProgram(
 
     private val viewProjectionMatrixUniform = UniformMatrix4fv(0, "u_viewProjectionMatrix")
 
-    private val primarySampler = Sampler(1, "u_texture0")
+    private val sampler = Sampler(1, "u_texture0")
 
-    val descriptors = listOf(*initDescriptors.toTypedArray(),
-            viewProjectionMatrixUniform,
-            primarySampler)
+    val descriptorSets = listOf(*initDescriptorSets.toTypedArray(), viewProjectionMatrixUniform, sampler)
 
-    open fun prepare(delta: Float, mvpMatrix: Matrix4, texture: Texture?) {
+    open fun prepare(delta: Float, mvpMatrix: Matrix4, textures: List<Texture>) {
         viewProjectionMatrixUniform.set(mvpMatrix)
-        primarySampler.set(texture ?: instance.graphicsApi.emptyTexture())
+        sampler.set(textures.firstOrNull() ?: Texture.emptyTexture())
     }
 
     override fun dispose() {
-        descriptors.forEach { it.dispose() }
+        descriptorSets.forEach { it.dispose() }
     }
 }

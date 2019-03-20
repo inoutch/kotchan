@@ -3,6 +3,7 @@ package io.github.inoutch.kotchan.core.graphic.polygon
 import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
 import io.github.inoutch.kotchan.core.graphic.GraphicsPipeline
 import io.github.inoutch.kotchan.core.graphic.Material
+import io.github.inoutch.kotchan.core.graphic.texture.Texture
 import io.github.inoutch.kotchan.utility.font.BMFont
 import io.github.inoutch.kotchan.utility.io.getResourcePathWithError
 import io.github.inoutch.kotchan.utility.path.Path
@@ -13,7 +14,7 @@ import io.github.inoutch.kotchan.utility.type.Vector4
 
 class TextLabel(
         private val bmFont: BMFont,
-        graphicsPipeline: GraphicsPipeline,
+        materialConfig: Material.Config,
         textureDir: String,
         initText: String)
     : Polygon2D(Mesh(), null, Vector2.Zero) {
@@ -22,10 +23,10 @@ class TextLabel(
         fun loadFromResource(
                 filepath: String,
                 textureDir: String,
-                graphicsPipeline: GraphicsPipeline,
+                materialConfig: Material.Config,
                 text: String): TextLabel {
             val bmFont = BMFont.loadFromResource(filepath)
-            return TextLabel(bmFont, graphicsPipeline, instance.file.getResourcePathWithError(textureDir), text)
+            return TextLabel(bmFont, materialConfig, instance.file.getResourcePathWithError(textureDir), text)
         }
     }
 
@@ -55,8 +56,8 @@ class TextLabel(
 
     init {
         materials = bmFont.pages.map {
-            val texture = instance.graphicsApi.loadTexture(Path.resolve(textureDir, it.file))
-            it.id to Material(graphicsPipeline, texture ?: instance.graphicsApi.emptyTexture())
+            val texture = Texture.load(Path.resolve(textureDir, it.file))
+            it.id to Material(materialConfig, listOf(texture ?: Texture.emptyTexture()))
         }.toMap()
 
         val label = this.createLabel(this.text)
@@ -91,15 +92,12 @@ class TextLabel(
             x += char.xAdvance
 
             val material = materials[char.page] ?: continue
-            val texture = material.texture ?: continue
+            val texture = material.textures.firstOrNull() ?: continue
             val mesh = meshes.getOrPut(char.page) { LabelMesh(char.page, material) }
             mesh.positions.addAll(Sprite.createSquarePositions(offset, char.rect.size.toVector2()))
-//            mesh.texcoords.addAll(Sprite.createSquareTexcoords(
-//                    char.rect.origin / texture.size.toVector2(),
-//                    char.rect.size / texture.size.toVector2()))
             mesh.texcoords.addAll(Sprite.createSquareTexcoords(
-                    Vector2.Zero,
-                    Vector2(1.0f, 1.0f)))
+                    char.rect.origin / texture.size.toVector2(),
+                    char.rect.size / texture.size.toVector2()))
             mesh.colors.addAll(List(6) { color })
         }
         return LabelBundle(meshes, Vector2(x, y))

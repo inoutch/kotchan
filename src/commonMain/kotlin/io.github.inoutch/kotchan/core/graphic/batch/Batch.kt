@@ -71,7 +71,7 @@ class Batch : Disposable {
         polygons.forEach { pair ->
             val material = pair.key
             material.graphicsPipeline.bind()
-            material.graphicsPipeline.createInfo.shaderProgram.prepare(delta, camera.combine, material.texture)
+            material.graphicsPipeline.createInfo.shaderProgram.prepare(delta, camera.combine, material.textures)
 
             val polygonBundle = pair.value
             polygonBundle.positionBuffer.flush()

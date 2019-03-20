@@ -1,6 +1,5 @@
 package io.github.inoutch.kotchan.core.tool
 
-import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
 import io.github.inoutch.kotchan.core.graphic.texture.Texture
 import io.github.inoutch.kotchan.utility.Disposable
 
@@ -10,7 +9,7 @@ class TextureCacheManager : Disposable {
 
     fun load(filepath: String): Texture? {
         return cachesByPath[filepath]
-                ?: instance.graphicsApi.loadTexture(filepath)
+                ?: Texture.load(filepath)
                 ?: return null
     }
 
