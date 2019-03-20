@@ -67,6 +67,13 @@ expect fun vkCmdClearColorImage(
         clearColor: Vector4,
         ranges: List<VkImageSubresourceRange>)
 
+expect fun vkCmdClearDepthStencilImage(
+        commandBuffer: VkCommandBuffer,
+        image: VkImage,
+        imageLayout: VkImageLayout,
+        depthStencilValue: VkClearDepthStencilValue,
+        ranges: List<VkImageSubresourceRange>)
+
 expect fun vkResetCommandBuffer(
         commandBuffer: VkCommandBuffer,
         flags: List<VkCommandBufferResetFlagBits>)

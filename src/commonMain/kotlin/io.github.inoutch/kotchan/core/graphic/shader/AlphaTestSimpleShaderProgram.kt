@@ -1,8 +1,6 @@
 package io.github.inoutch.kotchan.core.graphic.shader
 
 import io.github.inoutch.kotchan.core.KotchanCore
-import io.github.inoutch.kotchan.core.shader.simpleVertCode
-import io.github.inoutch.kotchan.core.shader.simpleVertText
 import io.github.inoutch.kotchan.extension.toByteArray
 
 val alphaTestSimpleFragCode = intArrayOf(

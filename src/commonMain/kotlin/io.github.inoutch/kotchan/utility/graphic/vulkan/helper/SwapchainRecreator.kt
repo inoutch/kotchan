@@ -13,7 +13,8 @@ class SwapchainRecreator(
     data class ResultBundle(
             val swapchainKHR: VkSwapchainKHR,
             val framebuffers: List<VkFramebuffer>,
-            val commandBuffers: List<VkCommandBuffer>)
+            val commandBuffers: List<VkCommandBuffer>,
+            val depthResources: List<DepthResource>)
 
     var mustBeRecreate = false
 
@@ -31,28 +32,22 @@ class SwapchainRecreator(
 
     private val surfaceFormat = swapchainSupportDetails.chooseSwapSurfaceFormat()
 
-    private var swapchainImages: List<VkImage> = listOf()
+    var swapchainImages: List<VkImage> = listOf()
+        private set
 
     private var swapchainImageViews: List<VkImageView> = listOf()
 
-    private val depthImage: VkImage
-
-    private val depthImageView: VkImageView
-
-    private val depthImageMemory: VkDeviceMemory
+    var depthResources: List<DepthResource>
+        private set
 
     init {
         extent = swapchainSupportDetails.chooseSwapExtent(newExtent)
-
-        val resources = createDepthResources(this.extent)
-        depthImage = resources.depthImage
-        depthImageView = resources.depthImageView
-        depthImageMemory = resources.depthImageMemory
 
         val result = recreate(newExtent, true)
         currentSwapchain = result.swapchainKHR
         framebuffers = result.framebuffers
         commandBuffers = result.commandBuffers
+        depthResources = result.depthResources
     }
 
     fun recreate(newExtent: Point, firstInit: Boolean = false): ResultBundle {
@@ -68,8 +63,12 @@ class SwapchainRecreator(
             createImageView(it, surfaceFormat.format, listOf(VkImageAspectFlagBits.VK_IMAGE_ASPECT_COLOR_BIT))
         }
 
+        val depthResources = swapchainImageViews.map { createDepthResources(this.extent) }
+
         // create frame buffers
-        val framebuffers = swapchainImageViews.map { createFramebuffer(it, depthImageView, extent) }
+        val framebuffers = swapchainImageViews.mapIndexed { index, view ->
+            createFramebuffer(view, depthResources[index].depthImageView, extent)
+        }
 
         // create command buffers
         val commandBuffers = createRenderCommandBuffer(vk.commandPool, framebuffers)
@@ -84,13 +83,15 @@ class SwapchainRecreator(
             this.framebuffers = framebuffers
         }
         mustBeRecreate = false
-        return ResultBundle(swapchain, framebuffers, commandBuffers)
+        return ResultBundle(swapchain, framebuffers, commandBuffers, depthResources)
     }
 
     override fun dispose() {
-        depthImage.dispose()
-        depthImageView.dispose()
-        depthImageMemory.dispose()
+        depthResources.forEach {
+            it.depthImage.dispose()
+            it.depthImageView.dispose()
+            it.depthImageMemory.dispose()
+        }
 
         commandBuffers.forEach { it.dispose() }
         framebuffers.forEach { it.dispose() }
@@ -176,11 +177,11 @@ class SwapchainRecreator(
         return vkAllocateCommandBuffers(vk.device, allocateInfo)
     }
 
-    data class DepthResources(val depthImage: VkImage,
-                              val depthImageMemory: VkDeviceMemory,
-                              val depthImageView: VkImageView)
+    data class DepthResource(val depthImage: VkImage,
+                             val depthImageMemory: VkDeviceMemory,
+                             val depthImageView: VkImageView)
 
-    private fun createDepthResources(extent: Point): DepthResources {
+    private fun createDepthResources(extent: Point): DepthResource {
         val depthFormat = vk.findDepthFormat()
         val depthImage = Helper.createImage(
                 vk.device,
@@ -199,6 +200,6 @@ class SwapchainRecreator(
                 VkImageLayout.VK_IMAGE_LAYOUT_UNDEFINED,
                 VkImageLayout.VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
                 null)
-        return DepthResources(depthImage, imageMemoryBundle.first, ret)
+        return DepthResource(depthImage, imageMemoryBundle.first, ret)
     }
 }

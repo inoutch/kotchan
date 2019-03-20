@@ -5,6 +5,7 @@ import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.SwapchainSupportD
 import io.github.inoutch.kotchan.utility.Disposable
 import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.*
 import io.github.inoutch.kotchan.utility.type.Point
+import io.github.inoutch.kotchan.utility.type.Vector4
 import io.github.inoutch.kotchan.utility.type.Version
 
 class VK(appName: String,
@@ -136,6 +137,19 @@ class VK(appName: String,
 
         val usage = listOf(VkCommandBufferUsageFlagBits.VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT)
         vkBeginCommandBuffer(currentCommandBuffer, VkCommandBufferBeginInfo(usage, null))
+
+        vkCmdClearColorImage(
+                currentCommandBuffer,
+                swapchainRecreator.swapchainImages[currentImageIndex],
+                VkImageLayout.VK_IMAGE_LAYOUT_GENERAL,
+                Vector4(0.5f, 0.5f, 0.5f, 1.0f),
+                listOf(VkImageSubresourceRange(listOf(VkImageAspectFlagBits.VK_IMAGE_ASPECT_COLOR_BIT), 0, 1, 0, 1)))
+        vkCmdClearDepthStencilImage(
+                currentCommandBuffer,
+                swapchainRecreator.depthResources[currentImageIndex].depthImage,
+                VkImageLayout.VK_IMAGE_LAYOUT_GENERAL,
+                VkClearDepthStencilValue(1.0f, 0),
+                listOf(VkImageSubresourceRange(listOf(VkImageAspectFlagBits.VK_IMAGE_ASPECT_DEPTH_BIT), 0, 1, 0, 1)))
     }
 
     fun end() {

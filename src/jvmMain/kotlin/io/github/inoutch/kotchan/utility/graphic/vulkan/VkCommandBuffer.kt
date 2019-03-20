@@ -141,6 +141,20 @@ actual fun vkCmdClearColorImage(
             ranges.toNative(this))
 }
 
+actual fun vkCmdClearDepthStencilImage(
+        commandBuffer: VkCommandBuffer,
+        image: VkImage,
+        imageLayout: VkImageLayout,
+        depthStencilValue: VkClearDepthStencilValue,
+        ranges: List<VkImageSubresourceRange>) = memScoped {
+    VK10.vkCmdClearDepthStencilImage(
+            commandBuffer.native,
+            image.native,
+            imageLayout.value,
+            depthStencilValue.toNative(this),
+            ranges.toNative(this))
+}
+
 actual fun vkResetCommandBuffer(commandBuffer: VkCommandBuffer, flags: List<VkCommandBufferResetFlagBits>) {
     VK10.vkResetCommandBuffer(commandBuffer.native, flags.sumBy { it.value })
 }

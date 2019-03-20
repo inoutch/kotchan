@@ -8,12 +8,28 @@ open class Polygon(initMesh: Mesh, val material: Material?) {
         protected set
 
     var isPositionsDirty = true
+        set(value) {
+            field = value
+            children.forEach { it.isPositionsDirty = value }
+        }
 
     var isColorsDirty = true
+        set(value) {
+            field = value
+            children.forEach { it.isColorsDirty = value }
+        }
 
     var isNormalsDirty = true
+        set(value) {
+            field = value
+            children.forEach { it.isNormalsDirty = value }
+        }
 
     var isTexcoordsDirty = true
+        set(value) {
+            field = value
+            children.forEach { it.isTexcoordsDirty = value }
+        }
 
     var visible = true
         set(value) {
@@ -24,8 +40,9 @@ open class Polygon(initMesh: Mesh, val material: Material?) {
 
     open var position = Vector3()
         set(value) {
-            if (field != value)
+            if (field != value) {
                 isPositionsDirty = true
+            }
             field = value
         }
 
@@ -122,8 +139,8 @@ open class Polygon(initMesh: Mesh, val material: Material?) {
     private var normalArray = mesh.nom().flatten()
 
     protected open fun transform(): Matrix4 {
-        val parent = this.parent ?: return Matrix4.createTranslation(position) * Matrix4.createScale(scale)
-        return Matrix4.createTranslation(position + parent.position) *
-                Matrix4.createScale(scale * parent.scale)
+        val currentTransform = Matrix4.createTranslation(position) * Matrix4.createScale(scale)
+        val parent = this.parent ?: return currentTransform
+        return parent.transform() * currentTransform
     }
 }

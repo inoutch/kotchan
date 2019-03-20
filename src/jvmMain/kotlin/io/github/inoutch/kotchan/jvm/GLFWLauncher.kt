@@ -64,7 +64,7 @@ class GLFWLauncher(config: KotchanEngine.Config) {
         var point = Point.ZERO
         var touch: TouchEvent? = null
         glfwSetCursorPosCallback(window) { _, xpos, ypos ->
-            point = Point(xpos.toInt(), ypos.toInt())
+            point = Point(xpos.toInt(), nativeSize.y - ypos.toInt())
             val t = touch ?: return@glfwSetCursorPosCallback
             t.point = point
             core.touchEmitter.onTouchesMoved(listOf(t))

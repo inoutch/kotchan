@@ -141,6 +141,22 @@ actual fun vkCmdClearColorImage(
 }
 
 @ExperimentalUnsignedTypes
+actual fun vkCmdClearDepthStencilImage(
+        commandBuffer: VkCommandBuffer,
+        image: VkImage,
+        imageLayout: VkImageLayout,
+        depthStencilValue: VkClearDepthStencilValue,
+        ranges: List<VkImageSubresourceRange>) = memScoped {
+    vulkan.vkCmdClearDepthStencilImage(
+            commandBuffer.native,
+            image.native,
+            imageLayout.value.toUInt(),
+            depthStencilValue.toNative(this),
+            ranges.size.toUInt(),
+            ranges.toNative(this))
+}
+
+@ExperimentalUnsignedTypes
 actual fun vkResetCommandBuffer(commandBuffer: VkCommandBuffer, flags: List<VkCommandBufferResetFlagBits>) {
     vulkan.vkResetCommandBuffer(commandBuffer.native, flags.sumBy { it.value }.toUInt())
 }
