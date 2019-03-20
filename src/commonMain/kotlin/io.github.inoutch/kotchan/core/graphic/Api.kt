@@ -162,7 +162,6 @@ class Api(private val vk: VK?, private val gl: GL?) {
     val bindGraphicsPipeline = checkSupportGraphics({
         pipeline@{ pipeline: GraphicsPipeline ->
             val vkPipeline = pipeline.vkPipeline ?: return@pipeline
-            println(vkPipeline.hashCode())
 
             vkCmdBindPipeline(
                     it.currentCommandBuffer,

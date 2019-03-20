@@ -45,7 +45,7 @@ class AppScene : Scene() {
         sprite2 = Sprite(material, Vector2(32, 45))
         sprite3 = Sprite(material, Vector2(53, 101))
 
-        batch.add(sprite1, sprite2)
+        batch.add(sprite1, sprite2, sprite3)
 
         val template = Template()
         template.add(TemplateType.BottomCenter,
