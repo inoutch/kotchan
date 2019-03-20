@@ -32,7 +32,7 @@ class Helper {
                     0,
                     surfaceFormat.format,
                     listOf(VkSampleFlagBits.VK_SAMPLE_COUNT_1_BIT),
-                    VkAttachmentLoadOp.VK_ATTACHMENT_LOAD_OP_CLEAR,
+                    VkAttachmentLoadOp.VK_ATTACHMENT_LOAD_OP_DONT_CARE,
                     VkAttachmentStoreOp.VK_ATTACHMENT_STORE_OP_STORE,
                     VkAttachmentLoadOp.VK_ATTACHMENT_LOAD_OP_DONT_CARE,
                     VkAttachmentStoreOp.VK_ATTACHMENT_STORE_OP_DONT_CARE,

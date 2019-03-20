@@ -124,13 +124,13 @@ class Api(private val vk: VK?, private val gl: GL?) {
             val shader = createInfo.shaderProgram.shader.vkShader ?: throw Error("no vulkan shader module")
             val uniforms = createInfo.shaderProgram.descriptorSets
                     .filterIsInstance<Uniform>()
-                    .map { VKUniformBuffer(vk, it.binding, it.size) }
+            val uniformBuffers = uniforms.map { VKUniformBuffer(vk, it.binding, it.size) }
             val samplers = createInfo.shaderProgram.descriptorSets
                     .filterIsInstance<Sampler>()
             val descriptorSetLayout = createDescriptorSetLayout(vk, createInfo.shaderProgram.descriptorSets)
-            val descriptorSetProvider = DescriptorSetProvider(vk, descriptorSetLayout, uniforms, samplers.size)
-
-            createInfo.shaderProgram.descriptorSets.forEach { updateDescriptor(vk, it, descriptorSetProvider) }
+            val descriptorSetProvider = DescriptorSetProvider(
+                    vk, descriptorSetLayout, uniformBuffers, samplers.size)
+            val samplerBuffers = samplers.map { VKSampler(descriptorSetProvider, it.binding) }
 
             val pipelineLayout = vk.createPipelineLayout(listOf(descriptorSetLayout))
             val pipeline = Helper.createGraphicsPipeline(
@@ -143,7 +143,9 @@ class Api(private val vk: VK?, private val gl: GL?) {
                     convertVkPolygonMode(createInfo.polygonMode))
 
             return@pipeline GraphicsPipeline(createInfo,
-                    VKPipeline(vk, pipeline, descriptorSetLayout, descriptorSetProvider, pipelineLayout))
+                    VKPipeline(vk, pipeline, descriptorSetLayout, descriptorSetProvider, pipelineLayout),
+                    uniformBuffers,
+                    samplerBuffers)
         }
     }, {
         pipeline@{ createInfo: GraphicsPipeline.CreateInfo ->
@@ -167,6 +169,12 @@ class Api(private val vk: VK?, private val gl: GL?) {
                     it.currentCommandBuffer,
                     VkPipelineBindPoint.VK_PIPELINE_BIND_POINT_GRAPHICS,
                     vkPipeline.pipeline)
+
+            val uniforms = pipeline.createInfo.shaderProgram.descriptorSets.filterIsInstance<Uniform>()
+            val samplers = pipeline.createInfo.shaderProgram.descriptorSets.filterIsInstance<Sampler>()
+            uniforms.forEachIndexed { index, uniform -> uniform.vkUniform = pipeline.vkUniforms[index] }
+            samplers.forEachIndexed { index, sampler -> sampler.vkSampler = pipeline.vkSamplers[index] }
+
             currentPipeline = pipeline
         }
     }, {
@@ -285,14 +293,6 @@ class Api(private val vk: VK?, private val gl: GL?) {
             }
         }
     })
-
-    private fun updateDescriptor(vk: VK, descriptorSet: DescriptorSet, descriptorSetProvider: DescriptorSetProvider) {
-        when (descriptorSet) {
-            is Uniform -> descriptorSet.vkUniform = VKUniformBuffer(vk, descriptorSet.binding, descriptorSet.size)
-            is Sampler -> descriptorSet.vkSampler = VKSampler(descriptorSetProvider, descriptorSet.binding)
-            else -> throw Error("unsupported descriptorSet type")
-        }
-    }
 
     private fun <T> checkSupportGraphics(vkScope: (vk: VK) -> T, glScope: (gl: GL) -> T): T {
         val vk = this.vk

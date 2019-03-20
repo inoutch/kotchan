@@ -27,16 +27,16 @@ class AppScene : Scene() {
     private val sprite2: Sprite
     private val sprite3: Sprite
 
-//    private val label: TextLabel
+    private val label: TextLabel
 
     private val batch = Batch()
 
     init {
-//        val textLabelMaterialConfig = Material.Config(shaderProgram)
-//        label = TextLabel.loadFromResource(
-//                "font/sample.fnt", "font", textLabelMaterialConfig, "Kotchan Examples")
-//        label.position = Vector3(100.0f, 100.0f, 0.0f)
-//        batch.add(label)
+        val textLabelMaterialConfig = Material.Config(shaderProgram)
+        label = TextLabel.loadFromResource(
+                "font/sample.fnt", "font", textLabelMaterialConfig, "Kotchan Examples")
+        label.position = Vector3(100.0f, 100.0f, 0.0f)
+        batch.add(label)
 
         val spriteMaterialConfig = Material.Config(shaderProgram, Texture.loadFromResource("tiles/sample.png"))
         material = Material(spriteMaterialConfig)
@@ -45,7 +45,7 @@ class AppScene : Scene() {
         sprite2 = Sprite(material, Vector2(32, 45))
         sprite3 = Sprite(material, Vector2(53, 101))
 
-        batch.add(sprite1, sprite2, sprite3)
+        batch.add(sprite1, sprite2)
 
         val template = Template()
         template.add(TemplateType.BottomCenter,
