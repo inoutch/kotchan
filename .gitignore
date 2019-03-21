@@ -214,8 +214,5 @@ DerivedData/
 !default.perspectivev3
 
 *.iml
-*.module
-*.module.md5
-*.module.sha1
 
 ./native/MVKView/build
