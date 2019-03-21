@@ -1,38 +1,15 @@
 package io.github.inoutch.kotchan.core.graphic.polygon
 
-import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
-import io.github.inoutch.kotchan.core.graphic.GraphicsPipeline
 import io.github.inoutch.kotchan.core.graphic.Material
-import io.github.inoutch.kotchan.core.graphic.texture.Texture
 import io.github.inoutch.kotchan.utility.font.BMFont
-import io.github.inoutch.kotchan.utility.io.getResourcePathWithError
-import io.github.inoutch.kotchan.utility.path.Path
 import io.github.inoutch.kotchan.utility.type.Mesh
 import io.github.inoutch.kotchan.utility.type.Vector2
 import io.github.inoutch.kotchan.utility.type.Vector3
 import io.github.inoutch.kotchan.utility.type.Vector4
 
-class TextLabel(
-        private val bmFont: BMFont,
-        materialConfig: Material.Config,
-        textureDir: String,
-        initText: String)
-    : Polygon2D(Mesh(), null, Vector2.Zero) {
-
-    companion object {
-        fun loadFromResource(
-                filepath: String,
-                textureDir: String,
-                materialConfig: Material.Config,
-                text: String): TextLabel {
-            val bmFont = BMFont.loadFromResource(filepath)
-            return TextLabel(bmFont, materialConfig, instance.file.getResourcePathWithError(textureDir), text)
-        }
-    }
+class TextLabel(private val bmFont: BMFont, initText: String) : Polygon2D(Mesh(), null, Vector2.Zero) {
 
     private val polygons: Map<Int, Polygon>
-
-    val materials: Map<Int, Material>
 
     var text = initText
         set(value) {
@@ -55,11 +32,6 @@ class TextLabel(
     private data class LabelBundle(val meshes: Map<Int, LabelMesh>, val size: Vector2)
 
     init {
-        materials = bmFont.pages.map {
-            val texture = Texture.load(Path.resolve(textureDir, it.file))
-            it.id to Material(materialConfig, listOf(texture ?: Texture.emptyTexture()))
-        }.toMap()
-
         val label = this.createLabel(this.text)
         size = label.size
 
@@ -91,6 +63,7 @@ class TextLabel(
 
             x += char.xAdvance
 
+            val materials = bmFont.materials
             val material = materials[char.page] ?: continue
             val texture = material.textures.firstOrNull() ?: continue
             val mesh = meshes.getOrPut(char.page) { LabelMesh(char.page, material) }

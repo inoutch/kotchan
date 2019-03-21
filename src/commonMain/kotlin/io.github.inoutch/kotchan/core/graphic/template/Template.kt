@@ -99,8 +99,8 @@ class Template(val rect: Rect = Rect(Vector2.Zero, instance.screenSize.toVector2
                 }
                 val anchorPoint = switchType(templateType).let { Vector2(h(it.first), v(it.second)) }
                 val basePosition = Vector2(
-                        rect.size.x * anchorPoint.x - width * anchorPoint.x,
-                        rect.size.y * anchorPoint.y - height * anchorPoint.y)
+                        rect.origin.x + rect.size.x * anchorPoint.x - width * anchorPoint.x,
+                        rect.origin.y + rect.size.y * anchorPoint.y - height * anchorPoint.y)
                 var p = basePosition
                 for (fragment in y.value) {
                     val polygonSize = fragment.polygon.size

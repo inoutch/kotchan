@@ -4,10 +4,14 @@ interface Disposable {
     fun dispose()
 }
 
-class DisposeManager : Disposable {
+interface DisposerAppender {
+    fun <T : Disposable> add(disposable: T): T
+}
+
+class Disposer : Disposable, DisposerAppender {
     private val disposables = mutableListOf<Disposable>()
 
-    fun <T : Disposable> add(disposable: T): T {
+    override fun <T : Disposable> add(disposable: T): T {
         disposables.add(disposable)
         return disposable
     }
@@ -23,8 +27,8 @@ class DisposeManager : Disposable {
     }
 }
 
-fun <T> disposeScoped(scope: DisposeManager.() -> T): T {
-    val disposeManager = DisposeManager()
+fun <T> disposeScoped(scope: Disposer.() -> T): T {
+    val disposeManager = Disposer()
 
     try {
         val ret = scope(disposeManager)

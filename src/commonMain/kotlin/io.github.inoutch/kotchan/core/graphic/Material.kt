@@ -16,8 +16,12 @@ class Material(config: Config, extraTextures: List<Texture> = listOf()) : Dispos
 
     val textures = listOf(*config.textures.toTypedArray(), *extraTextures.toTypedArray())
 
+    val texture: Texture
+        get() = textures.first()
+
     val graphicsPipeline = instance.graphicsApi.createGraphicsPipeline(
-            GraphicsPipeline.CreateInfo(config.shaderProgram, config.depthTest, config.cullMode, config.polygonMode))
+            config.shaderProgram,
+            GraphicsPipeline.Config(config.depthTest, config.cullMode, config.polygonMode))
 
     override fun dispose() {
         graphicsPipeline.dispose()

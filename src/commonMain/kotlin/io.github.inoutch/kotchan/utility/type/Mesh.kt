@@ -1,14 +1,18 @@
 package io.github.inoutch.kotchan.utility.type
 
-data class Mesh(
-        private var positions: List<Vector3> = emptyList(),
-        private var texcoords: List<Vector2> = emptyList(),
-        private var colors: List<Vector4> = emptyList(),
-        private var normals: List<Vector3> = emptyList()) {
-    val size: Int
+class Mesh(initPositions: List<Vector3> = emptyList(),
+           initTexcoords: List<Vector2> = emptyList(),
+           initColors: List<Vector4> = emptyList(),
+           initNormals: List<Vector3> = emptyList()) {
+
+    private var positions: MutableList<Vector3> = initPositions.toMutableList()
+    private var texcoords: MutableList<Vector2> = initTexcoords.toMutableList()
+    private var colors: MutableList<Vector4> = initColors.toMutableList()
+    private var normals: MutableList<Vector3> = initNormals.toMutableList()
+
+    val size: Int = positions.size
 
     init {
-        size = positions.size
         if (size != texcoords.size || size != colors.size || (size != normals.size && normals.isNotEmpty())) {
             throw Error("invalid vertex numbers")
         }
@@ -21,25 +25,49 @@ data class Mesh(
 
     fun updatePositions(positions: List<Vector3>) {
         if (this.positions.size == positions.size) {
-            this.positions = positions
+            this.positions = positions.toMutableList()
         }
     }
 
     fun updateTexcoords(texcoords: List<Vector2>) {
         if (this.texcoords.size == texcoords.size) {
-            this.texcoords = texcoords
+            this.texcoords = texcoords.toMutableList()
         }
     }
 
     fun updateColors(colors: List<Vector4>) {
         if (this.colors.size == colors.size) {
-            this.colors = colors
+            this.colors = colors.toMutableList()
         }
     }
 
     fun updateNormals(normals: List<Vector3>) {
         if (this.normals.size == normals.size) {
-            this.normals = normals
+            this.normals = normals.toMutableList()
+        }
+    }
+
+    fun updatePositions(positions: List<Vector3>, offset: Int) {
+        if (this.positions.size >= positions.size + offset) {
+            positions.forEachIndexed { i, x -> this.positions[i + offset] = x }
+        }
+    }
+
+    fun updateTexcoords(texcoords: List<Vector2>, offset: Int) {
+        if (this.texcoords.size >= texcoords.size + offset) {
+            texcoords.forEachIndexed { i, x -> this.texcoords[i + offset] = x }
+        }
+    }
+
+    fun updateColors(colors: List<Vector4>, offset: Int) {
+        if (this.colors.size >= colors.size + offset) {
+            colors.forEachIndexed { i, x -> this.colors[i + offset] = x }
+        }
+    }
+
+    fun updateNormals(normals: List<Vector3>, offset: Int) {
+        if (this.normals.size >= normals.size + offset) {
+            normals.forEachIndexed { i, x -> this.normals[i + offset] = x }
         }
     }
 

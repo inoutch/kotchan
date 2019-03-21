@@ -95,6 +95,37 @@ open class Polygon(initMesh: Mesh, val material: Material?) {
         texcoordArray
     }
 
+    open val positionChanges: List<PartialChange<FloatArray>>
+        get() {
+            val ret = privatePositionChanges.map { partials ->
+                val positions = partials.value.map { Vector3(transform() * Vector4(it, 1.0f)) }.flatten()
+                PartialChange(positions, partials.offset * 3)
+            }
+            privatePositionChanges.clear()
+            return ret
+        }
+
+    open val colorChanges: List<PartialChange<FloatArray>>
+        get() {
+            val ret = privateColorChanges.toList()
+            privateColorChanges.clear()
+            return ret
+        }
+
+    open val texcoordChanges: List<PartialChange<FloatArray>>
+        get() {
+            val ret = privateTexcoordChanges.toList()
+            privateTexcoordChanges.clear()
+            return ret
+        }
+
+    open val normalChanges: List<PartialChange<FloatArray>>
+        get() {
+            val ret = privateNormalChanges.toList()
+            privateNormalChanges.clear()
+            return ret
+        }
+
     open fun addChild(polygon: Polygon) {
         if (polygon.parent != null) {
             throw Error("$polygon: this view was already had a parent view")
@@ -138,9 +169,32 @@ open class Polygon(initMesh: Mesh, val material: Material?) {
 
     private var normalArray = mesh.nom().flatten()
 
+    private val privatePositionChanges = mutableListOf<PartialChange<List<Vector3>>>()
+
+    private val privateTexcoordChanges = mutableListOf<PartialChange<FloatArray>>()
+
+    private val privateColorChanges = mutableListOf<PartialChange<FloatArray>>()
+
+    private val privateNormalChanges = mutableListOf<PartialChange<FloatArray>>()
+
     protected open fun transform(): Matrix4 {
         val currentTransform = Matrix4.createTranslation(position) * Matrix4.createScale(scale)
         val parent = this.parent ?: return currentTransform
         return parent.transform() * currentTransform
+    }
+
+    fun updatePositions(positions: List<Vector3>, offset: Int) {
+        privatePositionChanges.add(PartialChange(positions, offset))
+        mesh.updatePositions(positions, offset)
+    }
+
+    fun updateTexcoords(texcoords: List<Vector2>, offset: Int) {
+        privateTexcoordChanges.add(PartialChange(texcoords.flatten(), offset * 2))
+        mesh.updateTexcoords(texcoords, offset)
+    }
+
+    fun updateColors(colors: List<Vector4>, offset: Int) {
+        privateColorChanges.add(PartialChange(colors.flatten(), offset * 4))
+        mesh.updateColors(colors, offset)
     }
 }

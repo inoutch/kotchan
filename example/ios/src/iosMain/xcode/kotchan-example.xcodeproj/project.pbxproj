@@ -16,6 +16,7 @@
 		951B502521E0DD2700B01C37 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 951B501B21E0DD2700B01C37 /* Main.storyboard */; };
 		951B502721E0DD2700B01C37 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 951B501F21E0DD2700B01C37 /* main.m */; };
 		951B502821E0DD2700B01C37 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 951B502021E0DD2700B01C37 /* AppDelegate.m */; };
+		954C1396224285ED0037D6CA /* sample.wav in Resources */ = {isa = PBXBuildFile; fileRef = 954C1395224285ED0037D6CA /* sample.wav */; };
 		95FD4D292214537B00A65BF6 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 95FD4D282214537B00A65BF6 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
@@ -32,6 +33,7 @@
 		951B502021E0DD2700B01C37 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		951B502121E0DD2700B01C37 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		951B502221E0DD2700B01C37 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		954C1395224285ED0037D6CA /* sample.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = sample.wav; path = ../resources/sample.wav; sourceTree = "<group>"; };
 		95B250FB20711F2800B001E5 /* kotchan-example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "kotchan-example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		95FD4D282214537B00A65BF6 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -50,6 +52,7 @@
 		9506744D223BE37300CF36A3 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				954C1395224285ED0037D6CA /* sample.wav */,
 				9506745F223BE38200CF36A3 /* font */,
 				95067462223BE38200CF36A3 /* sample.mp3 */,
 				95067460223BE38200CF36A3 /* sprites */,
@@ -161,6 +164,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				954C1396224285ED0037D6CA /* sample.wav in Resources */,
 				95067465223BE38200CF36A3 /* tiles in Resources */,
 				951B502521E0DD2700B01C37 /* Main.storyboard in Resources */,
 				95067464223BE38200CF36A3 /* sprites in Resources */,

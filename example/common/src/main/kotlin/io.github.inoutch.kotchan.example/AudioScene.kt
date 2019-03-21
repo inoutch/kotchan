@@ -1,7 +1,7 @@
 package io.github.inoutch.kotchan.example
 
+import io.github.inoutch.kotchan.core.KotchanCore
 import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
-import io.github.inoutch.kotchan.core.KotchanCore.Companion.logger
 import io.github.inoutch.kotchan.core.graphic.Material
 import io.github.inoutch.kotchan.core.graphic.Scene
 import io.github.inoutch.kotchan.core.graphic.batch.Batch
@@ -12,14 +12,21 @@ import io.github.inoutch.kotchan.core.graphic.template.TemplateAppendType
 import io.github.inoutch.kotchan.core.graphic.template.TemplateType
 import io.github.inoutch.kotchan.core.graphic.texture.Texture
 import io.github.inoutch.kotchan.core.graphic.ui.button.ColorButton
+import io.github.inoutch.kotchan.utility.audio.BGM
+import io.github.inoutch.kotchan.utility.audio.loadFromResource
 import io.github.inoutch.kotchan.utility.font.BMFont
-import io.github.inoutch.kotchan.utility.type.*
+import io.github.inoutch.kotchan.utility.type.Color
+import io.github.inoutch.kotchan.utility.type.Vector2
+import io.github.inoutch.kotchan.utility.type.Vector3
+import io.github.inoutch.kotchan.utility.type.Vector4
 
-class AppScene : Scene() {
+class AudioScene : Scene() {
 
     private val shaderProgram = SimpleShaderProgram()
 
-    private val camera = instance.createCamera2D()
+    private val camera = KotchanCore.instance.createCamera2D()
+
+    private val bgm = disposer.add(BGM.loadFromResource("sample.wav"))
 
     private val buttonMaterial: Material
 
@@ -30,22 +37,21 @@ class AppScene : Scene() {
     private var colorCircle = 0.0f
 
     init {
+
         val bmFont = disposer.add(BMFont.loadFromResource(
                 "font/sample.fnt", "font", Material.Config(shaderProgram)))
-        titleTextLabel = TextLabel(bmFont, "Kotchan Examples")
+        titleTextLabel = TextLabel(bmFont, "Audio Examples")
 
         buttonMaterial = disposer.add(Material(Material.Config(shaderProgram, Texture.emptyTexture())))
 
-        val transitions = listOf("Audio" to {
-            instance.runScene { AudioScene() }
-        }, "Tile map" to {
-            instance.runScene { TileMapScene() }
-        }, "Animation" to {
-            instance.runScene { AnimationScene() }
-        }, "Alpha test" to {
-            instance.runScene { AlphaTestScene() }
-        }, "Template" to {
-            instance.runScene { TemplateScene() }
+        val transitions = listOf("Play" to {
+            bgm.play()
+        }, "Stop" to {
+            bgm.stop()
+        }, "Pause" to {
+            bgm.pause()
+        }, "Back" to {
+            instance.runScene { AppScene() }
         })
         val buttons = transitions.map {
             val button = ColorButton(buttonMaterial, camera, Vector2(250, 32), it.second)
@@ -75,9 +81,9 @@ class AppScene : Scene() {
         val color = Color.hsv2rgb(colorCircle, 1.0f, 1.0f)
         titleTextLabel.color = Vector4(color, 1.0f)
 
-        instance.graphicsApi.clearColor(Vector4(0.2f, 0.2f, 0.2f, 1.0f))
-        instance.graphicsApi.clearDepth(1.0f)
-        instance.graphicsApi.setViewport(instance.viewport)
+        KotchanCore.instance.graphicsApi.clearColor(Vector4(0.2f, 0.2f, 0.2f, 1.0f))
+        KotchanCore.instance.graphicsApi.clearDepth(1.0f)
+        KotchanCore.instance.graphicsApi.setViewport(KotchanCore.instance.viewport)
         batch.draw(delta, camera)
     }
 

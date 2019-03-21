@@ -8,11 +8,18 @@ class VKPipeline(
         val pipeline: VkPipeline,
         val descriptorSetLayout: VkDescriptorSetLayout,
         val descriptorSetProvider: DescriptorSetProvider,
-        val pipelineLayout: VkPipelineLayout) : Disposable {
+        val pipelineLayout: VkPipelineLayout,
+        val uniforms: List<VKUniformBuffer>,
+        val samplers: List<VKSampler>) : Disposable {
+
     override fun dispose() {
-        vkQueueWaitIdle(vk.queue)
-        descriptorSetLayout.dispose()
-        pipelineLayout.dispose()
-        pipeline.dispose()
+        vk.waitQueue {
+            descriptorSetProvider.dispose()
+            uniforms.forEach { it.dispose() }
+//        samplers.forEach { it.dipose() }
+            descriptorSetLayout.dispose()
+            pipelineLayout.dispose()
+            pipeline.dispose()
+        }
     }
 }

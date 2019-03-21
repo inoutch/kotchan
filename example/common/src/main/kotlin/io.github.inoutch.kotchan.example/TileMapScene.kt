@@ -1,30 +1,30 @@
 package io.github.inoutch.kotchan.example
 
 import io.github.inoutch.kotchan.core.KotchanCore
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
+import io.github.inoutch.kotchan.core.controller.touch.TouchType
+import io.github.inoutch.kotchan.core.controller.touch.listener.GridTouchListener
+import io.github.inoutch.kotchan.core.controller.touch.listener.ScrollTouchListener
 import io.github.inoutch.kotchan.core.graphic.Material
 import io.github.inoutch.kotchan.core.graphic.Scene
 import io.github.inoutch.kotchan.core.graphic.batch.Batch
-import io.github.inoutch.kotchan.core.graphic.polygon.SpriteAtlas
 import io.github.inoutch.kotchan.core.graphic.polygon.TextLabel
-import io.github.inoutch.kotchan.core.graphic.shader.AlphaTestSimpleShaderProgram
+import io.github.inoutch.kotchan.core.graphic.polygon.tile.TileLayer
+import io.github.inoutch.kotchan.core.graphic.polygon.tile.TileMap
 import io.github.inoutch.kotchan.core.graphic.shader.SimpleShaderProgram
 import io.github.inoutch.kotchan.core.graphic.template.Template
 import io.github.inoutch.kotchan.core.graphic.template.TemplateAppendType
 import io.github.inoutch.kotchan.core.graphic.template.TemplateType
 import io.github.inoutch.kotchan.core.graphic.texture.Texture
 import io.github.inoutch.kotchan.core.graphic.ui.button.ColorButton
-import io.github.inoutch.kotchan.core.tool.TexturePacker
 import io.github.inoutch.kotchan.utility.font.BMFont
+import io.github.inoutch.kotchan.utility.time.Timer
 import io.github.inoutch.kotchan.utility.type.*
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
+import kotlin.random.Random
 
-class AlphaTestScene : Scene() {
+class TileMapScene : Scene() {
 
-    private val shaderProgram = AlphaTestSimpleShaderProgram()
-
-    private val uiShaderProgram = SimpleShaderProgram()
+    private val shaderProgram = SimpleShaderProgram()
 
     private val camera = KotchanCore.instance.createCamera2D()
 
@@ -32,32 +32,32 @@ class AlphaTestScene : Scene() {
 
     private val buttonMaterial: Material
 
+    private val tileMaterial: Material
+
     private val titleTextLabel: TextLabel
 
     private val batch = disposer.add(Batch())
 
     private val uiBatch = disposer.add(Batch())
 
-    private val sprite1: SpriteAtlas
-
-    private val sprite2: SpriteAtlas
-
     private var colorCircle = 0.0f
 
-    private val centerPosition = Vector3(Vector2(screenSize.x / 2.0f, screenSize.y / 2.0f + 60.0f), 0.0f)
+    private val tileMap: TileMap
 
     init {
         val bmFont = disposer.add(BMFont.loadFromResource(
                 "font/sample.fnt", "font",
-                Material.Config(uiShaderProgram).also { it.depthTest = false }))
-        titleTextLabel = TextLabel(bmFont, "Alpha Test Example")
+                Material.Config(shaderProgram).also { it.depthTest = false }))
+        titleTextLabel = TextLabel(bmFont, "Tile Map Example")
 
-        buttonMaterial = disposer.add(Material(Material.Config(uiShaderProgram, Texture.emptyTexture()).also {
+        buttonMaterial = disposer.add(Material(Material.Config(shaderProgram, Texture.emptyTexture()).also {
             it.depthTest = false
         }))
 
+        tileMaterial = disposer.add(Material(Material.Config(shaderProgram, Texture.loadFromResource("tiles/sample.png"))))
+
         val transitions = listOf("Back" to {
-            KotchanCore.instance.runScene { AppScene() }
+            instance.runScene { AppScene() }
         })
         val buttons = transitions.map {
             val button = ColorButton(buttonMaterial, uiCamera, Vector2(250, 32), it.second)
@@ -73,22 +73,38 @@ class AlphaTestScene : Scene() {
 
         uiBatch.add(titleTextLabel, *buttons.toTypedArray())
 
-        Template(Rect(Vector2.Zero, Vector2(screenSize.x.toFloat(), 200.0f))).apply {
+        Template(Rect(
+                Vector2(0.0f, screenSize.y.toFloat() - 300.0f),
+                Vector2(screenSize.x.toFloat(), 300.0f))).apply {
             add(TemplateType.MiddleCenter, TemplateAppendType.Row, 12.0f, 0.0f,
                     listOf(titleTextLabel, *buttons.toTypedArray()).reversed())
             updatePositions()
         }
 
-        val textureBundle = TexturePacker.loadFileFromResource("sprites", "sprites/spritesheet.json")
-        val spriteMaterial = disposer.add(Material(Material.Config(shaderProgram, textureBundle.texture)))
-        sprite1 = SpriteAtlas(spriteMaterial, textureBundle.textureAtlas)
-        sprite2 = SpriteAtlas(spriteMaterial, textureBundle.textureAtlas)
-        sprite1.position = centerPosition
-        sprite2.position = centerPosition
-        sprite1.scale = Vector3(0.5f)
-        sprite2.scale = Vector3(0.5f)
-        batch.add(sprite1)
-        batch.add(sprite2)
+        val random = Random(Timer.milliseconds())
+        val tileMapSize = Point(10, 10)
+        tileMap = TileMap(TileMap.Config(
+                tileMaterial,
+                Point(32, 32),
+                Point(16, 16),
+                tileMapSize,
+                TileLayer.Config(List(3) { Array2D(tileMapSize) { random.nextInt(0, 4) } })))
+        batch.add(tileMap)
+
+        touchController.add(GridTouchListener(camera, tileMap.config.tileSize, { point: Point, touchType: TouchType ->
+            if (touchType == TouchType.Began) {
+                tileMap.layer(0)?.setGraphicId(point, random.nextInt(0, 4))
+            }
+            true
+        }))
+
+        ScrollTouchListener(uiCamera) {
+            camera.position -= Vector3(it.x, it.y, 0.0f)
+            camera.update()
+        }.also {
+            it.accelerationEnable = true
+            touchController.add(it)
+        }
     }
 
     override fun draw(delta: Float) {
@@ -101,11 +117,6 @@ class AlphaTestScene : Scene() {
         KotchanCore.instance.graphicsApi.clearColor(Vector4(0.2f, 0.2f, 0.2f, 1.0f))
         KotchanCore.instance.graphicsApi.clearDepth(1.0f)
         KotchanCore.instance.graphicsApi.setViewport(KotchanCore.instance.viewport)
-
-        sprite1.position = centerPosition + Vector3(
-                cos(colorCircle * PI * 2.0f).toFloat() * 50.0f,
-                sin(colorCircle * PI * 2.0f).toFloat() * 30.0f,
-                -sin(colorCircle * PI * 2.0f).toFloat())
 
         batch.draw(delta, camera)
         uiBatch.draw(delta, uiCamera)

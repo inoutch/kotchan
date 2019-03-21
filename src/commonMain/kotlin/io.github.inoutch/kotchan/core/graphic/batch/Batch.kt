@@ -34,6 +34,10 @@ class Batch : Disposable {
         add(polygon.children)
 
         val material = polygon.material ?: return
+        if (polygon.mesh.size <= 0) {
+            return
+        }
+
         val batchPolygonBundle = polygons.getOrPut(material) {
             BatchPolygonBundle(
                     BatchBuffer(BATCH_BUFFER_SIZE * 3),
@@ -55,7 +59,7 @@ class Batch : Disposable {
         val material = invPolygonCache[polygon]
                 ?: polygons.filterValues { values -> values.polygons.find { polygon == it.polygon } != null }
                         .keys.firstOrNull()
-                ?: throw Error("This polygon is not contained")
+                ?: return
         val batchPolygonBundle = polygons[material] ?: return
         val bundle = invPolygonBundleCache[polygon]
                 ?: batchPolygonBundle.polygons.find { polygon == it.polygon }
@@ -71,12 +75,27 @@ class Batch : Disposable {
         polygons.forEach { pair ->
             val material = pair.key
             material.graphicsPipeline.bind()
-            material.graphicsPipeline.createInfo.shaderProgram.prepare(delta, camera.combine, material.textures)
+            material.graphicsPipeline.shaderProgram.prepare(delta, camera.combine, material.textures)
 
             val polygonBundle = pair.value
             polygonBundle.positionBuffer.flush()
             polygonBundle.texcoordBuffer.flush()
             polygonBundle.colorBuffer.flush()
+
+            polygonBundle.polygons.forEach { batchBundle ->
+                batchBundle.polygon.positionChanges.forEach { partialChange ->
+                    polygonBundle.positionBuffer.copy(batchBundle.positionBufferData, partialChange)
+                }
+                batchBundle.polygon.texcoordChanges.forEach { partialChange ->
+                    polygonBundle.texcoordBuffer.copy(batchBundle.texcoordBufferData, partialChange)
+                }
+                batchBundle.polygon.colorChanges.forEach { partialChange ->
+                    polygonBundle.colorBuffer.copy(batchBundle.colorBufferData, partialChange)
+                }
+//                batchBundle.polygon.normalChanges.forEach { partialChange ->
+//                    polygonBundle.normalBuffer.copy(batchBundle.normalBufferData, partialChange)
+//                }
+            }
 
             polygonBundle.polygons.filter { it.polygon.isPositionsDirty }
                     .forEach { polygonBundle.positionBuffer.copy(it.positionBufferData, it.polygon.positions()) }

@@ -5,6 +5,7 @@ import io.github.inoutch.kotchan.utility.Disposable
 import io.github.inoutch.kotchan.utility.memScoped
 import org.lwjgl.system.MemoryUtil
 import org.lwjgl.vulkan.VK10
+import java.lang.Error
 
 actual class MappedMemory actual constructor(size: Long) : Disposable {
 

@@ -137,19 +137,6 @@ class VK(appName: String,
 
         val usage = listOf(VkCommandBufferUsageFlagBits.VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT)
         vkBeginCommandBuffer(currentCommandBuffer, VkCommandBufferBeginInfo(usage, null))
-
-        vkCmdClearColorImage(
-                currentCommandBuffer,
-                swapchainRecreator.swapchainImages[currentImageIndex],
-                VkImageLayout.VK_IMAGE_LAYOUT_GENERAL,
-                Vector4(0.5f, 0.5f, 0.5f, 1.0f),
-                listOf(VkImageSubresourceRange(listOf(VkImageAspectFlagBits.VK_IMAGE_ASPECT_COLOR_BIT), 0, 1, 0, 1)))
-        vkCmdClearDepthStencilImage(
-                currentCommandBuffer,
-                swapchainRecreator.depthResources[currentImageIndex].depthImage,
-                VkImageLayout.VK_IMAGE_LAYOUT_GENERAL,
-                VkClearDepthStencilValue(1.0f, 0),
-                listOf(VkImageSubresourceRange(listOf(VkImageAspectFlagBits.VK_IMAGE_ASPECT_DEPTH_BIT), 0, 1, 0, 1)))
     }
 
     fun end() {
@@ -171,6 +158,24 @@ class VK(appName: String,
 
         vkQueuePresentKHR(queue, presentInfo)
         currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT
+    }
+
+    fun waitQueue(disposeScope: () -> Unit) {
+        vkEndCommandBuffer(currentCommandBuffer)
+
+        val submitInfo = VkSubmitInfo(
+                listOf(),
+                listOf(VkPipelineStageFlagBits.VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT),
+                listOf(commandBuffers[currentImageIndex]),
+                listOf())
+        vkQueueSubmit(queue, listOf(submitInfo), null)
+
+        vkQueueWaitIdle(queue)
+
+        disposeScope()
+
+        val usage = listOf(VkCommandBufferUsageFlagBits.VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT)
+        vkBeginCommandBuffer(currentCommandBuffer, VkCommandBufferBeginInfo(usage, null))
     }
 
     override fun dispose() {

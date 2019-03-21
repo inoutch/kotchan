@@ -2,7 +2,10 @@ package io.github.inoutch.kotchan.core.graphic.batch
 
 import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
 import io.github.inoutch.kotchan.core.graphic.VertexBuffer
+import io.github.inoutch.kotchan.core.graphic.polygon.PartialChange
 import io.github.inoutch.kotchan.utility.Disposable
+import io.github.inoutch.kotchan.utility.type.Matrix4
+import io.github.inoutch.kotchan.utility.type.Vector4
 
 class BatchBuffer(defaultSize: Int) : Disposable {
 
@@ -49,6 +52,15 @@ class BatchBuffer(defaultSize: Int) : Disposable {
             instance.graphicsApi.copyToBuffer(vertexBuffer, vertices, target.start)
         }
         target.vertices = vertices
+    }
+
+    fun copy(target: BatchBufferData, change: PartialChange<FloatArray>) {
+        val changeArray = change.value
+        instance.graphicsApi.copyToBuffer(vertexBuffer, changeArray, target.start + change.offset)
+        target.vertices = floatArrayOf(
+                *target.vertices.sliceArray(IntRange(0, change.offset - 1)),
+                *changeArray,
+                *target.vertices.sliceArray(IntRange(change.offset + changeArray.size, target.vertices.size - 1)))
     }
 
     fun flush() {

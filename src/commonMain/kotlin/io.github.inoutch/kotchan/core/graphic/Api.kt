@@ -20,9 +20,26 @@ import io.github.inoutch.kotchan.utility.type.*
 
 class Api(private val vk: VK?, private val gl: GL?) {
 
+    data class TextureBundle(val vkTexture: VKTexture? = null,
+                             val glTexture: GLTexture? = null)
+
     private var sharedTexture: Texture? = null
 
     private var currentPipeline: GraphicsPipeline? = null
+
+    val begin = checkSupportGraphics({ { it.begin() } }, { { it.bindDefaultFrameBuffer() } })
+
+    val end = checkSupportGraphics({
+        { it.end() }
+    }, {
+        {
+            it.useProgram(0)
+            it.bindVBO(0)
+            it.disableVertexPointer(GLAttribLocation.ATTRIBUTE_COLOR)
+            it.disableVertexPointer(GLAttribLocation.ATTRIBUTE_TEXCOORD)
+            it.disableVertexPointer(GLAttribLocation.ATTRIBUTE_POSITION)
+        }
+    })
 
     val allocateVertexBuffer = checkSupportGraphics({ vk ->
         { size: Int ->
@@ -35,7 +52,7 @@ class Api(private val vk: VK?, private val gl: GL?) {
         }
     }, {
         { size: Int ->
-            VertexBuffer(null, VertexBuffer.GLBundle(it.createVBO(size)))
+            VertexBuffer(null, it.createVBO(size))
         }
     })
 
@@ -54,7 +71,7 @@ class Api(private val vk: VK?, private val gl: GL?) {
     }, {
         copy@{ vertexBuffer: VertexBuffer, vertices: FloatArray, offset: Int ->
             val glBuffer = vertexBuffer.glBuffer ?: return@copy
-            it.updateVBO(glBuffer.vbo, offset, vertices)
+            it.updateVBO(glBuffer, offset, vertices)
         }
     })
 
@@ -96,11 +113,11 @@ class Api(private val vk: VK?, private val gl: GL?) {
         }
     }, {
         { batchBufferBundle: BatchPolygonBundle ->
-            it.bindVBO(batchBufferBundle.positionBuffer.vertexBuffer.glBuffer?.vbo?.id ?: 0)
+            it.bindVBO(batchBufferBundle.positionBuffer.vertexBuffer.glBuffer?.id ?: 0)
             it.vertexPointer(GLAttribLocation.ATTRIBUTE_POSITION, 3, 0, 0)
-            it.bindVBO(batchBufferBundle.texcoordBuffer.vertexBuffer.glBuffer?.vbo?.id ?: 0)
+            it.bindVBO(batchBufferBundle.texcoordBuffer.vertexBuffer.glBuffer?.id ?: 0)
             it.vertexPointer(GLAttribLocation.ATTRIBUTE_TEXCOORD, 2, 0, 0)
-            it.bindVBO(batchBufferBundle.colorBuffer.vertexBuffer.glBuffer?.vbo?.id ?: 0)
+            it.bindVBO(batchBufferBundle.colorBuffer.vertexBuffer.glBuffer?.id ?: 0)
             it.vertexPointer(GLAttribLocation.ATTRIBUTE_COLOR, 4, 0, 0)
 
             it.drawTriangleArrays(0, batchBufferBundle.size)
@@ -120,14 +137,14 @@ class Api(private val vk: VK?, private val gl: GL?) {
     })
 
     val createGraphicsPipeline = checkSupportGraphics({ vk ->
-        pipeline@{ createInfo: GraphicsPipeline.CreateInfo ->
-            val shader = createInfo.shaderProgram.shader.vkShader ?: throw Error("no vulkan shader module")
-            val uniforms = createInfo.shaderProgram.descriptorSets
+        pipeline@{ shaderProgram: ShaderProgram, config: GraphicsPipeline.Config ->
+            val shader = shaderProgram.shader.vkShader ?: throw Error("no vulkan shader module")
+            val uniforms = shaderProgram.descriptorSets
                     .filterIsInstance<Uniform>()
             val uniformBuffers = uniforms.map { VKUniformBuffer(vk, it.binding, it.size) }
-            val samplers = createInfo.shaderProgram.descriptorSets
+            val samplers = shaderProgram.descriptorSets
                     .filterIsInstance<Sampler>()
-            val descriptorSetLayout = createDescriptorSetLayout(vk, createInfo.shaderProgram.descriptorSets)
+            val descriptorSetLayout = createDescriptorSetLayout(vk, shaderProgram.descriptorSets)
             val descriptorSetProvider = DescriptorSetProvider(
                     vk, descriptorSetLayout, uniformBuffers, samplers.size)
             val samplerBuffers = samplers.map { VKSampler(descriptorSetProvider, it.binding) }
@@ -138,26 +155,25 @@ class Api(private val vk: VK?, private val gl: GL?) {
                     vk.renderPass,
                     pipelineLayout,
                     shader.vert, shader.frag,
-                    createInfo.depthTest,
-                    convertVkCullMode(createInfo.cullMode),
-                    convertVkPolygonMode(createInfo.polygonMode))
+                    config.depthTest,
+                    convertVkCullMode(config.cullMode),
+                    convertVkPolygonMode(config.polygonMode))
 
-            return@pipeline GraphicsPipeline(createInfo,
-                    VKPipeline(vk, pipeline, descriptorSetLayout, descriptorSetProvider, pipelineLayout),
-                    uniformBuffers,
-                    samplerBuffers)
+            return@pipeline GraphicsPipeline(shaderProgram, config,
+                    VKPipeline(vk, pipeline, descriptorSetLayout, descriptorSetProvider, pipelineLayout,
+                            uniformBuffers, samplerBuffers))
         }
     }, {
-        pipeline@{ createInfo: GraphicsPipeline.CreateInfo ->
-            val shaderId = createInfo.shaderProgram.shader.glShader?.id ?: 0
-            createInfo.shaderProgram.descriptorSets.forEach { descriptor ->
+        pipeline@{ shaderProgram: ShaderProgram, config: GraphicsPipeline.Config ->
+            val shaderId = shaderProgram.shader.glShader?.id ?: 0
+            shaderProgram.descriptorSets.forEach { descriptor ->
                 if (descriptor is Uniform) {
                     descriptor.glUniform = it.getUniform(shaderId, descriptor.descriptorName)
                 } else if (descriptor is Sampler) {
                     descriptor.glSampler = it.getUniform(shaderId, descriptor.descriptorName)
                 }
             }
-            return@pipeline GraphicsPipeline(createInfo)
+            return@pipeline GraphicsPipeline(shaderProgram, config)
         }
     })
 
@@ -170,16 +186,16 @@ class Api(private val vk: VK?, private val gl: GL?) {
                     VkPipelineBindPoint.VK_PIPELINE_BIND_POINT_GRAPHICS,
                     vkPipeline.pipeline)
 
-            val uniforms = pipeline.createInfo.shaderProgram.descriptorSets.filterIsInstance<Uniform>()
-            val samplers = pipeline.createInfo.shaderProgram.descriptorSets.filterIsInstance<Sampler>()
-            uniforms.forEachIndexed { index, uniform -> uniform.vkUniform = pipeline.vkUniforms[index] }
-            samplers.forEachIndexed { index, sampler -> sampler.vkSampler = pipeline.vkSamplers[index] }
+            val uniforms = pipeline.shaderProgram.descriptorSets.filterIsInstance<Uniform>()
+            val samplers = pipeline.shaderProgram.descriptorSets.filterIsInstance<Sampler>()
+            uniforms.forEachIndexed { index, uniform -> uniform.vkUniform = vkPipeline.uniforms[index] }
+            samplers.forEachIndexed { index, sampler -> sampler.vkSampler = vkPipeline.samplers[index] }
 
             currentPipeline = pipeline
         }
     }, {
         pipeline@{ pipeline: GraphicsPipeline ->
-            it.useProgram(pipeline.createInfo.shaderProgram.shader.glShader?.id ?: return@pipeline)
+            it.useProgram(pipeline.shaderProgram.shader.glShader?.id ?: return@pipeline)
         }
     })
 
@@ -202,19 +218,34 @@ class Api(private val vk: VK?, private val gl: GL?) {
         }
     })
 
-    data class TextureBundle(val vkTexture: VKTexture? = null,
-                             val glTexture: GLTexture? = null)
-
-    val loadTexture = checkSupportGraphics({
-        loadTexture@{ filepath: String ->
-            val data = instance.file.readBytes(filepath) ?: return@loadTexture null
-            val tex = VKTexture(it, Image.load(data))
-            TextureBundle(tex, null)
+    val clearColor = checkSupportGraphics({
+        { color: Vector4 ->
+            vkCmdClearColorImage(
+                    it.currentCommandBuffer,
+                    it.swapchainRecreator.swapchainImages[it.currentImageIndex],
+                    VkImageLayout.VK_IMAGE_LAYOUT_GENERAL,
+                    color,
+                    listOf(VkImageSubresourceRange(listOf(VkImageAspectFlagBits.VK_IMAGE_ASPECT_COLOR_BIT), 0, 1, 0, 1)))
         }
     }, {
-        loadTexture@{ filepath: String ->
-            val tex = it.loadTexture(filepath) ?: return@loadTexture null
-            TextureBundle(null, tex)
+        { color: Vector4 ->
+            it.clearColor(color.x, color.y, color.z, color.w)
+        }
+    })
+
+    val clearDepth = checkSupportGraphics({
+        { depthColor: Float ->
+            vkCmdClearDepthStencilImage(
+                    it.currentCommandBuffer,
+                    it.swapchainRecreator.depthResources[it.currentImageIndex].depthImage,
+                    VkImageLayout.VK_IMAGE_LAYOUT_GENERAL,
+                    VkClearDepthStencilValue(depthColor, 0),
+                    listOf(VkImageSubresourceRange(listOf(VkImageAspectFlagBits.VK_IMAGE_ASPECT_DEPTH_BIT), 0, 1, 0, 1)))
+
+        }
+    }, {
+        { depthColor: Float ->
+            it.clearDepth(depthColor, depthColor, depthColor, depthColor)
         }
     })
 
@@ -252,7 +283,7 @@ class Api(private val vk: VK?, private val gl: GL?) {
         }
     }, {
         { uniform: Uniform4f, value: Vector4 ->
-            uniform.glUniform?.let { l -> it.uniform4f(uniform.binding, value) }
+            it.uniform4f(uniform.binding, value)
         }
     })
 
@@ -262,7 +293,7 @@ class Api(private val vk: VK?, private val gl: GL?) {
         }
     }, {
         { uniform: UniformMatrix4fv, value: Matrix4 ->
-            uniform.glUniform?.let { l -> it.uniformMatrix4fv(uniform.binding, 1, false, value) }
+            it.uniformMatrix4fv(uniform.binding, 1, false, value)
         }
     })
 
@@ -275,6 +306,19 @@ class Api(private val vk: VK?, private val gl: GL?) {
             it.uniform1i(sampler.glSampler ?: 0, sampler.binding)
             it.activeTexture(sampler.binding)
             it.useTexture(texture.glTexture)
+        }
+    })
+
+    val loadTexture = checkSupportGraphics({
+        loadTexture@{ filepath: String ->
+            val data = instance.file.readBytes(filepath) ?: return@loadTexture null
+            val tex = VKTexture(it, Image.load(data))
+            TextureBundle(tex, null)
+        }
+    }, {
+        loadTexture@{ filepath: String ->
+            val tex = it.loadTexture(filepath) ?: return@loadTexture null
+            TextureBundle(null, tex)
         }
     })
 

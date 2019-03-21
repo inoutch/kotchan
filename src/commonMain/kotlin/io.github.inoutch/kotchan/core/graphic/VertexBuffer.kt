@@ -8,14 +8,12 @@ import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.VKBufferMemory
 
 data class VertexBuffer(
         val vkBuffer: VKBufferMemory?,
-        val glBuffer: GLBundle?) : Disposable {
+        val glBuffer: GLVBO?) : Disposable {
 
     data class GLBundle(val vbo: GLVBO)
 
     override fun dispose() {
         vkBuffer?.dispose()
-        glBuffer?.apply {
-            vbo.dispose()
-        }
+        glBuffer?.dispose()
     }
 }

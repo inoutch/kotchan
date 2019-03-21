@@ -29,7 +29,7 @@ open class AnimatedSpriteAtlas(
 
     fun run(animationId: Int, done: (() -> Unit)? = null) {
         currentAnimationIndex = 0
-        animationStateId
+        animationStateId = animationId
         this.done = done
     }
 

@@ -84,8 +84,8 @@ class KotchanCore(
     }
 
     fun draw() {
-
-        vk?.begin()
+        // initialize per frame for graphic api
+        graphicsApi.begin()
 
         // transit view
         this.sceneFactory?.let { clearScreenFactory(it) }
@@ -100,19 +100,7 @@ class KotchanCore(
 
         currentScene?.draw(delta)
 
-        vk?.end()
-
-        // TODO:
-//        gl.bindDefaultFrameBuffer()
-//        gl.viewPort(viewport.origin.x, viewport.origin.y, viewport.size.x, viewport.size.y)
-
-        // release bindings
-        // TODO:
-//        gl.useProgram(0)
-//        gl.bindVBO(0)
-//        gl.disableVertexPointer(GLAttribLocation.ATTRIBUTE_COLOR)
-//        gl.disableVertexPointer(GLAttribLocation.ATTRIBUTE_TEXCOORD)
-//        gl.disableVertexPointer(GLAttribLocation.ATTRIBUTE_POSITION)
+        graphicsApi.end()
     }
 
     // TODO: implement reshape

@@ -69,8 +69,9 @@ class DescriptorSetProvider(private val vk: VK,
         }
 
     override fun dispose() {
-        bundles.forEach { it.descriptorSets.forEach { d -> d.dispose() } }
+        bindingTextures.clear()
         descriptorPool.dispose()
+//        bundles.forEach { it.descriptorSets.forEach { d -> d.dispose() } }
     }
 }
 

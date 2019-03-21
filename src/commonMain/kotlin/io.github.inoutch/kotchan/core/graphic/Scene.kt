@@ -2,6 +2,8 @@ package io.github.inoutch.kotchan.core.graphic
 
 import io.github.inoutch.kotchan.core.KotchanCore
 import io.github.inoutch.kotchan.utility.Disposable
+import io.github.inoutch.kotchan.utility.Disposer
+import io.github.inoutch.kotchan.utility.DisposerAppender
 
 abstract class Scene : Disposable {
 
@@ -17,6 +19,11 @@ abstract class Scene : Disposable {
 
     protected val screenSize = KotchanCore.instance.screenSize
 
+    protected val disposer: DisposerAppender
+        get() = privateDisposer
+
+    private val privateDisposer = Disposer()
+
     abstract fun draw(delta: Float)
 
     abstract fun reshape(x: Int, y: Int, width: Int, height: Int)
@@ -24,4 +31,8 @@ abstract class Scene : Disposable {
     abstract fun pause()
 
     abstract fun resume()
+
+    override fun dispose() {
+        privateDisposer.dispose()
+    }
 }
