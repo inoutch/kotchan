@@ -1,0 +1,147 @@
+{
+  "formatVersion": "0.4",
+  "component": {
+    "url": "../../kotchan/0.2.1/kotchan-0.2.1.module",
+    "group": "io.github.inoutch",
+    "module": "kotchan",
+    "version": "0.2.1",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "4.10.2",
+      "buildId": "6nksop2r2nc7hp7eqcd6zcmhqy"
+    }
+  },
+  "variants": [
+    {
+      "name": "jvm-api",
+      "attributes": {
+        "artifactType": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "files": [
+        {
+          "name": "kotchan-jvm-0.2.1.jar",
+          "url": "kotchan-jvm-0.2.1.jar",
+          "size": 1156623,
+          "sha1": "e2937f2ad27e238a1e1d957214ef9071db149df",
+          "md5": "2d6698431dd9c9a5fdd0b1ecbaa8e422"
+        }
+      ]
+    },
+    {
+      "name": "jvm-runtime",
+      "attributes": {
+        "artifactType": "jar",
+        "org.gradle.usage": "java-runtime-jars",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.3.21"
+          }
+        },
+        {
+          "group": "com.fasterxml.jackson.module",
+          "module": "jackson-module-kotlin",
+          "version": {
+            "requires": "2.9.8"
+          }
+        },
+        {
+          "group": "org.lwjgl",
+          "module": "lwjgl",
+          "version": {
+            "requires": "3.2.1"
+          }
+        },
+        {
+          "group": "org.lwjgl",
+          "module": "lwjgl",
+          "version": {
+            "requires": "3.2.1"
+          }
+        },
+        {
+          "group": "org.lwjgl",
+          "module": "lwjgl-stb",
+          "version": {
+            "requires": "3.2.1"
+          }
+        },
+        {
+          "group": "org.lwjgl",
+          "module": "lwjgl-stb",
+          "version": {
+            "requires": "3.2.1"
+          }
+        },
+        {
+          "group": "org.lwjgl",
+          "module": "lwjgl-glfw",
+          "version": {
+            "requires": "3.2.1"
+          }
+        },
+        {
+          "group": "org.lwjgl",
+          "module": "lwjgl-glfw",
+          "version": {
+            "requires": "3.2.1"
+          }
+        },
+        {
+          "group": "org.lwjgl",
+          "module": "lwjgl-vulkan",
+          "version": {
+            "requires": "3.2.1"
+          }
+        },
+        {
+          "group": "org.lwjgl",
+          "module": "lwjgl-vulkan",
+          "version": {
+            "requires": "3.2.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.3.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "kotchan-jvm-0.2.1.jar",
+          "url": "kotchan-jvm-0.2.1.jar",
+          "size": 1156623,
+          "sha1": "e2937f2ad27e238a1e1d957214ef9071db149df",
+          "md5": "2d6698431dd9c9a5fdd0b1ecbaa8e422"
+        }
+      ]
+    },
+    {
+      "name": "metadata-api",
+      "attributes": {
+        "artifactType": "jar",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.platform.type": "common"
+      },
+      "available-at": {
+        "url": "../../kotchan-metadata/0.2.1/kotchan-metadata-0.2.1.module",
+        "group": "io.github.inoutch",
+        "module": "kotchan-metadata",
+        "version": "0.2.1"
+      }
+    }
+  ]
+}
