@@ -1,20 +1,38 @@
 package io.github.inoutch.kotchan.utility.font
 
-import io.github.inoutch.kotchan.core.logger.logger
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.logger
+import io.github.inoutch.kotchan.core.error.NoSuchFileError
+import io.github.inoutch.kotchan.core.graphic.Material
+import io.github.inoutch.kotchan.core.graphic.texture.Texture
 import io.github.inoutch.kotchan.extension.splitWithEscaping
+import io.github.inoutch.kotchan.utility.Disposable
+import io.github.inoutch.kotchan.utility.io.getResourcePathWithError
+import io.github.inoutch.kotchan.utility.io.readTextFromResource
+import io.github.inoutch.kotchan.utility.path.Path
 import io.github.inoutch.kotchan.utility.type.Point
 import io.github.inoutch.kotchan.utility.type.PointRect
 
 class BMFont private constructor(
+        textureDir: String,
+        materialConfig: Material.Config,
         val info: Info,
         val common: Common,
         val pages: List<Page>,
         val chars: Map<Int, Char>,
         // first char id, second char id, amount
-        val kernings: Map<Int, Map<Int, Int>>) {
+        val kernings: Map<Int, Map<Int, Int>>) : Disposable {
 
     companion object {
-        fun parse(text: String): BMFont {
+        fun load(filepath: String, textureDir: String, materialConfig: Material.Config) =
+                instance.file.readText(filepath)?.let { parse(it, textureDir, materialConfig) }
+
+        fun loadFromResource(filepath: String, textureDir: String, materialConfig: Material.Config) =
+                instance.file.readTextFromResource(filepath)?.let {
+                    parse(it, instance.file.getResourcePathWithError(textureDir), materialConfig)
+                } ?: throw NoSuchFileError(filepath)
+
+        fun parse(text: String, textureDir: String, materialConfig: Material.Config): BMFont {
             val lines = text.split("\n")
             val chunks = lines
                     .mapNotNull { line -> convertChunk(line.splitWithEscaping(' ').filter { it.isNotEmpty() }) }
@@ -40,6 +58,8 @@ class BMFont private constructor(
             }
 
             return BMFont(
+                    textureDir,
+                    materialConfig,
                     info, common, pages,
                     chars.associateBy { it.id },
                     kernigs.groupBy { it.first }
@@ -203,4 +223,14 @@ class BMFont private constructor(
             val first: Int,
             val second: Int,
             val amount: Int) : Chunk(type)
+
+    val materials = pages.map { page ->
+        val texture = Texture.load(Path.resolve(textureDir, page.file))
+        page.id to Material(materialConfig, listOf(texture ?: Texture.emptyTexture()))
+                .also { it.textureAutoRelease = true }
+    }.toMap()
+
+    override fun dispose() {
+        materials.forEach { it.value.dispose() }
+    }
 }

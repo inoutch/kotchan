@@ -1,113 +1,131 @@
 package io.github.inoutch.kotchan.example
 
 import io.github.inoutch.kotchan.core.KotchanCore
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
+import io.github.inoutch.kotchan.core.controller.touch.TouchType
+import io.github.inoutch.kotchan.core.controller.touch.listener.GridTouchListener
 import io.github.inoutch.kotchan.core.controller.touch.listener.ScrollTouchListener
-import io.github.inoutch.kotchan.core.view.Scene
-import io.github.inoutch.kotchan.core.view.batch.Batch
-import io.github.inoutch.kotchan.core.view.drawable.Label
-import io.github.inoutch.kotchan.core.view.map.TileLayerInfo
-import io.github.inoutch.kotchan.core.view.map.TileMap
-import io.github.inoutch.kotchan.core.view.map.TileMapInfo
-import io.github.inoutch.kotchan.core.view.shader.NoColorsShaderProgram
-import io.github.inoutch.kotchan.core.view.shader.SimpleShaderProgram
-import io.github.inoutch.kotchan.core.view.ui.button.MockButton
-import io.github.inoutch.kotchan.core.view.ui.template.Template
-import io.github.inoutch.kotchan.core.view.ui.template.TemplateAppendType
-import io.github.inoutch.kotchan.core.view.ui.template.TemplateType
+import io.github.inoutch.kotchan.core.graphic.Material
+import io.github.inoutch.kotchan.core.graphic.Scene
+import io.github.inoutch.kotchan.core.graphic.batch.Batch
+import io.github.inoutch.kotchan.core.graphic.polygon.TextLabel
+import io.github.inoutch.kotchan.core.graphic.polygon.tile.TileLayer
+import io.github.inoutch.kotchan.core.graphic.polygon.tile.TileMap
+import io.github.inoutch.kotchan.core.graphic.shader.SimpleShaderProgram
+import io.github.inoutch.kotchan.core.graphic.template.Template
+import io.github.inoutch.kotchan.core.graphic.template.TemplateAppendType
+import io.github.inoutch.kotchan.core.graphic.template.TemplateType
+import io.github.inoutch.kotchan.core.graphic.texture.Texture
+import io.github.inoutch.kotchan.core.graphic.ui.button.ColorButton
 import io.github.inoutch.kotchan.utility.font.BMFont
-import io.github.inoutch.kotchan.utility.io.getResourcePathWithError
-import io.github.inoutch.kotchan.utility.io.readTextFromResourceWithError
+import io.github.inoutch.kotchan.utility.time.Timer
 import io.github.inoutch.kotchan.utility.type.*
 import kotlin.random.Random
 
 class TileMapScene : Scene() {
-    private val random = Random(0)
 
-    private val scrollCamera = KotchanCore.instance.createCamera2D()
+    private val shaderProgram = SimpleShaderProgram()
+
+    private val camera = KotchanCore.instance.createCamera2D()
 
     private val uiCamera = KotchanCore.instance.createCamera2D()
 
-    private val noColorsShaderProgram = NoColorsShaderProgram()
+    private val buttonMaterial: Material
 
-    private val buttonShaderProgram = SimpleShaderProgram()
+    private val tileMaterial: Material
 
-    private val batch = Batch()
+    private val titleTextLabel: TextLabel
 
-    private val backLabel: Label
+    private val batch = disposer.add(Batch())
 
-    private val backButton: MockButton
+    private val uiBatch = disposer.add(Batch())
 
-    private val tiles = List(100) { List(100) { random.nextInt() % 4 } }
+    private var colorCircle = 0.0f
 
-    private val texture = textureManager.getFromResource("tiles/sample.png")
-
-    private val tileMap = TileMap(TileMapInfo(Point(16, 16), texture, List(1) { TileLayerInfo(tiles) }))
+    private val tileMap: TileMap
 
     init {
-        ScrollTouchListener(scrollCamera) {
-            scrollCamera.position -= Vector3(it, 0.0f)
+        val bmFont = disposer.add(BMFont.loadFromResource(
+                "font/sample.fnt", "font",
+                Material.Config(shaderProgram).also { it.depthTest = false }))
+        titleTextLabel = TextLabel(bmFont, "Tile Map Example")
 
-            scrollCamera.position = Vector3(if (scrollCamera.position.x < 0) {
-                0.0f
-            } else if (scrollCamera.position.x > 16 * 100 - screenSize.x) {
-                16.0f * 100.0f - screenSize.x
-            } else scrollCamera.position.x, scrollCamera.position.y, scrollCamera.position.z)
+        buttonMaterial = disposer.add(Material(Material.Config(shaderProgram, Texture.emptyTexture()).also {
+            it.depthTest = false
+        }))
 
-            scrollCamera.position = Vector3(scrollCamera.position.x, if (scrollCamera.position.y < 0) {
-                0.0f
-            } else if (scrollCamera.position.y > 16 * 100 - screenSize.y) {
-                16.0f * 100.0f - screenSize.y
-            } else {
-                scrollCamera.position.y
-            }, scrollCamera.position.z)
+        tileMaterial = disposer.add(Material(Material.Config(shaderProgram, Texture.loadFromResource("tiles/sample.png"))))
+        tileMaterial.textureAutoRelease = true
 
-            scrollCamera.update()
+        val transitions = listOf("Back" to {
+            instance.runScene { AppScene() }
+        })
+        val buttons = transitions.map {
+            val button = ColorButton(buttonMaterial, uiCamera, Vector2(250, 32), it.second)
+            button.normalColor = Vector4(0.0f, 0.0f, 0.0f, 0.2f)
+            button.pressedColor = Vector4(0.0f, 0.0f, 0.0f, 0.4f)
+            touchController.add(button.touchListener)
+
+            val label = TextLabel(bmFont, it.first)
+            label.position = Vector3(button.size / 2.0f, -0.1f)
+            button.addChild(label)
+            button
+        }
+
+        uiBatch.add(titleTextLabel, *buttons.toTypedArray())
+
+        Template(Rect(
+                Vector2(0.0f, screenSize.y.toFloat() - 300.0f),
+                Vector2(screenSize.x.toFloat(), 300.0f))).apply {
+            add(TemplateType.MiddleCenter, TemplateAppendType.Row, 12.0f, 0.0f,
+                    listOf(titleTextLabel, *buttons.toTypedArray()).reversed())
+            updatePositions()
+        }
+
+        val random = Random(Timer.milliseconds())
+        val tileMapSize = Point(10, 10)
+        tileMap = TileMap(TileMap.Config(
+                tileMaterial,
+                Point(32, 32),
+                Point(16, 16),
+                tileMapSize,
+                TileLayer.Config(List(3) { Array2D(tileMapSize) { random.nextInt(0, 4) } })))
+        batch.add(tileMap)
+
+        touchController.add(GridTouchListener(camera, tileMap.config.tileSize, { point: Point, touchType: TouchType ->
+            if (touchType == TouchType.Began) {
+                tileMap.layer(0)?.setGraphicId(point, random.nextInt(0, 4))
+            }
+            true
+        }))
+
+        ScrollTouchListener(uiCamera) {
+            camera.position -= Vector3(it.x, it.y, 0.0f)
+            camera.update()
         }.also {
-            touchController.add(it)
             it.accelerationEnable = true
+            touchController.add(it)
         }
-
-        val bmFont = BMFont.parse(file.readTextFromResourceWithError("font/sample.fnt"))
-
-        val template = Template(Rect(Vector2.Zero, screenSize.toVector2()))
-
-        backLabel = Label(bmFont, file.getResourcePathWithError("font"), "Back")
-        batch.add(backLabel, noColorsShaderProgram)
-        template.add(TemplateType.MiddleCenter, TemplateAppendType.Row, 24.0f, backLabel)
-        template.updatePositions()
-
-        backButton = MockButton(uiCamera, Vector2(240.0f, 40.0f)) {
-            KotchanCore.instance.runScene { AppScene() }
-        }
-        backButton.position = backLabel.position
-        backButton.normalColor = Vector4(0.0f, 0.0f, 0.0f, 0.2f)
-        backButton.pressedColor = Vector4(0.0f, 0.0f, 0.0f, 0.4f)
-        touchController.add(backButton.touchListener, 0)
-        batch.add(backButton, buttonShaderProgram)
     }
 
     override fun draw(delta: Float) {
-        gl.clearColor(0.2f, 0.2f, 0.2f, 1.0f)
+        colorCircle += delta * 0.2f
+        if (colorCircle > 1.0f) colorCircle -= 1.0f
 
-        tileMap.draw(delta, scrollCamera)
-        batch.draw(delta, uiCamera)
+        val color = Color.hsv2rgb(colorCircle, 1.0f, 1.0f)
+        titleTextLabel.color = Vector4(color, 1.0f)
+
+        KotchanCore.instance.graphicsApi.clearColor(Vector4(0.2f, 0.2f, 0.2f, 1.0f))
+        KotchanCore.instance.graphicsApi.clearDepth(1.0f)
+        KotchanCore.instance.graphicsApi.setViewport(KotchanCore.instance.viewport)
+
+        batch.draw(delta, camera)
+        uiBatch.draw(delta, uiCamera)
     }
-
-    override fun reshape(x: Int, y: Int, width: Int, height: Int) {}
 
     override fun pause() {}
 
     override fun resume() {}
 
-    override fun destroyed() {
-        tileMap.destroy()
-        batch.destroy()
-        backButton.destroy()
-        backLabel.destroy()
-
-        noColorsShaderProgram.destroy()
-        buttonShaderProgram.destroy()
-
-        textureManager.clearAll()
-    }
+    override fun reshape(x: Int, y: Int, width: Int, height: Int) {}
 }

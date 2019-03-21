@@ -1,0 +1,175 @@
+{
+	"frames": {
+		"go_1.png": {
+			"frame": {
+				"x": 1,
+				"y": 1,
+				"w": 224,
+				"h": 364
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 224,
+				"h": 364
+			},
+			"sourceSize": {
+				"w": 224,
+				"h": 364
+			}
+		},
+		"go_2.png": {
+			"frame": {
+				"x": 227,
+				"y": 1,
+				"w": 224,
+				"h": 364
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 224,
+				"h": 364
+			},
+			"sourceSize": {
+				"w": 224,
+				"h": 364
+			}
+		},
+		"go_3.png": {
+			"frame": {
+				"x": 453,
+				"y": 1,
+				"w": 224,
+				"h": 364
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 224,
+				"h": 364
+			},
+			"sourceSize": {
+				"w": 224,
+				"h": 364
+			}
+		},
+		"go_4.png": {
+			"frame": {
+				"x": 679,
+				"y": 1,
+				"w": 224,
+				"h": 364
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 224,
+				"h": 364
+			},
+			"sourceSize": {
+				"w": 224,
+				"h": 364
+			}
+		},
+		"go_5.png": {
+			"frame": {
+				"x": 905,
+				"y": 1,
+				"w": 224,
+				"h": 364
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 224,
+				"h": 364
+			},
+			"sourceSize": {
+				"w": 224,
+				"h": 364
+			}
+		},
+		"go_6.png": {
+			"frame": {
+				"x": 1131,
+				"y": 1,
+				"w": 224,
+				"h": 364
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 224,
+				"h": 364
+			},
+			"sourceSize": {
+				"w": 224,
+				"h": 364
+			}
+		},
+		"go_7.png": {
+			"frame": {
+				"x": 1357,
+				"y": 1,
+				"w": 224,
+				"h": 364
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 224,
+				"h": 364
+			},
+			"sourceSize": {
+				"w": 224,
+				"h": 364
+			}
+		},
+		"go_8.png": {
+			"frame": {
+				"x": 1583,
+				"y": 1,
+				"w": 224,
+				"h": 364
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 224,
+				"h": 364
+			},
+			"sourceSize": {
+				"w": 224,
+				"h": 364
+			}
+		}
+	},
+	"meta": {
+		"app": "http://www.codeandweb.com/texturepacker",
+		"version": "1.0",
+		"image": "spritesheet.png",
+		"format": "RGBA8888",
+		"size": {
+			"w": 1808,
+			"h": 366
+		},
+		"scale": "1"
+	}
+}

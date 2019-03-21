@@ -1,27 +1,32 @@
 package io.github.inoutch.kotchan.core
 
-import io.github.inoutch.kotchan.utility.graphic.GLAttribLocation
 import io.github.inoutch.kotchan.core.constant.ScreenType
 import io.github.inoutch.kotchan.core.controller.event.listener.EventController
 import io.github.inoutch.kotchan.core.controller.event.listener.TimerEventController
 import io.github.inoutch.kotchan.core.controller.touch.TouchControllerEntity
-import io.github.inoutch.kotchan.core.logger.logger
-import io.github.inoutch.kotchan.core.view.Scene
-import io.github.inoutch.kotchan.utility.graphic.GL
+import io.github.inoutch.kotchan.core.graphic.Scene
 import io.github.inoutch.kotchan.utility.io.File
 import io.github.inoutch.kotchan.utility.time.Timer
 import io.github.inoutch.kotchan.utility.type.*
-import io.github.inoutch.kotchan.core.view.animator.Animator
-import io.github.inoutch.kotchan.core.view.camera.Camera
-import io.github.inoutch.kotchan.core.view.camera.Camera2D
-import io.github.inoutch.kotchan.core.view.camera.Camera3D
-import io.github.inoutch.kotchan.core.view.texture.TextureManager
+import io.github.inoutch.kotchan.core.graphic.animator.Animator
+import io.github.inoutch.kotchan.core.graphic.camera.Camera
+import io.github.inoutch.kotchan.core.graphic.camera.Camera2D
+import io.github.inoutch.kotchan.core.graphic.camera.Camera3D
+import io.github.inoutch.kotchan.core.graphic.Api
+import io.github.inoutch.kotchan.core.logger.Logger
+import io.github.inoutch.kotchan.core.tool.TextureCacheManager
+import io.github.inoutch.kotchan.utility.graphic.gl.GL
+import io.github.inoutch.kotchan.utility.graphic.vulkan.VK
 
-class KotchanCore(private val config: KotchanEngine.Config, windowSize: Point? = null) {
+class KotchanCore(
+        private val config: KotchanEngine.Config,
+        actualSizeWindowSize: Point) {
 
     companion object {
         const val KOTCHAN_ENGINE_NAME = "kotchan-engine"
+        const val KOTCHAN_LOGGER = "kotchan-logger"
         val instance: KotchanCore get() = KotchanInstance.manager().get(KOTCHAN_ENGINE_NAME) as KotchanCore
+        val logger: Logger get() = KotchanInstance.manager().get(KOTCHAN_LOGGER) as Logger
     }
 
     private var currentScene: Scene? = null
@@ -32,11 +37,16 @@ class KotchanCore(private val config: KotchanEngine.Config, windowSize: Point? =
 
     private var beforeMillis: Long = 0
 
-    val gl = GL()
-
+    // external utilities
     val file = File()
 
-    val textureManager = TextureManager(gl)
+    var gl: GL? = null
+
+    var vk: VK? = null
+
+    lateinit var graphicsApi: Api
+
+    val textureCacheManager = TextureCacheManager()
 
     val touchEmitter = touchControllerEntity
 
@@ -48,8 +58,7 @@ class KotchanCore(private val config: KotchanEngine.Config, windowSize: Point? =
 
     val animator = Animator()
 
-    var windowSize = windowSize ?: config.windowSize
-        private set
+    val windowSize = actualSizeWindowSize
 
     var screenSize = config.screenSize
         private set
@@ -57,23 +66,27 @@ class KotchanCore(private val config: KotchanEngine.Config, windowSize: Point? =
     var viewport = PointRect()
         private set
 
-    val logLevel = config.logLevel
-
     init {
+        // add engine instance to manager
         KotchanInstance.manager().add(KOTCHAN_ENGINE_NAME, this)
+        KotchanInstance.manager().add(KOTCHAN_LOGGER, config.loggerFactory?.create() ?: Logger())
     }
 
     fun init() {
         logger.init(config.logLevel)
+        graphicsApi = Api(this.vk, this.gl)
 
         this.screenSize = calcScreenSize()
         this.viewport = calcViewport()
 
         beforeMillis = Timer.milliseconds()
-        currentScene = config.initScene()
+        sceneFactory = { config.initScene() }
     }
 
     fun draw() {
+        // initialize per frame for graphic api
+        graphicsApi.begin()
+
         // transit view
         this.sceneFactory?.let { clearScreenFactory(it) }
 
@@ -84,19 +97,13 @@ class KotchanCore(private val config: KotchanEngine.Config, windowSize: Point? =
         timerEventController.update(delta)
 
         animator.update(delta)
+
         currentScene?.draw(delta)
 
-        gl.bindDefaultFrameBuffer()
-        gl.viewPort(viewport.origin.x, viewport.origin.y, viewport.size.x, viewport.size.y)
-
-        // release bindings
-        gl.useProgram(0)
-        gl.bindVBO(0)
-        gl.disableVertexPointer(GLAttribLocation.ATTRIBUTE_COLOR)
-        gl.disableVertexPointer(GLAttribLocation.ATTRIBUTE_TEXCOORD)
-        gl.disableVertexPointer(GLAttribLocation.ATTRIBUTE_POSITION)
+        graphicsApi.end()
     }
 
+    // TODO: implement reshape
     fun reshape(x: Int, y: Int, width: Int, height: Int) {
         currentScene?.reshape(x, y, width, height)
     }
@@ -139,6 +146,7 @@ class KotchanCore(private val config: KotchanEngine.Config, windowSize: Point? =
     }
 
     private fun calcViewport(): PointRect {
+        val windowSize = vk?.swapchainRecreator?.extent ?: windowSize
         val windowRatio = windowSize.y / windowSize.x
         return when (config.screenType) {
             ScreenType.EXTEND -> PointRect(Point(), windowSize)
@@ -164,11 +172,11 @@ class KotchanCore(private val config: KotchanEngine.Config, windowSize: Point? =
     }
 
     private fun clearScreenFactory(sceneFactory: () -> Scene) {
-        currentScene?.destroyed()
+        currentScene?.dispose()
+
         touchController.clearAll()
 
         currentScene = sceneFactory.invoke()
-
         this.sceneFactory = null
     }
 }

@@ -217,3 +217,5 @@ DerivedData/
 *.module
 *.module.md5
 *.module.sha1
+
+./native/MVKView/build

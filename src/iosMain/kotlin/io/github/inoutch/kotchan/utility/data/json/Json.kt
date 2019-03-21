@@ -1,10 +1,10 @@
 package io.github.inoutch.kotchan.utility.data.json
 
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.logger
 import kotlinx.cinterop.*
 import platform.Foundation.*
 
 import io.github.inoutch.kotchan.ios.extension.*
-import io.github.inoutch.kotchan.core.logger.logger
 
 actual class Json {
     actual companion object {
@@ -21,6 +21,7 @@ actual class Json {
             return parseNative(jsonObject)
         }
 
+        @ExperimentalUnsignedTypes
         actual fun write(jsonObject: JsonObject): String? {
             val obj = when {
                 jsonObject.isMap() -> output(jsonObject)

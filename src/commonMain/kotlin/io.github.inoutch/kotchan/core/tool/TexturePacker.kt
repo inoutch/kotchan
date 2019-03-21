@@ -2,16 +2,25 @@ package io.github.inoutch.kotchan.core.tool
 
 import io.github.inoutch.kotchan.utility.data.json.Json
 import interop.data.json.JsonType
-import io.github.inoutch.kotchan.utility.graphic.GLTexture
 import io.github.inoutch.kotchan.core.KotchanCore
-import io.github.inoutch.kotchan.core.logger.logger
-import io.github.inoutch.kotchan.core.view.texture.TextureAtlas
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.logger
+import io.github.inoutch.kotchan.core.error.NoSuchFileError
+import io.github.inoutch.kotchan.core.graphic.texture.Texture
+import io.github.inoutch.kotchan.core.graphic.texture.TextureAtlas
 import io.github.inoutch.kotchan.utility.path.Path
 import io.github.inoutch.kotchan.utility.type.*
 
 class TexturePacker {
+    data class Bundle(val textureAtlas: TextureAtlas, val texture: Texture)
+
     companion object {
-        fun loadFile(textureDir: String, filepath: String, enableCache: Boolean = true): TextureAtlas? {
+        fun loadFileFromResource(textureDir: String, filepath: String, enableCache: Boolean = true) =
+                loadFile(instance.file.getResourcePath(textureDir) ?: throw NoSuchFileError(textureDir),
+                        instance.file.getResourcePath(filepath) ?: throw NoSuchFileError(filepath), enableCache)
+                        ?: throw NoSuchFileError(Path.resolve(textureDir, filepath))
+
+        fun loadFile(textureDir: String, filepath: String, enableCache: Boolean = true): Bundle? {
             val file = KotchanCore.instance.file
             val json = file.readText(filepath)
             if (json == null) {
@@ -74,15 +83,16 @@ class TexturePacker {
             val imagePath = Path.resolve(textureDir, image)
             val texture = KotchanCore.instance.let {
                 if (enableCache) {
-                    it.textureManager.get(imagePath)
+                    it.textureCacheManager.load(imagePath)
                 } else {
-                    it.gl.loadTexture(imagePath)
+                    Texture.load(imagePath)
                 }
             }
             if (texture == null) {
                 logger.warn("texture is not found [$imagePath]")
+                return null
             }
-            return TextureAtlas(frames, texture ?: GLTexture.empty)
+            return Bundle(TextureAtlas(frames, texture.size.toVector2()), texture)
         }
     }
 }

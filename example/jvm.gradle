@@ -1,5 +1,5 @@
 buildscript {
-    ext.jogl_version = "2.3.2"
+    ext.lwjgl_version = "3.2.1"
 }
 
 apply plugin: "application"
@@ -9,32 +9,42 @@ processResources {
     from "../common/src/main/resources"
 }
 
+mainClassName = "io.github.inoutch.kotchan.example.Main"
+defaultTasks "run"
 sourceSets.main.kotlin.srcDirs += "../../src/jvmMain/kotlin"
+
+import org.gradle.internal.os.OperatingSystem
+
+def platform = OperatingSystem.current()
+switch (platform) {
+    case OperatingSystem.WINDOWS:
+        project.ext.lwjgl_natives = "natives-windows"
+        break
+    case OperatingSystem.LINUX:
+        project.ext.lwjgl_natives = "natives-linux"
+        break
+    case OperatingSystem.MAC_OS:
+        project.ext.lwjgl_natives = "natives-macos"
+        break
+}
+
+if (platform == OperatingSystem.MAC_OS) {
+    applicationDefaultJvmArgs = ["-XstartOnFirstThread"]
+}
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-
+    // utils
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.8"
-    implementation "org.jogamp.gluegen:gluegen-rt:$jogl_version"
-    implementation "org.jogamp.jogl:jogl-all:$jogl_version"
 
-    implementation "org.jogamp.gluegen:gluegen-rt:$jogl_version:natives-linux-amd64"
-    implementation "org.jogamp.gluegen:gluegen-rt:$jogl_version:natives-linux-armv6"
-    implementation "org.jogamp.gluegen:gluegen-rt:$jogl_version:natives-linux-armv6hf"
-    implementation "org.jogamp.gluegen:gluegen-rt:$jogl_version:natives-linux-i586"
-    implementation "org.jogamp.gluegen:gluegen-rt:$jogl_version:natives-macosx-universal"
-    implementation "org.jogamp.gluegen:gluegen-rt:$jogl_version:natives-solaris-amd64"
-    implementation "org.jogamp.gluegen:gluegen-rt:$jogl_version:natives-solaris-i586"
-    implementation "org.jogamp.gluegen:gluegen-rt:$jogl_version:natives-windows-amd64"
-    implementation "org.jogamp.gluegen:gluegen-rt:$jogl_version:natives-windows-i586"
-
-    implementation "org.jogamp.jogl:jogl-all:$jogl_version:natives-linux-amd64"
-    implementation "org.jogamp.jogl:jogl-all:$jogl_version:natives-linux-armv6"
-    implementation "org.jogamp.jogl:jogl-all:$jogl_version:natives-linux-armv6hf"
-    implementation "org.jogamp.jogl:jogl-all:$jogl_version:natives-linux-i586"
-    implementation "org.jogamp.jogl:jogl-all:$jogl_version:natives-macosx-universal"
-    implementation "org.jogamp.jogl:jogl-all:$jogl_version:natives-solaris-amd64"
-    implementation "org.jogamp.jogl:jogl-all:$jogl_version:natives-solaris-i586"
-    implementation "org.jogamp.jogl:jogl-all:$jogl_version:natives-windows-amd64"
-    implementation "org.jogamp.jogl:jogl-all:$jogl_version:natives-windows-i586"
+    implementation "org.lwjgl:lwjgl:$lwjgl_version"
+    implementation "org.lwjgl:lwjgl:$lwjgl_version:$lwjgl_natives"
+    implementation "org.lwjgl:lwjgl-stb:$lwjgl_version"
+    implementation "org.lwjgl:lwjgl-stb:$lwjgl_version:$lwjgl_natives"
+    implementation "org.lwjgl:lwjgl-glfw:$lwjgl_version"
+    implementation "org.lwjgl:lwjgl-glfw:$lwjgl_version:$lwjgl_natives"
+    implementation "org.lwjgl:lwjgl-vulkan:$lwjgl_version"
+    if (platform == OperatingSystem.MAC_OS) {
+        implementation "org.lwjgl:lwjgl-vulkan:$lwjgl_version:$lwjgl_natives"
+    }
 }

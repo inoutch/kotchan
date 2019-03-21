@@ -5,6 +5,7 @@ import android.media.AudioAttributes
 import io.github.inoutch.kotchan.android.KotchanActivity
 
 actual class SE actual constructor(filepath: String) : SoundBase() {
+
     companion object {
         private const val STREAM_MAX = 32
 
@@ -33,7 +34,7 @@ actual class SE actual constructor(filepath: String) : SoundBase() {
         soundPool.stop(sound)
     }
 
-    actual override fun destroy() {
+    actual override fun dispose() {
         soundPool.release()
     }
 }

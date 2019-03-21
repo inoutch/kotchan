@@ -1,0 +1,4 @@
+headers = vulkan/vulkan.h vulkan/vulkan_ios.h
+
+staticLibraries = libMoltenVK.a
+libraryPaths = ./build/externals/MoltenVK/iOS/static ../../build/externals/MoltenVK/iOS/static

@@ -1,73 +1,71 @@
 package io.github.inoutch.kotchan.example
 
-import io.github.inoutch.kotchan.core.KotchanCore
-import io.github.inoutch.kotchan.core.view.Scene
-import io.github.inoutch.kotchan.core.view.batch.Batch
-import io.github.inoutch.kotchan.core.view.drawable.Label
-import io.github.inoutch.kotchan.core.view.shader.NoColorsShaderProgram
-import io.github.inoutch.kotchan.core.view.shader.SimpleShaderProgram
-import io.github.inoutch.kotchan.core.view.ui.button.MockButton
-import io.github.inoutch.kotchan.core.view.ui.template.Template
-import io.github.inoutch.kotchan.core.view.ui.template.TemplateAppendType
-import io.github.inoutch.kotchan.core.view.ui.template.TemplateType
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.logger
+import io.github.inoutch.kotchan.core.graphic.Material
+import io.github.inoutch.kotchan.core.graphic.Scene
+import io.github.inoutch.kotchan.core.graphic.batch.Batch
+import io.github.inoutch.kotchan.core.graphic.polygon.TextLabel
+import io.github.inoutch.kotchan.core.graphic.shader.SimpleShaderProgram
+import io.github.inoutch.kotchan.core.graphic.template.Template
+import io.github.inoutch.kotchan.core.graphic.template.TemplateAppendType
+import io.github.inoutch.kotchan.core.graphic.template.TemplateType
+import io.github.inoutch.kotchan.core.graphic.texture.Texture
+import io.github.inoutch.kotchan.core.graphic.ui.button.ColorButton
 import io.github.inoutch.kotchan.utility.font.BMFont
-import io.github.inoutch.kotchan.utility.io.getResourcePathWithError
-import io.github.inoutch.kotchan.utility.io.readTextFromResourceWithError
 import io.github.inoutch.kotchan.utility.type.*
 
 class AppScene : Scene() {
+
+    private val shaderProgram = SimpleShaderProgram()
+
+    private val camera = instance.createCamera2D()
+
+    private val buttonMaterial: Material
+
+    private val titleTextLabel: TextLabel
+
+    private val batch = disposer.add(Batch())
+
     private var colorCircle = 0.0f
 
-    private val camera = KotchanCore.instance.createCamera2D()
-    private val noColorsShaderProgram = NoColorsShaderProgram()
-    private val buttonShaderProgram = SimpleShaderProgram()
-    private val labelShaderProgram = SimpleShaderProgram()
-    private val batch = Batch()
-
-    private val exampleLabel: Label
-
-    private val bgmLabel: Label
-    private val bgmButton: MockButton
-
-    private val tileLabel: Label
-    private val tileButton: MockButton
-
     init {
-        val bmFont = BMFont.parse(file.readTextFromResourceWithError("font/sample.fnt"))
+        val bmFont = disposer.add(BMFont.loadFromResource(
+                "font/sample.fnt", "font", Material.Config(shaderProgram)))
+        titleTextLabel = TextLabel(bmFont, "Kotchan Examples")
 
-        val template = Template(Rect(Vector2.Zero, screenSize.toVector2()))
+        buttonMaterial = disposer.add(Material(Material.Config(shaderProgram, Texture.emptyTexture())))
 
-        exampleLabel = Label(bmFont, file.getResourcePathWithError("font"), "Kotchan Examples")
-        batch.add(exampleLabel, labelShaderProgram)
+        val transitions = listOf("Audio" to {
+            instance.runScene { AudioScene() }
+        }, "Tile map" to {
+            instance.runScene { TileMapScene() }
+        }, "Animation" to {
+            instance.runScene { AnimationScene() }
+        }, "Alpha test" to {
+            instance.runScene { AlphaTestScene() }
+        }, "Template" to {
+            instance.runScene { TemplateScene() }
+        })
+        val buttons = transitions.map {
+            val button = ColorButton(buttonMaterial, camera, Vector2(250, 32), it.second)
+            button.normalColor = Vector4(0.0f, 0.0f, 0.0f, 0.2f)
+            button.pressedColor = Vector4(0.0f, 0.0f, 0.0f, 0.4f)
+            touchController.add(button.touchListener)
 
-        bgmLabel = Label(bmFont, file.getResourcePathWithError("font"), "Sound Example")
-        batch.add(bgmLabel, noColorsShaderProgram)
-
-        tileLabel = Label(bmFont, file.getResourcePathWithError("font"), "Tile Map Example")
-        batch.add(tileLabel, noColorsShaderProgram)
-
-        template.add(TemplateType.MiddleCenter, TemplateAppendType.Row, 24.0f, tileLabel)
-        template.add(TemplateType.MiddleCenter, TemplateAppendType.Row, 24.0f, bgmLabel)
-        template.add(TemplateType.MiddleCenter, TemplateAppendType.Row, 24.0f, exampleLabel)
-        template.updatePositions()
-
-        bgmButton = MockButton(camera, Vector2(240.0f, 40.0f)) {
-            KotchanCore.instance.runScene { BgmScene() }
+            val label = TextLabel(bmFont, it.first)
+            label.position = Vector3(button.size / 2.0f, -0.1f)
+            button.addChild(label)
+            button
         }
-        bgmButton.position = bgmLabel.position
-        bgmButton.normalColor = Vector4(0.0f, 0.0f, 0.0f, 0.2f)
-        bgmButton.pressedColor = Vector4(0.0f, 0.0f, 0.0f, 0.4f)
-        touchController.add(bgmButton.touchListener, 0)
-        batch.add(bgmButton, buttonShaderProgram)
 
-        tileButton = MockButton(camera, Vector2(240.0f, 40.0f)) {
-            KotchanCore.instance.runScene { TileMapScene() }
+        batch.add(titleTextLabel, *buttons.toTypedArray())
+
+        Template().apply {
+            add(TemplateType.MiddleCenter, TemplateAppendType.Row, 12.0f, 0.0f,
+                    listOf(titleTextLabel, *buttons.toTypedArray()).reversed())
+            updatePositions()
         }
-        tileButton.position = tileLabel.position
-        tileButton.normalColor = Vector4(0.0f, 0.0f, 0.0f, 0.2f)
-        tileButton.pressedColor = Vector4(0.0f, 0.0f, 0.0f, 0.4f)
-        touchController.add(tileButton.touchListener, 0)
-        batch.add(tileButton, buttonShaderProgram)
     }
 
     override fun draw(delta: Float) {
@@ -75,11 +73,11 @@ class AppScene : Scene() {
         if (colorCircle > 1.0f) colorCircle -= 1.0f
 
         val color = Color.hsv2rgb(colorCircle, 1.0f, 1.0f)
-        exampleLabel.color = Vector4(color, 1.0f)
+        titleTextLabel.color = Vector4(color, 1.0f)
 
-        gl.clearColor(0.2f, 0.2f, 0.2f, 1.0f)
-        gl.enableBlend()
-        gl.activeTexture(0)
+        instance.graphicsApi.clearColor(Vector4(0.2f, 0.2f, 0.2f, 1.0f))
+        instance.graphicsApi.clearDepth(1.0f)
+        instance.graphicsApi.setViewport(instance.viewport)
         batch.draw(delta, camera)
     }
 
@@ -88,19 +86,4 @@ class AppScene : Scene() {
     override fun resume() {}
 
     override fun reshape(x: Int, y: Int, width: Int, height: Int) {}
-
-    override fun destroyed() {
-        batch.destroy()
-
-        noColorsShaderProgram.destroy()
-        buttonShaderProgram.destroy()
-        labelShaderProgram.destroy()
-
-        exampleLabel.destroy()
-
-        tileLabel.destroy()
-        tileButton.destroy()
-        bgmLabel.destroy()
-        bgmButton.destroy()
-    }
 }

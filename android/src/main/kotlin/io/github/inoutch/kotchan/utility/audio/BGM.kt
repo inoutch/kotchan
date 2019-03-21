@@ -5,6 +5,7 @@ import io.github.inoutch.kotchan.android.KotchanActivity
 import io.github.inoutch.kotchan.android.audio.KotchanSoundManager
 
 actual class BGM actual constructor(filepath: String) : SoundBase() {
+    actual companion object;
 
     override var volume: Float = 1.0f
         set(value) {
@@ -42,7 +43,7 @@ actual class BGM actual constructor(filepath: String) : SoundBase() {
         mediaPlayer.seekTo(0)
     }
 
-    actual override fun destroy() {
+    actual override fun dispose() {
         mediaPlayer.release()
         KotchanSoundManager.instance.remove(this)
     }

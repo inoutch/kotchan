@@ -1,13 +1,13 @@
 package io.github.inoutch.kotchan.core.controller.touch.listener
 
-import io.github.inoutch.kotchan.core.view.camera.Camera
+import io.github.inoutch.kotchan.core.graphic.camera.Camera
 import io.github.inoutch.kotchan.core.controller.touch.Touch
 import io.github.inoutch.kotchan.core.controller.touch.TouchControllerEntity
 import io.github.inoutch.kotchan.core.controller.touch.TouchType
 import io.github.inoutch.kotchan.utility.type.*
 import io.github.inoutch.kotchan.core.controller.touch.listener.decision.TouchDecision
 
-abstract class TouchListener(private val camera: Camera) {
+abstract class TouchListener(protected val camera: Camera) {
 
     var decision: TouchDecision? = null
 

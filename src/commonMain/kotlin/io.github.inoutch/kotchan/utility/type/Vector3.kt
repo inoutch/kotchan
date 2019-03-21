@@ -4,6 +4,7 @@ import kotlin.math.sqrt
 
 data class Vector3(val x: Float, val y: Float, val z: Float) {
     constructor() : this(0.0f, 0.0f, 0.0f)
+    constructor(v: Float) : this(v, v, v)
     constructor(vector2: Vector2, z: Float) : this(vector2.x, vector2.y, z)
     constructor(vector4: Vector4) : this(vector4.x, vector4.y, vector4.z)
 

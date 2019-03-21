@@ -1,49 +1,61 @@
 package io.github.inoutch.kotchan.utility.audio
 
-import javafx.scene.media.Media
-import javafx.scene.media.MediaPlayer
-import javafx.util.Duration
+import java.io.File
+import javax.sound.sampled.*
 
 actual class BGM actual constructor(filepath: String) : SoundBase() {
+    actual companion object;
 
     override var volume: Float
-        get() = mediaPlayer.volume.toFloat()
+        get() = (clip.getControl(FloatControl.Type.MASTER_GAIN) as FloatControl).value
         set(value) {
-            mediaPlayer.volume = value.toDouble()
+            (clip.getControl(FloatControl.Type.MASTER_GAIN) as FloatControl).value = value
         }
 
     actual val isPlaying: Boolean
-        get() = mediaPlayer.status == MediaPlayer.Status.PLAYING
+        get() = clip.isRunning
 
-    private val mediaPlayer: MediaPlayer
+    private val clip: Clip
 
     init {
-        val media = Media("file://$filepath")
-        mediaPlayer = MediaPlayer(media)
+        clip = createClip(filepath)
     }
 
     actual override fun play() {
-        mediaPlayer.play()
+        clip.start()
     }
 
     actual override fun stop() {
-        mediaPlayer.stop()
+        clip.stop()
+        clip.flush()
+        clip.framePosition = 0
     }
 
-    actual override fun destroy() {
-        mediaPlayer.dispose()
+    actual override fun dispose() {
+        clip.close()
     }
 
     actual fun pause() {
-        mediaPlayer.pause()
+        clip.stop()
     }
 
     actual fun loop(count: Int) {
-        mediaPlayer.cycleCount = count
-        mediaPlayer.play()
+        clip.loop(count)
     }
 
     actual fun reset() {
-        mediaPlayer.seek(Duration.ONE)
+        clip.framePosition = 0
+    }
+
+    private fun createClip(filepath: String): Clip {
+        return AudioSystem.getAudioInputStream(File(filepath)).use { ais ->
+            val af = ais.format
+            val dataLine = DataLine.Info(Clip::class.java, af)
+            val c = AudioSystem.getLine(dataLine) as Clip
+
+            c.open(ais)
+
+            c
+        }
     }
 }

@@ -5,6 +5,7 @@ import platform.Foundation.NSData
 import platform.Foundation.dataWithContentsOfFile
 
 actual class BGM actual constructor(filepath: String) : SoundBase() {
+    actual companion object;
 
     override var volume: Float
         set(value) {
@@ -28,9 +29,10 @@ actual class BGM actual constructor(filepath: String) : SoundBase() {
 
     actual override fun stop() {
         audio.stop()
+        audio.currentTime = 0.0
     }
 
-    actual override fun destroy() {}
+    actual override fun dispose() {}
 
     actual fun reset() {
         audio.currentTime = 0.0

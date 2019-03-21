@@ -1,7 +1,7 @@
 package io.github.inoutch.kotchan.core
 
 actual class KotchanInstance {
-    @kotlin.native.ThreadLocal
+    @kotlin.native.concurrent.ThreadLocal
     actual companion object {
         actual fun manager() = manager
 

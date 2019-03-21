@@ -6,5 +6,5 @@ expect class SE(filepath: String) : SoundBase {
 
     override fun stop()
 
-    override fun destroy()
+    override fun dispose()
 }

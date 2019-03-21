@@ -20,5 +20,5 @@ actual class SE actual constructor(filepath: String) : SoundBase() {
         clip.stop()
     }
 
-    actual override fun destroy() {}
+    actual override fun dispose() {}
 }

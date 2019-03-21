@@ -1,8 +1,5 @@
 package io.github.inoutch.kotchan.core.model
 
-import io.github.inoutch.kotchan.core.destruction.Destruction
-
-interface Model : Destruction {
-
+interface Model {
     fun update(delta: Float)
 }
