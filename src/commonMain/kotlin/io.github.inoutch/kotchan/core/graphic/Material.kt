@@ -23,7 +23,12 @@ class Material(config: Config, extraTextures: List<Texture> = listOf()) : Dispos
             config.shaderProgram,
             GraphicsPipeline.Config(config.depthTest, config.cullMode, config.polygonMode))
 
+    var textureAutoRelease = false
+
     override fun dispose() {
         graphicsPipeline.dispose()
+        if (textureAutoRelease) {
+            textures.forEach { it.dispose() }
+        }
     }
 }

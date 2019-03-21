@@ -9,7 +9,7 @@ open class AnimatedSpriteAtlas(
         textureAtlas: TextureAtlas,
         val config: Config) : SpriteAtlas(material, textureAtlas), Updatable {
 
-    data class AnimationSet(val ids: List<Int>, val intervalSec: Float, val count: Int = -1)
+    data class AnimationSet(val names: List<String>, val intervalSec: Float, val count: Int = -1)
 
     data class Config(val animations: List<AnimationSet>,
                       val defaultAnimationId: Int = 0)
@@ -44,11 +44,12 @@ open class AnimatedSpriteAtlas(
     override fun update(delta: Float) {
         elapsedMilliseconds += (delta * 1000.0f).toInt()
         val animation = config.animations.getOrNull(animationStateId) ?: return
-        val i = (elapsedMilliseconds / (animation.intervalSec * 1000).toInt()) % animation.ids.size
+        val i = (elapsedMilliseconds / (animation.intervalSec * 1000).toInt()) % animation.names.size
 
         if (currentAnimationIndex != i) {
-            setAtlas(animation.ids[i])
-            if (currentAnimationIndex == animation.ids.size - 1) {
+            setAtlas(animation.names[i])
+            println(animation.names[i])
+            if (currentAnimationIndex == animation.names.size - 1) {
                 done?.invoke()
             }
             currentAnimationIndex = i

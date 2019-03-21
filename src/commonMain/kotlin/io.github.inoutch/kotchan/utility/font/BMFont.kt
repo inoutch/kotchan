@@ -224,9 +224,10 @@ class BMFont private constructor(
             val second: Int,
             val amount: Int) : Chunk(type)
 
-    val materials = pages.map {
-        val texture = Texture.load(Path.resolve(textureDir, it.file))
-        it.id to Material(materialConfig, listOf(texture ?: Texture.emptyTexture()))
+    val materials = pages.map { page ->
+        val texture = Texture.load(Path.resolve(textureDir, page.file))
+        page.id to Material(materialConfig, listOf(texture ?: Texture.emptyTexture()))
+                .also { it.textureAutoRelease = true }
     }.toMap()
 
     override fun dispose() {

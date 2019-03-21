@@ -80,7 +80,9 @@ class AlphaTestScene : Scene() {
         }
 
         val textureBundle = TexturePacker.loadFileFromResource("sprites", "sprites/spritesheet.json")
+
         val spriteMaterial = disposer.add(Material(Material.Config(shaderProgram, textureBundle.texture)))
+        spriteMaterial.textureAutoRelease = true
         sprite1 = SpriteAtlas(spriteMaterial, textureBundle.textureAtlas)
         sprite2 = SpriteAtlas(spriteMaterial, textureBundle.textureAtlas)
         sprite1.position = centerPosition

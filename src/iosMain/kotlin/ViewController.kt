@@ -37,7 +37,7 @@ class ViewController : UIViewController {
         this.view.contentScaleFactor = UIScreen.mainScreen.nativeScale
 
         displayLink = CADisplayLink.displayLinkWithTarget(this, NSSelectorFromString("render:"))
-        displayLink.preferredFramesPerSecond = 30
+        displayLink.preferredFramesPerSecond = 60
         displayLink.addToRunLoop(NSRunLoop.currentRunLoop, NSDefaultRunLoopMode)
 
         viewSize = UIScreen.mainScreen().bounds().useContents {

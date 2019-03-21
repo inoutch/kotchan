@@ -14,7 +14,7 @@ class TileLayer(private val config: TileMap.Config, layer: Array2D<Int>)
             val bundle = layer.getAll().map {
                 Sprite.createSquarePositions(it.p.toVector2() * tileSize, tileSize.toVector2()) to
                         calcTexcoords(it.value, calcTileNumber(textureSize, textureTileSize).toPoint(),
-                                calcTileTexcoord(textureSize, textureTileSize))
+                                calcTileTexcoord(textureSize, textureTileSize), textureTileSize)
             }.toMap()
 
             val positions = bundle.keys.flatten()
@@ -28,8 +28,10 @@ class TileLayer(private val config: TileMap.Config, layer: Array2D<Int>)
             return Vector2(u, v) * tileTexcoordSize
         }
 
-        fun calcTexcoords(id: Int, tileNumber: Point, tileTexcoordSize: Vector2): List<Vector2> {
-            return Sprite.createSquareTexcoords(calcTexcoord(id, tileNumber, tileTexcoordSize), tileTexcoordSize)
+        fun calcTexcoords(id: Int, tileNumber: Point, tileTexcoordSize: Vector2, tileTextureSize: Point): List<Vector2> {
+            val bias = tileTexcoordSize / tileTextureSize
+            return Sprite.createSquareTexcoords(calcTexcoord(id, tileNumber, tileTexcoordSize) + bias / 2.0f,
+                    tileTexcoordSize - bias)
         }
 
         fun calcTileNumber(textureSize: Point, tileSize: Point): Vector2 {
@@ -56,7 +58,8 @@ class TileLayer(private val config: TileMap.Config, layer: Array2D<Int>)
         val offset = 6 * (p.y * config.mapSize.x + p.x)
         val tileNumber = calcTileNumber(config.material.texture.size, config.tileTextureSize).toPoint()
         val positions = Sprite.createSquarePositions(p.toVector2() * tileSize, tileSize.toVector2())
-        val texcoords = calcTexcoords(id, tileNumber, calcTileTexcoord(config.material.texture.size, config.tileTextureSize))
+        val texcoords = calcTexcoords(id, tileNumber,
+                calcTileTexcoord(config.material.texture.size, config.tileTextureSize), config.tileTextureSize)
         updatePositions(positions, offset)
         updateTexcoords(texcoords, offset)
     }

@@ -22,6 +22,7 @@ open class SpriteAtlas(
         setAtlas(frame, data)
     }
 
+    // not recommended
     fun setAtlas(index: Int) {
         val frame = textureAtlas.frame(index) ?: return
         val data = textureAtlas.frameMesh(index) ?: return

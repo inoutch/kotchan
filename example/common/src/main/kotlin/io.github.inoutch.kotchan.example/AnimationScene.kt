@@ -72,7 +72,7 @@ class AnimationScene : Scene() {
         val textureBundle = TexturePacker.loadFileFromResource("sprites", "sprites/spritesheet.json")
         val spriteMaterial = disposer.add(Material(Material.Config(shaderProgram, textureBundle.texture)))
         animatedSprite = AnimatedSpriteAtlas(spriteMaterial, textureBundle.textureAtlas, AnimatedSpriteAtlas.Config(
-                listOf(AnimatedSpriteAtlas.AnimationSet(List(8) { it }, 0.1f))
+                listOf(AnimatedSpriteAtlas.AnimationSet(List(8) { "go_${it + 1}.png" }, 0.1f))
         ))
         animatedSprite.position = Vector3(Vector2(screenSize.x / 2.0f, screenSize.y / 2.0f + 60.0f), 0.0f)
         batch.add(animatedSprite)

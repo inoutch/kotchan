@@ -55,6 +55,7 @@ class TileMapScene : Scene() {
         }))
 
         tileMaterial = disposer.add(Material(Material.Config(shaderProgram, Texture.loadFromResource("tiles/sample.png"))))
+        tileMaterial.textureAutoRelease = true
 
         val transitions = listOf("Back" to {
             instance.runScene { AppScene() }

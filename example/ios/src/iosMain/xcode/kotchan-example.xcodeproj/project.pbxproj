@@ -10,7 +10,6 @@
 		95067463223BE38200CF36A3 /* font in Resources */ = {isa = PBXBuildFile; fileRef = 9506745F223BE38200CF36A3 /* font */; };
 		95067464223BE38200CF36A3 /* sprites in Resources */ = {isa = PBXBuildFile; fileRef = 95067460223BE38200CF36A3 /* sprites */; };
 		95067465223BE38200CF36A3 /* tiles in Resources */ = {isa = PBXBuildFile; fileRef = 95067461223BE38200CF36A3 /* tiles */; };
-		95067466223BE38200CF36A3 /* sample.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 95067462223BE38200CF36A3 /* sample.mp3 */; };
 		951B502321E0DD2700B01C37 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 951B501921E0DD2700B01C37 /* Assets.xcassets */; };
 		951B502421E0DD2700B01C37 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 951B501A21E0DD2700B01C37 /* ViewController.m */; };
 		951B502521E0DD2700B01C37 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 951B501B21E0DD2700B01C37 /* Main.storyboard */; };
@@ -24,7 +23,6 @@
 		9506745F223BE38200CF36A3 /* font */ = {isa = PBXFileReference; lastKnownFileType = folder; path = font; sourceTree = "<group>"; };
 		95067460223BE38200CF36A3 /* sprites */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sprites; sourceTree = "<group>"; };
 		95067461223BE38200CF36A3 /* tiles */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tiles; sourceTree = "<group>"; };
-		95067462223BE38200CF36A3 /* sample.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = sample.mp3; sourceTree = "<group>"; };
 		951B501821E0DD2700B01C37 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		951B501921E0DD2700B01C37 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		951B501A21E0DD2700B01C37 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
@@ -54,7 +52,6 @@
 			children = (
 				954C1395224285ED0037D6CA /* sample.wav */,
 				9506745F223BE38200CF36A3 /* font */,
-				95067462223BE38200CF36A3 /* sample.mp3 */,
 				95067460223BE38200CF36A3 /* sprites */,
 				95067461223BE38200CF36A3 /* tiles */,
 			);
@@ -169,7 +166,6 @@
 				951B502521E0DD2700B01C37 /* Main.storyboard in Resources */,
 				95067464223BE38200CF36A3 /* sprites in Resources */,
 				95FD4D292214537B00A65BF6 /* Default-568h@2x.png in Resources */,
-				95067466223BE38200CF36A3 /* sample.mp3 in Resources */,
 				951B502321E0DD2700B01C37 /* Assets.xcassets in Resources */,
 				95067463223BE38200CF36A3 /* font in Resources */,
 			);

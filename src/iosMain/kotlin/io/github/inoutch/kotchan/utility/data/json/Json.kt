@@ -21,6 +21,7 @@ actual class Json {
             return parseNative(jsonObject)
         }
 
+        @ExperimentalUnsignedTypes
         actual fun write(jsonObject: JsonObject): String? {
             val obj = when {
                 jsonObject.isMap() -> output(jsonObject)
