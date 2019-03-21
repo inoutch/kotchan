@@ -1,7 +1,7 @@
 package io.github.inoutch.kotchan.utility.io
 
 import io.github.inoutch.kotchan.android.KotchanActivity
-import io.github.inoutch.kotchan.core.logger.logger
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.logger
 import io.github.inoutch.kotchan.extension.toUTF8String
 import java.io.File
 import java.io.FileNotFoundException

@@ -13,6 +13,9 @@ actual class MappedMemory actual constructor(size: Long) : Disposable {
     actual fun copy(offset: Long, size: Long, array: IntArray) {
     }
 
+    actual fun copy(offset: Long, size: Long, array: ByteArray) {
+    }
+
     override fun dispose() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

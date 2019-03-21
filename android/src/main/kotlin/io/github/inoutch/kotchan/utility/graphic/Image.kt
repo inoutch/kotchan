@@ -2,7 +2,7 @@ package io.github.inoutch.kotchan.utility.graphic
 
 import io.github.inoutch.kotchan.utility.type.Point
 
-actual class Image private actual constructor(byteArray: ByteArray, size: Point) {
+actual class Image actual constructor(byteArray: ByteArray, size: Point) {
     actual companion object {
         actual fun load(byteArray: ByteArray): Image {
             TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

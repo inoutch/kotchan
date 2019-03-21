@@ -78,3 +78,6 @@ actual fun vkCmdCopyBufferToImage(commandBuffer: VkCommandBuffer, srcBuffer: VkB
 
 actual fun vkCmdClearDepthStencilImage(commandBuffer: VkCommandBuffer, image: VkImage, imageLayout: VkImageLayout, depthStencilValue: VkClearDepthStencilValue, ranges: List<VkImageSubresourceRange>) {
 }
+
+actual fun vkCmdBindDescriptorSets(commandBuffer: VkCommandBuffer, pipelineBindPoint: VkPipelineBindPoint, layout: VkPipelineLayout, firstSet: Int, descriptorSets: List<VkDescriptorSet>, dynamicOffsets: List<Int>) {
+}

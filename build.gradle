@@ -43,6 +43,19 @@ switch (OperatingSystem.current()) {
         break
 }
 
+def platform = OperatingSystem.current()
+switch (platform) {
+    case OperatingSystem.WINDOWS:
+        project.ext.lwjgl_natives = "natives-windows"
+        break
+    case OperatingSystem.LINUX:
+        project.ext.lwjgl_natives = "natives-linux"
+        break
+    case OperatingSystem.MAC_OS:
+        project.ext.lwjgl_natives = "natives-macos"
+        break
+}
+
 kotlin {
     targets {
         fromPreset(presets.iosArm64, "ios") {
@@ -70,14 +83,18 @@ kotlin {
         jvmMain {
             dependencies {
                 implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-                implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.+"
+                implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.8"
 
                 implementation "org.lwjgl:lwjgl:$lwjgl_version"
                 implementation "org.lwjgl:lwjgl:$lwjgl_version:$lwjgl_natives"
+                implementation "org.lwjgl:lwjgl-stb:$lwjgl_version"
+                implementation "org.lwjgl:lwjgl-stb:$lwjgl_version:$lwjgl_natives"
                 implementation "org.lwjgl:lwjgl-glfw:$lwjgl_version"
                 implementation "org.lwjgl:lwjgl-glfw:$lwjgl_version:$lwjgl_natives"
                 implementation "org.lwjgl:lwjgl-vulkan:$lwjgl_version"
-                implementation "org.lwjgl:lwjgl-vulkan:$lwjgl_version:$lwjgl_natives"
+                if (platform == OperatingSystem.MAC_OS) {
+                    implementation "org.lwjgl:lwjgl-vulkan:$lwjgl_version:$lwjgl_natives"
+                }
             }
         }
         iosMain {
