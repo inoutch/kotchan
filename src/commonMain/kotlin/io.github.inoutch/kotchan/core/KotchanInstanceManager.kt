@@ -11,4 +11,9 @@ class KotchanInstanceManager {
     fun get(name: String): Any? {
         return instances[name]
     }
+
+    @Suppress("UNCHECKED_CAST")
+    fun <T : Any> getOrAdd(name: String, addCallback: () -> T): T {
+        return get(name) as T? ?: addCallback().also { add(name, it) }
+    }
 }

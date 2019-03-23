@@ -15,7 +15,6 @@ open class AnimatedSpriteAtlas(
                       val defaultAnimationId: Int = 0)
 
     var animationStateId = config.defaultAnimationId
-        private set
 
     private var currentAnimationIndex = 0
 
@@ -48,9 +47,9 @@ open class AnimatedSpriteAtlas(
 
         if (currentAnimationIndex != i) {
             setAtlas(animation.names[i])
-            println(animation.names[i])
             if (currentAnimationIndex == animation.names.size - 1) {
                 done?.invoke()
+                done = null
             }
             currentAnimationIndex = i
         }
