@@ -47,7 +47,9 @@ class Api(private val vk: VK?, private val gl: GL?) {
                     VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
                     VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)
             val vertexBuffer = VKBufferMemory(
-                    vk, size.toLong(), listOf(VkBufferUsageFlagBits.VK_BUFFER_USAGE_VERTEX_BUFFER_BIT), memTypes)
+                    vk,
+                    size.toLong() * FLOAT_SIZE,
+                    listOf(VkBufferUsageFlagBits.VK_BUFFER_USAGE_VERTEX_BUFFER_BIT), memTypes)
             VertexBuffer(vertexBuffer, null)
         }
     }, {
