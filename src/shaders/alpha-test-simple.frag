@@ -9,7 +9,7 @@ layout(location=0) out vec4 outColor;
 
 void main(void) {
     vec4 c = texture(texSampler, texcoord) * color;
-    if (c.a < 1.0) {
+    if (c.a < 0.3) {
         discard;
     }
     outColor = c;
