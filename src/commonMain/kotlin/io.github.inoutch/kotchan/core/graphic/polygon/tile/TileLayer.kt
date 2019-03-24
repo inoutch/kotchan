@@ -5,16 +5,21 @@ import io.github.inoutch.kotchan.core.graphic.polygon.Sprite
 import io.github.inoutch.kotchan.utility.type.*
 import kotlin.math.floor
 
-class TileLayer(private val config: TileMap.Config, layer: Array2D<Int>)
-    : Polygon(createMesh(layer, config.tileSize, config.tileTextureSize, config.material.texture.size), config.material) {
-    data class Config(val layers: List<Array2D<Int>>)
+class TileLayer(private val config: TileMap.Config, layer: Array2D<Int>) : Polygon(createMesh(
+        layer, config.tileSize, config.tileTextureSize, config.material.texture.size, config.biasPerPixel),
+        config.material) {
+    data class Config(val layers: List<Array2D<Int>>, val biasPerPixel: Float = 0.5f)
 
     companion object {
-        fun createMesh(layer: Array2D<Int>, tileSize: Point, textureTileSize: Point, textureSize: Point): Mesh {
+        fun createMesh(layer: Array2D<Int>,
+                       tileSize: Point,
+                       textureTileSize: Point,
+                       textureSize: Point,
+                       biasPerPixel: Float): Mesh {
             val bundle = layer.getAll().map {
                 Sprite.createSquarePositions(it.p.toVector2() * tileSize, tileSize.toVector2()) to
                         calcTexcoords(it.value, calcTileNumber(textureSize, textureTileSize).toPoint(),
-                                calcTileTexcoord(textureSize, textureTileSize), textureTileSize)
+                                calcTileTexcoord(textureSize, textureTileSize), textureTileSize, biasPerPixel)
             }.toMap()
 
             val positions = bundle.keys.flatten()
@@ -28,9 +33,13 @@ class TileLayer(private val config: TileMap.Config, layer: Array2D<Int>)
             return Vector2(u, v) * tileTexcoordSize
         }
 
-        fun calcTexcoords(id: Int, tileNumber: Point, tileTexcoordSize: Vector2, tileTextureSize: Point): List<Vector2> {
+        fun calcTexcoords(id: Int,
+                          tileNumber: Point,
+                          tileTexcoordSize: Vector2,
+                          tileTextureSize: Point,
+                          biasPerPixel: Float): List<Vector2> {
             val bias = tileTexcoordSize / tileTextureSize
-            return Sprite.createSquareTexcoords(calcTexcoord(id, tileNumber, tileTexcoordSize) + bias / 2.0f,
+            return Sprite.createSquareTexcoords(calcTexcoord(id, tileNumber, tileTexcoordSize) + bias * biasPerPixel,
                     tileTexcoordSize - bias)
         }
 
@@ -59,7 +68,9 @@ class TileLayer(private val config: TileMap.Config, layer: Array2D<Int>)
         val tileNumber = calcTileNumber(config.material.texture.size, config.tileTextureSize).toPoint()
         val positions = Sprite.createSquarePositions(p.toVector2() * tileSize, tileSize.toVector2())
         val texcoords = calcTexcoords(id, tileNumber,
-                calcTileTexcoord(config.material.texture.size, config.tileTextureSize), config.tileTextureSize)
+                calcTileTexcoord(config.material.texture.size, config.tileTextureSize),
+                config.tileTextureSize,
+                config.biasPerPixel)
         updatePositions(positions, offset)
         updateTexcoords(texcoords, offset)
     }

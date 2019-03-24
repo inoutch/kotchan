@@ -26,12 +26,14 @@ class Batch : Disposable {
         polygons.forEach { add(it) }
     }
 
-    fun add(polygon: Polygon) {
+    fun add(polygon: Polygon, autoAddChildren: Boolean = true) {
         if (invPolygonCache[polygon] != null) {
             return
         }
 
-        add(polygon.children)
+        if (autoAddChildren) {
+            add(polygon.children)
+        }
 
         val material = polygon.material ?: return
         if (polygon.mesh.size <= 0) {
