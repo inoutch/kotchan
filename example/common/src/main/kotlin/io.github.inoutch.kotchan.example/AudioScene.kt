@@ -60,7 +60,7 @@ class AudioScene : Scene() {
             touchController.add(button.touchListener)
 
             val label = TextLabel(bmFont, it.first)
-            label.position = Vector3(button.size / 2.0f, -0.1f)
+            label.position = Vector3(0.0f, 0.0f, -0.1f)
             button.addChild(label)
             button
         }

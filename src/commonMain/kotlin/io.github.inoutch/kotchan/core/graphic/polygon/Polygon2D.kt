@@ -18,5 +18,7 @@ open class Polygon2D(initMesh: Mesh, material: Material?, size: Vector2) : Polyg
     override fun transform() = super.transform() * Matrix4.createTranslation(
             Vector3(size * anchorPoint * -1.0f, 0.0f))
 
+    override fun childrenTransform() = super.transform()
+
     fun rect() = Rect(Vector2(position.x, position.y) - anchorPoint * size, size)
 }

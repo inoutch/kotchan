@@ -2,10 +2,7 @@ package io.github.inoutch.kotchan.core.graphic.polygon
 
 import io.github.inoutch.kotchan.core.graphic.Material
 import io.github.inoutch.kotchan.utility.font.BMFont
-import io.github.inoutch.kotchan.utility.type.Mesh
-import io.github.inoutch.kotchan.utility.type.Vector2
-import io.github.inoutch.kotchan.utility.type.Vector3
-import io.github.inoutch.kotchan.utility.type.Vector4
+import io.github.inoutch.kotchan.utility.type.*
 
 class TextLabel(private val bmFont: BMFont, initText: String) : Polygon2D(Mesh(), null, Vector2.Zero) {
 
@@ -35,7 +32,7 @@ class TextLabel(private val bmFont: BMFont, initText: String) : Polygon2D(Mesh()
         val label = this.createLabel(this.text)
         size = label.size
 
-        polygons = label.meshes.map { it.key to Polygon(it.value.toMesh(), it.value.material) }.toMap()
+        polygons = label.meshes.map { it.key to Polygon2D(it.value.toMesh(), it.value.material, size) }.toMap()
         addChildren(polygons.values.toList())
     }
 
