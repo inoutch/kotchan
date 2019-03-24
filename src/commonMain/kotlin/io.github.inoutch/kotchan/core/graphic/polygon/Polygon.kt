@@ -180,8 +180,10 @@ open class Polygon(initMesh: Mesh, val material: Material?) {
     protected open fun transform(): Matrix4 {
         val currentTransform = Matrix4.createTranslation(position) * Matrix4.createScale(scale)
         val parent = this.parent ?: return currentTransform
-        return parent.transform() * currentTransform
+        return parent.childrenTransform() * currentTransform
     }
+
+    protected open fun childrenTransform() = transform()
 
     fun updatePositions(positions: List<Vector3>, offset: Int) {
         privatePositionChanges.add(PartialChange(positions, offset))
