@@ -150,7 +150,7 @@ class Helper {
                     false,
                     stencilOpState,
                     stencilOpState,
-                    0.0f,
+                    -1.0f,
                     1.0f)
 
             val colorWriteMask = VkPipelineColorBlendAttachmentState(
