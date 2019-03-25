@@ -8,7 +8,7 @@ import kotlin.math.floor
 class TileLayer(private val config: TileMap.Config, layer: Array2D<Int>) : Polygon(createMesh(
         layer, config.tileSize, config.tileTextureSize, config.material.texture.size, config.biasPerPixel),
         config.material) {
-    data class Config(val layers: List<Array2D<Int>>, val biasPerPixel: Float = 0.5f)
+    data class Config(val layers: List<Array2D<Int>>)
 
     companion object {
         fun createMesh(layer: Array2D<Int>,
@@ -39,8 +39,9 @@ class TileLayer(private val config: TileMap.Config, layer: Array2D<Int>) : Polyg
                           tileTextureSize: Point,
                           biasPerPixel: Float): List<Vector2> {
             val bias = tileTexcoordSize / tileTextureSize
-            return Sprite.createSquareTexcoords(calcTexcoord(id, tileNumber, tileTexcoordSize) + bias * biasPerPixel,
-                    tileTexcoordSize - bias)
+            return Sprite.createSquareTexcoords(
+                    calcTexcoord(id, tileNumber, tileTexcoordSize) + bias * biasPerPixel,
+                    tileTexcoordSize - bias * biasPerPixel)
         }
 
         fun calcTileNumber(textureSize: Point, tileSize: Point): Vector2 {

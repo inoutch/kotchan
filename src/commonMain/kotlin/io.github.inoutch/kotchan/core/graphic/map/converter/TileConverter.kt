@@ -4,6 +4,7 @@ import io.github.inoutch.kotchan.utility.data.json.Json
 import interop.data.json.JsonType
 import io.github.inoutch.kotchan.core.KotchanCore.Companion.logger
 import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
+import io.github.inoutch.kotchan.utility.io.getResourcePathWithError
 import io.github.inoutch.kotchan.utility.type.Point
 
 class TileConverter {
@@ -77,6 +78,8 @@ class TileConverter {
                             ConversionOutputData(ox, oy, ov))
                 }
     }
+
+    fun loadFromResource(filepath: String, name: String) = load(instance.file.getResourcePathWithError(filepath), name)
 
     fun convert(name: String, point: Point, input: (point: Point) -> Int, output: (point: Point, id: Int) -> Unit) {
         val converters = this.converters[name] ?: return
