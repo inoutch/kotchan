@@ -17,8 +17,10 @@ open class Polygon(initMesh: Mesh, val material: Material?) {
 
     var visible = true
         set(value) {
-            if (field != value)
+            if (field != value) {
                 isPositionsDirty = true
+                setDirtyPosition()
+            }
             field = value
         }
 
@@ -26,7 +28,7 @@ open class Polygon(initMesh: Mesh, val material: Material?) {
         set(value) {
             if (field != value) {
                 isPositionsDirty = true
-                children.forEach { it.isPositionsDirty = true }
+                setDirtyPosition()
             }
             field = value
         }
@@ -35,7 +37,7 @@ open class Polygon(initMesh: Mesh, val material: Material?) {
         set(value) {
             if (field != value) {
                 isColorsDirty = true
-                children.forEach { it.isColorsDirty = true }
+                setDirtyColor()
             }
             field = value
         }
@@ -44,7 +46,7 @@ open class Polygon(initMesh: Mesh, val material: Material?) {
         set(value) {
             if (field != value) {
                 isPositionsDirty = true
-                children.forEach { it.isPositionsDirty = true }
+                setDirtyPosition()
             }
             field = value
         }
@@ -186,5 +188,15 @@ open class Polygon(initMesh: Mesh, val material: Material?) {
     fun updateColors(colors: List<Vector4>, offset: Int) {
         privateColorChanges.add(PartialChange(colors.flatten(), offset * 4))
         mesh.updateColors(colors, offset)
+    }
+
+    private fun setDirtyPosition() {
+        isPositionsDirty = true
+        privateChildren.forEach { it.setDirtyPosition() }
+    }
+
+    private fun setDirtyColor() {
+        isColorsDirty = true
+        privateChildren.forEach { it.setDirtyColor() }
     }
 }
