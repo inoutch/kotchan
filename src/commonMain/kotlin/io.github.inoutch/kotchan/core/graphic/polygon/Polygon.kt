@@ -8,28 +8,12 @@ open class Polygon(initMesh: Mesh, val material: Material?) {
         protected set
 
     var isPositionsDirty = true
-        set(value) {
-            field = value
-            children.forEach { it.isPositionsDirty = value }
-        }
 
     var isColorsDirty = true
-        set(value) {
-            field = value
-            children.forEach { it.isColorsDirty = value }
-        }
 
     var isNormalsDirty = true
-        set(value) {
-            field = value
-            children.forEach { it.isNormalsDirty = value }
-        }
 
     var isTexcoordsDirty = true
-        set(value) {
-            field = value
-            children.forEach { it.isTexcoordsDirty = value }
-        }
 
     var visible = true
         set(value) {
@@ -42,14 +26,17 @@ open class Polygon(initMesh: Mesh, val material: Material?) {
         set(value) {
             if (field != value) {
                 isPositionsDirty = true
+                children.forEach { it.isPositionsDirty = true }
             }
             field = value
         }
 
     open var color = Vector4(1.0f, 1.0f, 1.0f, 1.0f)
         set(value) {
-            if (field != value)
+            if (field != value) {
                 isColorsDirty = true
+                children.forEach { it.isColorsDirty = true }
+            }
             field = value
         }
 
@@ -57,6 +44,7 @@ open class Polygon(initMesh: Mesh, val material: Material?) {
         set(value) {
             if (field != value) {
                 isPositionsDirty = true
+                children.forEach { it.isPositionsDirty = true }
             }
             field = value
         }
