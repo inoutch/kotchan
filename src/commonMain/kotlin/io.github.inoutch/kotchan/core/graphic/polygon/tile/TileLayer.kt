@@ -41,7 +41,7 @@ class TileLayer(private val config: TileMap.Config, layer: Array2D<Int>) : Polyg
             val bias = tileTexcoordSize / tileTextureSize
             return Sprite.createSquareTexcoords(
                     calcTexcoord(id, tileNumber, tileTexcoordSize) + bias * biasPerPixel,
-                    tileTexcoordSize - bias * biasPerPixel)
+                    tileTexcoordSize - bias * biasPerPixel * 2.0f)
         }
 
         fun calcTileNumber(textureSize: Point, tileSize: Point): Vector2 {
