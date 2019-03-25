@@ -8,33 +8,19 @@ open class Polygon(initMesh: Mesh, val material: Material?) {
         protected set
 
     var isPositionsDirty = true
-        set(value) {
-            field = value
-            children.forEach { it.isPositionsDirty = value }
-        }
 
     var isColorsDirty = true
-        set(value) {
-            field = value
-            children.forEach { it.isColorsDirty = value }
-        }
 
     var isNormalsDirty = true
-        set(value) {
-            field = value
-            children.forEach { it.isNormalsDirty = value }
-        }
 
     var isTexcoordsDirty = true
-        set(value) {
-            field = value
-            children.forEach { it.isTexcoordsDirty = value }
-        }
 
     var visible = true
         set(value) {
-            if (field != value)
+            if (field != value) {
                 isPositionsDirty = true
+                setDirtyPosition()
+            }
             field = value
         }
 
@@ -42,14 +28,17 @@ open class Polygon(initMesh: Mesh, val material: Material?) {
         set(value) {
             if (field != value) {
                 isPositionsDirty = true
+                setDirtyPosition()
             }
             field = value
         }
 
     open var color = Vector4(1.0f, 1.0f, 1.0f, 1.0f)
         set(value) {
-            if (field != value)
+            if (field != value) {
                 isColorsDirty = true
+                setDirtyColor()
+            }
             field = value
         }
 
@@ -57,6 +46,7 @@ open class Polygon(initMesh: Mesh, val material: Material?) {
         set(value) {
             if (field != value) {
                 isPositionsDirty = true
+                setDirtyPosition()
             }
             field = value
         }
@@ -198,5 +188,15 @@ open class Polygon(initMesh: Mesh, val material: Material?) {
     fun updateColors(colors: List<Vector4>, offset: Int) {
         privateColorChanges.add(PartialChange(colors.flatten(), offset * 4))
         mesh.updateColors(colors, offset)
+    }
+
+    private fun setDirtyPosition() {
+        isPositionsDirty = true
+        privateChildren.forEach { it.setDirtyPosition() }
+    }
+
+    private fun setDirtyColor() {
+        isColorsDirty = true
+        privateChildren.forEach { it.setDirtyColor() }
     }
 }
