@@ -30,6 +30,9 @@ open class AnimatedSpriteAtlas(
         currentAnimationIndex = 0
         animationStateId = animationId
         this.done = done
+        config.animations.getOrNull(animationStateId)?.let {
+            setAtlas(it.names[currentAnimationIndex])
+        }
     }
 
     // can run sequential as once
