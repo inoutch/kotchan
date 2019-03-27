@@ -6,17 +6,18 @@ import io.github.inoutch.kotchan.core.controller.touch.listener.decision.RectTou
 import io.github.inoutch.kotchan.core.graphic.Material
 import io.github.inoutch.kotchan.core.graphic.polygon.SpriteAtlas
 import io.github.inoutch.kotchan.core.graphic.texture.TextureAtlas
+import io.github.inoutch.kotchan.core.graphic.ui.UI
 
 class Button(material: Material,
              textureAtlas: TextureAtlas,
              private val normalName: String,
              private val pressedName: String,
              camera: Camera,
-             onClick: () -> Unit) : SpriteAtlas(material, textureAtlas) {
+             onClick: () -> Unit) : SpriteAtlas(material, textureAtlas), UI {
     init {
         setAtlas(normalName)
     }
 
-    val touchListener = ButtonTouchListener({ setAtlas(normalName) }, { setAtlas(pressedName) }, camera) { onClick() }
-            .apply { decision = RectTouchDecision { rect() } }
+    override val touchListener = ButtonTouchListener({ setAtlas(normalName) }, { setAtlas(pressedName) }, camera)
+    { onClick() }.apply { decision = RectTouchDecision { rect() } }
 }

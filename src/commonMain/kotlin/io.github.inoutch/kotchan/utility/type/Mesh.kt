@@ -82,3 +82,11 @@ class Mesh(initPositions: List<Vector3> = emptyList(),
         return null
     }
 }
+
+fun List<Mesh>.combine(): Mesh {
+    val pos = map { it.pos() }.flatten()
+    val tex = map { it.tex() }.flatten()
+    val col = map { it.col() }.flatten()
+    val nom = map { it.nom() }.flatten()
+    return Mesh(pos, tex, col, nom)
+}
