@@ -7,12 +7,12 @@ import io.github.inoutch.kotchan.core.controller.touch.listener.ButtonTouchListe
 import io.github.inoutch.kotchan.core.controller.touch.listener.decision.RectTouchDecision
 import io.github.inoutch.kotchan.core.graphic.Material
 import io.github.inoutch.kotchan.core.graphic.polygon.Sprite
-import io.github.inoutch.kotchan.core.graphic.ui.UI
+import io.github.inoutch.kotchan.core.graphic.ui.Touchable
 
 class ColorButton(material: Material,
                   camera: Camera,
                   size: Vector2,
-                  onClick: () -> Unit) : Sprite(material, size), UI {
+                  onClick: () -> Unit) : Sprite(material, size), Touchable {
 
     var normalColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f)
         set(value) {

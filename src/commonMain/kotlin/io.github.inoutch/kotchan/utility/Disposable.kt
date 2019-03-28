@@ -8,7 +8,7 @@ interface DisposerAppender {
     fun <T : Disposable> add(disposable: T): T
 }
 
-class Disposer : Disposable, DisposerAppender {
+open class Disposer : Disposable, DisposerAppender {
     private val disposables = mutableListOf<Disposable>()
 
     override fun <T : Disposable> add(disposable: T): T {
@@ -16,7 +16,11 @@ class Disposer : Disposable, DisposerAppender {
         return disposable
     }
 
-    fun dispose(disposable: Disposable) {
+    open fun remove(disposable: Disposable) {
+        disposables.remove(disposable)
+    }
+
+    open fun dispose(disposable: Disposable) {
         disposables.remove(disposable)
         disposable.dispose()
     }
