@@ -6,14 +6,14 @@ import io.github.inoutch.kotchan.core.controller.touch.listener.decision.RectTou
 import io.github.inoutch.kotchan.core.graphic.Material
 import io.github.inoutch.kotchan.core.graphic.polygon.SpriteAtlas
 import io.github.inoutch.kotchan.core.graphic.texture.TextureAtlas
-import io.github.inoutch.kotchan.core.graphic.ui.UI
+import io.github.inoutch.kotchan.core.graphic.ui.Touchable
 
 class Button(material: Material,
              textureAtlas: TextureAtlas,
              private val normalName: String,
              private val pressedName: String,
              camera: Camera,
-             onClick: () -> Unit) : SpriteAtlas(material, textureAtlas), UI {
+             onClick: () -> Unit) : SpriteAtlas(material, textureAtlas), Touchable {
     init {
         setAtlas(normalName)
     }
