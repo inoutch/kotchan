@@ -7,7 +7,7 @@ import io.github.inoutch.kotchan.utility.Updatable
 open class AnimatedSpriteAtlas(
         material: Material?,
         textureAtlas: TextureAtlas,
-        val config: Config) : SpriteAtlas(material, textureAtlas), Updatable {
+        val config: Config) : SpriteAtlas(material, textureAtlas) {
 
     data class AnimationSet(val names: List<String>, val intervalSec: Float, val count: Int = -1)
 
@@ -15,6 +15,7 @@ open class AnimatedSpriteAtlas(
                       val defaultAnimationId: Int = 0)
 
     var animationStateId = config.defaultAnimationId
+        private set
 
     private var currentAnimationIndex = 0
 
