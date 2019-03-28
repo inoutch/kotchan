@@ -1,9 +1,10 @@
 package io.github.inoutch.kotchan.core.graphic.polygon
 
 import io.github.inoutch.kotchan.core.graphic.Material
+import io.github.inoutch.kotchan.utility.Updatable
 import io.github.inoutch.kotchan.utility.type.*
 
-open class Polygon(initMesh: Mesh, val material: Material?) {
+open class Polygon(initMesh: Mesh, val material: Material?) : Updatable {
     var mesh = initMesh
         protected set
 
@@ -189,6 +190,8 @@ open class Polygon(initMesh: Mesh, val material: Material?) {
         privateColorChanges.add(PartialChange(colors.flatten(), offset * 4))
         mesh.updateColors(colors, offset)
     }
+
+    override fun update(delta: Float) {}
 
     private fun setDirtyPosition() {
         isPositionsDirty = true
