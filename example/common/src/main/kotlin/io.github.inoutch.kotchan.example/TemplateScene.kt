@@ -90,4 +90,9 @@ class TemplateScene : Scene() {
     override fun resume() {}
 
     override fun reshape(x: Int, y: Int, width: Int, height: Int) {}
+
+    override fun dispose() {
+        super.dispose()
+        shaderProgram.dispose()
+    }
 }

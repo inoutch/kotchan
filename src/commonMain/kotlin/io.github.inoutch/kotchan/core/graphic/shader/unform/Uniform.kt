@@ -10,6 +10,6 @@ abstract class Uniform(binding: Int, uniformName: String) : DescriptorSet(bindin
     abstract val size: Long
 
     override fun dispose() {
-        vkUniform?.dispose()
+        // DO NOT dispose uniform in here
     }
 }

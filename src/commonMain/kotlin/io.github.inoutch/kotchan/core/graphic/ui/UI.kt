@@ -19,8 +19,8 @@ abstract class UI(private val batch: Batch) : Updatable, Disposable {
             field = value
         }
 
-    open fun <T> add(touchable: T): T where T : Touchable, T : Polygon2D {
-        instance.touchController.add(touchable.touchListener)
+    open fun <T> add(touchable: T, priority: Int = 0): T where T : Touchable, T : Polygon2D {
+        instance.touchController.add(touchable.touchListener, priority)
         touchables[touchable] = touchable
         batch.add(touchable)
         return touchable
