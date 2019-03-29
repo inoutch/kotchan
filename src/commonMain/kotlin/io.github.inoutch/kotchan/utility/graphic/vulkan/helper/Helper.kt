@@ -93,7 +93,9 @@ class Helper {
                 fragShaderModule: VkShaderModule,
                 depthTest: Boolean,
                 cullMode: VkCullMode,
-                polygonMode: VkPolygonMode): VkPipeline {
+                polygonMode: VkPolygonMode,
+                srcFactor: VkBlendFactor,
+                dstFactor: VkBlendFactor): VkPipeline {
 
             val shaderStages = createShaderStages(vertShaderModule, fragShaderModule)
 
@@ -155,8 +157,8 @@ class Helper {
 
             val colorWriteMask = VkPipelineColorBlendAttachmentState(
                     true,
-                    VkBlendFactor.VK_BLEND_FACTOR_SRC_ALPHA,
-                    VkBlendFactor.VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+                    srcFactor,
+                    dstFactor,
                     VkBlendOp.VK_BLEND_OP_ADD,
                     VkBlendFactor.VK_BLEND_FACTOR_ONE,
                     VkBlendFactor.VK_BLEND_FACTOR_ZERO,
