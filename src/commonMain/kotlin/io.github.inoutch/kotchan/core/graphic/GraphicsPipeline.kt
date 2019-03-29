@@ -13,7 +13,9 @@ class GraphicsPipeline(
     data class Config(
             val depthTest: Boolean = true,
             val cullMode: CullMode = CullMode.Back,
-            val polygonMode: PolygonMode = PolygonMode.Fill)
+            val polygonMode: PolygonMode = PolygonMode.Fill,
+            val srcBlendFactor: BlendFactor = BlendFactor.SrcAlpha,
+            val dstBlendFactor: BlendFactor = BlendFactor.OneMinusSrcAlpha)
 
     fun bind() {
         instance.graphicsApi.bindGraphicsPipeline(this)

@@ -11,3 +11,16 @@ enum class PolygonMode {
     Line,
     Point,
 }
+
+enum class BlendFactor {
+    One,
+    Zero,
+    SrcColor,
+    OneMinusSrcColor,
+    DstColor,
+    OneMinusDstColor,
+    SrcAlpha,
+    OneMinusSrcAlpha,
+    DstAlpha,
+    OneMinusDstAlpha,
+}

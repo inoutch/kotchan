@@ -159,7 +159,9 @@ class Api(private val vk: VK?, private val gl: GL?) {
                     shader.vert, shader.frag,
                     config.depthTest,
                     convertVkCullMode(config.cullMode),
-                    convertVkPolygonMode(config.polygonMode))
+                    convertVkPolygonMode(config.polygonMode),
+                    convertVkBlendFactor(config.srcBlendFactor),
+                    convertVkBlendFactor(config.dstBlendFactor))
 
             return@pipeline GraphicsPipeline(shaderProgram, config,
                     VKPipeline(vk, pipeline, descriptorSetLayout, descriptorSetProvider, pipelineLayout,
@@ -373,6 +375,19 @@ class Api(private val vk: VK?, private val gl: GL?) {
             return VkDescriptorType.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
         }
         throw Error("unsupported descriptorSet type")
+    }
+
+    private fun convertVkBlendFactor(factor: BlendFactor) = when (factor) {
+        BlendFactor.One -> VkBlendFactor.VK_BLEND_FACTOR_ONE
+        BlendFactor.Zero -> VkBlendFactor.VK_BLEND_FACTOR_ZERO
+        BlendFactor.SrcColor -> VkBlendFactor.VK_BLEND_FACTOR_SRC_COLOR
+        BlendFactor.OneMinusSrcColor -> VkBlendFactor.VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR
+        BlendFactor.DstColor -> VkBlendFactor.VK_BLEND_FACTOR_DST_COLOR
+        BlendFactor.OneMinusDstColor -> VkBlendFactor.VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR
+        BlendFactor.SrcAlpha -> VkBlendFactor.VK_BLEND_FACTOR_SRC_ALPHA
+        BlendFactor.OneMinusSrcAlpha -> VkBlendFactor.VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA
+        BlendFactor.DstAlpha -> VkBlendFactor.VK_BLEND_FACTOR_DST_ALPHA
+        BlendFactor.OneMinusDstAlpha -> VkBlendFactor.VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA
     }
 
     private fun convertVkCullMode(cullMode: CullMode) = when (cullMode) {
