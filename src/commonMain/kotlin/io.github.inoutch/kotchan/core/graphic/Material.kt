@@ -12,6 +12,8 @@ class Material(config: Config, extraTextures: List<Texture> = listOf()) : Dispos
         var depthTest = true
         var cullMode = CullMode.Back
         var polygonMode = PolygonMode.Fill
+        var srcBlendFactor = BlendFactor.SrcAlpha
+        var dstBlendFactor = BlendFactor.OneMinusSrcAlpha
     }
 
     val textures = listOf(*config.textures.toTypedArray(), *extraTextures.toTypedArray())
@@ -21,7 +23,12 @@ class Material(config: Config, extraTextures: List<Texture> = listOf()) : Dispos
 
     val graphicsPipeline = instance.graphicsApi.createGraphicsPipeline(
             config.shaderProgram,
-            GraphicsPipeline.Config(config.depthTest, config.cullMode, config.polygonMode))
+            GraphicsPipeline.Config(
+                    config.depthTest,
+                    config.cullMode,
+                    config.polygonMode,
+                    config.srcBlendFactor,
+                    config.dstBlendFactor))
 
     var textureAutoRelease = false
 
