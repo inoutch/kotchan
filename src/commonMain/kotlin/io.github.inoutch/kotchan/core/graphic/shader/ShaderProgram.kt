@@ -23,6 +23,8 @@ abstract class ShaderProgram(val shader: Shader, initDescriptorSets: List<Descri
     }
 
     override fun dispose() {
+        shader.glShader?.dispose()
+        shader.vkShader?.dispose()
         descriptorSets.forEach { it.dispose() }
     }
 }

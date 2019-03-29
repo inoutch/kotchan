@@ -130,11 +130,11 @@ class Api(private val vk: VK?, private val gl: GL?) {
         { vert: ShaderProgram.ShaderSource, frag: ShaderProgram.ShaderSource ->
             val vertModule = vkCreateShaderModule(it.device, VkShaderModuleCreateInfo(0, vert.binary))
             val fragModule = vkCreateShaderModule(it.device, VkShaderModuleCreateInfo(0, frag.binary))
-            Shader(Shader.VKBundle(vertModule, fragModule), null)
+            Shader(VKShader(it, vertModule, fragModule), null)
         }
     }, {
         { vert: ShaderProgram.ShaderSource, frag: ShaderProgram.ShaderSource ->
-            Shader(null, GLShader(it.compileShaderProgram(vert.text, frag.text)))
+            Shader(null, GLShader(it, it.compileShaderProgram(vert.text, frag.text)))
         }
     })
 
