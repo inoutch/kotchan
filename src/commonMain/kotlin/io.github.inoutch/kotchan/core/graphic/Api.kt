@@ -211,7 +211,7 @@ class Api(private val vk: VK?, private val gl: GL?) {
                             viewport.origin.x.toFloat(),
                             viewport.origin.y.toFloat() + viewport.size.y.toFloat(),
                             viewport.size.x.toFloat(),
-                            -viewport.size.y.toFloat(), -1.0f, 1.0f)))
+                            -viewport.size.y.toFloat(), 0.0f, 1.0f)))
 
             // TODO: implementation scissor api
             vkCmdSetScissor(it.currentCommandBuffer, 0, listOf(VkRect2D(viewport.origin, viewport.size)))

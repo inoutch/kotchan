@@ -107,7 +107,7 @@ class AlphaTestScene : Scene() {
         sprite1.position = centerPosition + Vector3(
                 cos(colorCircle * PI * 2.0f).toFloat() * 50.0f,
                 sin(colorCircle * PI * 2.0f).toFloat() * 30.0f,
-                -sin(colorCircle * PI * 2.0f).toFloat())
+                -sin(colorCircle * PI * 2.0f).toFloat() * 100.0f)
 
         batch.draw(delta, camera)
         uiBatch.draw(delta, uiCamera)

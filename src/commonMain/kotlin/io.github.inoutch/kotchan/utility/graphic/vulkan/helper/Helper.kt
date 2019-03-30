@@ -118,7 +118,7 @@ class Helper {
                     polygonMode,
                     cullMode,
                     VkFrontFace.VK_FRONT_FACE_COUNTER_CLOCKWISE,
-                    true,
+                    false,
                     false,
                     false,
                     0.0f,
@@ -152,7 +152,7 @@ class Helper {
                     false,
                     stencilOpState,
                     stencilOpState,
-                    -1.0f,
+                    0.0f,
                     1.0f)
 
             val colorWriteMask = VkPipelineColorBlendAttachmentState(

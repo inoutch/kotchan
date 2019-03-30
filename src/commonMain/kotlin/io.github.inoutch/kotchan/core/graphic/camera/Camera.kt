@@ -1,5 +1,6 @@
 package io.github.inoutch.kotchan.core.graphic.camera
 
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
 import io.github.inoutch.kotchan.utility.type.*
 
 abstract class Camera {
@@ -7,15 +8,29 @@ abstract class Camera {
         fun createOrthographic(left: Float, right: Float,
                                bottom: Float, top: Float,
                                near: Float, far: Float): Matrix4 {
-            val m3 = Matrix3.createDiagonal(
-                    2 / (right - left),
-                    2 / (top - bottom),
-                    -2 / (far - near))
+            return if (instance.vk != null) {
+                // for vulkan [z:0.0 ~ 1.0]
+                val m3 = Matrix3.createDiagonal(
+                        2 / (right - left),
+                        2 / (top - bottom),
+                        -1 / (far - near))
 
-            val tx = -(right + left) / (right - left)
-            val ty = -(top + bottom) / (top - bottom)
-            val tz = -(far + near) / (far - near)
-            return Matrix4(m3, Vector4(tx, ty, tz, 1.0f))
+                val tx = -(right + left) / (right - left)
+                val ty = -(top + bottom) / (top - bottom)
+                val tz = -(near) / (far - near)
+                Matrix4(m3, Vector4(tx, ty, tz, 1.0f))
+            } else {
+                // for opengl [z:-1.0 ~ 1.0]
+                val m3 = Matrix3.createDiagonal(
+                        2 / (right - left),
+                        2 / (top - bottom),
+                        -2 / (far - near))
+
+                val tx = -(right + left) / (right - left)
+                val ty = -(top + bottom) / (top - bottom)
+                val tz = -(far + near) / (far - near)
+                Matrix4(m3, Vector4(tx, ty, tz, 1.0f))
+            }
         }
     }
 
