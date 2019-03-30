@@ -8,13 +8,13 @@ import io.github.inoutch.kotchan.utility.Updatable
 
 abstract class UI(private val batch: Batch) : Updatable, Disposable {
 
-    private val touchables = mutableMapOf<Polygon2D, Touchable>()
+    private val touchables = mutableMapOf<Polygon2D, Touchable?>()
 
     var visible: Boolean = true
         set(value) {
             touchables.forEach {
                 it.key.visible = value
-                it.value.touchListener.enable = value
+                it.value?.touchListener?.enable = value
             }
             field = value
         }
@@ -26,6 +26,12 @@ abstract class UI(private val batch: Batch) : Updatable, Disposable {
         return touchable
     }
 
+    open fun <T : Polygon2D> add(polygon: T): T {
+        touchables[polygon] = null
+        batch.add(polygon)
+        return polygon
+    }
+
     open fun <T> remove(touchable: T) where T : Touchable, T : Polygon2D {
         touchables[touchable]?.let { instance.touchController.remove(it.touchListener) }
         touchables.remove(touchable)
@@ -35,7 +41,7 @@ abstract class UI(private val batch: Batch) : Updatable, Disposable {
     override fun dispose() {
         touchables.forEach {
             batch.remove(it.key)
-            instance.touchController.remove(it.value.touchListener)
+            it.value?.touchListener?.let { x -> instance.touchController.remove(x) }
         }
         touchables.clear()
     }
