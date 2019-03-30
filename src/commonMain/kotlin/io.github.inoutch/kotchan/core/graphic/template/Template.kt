@@ -88,14 +88,14 @@ class Template(val rect: Rect = Rect(Vector2.Zero, instance.screenSize.toVector2
             x.value.forEach { y ->
                 val templateAppendType = y.key
                 val width = if (templateAppendType == TemplateAppendType.Column) {
-                    y.value.sumByDouble { it.polygon.size.x.toDouble() + it.margin.toMarginWidth() }.toFloat()
+                    y.value.sumByDouble { it.polygon.size.x.toDouble() * it.polygon.scale.x + it.margin.toMarginWidth() }.toFloat()
                 } else {
-                    y.value.max { it.polygon.size.x + it.margin.toMarginWidth() }
+                    y.value.max { it.polygon.size.x * it.polygon.scale.x + it.margin.toMarginWidth() }
                 }
                 val height = if (templateAppendType == TemplateAppendType.Row) {
-                    y.value.sumByDouble { it.polygon.size.y.toDouble() + it.margin.toMarginHeight() }.toFloat()
+                    y.value.sumByDouble { it.polygon.size.y.toDouble() * it.polygon.scale.y + it.margin.toMarginHeight() }.toFloat()
                 } else {
-                    y.value.max { it.polygon.size.y + it.margin.toMarginHeight() }
+                    y.value.max { it.polygon.size.y * it.polygon.scale.y + it.margin.toMarginHeight() }
                 }
                 val anchorPoint = switchType(templateType).let { Vector2(h(it.first), v(it.second)) }
                 val basePosition = Vector2(
@@ -103,7 +103,7 @@ class Template(val rect: Rect = Rect(Vector2.Zero, instance.screenSize.toVector2
                         rect.origin.y + rect.size.y * anchorPoint.y - height * anchorPoint.y)
                 var p = basePosition
                 for (fragment in y.value) {
-                    val polygonSize = fragment.polygon.size
+                    val polygonSize = fragment.polygon.size * Vector2(fragment.polygon.scale.x, fragment.polygon.scale.y)
                     val marginWidth = fragment.margin.toMarginWidth()
                     val marginHeight = fragment.margin.toMarginHeight()
                     val offset = when (templateAppendType) {
@@ -115,8 +115,8 @@ class Template(val rect: Rect = Rect(Vector2.Zero, instance.screenSize.toVector2
                             Vector3(p + margin + offset + polygonSize / 2.0f, 0.0f)
                     fragment.polygon.anchorPoint = Vector2(0.5f, 0.5f)
                     p += when (templateAppendType) {
-                        TemplateAppendType.Row -> Vector2(0.0f, fragment.polygon.size.y + marginHeight)
-                        TemplateAppendType.Column -> Vector2(fragment.polygon.size.x + marginWidth, 0.0f)
+                        TemplateAppendType.Row -> Vector2(0.0f, fragment.polygon.size.y * fragment.polygon.scale.y + marginHeight)
+                        TemplateAppendType.Column -> Vector2(fragment.polygon.size.x * fragment.polygon.scale.x + marginWidth, 0.0f)
                     }
                 }
             }
