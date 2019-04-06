@@ -1,5 +1,8 @@
 package io.github.inoutch.kotchan.utility.type
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Matrix3(val col1: Vector3, val col2: Vector3, val col3: Vector3) {
     companion object {
         fun createDiagonal(d1: Float, d2: Float, d3: Float) = Matrix3(

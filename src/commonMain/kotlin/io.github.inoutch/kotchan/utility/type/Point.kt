@@ -1,5 +1,8 @@
 package io.github.inoutch.kotchan.utility.type
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Point(val x: Int, val y: Int) {
     companion object {
         val ZERO = Point(0, 0)

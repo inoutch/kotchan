@@ -4,6 +4,7 @@ buildscript {
 
 apply plugin: "application"
 apply plugin: "kotlin-platform-jvm"
+apply plugin: "kotlinx-serialization"
 
 processResources {
     from "../common/src/main/resources"
@@ -35,6 +36,7 @@ if (platform == OperatingSystem.MAC_OS) {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     // utils
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization_version"
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.8"
 
     implementation "org.lwjgl:lwjgl:$lwjgl_version"

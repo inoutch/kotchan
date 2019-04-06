@@ -55,15 +55,15 @@ class TileLayer(private val config: TileMap.Config, layer: Array2D<Int>) : Polyg
         }
     }
 
-    private val data = Array2D(config.mapSize) { layer.get(it) }
+    private val data = Array2D.create(config.mapSize) { layer[it] }
 
-    fun getGraphicId(p: Point) = data.get(p)
+    fun getGraphicId(p: Point) = data[p]
 
     fun setGraphicId(p: Point, id: Int) {
         if (getGraphicId(p) == null) {
             return
         }
-        data.set(p, id)
+        data[p] = id
         val tileSize = config.tileSize
         val offset = 6 * (p.y * config.mapSize.x + p.x)
         val tileNumber = calcTileNumber(config.material.texture.size, config.tileTextureSize).toPoint()

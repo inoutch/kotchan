@@ -89,7 +89,7 @@ class TileMapScene : Scene() {
                 Point(32, 32),
                 Point(16, 16),
                 tileMapSize,
-                TileLayer.Config(List(3) { Array2D(tileMapSize) { random.nextInt(0, 4) } })))
+                TileLayer.Config(List(3) { Array2D.create(tileMapSize) { random.nextInt(0, 4) } })))
         batch.add(tileMap)
 
         touchController.add(GridTouchListener(camera, tileMap.config.tileSize, { point: Point, touchType: TouchType ->
