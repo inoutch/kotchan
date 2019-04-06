@@ -1,0 +1,89 @@
+{
+  "formatVersion": "0.4",
+  "component": {
+    "url": "../../kotchan/0.2.21/kotchan-0.2.21.module",
+    "group": "io.github.inoutch",
+    "module": "kotchan",
+    "version": "0.2.21",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "4.10.2",
+      "buildId": "zulglzl46fgy7bezhfc2bq5l24"
+    }
+  },
+  "variants": [
+    {
+      "name": "ios-api",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "ios_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.3.21"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-serialization-runtime-native",
+          "version": {
+            "requires": "0.10.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-serialization-runtime-common",
+          "version": {
+            "requires": "0.10.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "kotchan.klib",
+          "url": "kotchan-ios-0.2.21.klib",
+          "size": 2569418,
+          "sha1": "dac0bb26e706b6942d4cf3579e8abe9c692c3c01",
+          "md5": "8f18f85530123adeaa6a1731cf456c49"
+        },
+        {
+          "name": "kotchan-cinterop-vulkan.klib",
+          "url": "kotchan-ios-0.2.21-cinterop-vulkan.klib",
+          "size": 5623276,
+          "sha1": "88cf8f0b861a3b238572ec8ec4d6ba233f81942d",
+          "md5": "3f08d0a5609f08d1a9493dad89b998d1"
+        },
+        {
+          "name": "kotchan-cinterop-kmvk.klib",
+          "url": "kotchan-ios-0.2.21-cinterop-kmvk.klib",
+          "size": 36310,
+          "sha1": "ce6c6cb508c9e6373474bd0be4302209b594de15",
+          "md5": "94cc2f2d0f26f8534bb5b0394b0d286a"
+        }
+      ]
+    },
+    {
+      "name": "metadata-api",
+      "attributes": {
+        "artifactType": "jar",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.platform.type": "common"
+      },
+      "available-at": {
+        "url": "../../kotchan-metadata/0.2.21/kotchan-metadata-0.2.21.module",
+        "group": "io.github.inoutch",
+        "module": "kotchan-metadata",
+        "version": "0.2.21"
+      }
+    }
+  ]
+}
