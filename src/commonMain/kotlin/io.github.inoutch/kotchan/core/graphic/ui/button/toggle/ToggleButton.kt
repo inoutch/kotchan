@@ -1,3 +1,5 @@
+package io.github.inoutch.kotchan.core.graphic.ui.button.toggle
+
 import io.github.inoutch.kotchan.core.graphic.ui.Touchable
 
 interface ToggleButton : Touchable {

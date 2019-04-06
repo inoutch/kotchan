@@ -1,3 +1,5 @@
+package io.github.inoutch.kotchan.core.graphic.ui.button.toggle
+
 import io.github.inoutch.kotchan.core.controller.touch.listener.ButtonTouchListener
 import io.github.inoutch.kotchan.core.controller.touch.listener.decision.RectTouchDecision
 import io.github.inoutch.kotchan.core.graphic.Material
