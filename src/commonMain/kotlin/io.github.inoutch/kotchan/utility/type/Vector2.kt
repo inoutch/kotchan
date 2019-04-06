@@ -1,16 +1,18 @@
 package io.github.inoutch.kotchan.utility.type
 
+import kotlinx.serialization.Serializable
 import kotlin.math.sqrt
 
+@Serializable
 data class Vector2(val x: Float, val y: Float) {
     constructor() : this(0.0f, 0.0f)
     constructor(x: Int, y: Int) : this(x.toFloat(), y.toFloat())
     constructor(vector: Vector3) : this(vector.x, vector.y)
 
-    val length get() = sqrt(x * x + y * y)
+    fun length() = sqrt(x * x + y * y)
 
     fun normalized(): Vector2 {
-        val len = length
+        val len = length()
         return Vector2(x / len, y / len)
     }
 

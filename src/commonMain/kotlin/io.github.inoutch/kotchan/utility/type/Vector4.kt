@@ -1,5 +1,8 @@
 package io.github.inoutch.kotchan.utility.type
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Vector4(var x: Float, val y: Float, val z: Float, val w: Float) {
     companion object {
         val Zero = Vector4()

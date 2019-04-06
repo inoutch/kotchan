@@ -1,7 +1,9 @@
 package io.github.inoutch.kotchan.utility.type
 
+import kotlinx.serialization.Serializable
 import kotlin.math.*
 
+@Serializable
 data class Matrix4(val col1: Vector4, val col2: Vector4, val col3: Vector4, val col4: Vector4) {
     companion object {
         fun createTranslation(vector: Vector3) = Matrix4(

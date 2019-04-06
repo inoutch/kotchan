@@ -1,5 +1,8 @@
 package io.github.inoutch.kotchan.utility.type
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class PointRect(val origin: Point = Point(), val size: Point = Point()) {
     constructor(x: Int, y: Int, w: Int, h: Int) : this(Point(x, y), Point(w, h))
 

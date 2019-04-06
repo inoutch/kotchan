@@ -52,7 +52,7 @@ open class ScrollTouchListener(
         if (before != null || !accelerationEnable) {
             return
         }
-        if (acceleration.length > 0) {
+        if (acceleration.length() > 0) {
             setVelocity(acceleration * delta * 60.0f)
             val friction = acceleration.normalized() * delta * 8.0f
             if (abs(friction.x) > abs(acceleration.x) || abs(friction.y) > abs(acceleration.y)) {
