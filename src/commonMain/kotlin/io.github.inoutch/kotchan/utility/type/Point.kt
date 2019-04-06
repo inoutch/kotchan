@@ -27,6 +27,7 @@ data class Point(val x: Int, val y: Int) {
     operator fun div(other: Float) = Vector2(x / other, y / other)
     operator fun div(other: Int) = Point(x / other, y / other)
     fun equals(other: Point) = x == other.x && y == other.y
+    fun inRange(p: Point) = 0 <= p.x && 0 <= p.y && p.x < x && p.y < y
 }
 
 fun Vector2.toPoint() = Point(this.x.toInt(), this.y.toInt())
