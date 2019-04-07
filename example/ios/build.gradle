@@ -8,15 +8,17 @@ buildscript {
         mavenCentral()
         maven { url "https://dl.bintray.com/kotlin/kotlin-dev" }
         maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
+        maven { url "https://dl.bintray.com/kotlin/kotlinx" }
     }
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
     }
 }
 
 apply plugin: "kotlin-multiplatform"
-apply plugin: "kotlinx-serialization-native"
+apply plugin: "kotlinx-serialization"
 
 repositories {
     google()
@@ -24,6 +26,7 @@ repositories {
     mavenCentral()
     maven { url "https://dl.bintray.com/kotlin/kotlin-dev" }
     maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
+    maven { url "https://dl.bintray.com/kotlin/kotlinx" }
 }
 
 kotlin {
@@ -50,6 +53,7 @@ kotlin {
             kotlin.srcDirs("../../src/commonMain/kotlin", "../common/src/main/kotlin")
             dependencies {
                 implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serialization_version"
             }
         }
         iosMain {
