@@ -171,10 +171,9 @@ class Api(private val vk: VK?, private val gl: GL?) {
         pipeline@{ shaderProgram: ShaderProgram, config: GraphicsPipeline.Config ->
             val shaderId = shaderProgram.shader.glShader?.id ?: 0
             shaderProgram.descriptorSets.forEach { descriptor ->
-                if (descriptor is Uniform) {
-                    descriptor.glUniform = it.getUniform(shaderId, descriptor.descriptorName)
-                } else if (descriptor is Sampler) {
-                    descriptor.glSampler = it.getUniform(shaderId, descriptor.descriptorName)
+                when (descriptor) {
+                    is Uniform -> descriptor.glUniform = it.getUniform(shaderId, descriptor.descriptorName)
+                    is Sampler -> descriptor.glSampler = it.getUniform(shaderId, descriptor.descriptorName)
                 }
             }
             return@pipeline GraphicsPipeline(shaderProgram, config)

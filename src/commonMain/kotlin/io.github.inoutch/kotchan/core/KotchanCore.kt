@@ -25,6 +25,7 @@ class KotchanCore(
     companion object {
         const val KOTCHAN_ENGINE_NAME = "kotchan-engine"
         const val KOTCHAN_LOGGER = "kotchan-logger"
+
         val instance: KotchanCore get() = KotchanInstance.manager().get(KOTCHAN_ENGINE_NAME) as KotchanCore
         val logger: Logger get() = KotchanInstance.manager().get(KOTCHAN_LOGGER) as Logger
     }
@@ -41,8 +42,10 @@ class KotchanCore(
     val file = File()
 
     var gl: GL? = null
+        private set
 
     var vk: VK? = null
+        private set
 
     lateinit var graphicsApi: Api
 
@@ -101,6 +104,14 @@ class KotchanCore(
         currentScene?.draw(delta)
 
         graphicsApi.end()
+    }
+
+    fun applyGL(gl: GL) {
+        this.gl = gl
+    }
+
+    fun applyVK(vk: VK) {
+        this.vk = vk
     }
 
     // TODO: implement reshape

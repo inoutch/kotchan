@@ -27,7 +27,7 @@ actual class GL {
     }
 
     actual fun createVBO(size: Int): GLVBO {
-        return createVBO(FloatArray(size, { 0.0f }))
+        return createVBO(FloatArray(size) { 0.0f })
     }
 
     actual fun createVBO(data: FloatArray): GLVBO {
