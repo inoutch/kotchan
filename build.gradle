@@ -1,5 +1,5 @@
 allprojects {
-    version "0.2.23"
+    version "0.3.0"
     group "io.github.inoutch"
 }
 
