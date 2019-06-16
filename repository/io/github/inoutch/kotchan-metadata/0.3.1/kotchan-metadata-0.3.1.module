@@ -1,0 +1,36 @@
+{
+  "formatVersion": "0.4",
+  "component": {
+    "url": "../../kotchan/0.3.1/kotchan-0.3.1.module",
+    "group": "io.github.inoutch",
+    "module": "kotchan",
+    "version": "0.3.1",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "5.1.1",
+      "buildId": "wvgnvwxlcnbhzhf5r54kyv7g6q"
+    }
+  },
+  "variants": [
+    {
+      "name": "metadata-api",
+      "attributes": {
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.platform.type": "common"
+      },
+      "files": [
+        {
+          "name": "kotchan-metadata-0.3.1.jar",
+          "url": "kotchan-metadata-0.3.1.jar",
+          "size": 238223,
+          "sha1": "ca4568209e3f3134a41de5aae1771721c6d5a5c",
+          "md5": "b09508a0c9743fd6643b85e168e600ff"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "formatVersion": "0.4",
+  "component": {
+    "group": "io.github.inoutch",
+    "module": "kotchan",
+    "version": "0.3.1",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "5.1.1",
+      "buildId": "wvgnvwxlcnbhzhf5r54kyv7g6q"
+    }
+  },
+  "variants": [
+    {
+      "name": "ios-api",
+      "attributes": {
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "ios_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../kotchan-ios/0.3.1/kotchan-ios-0.3.1.module",
+        "group": "io.github.inoutch",
+        "module": "kotchan-ios",
+        "version": "0.3.1"
+      }
+    },
+    {
+      "name": "jvm-api",
+      "attributes": {
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "available-at": {
+        "url": "../../kotchan-jvm/0.3.1/kotchan-jvm-0.3.1.module",
+        "group": "io.github.inoutch",
+        "module": "kotchan-jvm",
+        "version": "0.3.1"
+      }
+    },
+    {
+      "name": "jvm-runtime",
+      "attributes": {
+        "org.gradle.usage": "java-runtime-jars",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "available-at": {
+        "url": "../../kotchan-jvm/0.3.1/kotchan-jvm-0.3.1.module",
+        "group": "io.github.inoutch",
+        "module": "kotchan-jvm",
+        "version": "0.3.1"
+      }
+    },
+    {
+      "name": "metadata-api",
+      "attributes": {
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.platform.type": "common"
+      },
+      "available-at": {
+        "url": "../../kotchan-metadata/0.3.1/kotchan-metadata-0.3.1.module",
+        "group": "io.github.inoutch",
+        "module": "kotchan-metadata",
+        "version": "0.3.1"
+      }
+    }
+  ]
+}
