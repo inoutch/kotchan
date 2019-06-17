@@ -72,14 +72,14 @@ precision mediump int;
 in vec4 vColor;
 in vec2 vTexcoord;
 uniform sampler2D u_texture0;
-uniform float u_timeDelta;
-uniform float u_textureEnable;
 out vec4 outColor;
 void main(void)
 {
-    outColor = vColor;
-    if (u_textureEnable >= 1.0) {
-        outColor = outColor * texture(u_texture0, vTexcoord);
+    vec4 color = vColor * texture(u_texture0, vTexcoord);
+    if (color.a < 0.3) {
+        discard;
+    } else {
+        outColor = color;
     }
 }
 """
@@ -88,8 +88,8 @@ void main(void)
 class AlphaTestSimpleShaderProgram : ShaderProgram(createShader()) {
     companion object {
         fun createShader(): Shader {
-            val vert = ShaderProgram.ShaderSource(simpleVertText, simpleVertCode)
-            val frag = ShaderProgram.ShaderSource(alphaTestSimpleFragText, alphaTestSimpleFragCode)
+            val vert = ShaderSource(simpleVertText, simpleVertCode)
+            val frag = ShaderSource(alphaTestSimpleFragText, alphaTestSimpleFragCode)
             return KotchanCore.instance.graphicsApi.createShader(vert, frag)
         }
     }

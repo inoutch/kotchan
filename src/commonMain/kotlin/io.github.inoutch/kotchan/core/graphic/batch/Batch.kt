@@ -94,9 +94,9 @@ class Batch : Disposable {
                 batchBundle.polygon.colorChanges.forEach { partialChange ->
                     polygonBundle.colorBuffer.copy(batchBundle.colorBufferData, partialChange)
                 }
-//                batchBundle.polygon.normalChanges.forEach { partialChange ->
-//                    polygonBundle.normalBuffer.copy(batchBundle.normalBufferData, partialChange)
-//                }
+//              batchBundle.polygon.normalChanges.forEach { partialChange ->
+//                  polygonBundle.normalBuffer.copy(batchBundle.normalBufferData, partialChange)
+//              }
             }
 
             polygonBundle.polygons.filter { it.polygon.isPositionsDirty }

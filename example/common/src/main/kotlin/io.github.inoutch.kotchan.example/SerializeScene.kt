@@ -5,7 +5,6 @@ import io.github.inoutch.kotchan.core.KotchanCore.Companion.logger
 import io.github.inoutch.kotchan.core.graphic.Material
 import io.github.inoutch.kotchan.core.graphic.Scene
 import io.github.inoutch.kotchan.core.graphic.batch.Batch
-import io.github.inoutch.kotchan.core.graphic.polygon.Sprite
 import io.github.inoutch.kotchan.core.graphic.polygon.TextLabel
 import io.github.inoutch.kotchan.core.graphic.shader.SimpleShaderProgram
 import io.github.inoutch.kotchan.core.graphic.template.Template
