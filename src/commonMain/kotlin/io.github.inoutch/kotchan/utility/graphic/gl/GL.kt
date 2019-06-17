@@ -65,6 +65,10 @@ expect class GL() {
     fun disableDepth()
 
     // texture
+    fun enableTexture()
+
+    fun disableTexture()
+
     fun activeTexture(index: Int)
 
     fun useTexture(texture: GLTexture?)
@@ -101,4 +105,6 @@ expect class GL() {
     fun frameBufferTexture(attachType: GLFramebufferAttachType, texture: GLTexture)
 
     fun checkFrameBufferStatus(): Int
+
+    fun getError(): Int
 }

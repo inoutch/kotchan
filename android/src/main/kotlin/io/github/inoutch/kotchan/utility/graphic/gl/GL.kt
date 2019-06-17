@@ -135,6 +135,14 @@ actual class GL {
     }
 
     // texture
+    actual fun enableTexture() {
+        GLES30.glEnable(GLES30.GL_TEXTURE_2D)
+    }
+
+    actual fun disableTexture() {
+        GLES30.glDisable(GLES30.GL_TEXTURE_2D)
+    }
+
     actual fun activeTexture(index: Int) {
         GLES30.glActiveTexture(GLES30.GL_TEXTURE0 + index)
     }
@@ -251,6 +259,10 @@ actual class GL {
 
     actual fun checkFrameBufferStatus(): Int {
         return GLES30.glCheckFramebufferStatus(GLES30.GL_FRAMEBUFFER)
+    }
+
+    actual fun getError(): Int {
+        return GLES30.glGetError()
     }
 
     private fun compileShader(type: Int, text: String): Int {

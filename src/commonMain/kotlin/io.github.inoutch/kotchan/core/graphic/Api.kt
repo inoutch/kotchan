@@ -27,7 +27,15 @@ class Api(private val vk: VK?, private val gl: GL?) {
 
     private var currentPipeline: GraphicsPipeline? = null
 
-    val begin = checkSupportGraphics({ { it.begin() } }, { { it.bindDefaultFrameBuffer() } })
+    val begin = checkSupportGraphics({
+        {
+            it.begin()
+        }
+    }, {
+        {
+            it.enableBlend()
+        }
+    })
 
     val end = checkSupportGraphics({
         { it.end() }
@@ -306,9 +314,9 @@ class Api(private val vk: VK?, private val gl: GL?) {
         }
     }, {
         { sampler: Sampler, texture: Texture ->
+            texture.glTexture?.use()
             it.uniform1i(sampler.glSampler ?: 0, sampler.binding)
             it.activeTexture(sampler.binding)
-            it.useTexture(texture.glTexture)
         }
     })
 

@@ -114,6 +114,14 @@ actual class GL actual constructor() {
         throw UnsupportedPlatformError()
     }
 
+    actual fun enableTexture() {
+        throw UnsupportedPlatformError()
+    }
+
+    actual fun disableTexture() {
+        throw UnsupportedPlatformError()
+    }
+
     actual fun activeTexture(index: Int) {
         throw UnsupportedPlatformError()
     }
@@ -185,4 +193,6 @@ actual class GL actual constructor() {
     actual fun createTexture2d(width: Int, height: Int, internalFormat: GLInternalFormat, format: GLFormat): GLTexture {
         throw UnsupportedPlatformError()
     }
+
+    actual fun getError(): Int = throw UnsupportedPlatformError()
 }

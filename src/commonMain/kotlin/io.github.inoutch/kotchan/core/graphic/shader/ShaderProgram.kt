@@ -21,7 +21,7 @@ abstract class ShaderProgram(
 
     open fun prepare(delta: Float, mvpMatrix: Matrix4, textures: List<Texture>) {
         viewProjectionMatrixUniform.set(mvpMatrix)
-//        primarySampler.set(textures.firstOrNull() ?: Texture.emptyTexture())
+        primarySampler.set(textures.firstOrNull() ?: Texture.emptyTexture())
     }
 
     override fun dispose() {
