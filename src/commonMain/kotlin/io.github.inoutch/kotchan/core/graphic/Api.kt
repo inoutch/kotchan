@@ -206,6 +206,11 @@ class Api(private val vk: VK?, private val gl: GL?) {
         }
     }, {
         pipeline@{ pipeline: GraphicsPipeline ->
+            if (pipeline.config.depthTest) {
+                it.enableDepth()
+            } else {
+                it.disableDepth()
+            }
             it.useProgram(pipeline.shaderProgram.shader.glShader?.id ?: return@pipeline)
         }
     })
@@ -343,7 +348,9 @@ class Api(private val vk: VK?, private val gl: GL?) {
     }, {
         { callback: (textureBundle: TextureBundle) -> Texture ->
             sharedTexture.getOrCreate {
-                callback(TextureBundle(null, GLTexture.empty))
+                val colors = listOf(Vector4(1.0f))
+                val size = Point(1, 1)
+                callback(TextureBundle(null, it.createTexture(colors, size)))
                         .also { sharedTexture = it }
             }
         }
