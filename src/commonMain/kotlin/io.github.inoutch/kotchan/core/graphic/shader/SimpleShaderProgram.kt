@@ -154,7 +154,7 @@ in vec2 texcoord;
 uniform mat4 u_viewProjectionMatrix;
 out vec4 vColor;
 out vec2 vTexcoord;
-void main(void){
+void main(void) {
     vColor = color;
     vTexcoord = texcoord;
     gl_Position = u_viewProjectionMatrix * point;
@@ -169,24 +169,17 @@ precision mediump int;
 in vec4 vColor;
 in vec2 vTexcoord;
 uniform sampler2D u_texture0;
-uniform float u_timeDelta;
-uniform float u_textureEnable;
 out vec4 outColor;
-void main(void)
-{
-    outColor = vColor;
-    if (u_textureEnable >= 1.0) {
-        outColor = outColor * texture(u_texture0, vTexcoord);
-    }
+void main(void) {
+    outColor = vColor * texture(u_texture0, vTexcoord);
 }
 """
 
 class SimpleShaderProgram : ShaderProgram(createShader()) {
-
     companion object {
-        fun createShader(): Shader {
-            val vert = ShaderProgram.ShaderSource(simpleVertText, simpleVertCode)
-            val frag = ShaderProgram.ShaderSource(simpleFragText, simpleFragCode)
+        private fun createShader(): Shader {
+            val vert = ShaderSource(simpleVertText, simpleVertCode)
+            val frag = ShaderSource(simpleFragText, simpleFragCode)
             return KotchanCore.instance.graphicsApi.createShader(vert, frag)
         }
     }

@@ -53,15 +53,15 @@ class ViewController : UIViewController {
                 windowSize.y.toFloat() / viewSize.y)
 
         val config = DefaultConfig.config ?: throw Error("KotchanEngineConfig is not applied")
-
-        core = KotchanCore(config, windowSize)
-        core.vk = VK(config.appName,
+        val vk = VK(config.appName,
                 windowSize,
-                listOf(),
+                emptyList(),
                 listOf("VK_KHR_surface", "VK_MVK_ios_surface"),
-                listOf(),
+                emptyList(),
                 listOf("VK_KHR_swapchain")) { createSurface(it) }
 
+        core = KotchanCore(config, windowSize)
+        core.applyVK(vk)
         core.init()
     }
 

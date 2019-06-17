@@ -27,7 +27,15 @@ class Api(private val vk: VK?, private val gl: GL?) {
 
     private var currentPipeline: GraphicsPipeline? = null
 
-    val begin = checkSupportGraphics({ { it.begin() } }, { { it.bindDefaultFrameBuffer() } })
+    val begin = checkSupportGraphics({
+        {
+            it.begin()
+        }
+    }, {
+        {
+            it.enableBlend()
+        }
+    })
 
     val end = checkSupportGraphics({
         { it.end() }
@@ -171,10 +179,9 @@ class Api(private val vk: VK?, private val gl: GL?) {
         pipeline@{ shaderProgram: ShaderProgram, config: GraphicsPipeline.Config ->
             val shaderId = shaderProgram.shader.glShader?.id ?: 0
             shaderProgram.descriptorSets.forEach { descriptor ->
-                if (descriptor is Uniform) {
-                    descriptor.glUniform = it.getUniform(shaderId, descriptor.descriptorName)
-                } else if (descriptor is Sampler) {
-                    descriptor.glSampler = it.getUniform(shaderId, descriptor.descriptorName)
+                when (descriptor) {
+                    is Uniform -> descriptor.glUniform = it.getUniform(shaderId, descriptor.descriptorName)
+                    is Sampler -> descriptor.glSampler = it.getUniform(shaderId, descriptor.descriptorName)
                 }
             }
             return@pipeline GraphicsPipeline(shaderProgram, config)
@@ -199,6 +206,11 @@ class Api(private val vk: VK?, private val gl: GL?) {
         }
     }, {
         pipeline@{ pipeline: GraphicsPipeline ->
+            if (pipeline.config.depthTest) {
+                it.enableDepth()
+            } else {
+                it.disableDepth()
+            }
             it.useProgram(pipeline.shaderProgram.shader.glShader?.id ?: return@pipeline)
         }
     })
@@ -307,9 +319,9 @@ class Api(private val vk: VK?, private val gl: GL?) {
         }
     }, {
         { sampler: Sampler, texture: Texture ->
+            texture.glTexture?.use()
             it.uniform1i(sampler.glSampler ?: 0, sampler.binding)
             it.activeTexture(sampler.binding)
-            it.useTexture(texture.glTexture)
         }
     })
 
@@ -336,7 +348,9 @@ class Api(private val vk: VK?, private val gl: GL?) {
     }, {
         { callback: (textureBundle: TextureBundle) -> Texture ->
             sharedTexture.getOrCreate {
-                callback(TextureBundle(null, GLTexture.empty))
+                val colors = listOf(Vector4(1.0f))
+                val size = Point(1, 1)
+                callback(TextureBundle(null, it.createTexture(colors, size)))
                         .also { sharedTexture = it }
             }
         }
