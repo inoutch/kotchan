@@ -1,9 +1,7 @@
 package io.github.inoutch.kotchan.utility.graphic.gl
 
 import io.github.inoutch.kotchan.utility.graphic.UnsupportedPlatformError
-import io.github.inoutch.kotchan.utility.type.Matrix4
-import io.github.inoutch.kotchan.utility.type.Vector3
-import io.github.inoutch.kotchan.utility.type.Vector4
+import io.github.inoutch.kotchan.utility.type.*
 
 actual class GL actual constructor() {
     actual fun clearColor(red: Float, green: Float, blue: Float, alpha: Float) {
@@ -191,6 +189,10 @@ actual class GL actual constructor() {
     }
 
     actual fun createTexture2d(width: Int, height: Int, internalFormat: GLInternalFormat, format: GLFormat): GLTexture {
+        throw UnsupportedPlatformError()
+    }
+
+    actual fun createTexture(colors: List<Vector4>, size: Point): GLTexture? {
         throw UnsupportedPlatformError()
     }
 

@@ -1,8 +1,6 @@
 package io.github.inoutch.kotchan.utility.graphic.gl
 
-import io.github.inoutch.kotchan.utility.type.Matrix4
-import io.github.inoutch.kotchan.utility.type.Vector3
-import io.github.inoutch.kotchan.utility.type.Vector4
+import io.github.inoutch.kotchan.utility.type.*
 import kotlinx.cinterop.*
 import platform.glescommon.*
 import platform.gles3.*
@@ -238,6 +236,14 @@ actual class GL {
     }
 
     // texture
+    actual fun enableTexture() {
+        glEnable(GL_TEXTURE_2D)
+    }
+
+    actual fun disableTexture() {
+        glDisable(GL_TEXTURE_2D)
+    }
+
     actual fun activeTexture(index: Int) {
         glActiveTexture(GL_TEXTURE0.toUInt() + index.toUInt())
     }
@@ -253,6 +259,11 @@ actual class GL {
 
     actual fun deleteTexture(textureId: Int) {
         glDeleteTextures(1, arrayOf(textureId).toIntArray().toUIntArray().refTo(0))
+    }
+
+    actual fun createTexture(colors: List<Vector4>, size: Point): GLTexture? {
+        // unsupported
+        return null
     }
 
     actual fun createTexture2d(width: Int, height: Int, internalFormat: GLInternalFormat, format: GLFormat): GLTexture {
@@ -278,6 +289,10 @@ actual class GL {
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
             }
         }
+    }
+
+    actual fun getError(): Int {
+        return glGetError().toInt()
     }
 
     private fun compileShader(type: Int, text: String) = memScoped {
