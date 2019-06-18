@@ -1,5 +1,6 @@
 package io.github.inoutch.kotchan.utility.graphic.gl
 
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.opengl.GLES30
 import android.opengl.GLUtils
@@ -27,7 +28,7 @@ actual class GL {
     }
 
     actual fun createVBO(size: Int): GLVBO {
-        return createVBO(FloatArray(size, { 0.0f }))
+        return createVBO(FloatArray(size) { 0.0f })
     }
 
     actual fun createVBO(data: FloatArray): GLVBO {
@@ -135,6 +136,14 @@ actual class GL {
     }
 
     // texture
+    actual fun enableTexture() {
+        GLES30.glEnable(GLES30.GL_TEXTURE_2D)
+    }
+
+    actual fun disableTexture() {
+        GLES30.glDisable(GLES30.GL_TEXTURE_2D)
+    }
+
     actual fun activeTexture(index: Int) {
         GLES30.glActiveTexture(GLES30.GL_TEXTURE0 + index)
     }
@@ -170,6 +179,19 @@ actual class GL {
                 GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR)
             }
         }
+    }
+
+    actual fun createTexture(colors: List<Vector4>, size: Point): GLTexture? {
+        val pixels = colors
+                .map { it * 255.0f }
+                .map { it.x.toInt() or (it.y.toInt() shl 8) or (it.z.toInt() shl 16) or (it.z.toInt() shl 24) }
+                .toIntArray()
+        val bitmap = Bitmap.createBitmap(pixels, size.x, size.y, Bitmap.Config.ARGB_8888)
+        val texture = IntBuffer.allocate(1)
+        GLES30.glGenTextures(1, texture)
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, texture[0])
+        GLUtils.texImage2D(GLES30.GL_TEXTURE_2D, 0, bitmap, 0)
+        return GLTexture(texture[0], bitmap.width, bitmap.height)
     }
 
     actual fun createTexture2d(width: Int, height: Int, internalFormat: GLInternalFormat, format: GLFormat): GLTexture {
@@ -251,6 +273,10 @@ actual class GL {
 
     actual fun checkFrameBufferStatus(): Int {
         return GLES30.glCheckFramebufferStatus(GLES30.GL_FRAMEBUFFER)
+    }
+
+    actual fun getError(): Int {
+        return GLES30.glGetError()
     }
 
     private fun compileShader(type: Int, text: String): Int {

@@ -59,7 +59,7 @@ class GLFWLauncher(config: KotchanEngine.Config) {
         }
 
         core = KotchanCore(config, nativeSize)
-        core.vk = vk
+        core.applyVK(vk)
 
         var point = Point.ZERO
         var touch: TouchEvent? = null
