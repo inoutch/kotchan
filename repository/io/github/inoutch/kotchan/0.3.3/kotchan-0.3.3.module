@@ -1,5 +1,5 @@
 {
-  "formatVersion": "0.4",
+  "formatVersion": "1.0",
   "component": {
     "group": "io.github.inoutch",
     "module": "kotchan",
@@ -10,11 +10,43 @@
   },
   "createdBy": {
     "gradle": {
-      "version": "5.1.1",
-      "buildId": "4ohv56jokbhr5e3durxp5p5dyq"
+      "version": "5.4.1",
+      "buildId": "nz3zmrmvzjftvo24gsmfdfbk6e"
     }
   },
   "variants": [
+    {
+      "name": "android-releaseApiElements",
+      "attributes": {
+        "com.android.build.api.attributes.BuildTypeAttr": "release",
+        "com.android.build.api.attributes.VariantAttr": "release",
+        "com.android.build.gradle.internal.dependency.AndroidTypeAttr": "Aar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "androidJvm"
+      },
+      "available-at": {
+        "url": "../../kotchan-android/0.3.3/kotchan-android-0.3.3.module",
+        "group": "io.github.inoutch",
+        "module": "kotchan-android",
+        "version": "0.3.3"
+      }
+    },
+    {
+      "name": "android-releaseRuntimeElements",
+      "attributes": {
+        "com.android.build.api.attributes.BuildTypeAttr": "release",
+        "com.android.build.api.attributes.VariantAttr": "release",
+        "com.android.build.gradle.internal.dependency.AndroidTypeAttr": "Aar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "androidJvm"
+      },
+      "available-at": {
+        "url": "../../kotchan-android/0.3.3/kotchan-android-0.3.3.module",
+        "group": "io.github.inoutch",
+        "module": "kotchan-android",
+        "version": "0.3.3"
+      }
+    },
     {
       "name": "ios-api",
       "attributes": {
@@ -32,7 +64,7 @@
     {
       "name": "jvm-api",
       "attributes": {
-        "org.gradle.usage": "java-api",
+        "org.gradle.usage": "java-api-jars",
         "org.jetbrains.kotlin.platform.type": "jvm"
       },
       "available-at": {

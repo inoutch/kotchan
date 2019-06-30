@@ -1,5 +1,5 @@
 {
-  "formatVersion": "0.4",
+  "formatVersion": "1.0",
   "component": {
     "url": "../../kotchan/0.3.3/kotchan-0.3.3.module",
     "group": "io.github.inoutch",
@@ -11,8 +11,8 @@
   },
   "createdBy": {
     "gradle": {
-      "version": "5.1.1",
-      "buildId": "4ohv56jokbhr5e3durxp5p5dyq"
+      "version": "5.4.1",
+      "buildId": "nz3zmrmvzjftvo24gsmfdfbk6e"
     }
   },
   "variants": [
@@ -28,21 +28,21 @@
           "group": "org.jetbrains.kotlin",
           "module": "kotlin-stdlib-common",
           "version": {
-            "requires": "1.3.31"
+            "requires": "1.3.40"
           }
         },
         {
           "group": "org.jetbrains.kotlinx",
           "module": "kotlinx-serialization-runtime-native",
           "version": {
-            "requires": "0.11.0"
+            "requires": "0.11.1"
           }
         },
         {
           "group": "org.jetbrains.kotlinx",
           "module": "kotlinx-serialization-runtime-common",
           "version": {
-            "requires": "0.11.0"
+            "requires": "0.11.1"
           }
         }
       ],
@@ -50,23 +50,23 @@
         {
           "name": "kotchan.klib",
           "url": "kotchan-ios-0.3.3.klib",
-          "size": 1240892,
-          "sha1": "6452090973f0cce29c17283fc13184037256eddb",
-          "md5": "61054c78b4d34115997e5b23bf83bf60"
+          "size": 1251374,
+          "sha1": "65aea531c2ae8508707f9e1f1ff4eb7db90a9004",
+          "md5": "1a273300bfc00f72e3b3ae5ac4c2a46a"
         },
         {
           "name": "kotchan-cinterop-vulkan.klib",
           "url": "kotchan-ios-0.3.3-cinterop-vulkan.klib",
-          "size": 6272411,
-          "sha1": "9250045366ec68ec3b85d426d7aa2e96ae84d858",
-          "md5": "c678b999d8b55af899c0e1ae1a0a1015"
+          "size": 6268422,
+          "sha1": "186573d34741a96b07322b067e35a427ae474e79",
+          "md5": "2cd52eca20e5e8db80d0d39199404af4"
         },
         {
           "name": "kotchan-cinterop-kmvk.klib",
           "url": "kotchan-ios-0.3.3-cinterop-kmvk.klib",
-          "size": 67126,
-          "sha1": "9dabc23151d18c7415fdcfb889d4eb2b829b81d6",
-          "md5": "5dbc2fab4d7786d5da54748e272ae366"
+          "size": 32567,
+          "sha1": "2884b5ff51edc121e80a0b56fd18352399c2c908",
+          "md5": "8c6aedc46a5f5abc468e1a2a1c107459"
         }
       ]
     },

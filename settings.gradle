@@ -1,4 +1,2 @@
 rootProject.name = "kotchan"
 enableFeaturePreview("GRADLE_METADATA")
-
-include ":common", ":android"

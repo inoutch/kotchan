@@ -1,14 +1,19 @@
+import org.gradle.internal.os.OperatingSystem
+
 buildscript {
     ext.kotlin_version = "1.3.31"
-    ext.konan_version = "1.1.0"
-    ext.serialization_version = "0.10.0"
+    ext.kotlin_coroutines_version = "1.2.2"
+    ext.kotlin_serialization_version = "0.11.0"
+    ext.kotchan_version = "0.3.3"
+    ext.mainClassName = "MainKt"
+    ext.extraJvmArgs = ""
+
+    ext.lwjgl_version = "3.2.1"
 
     repositories {
         google()
         jcenter()
         mavenCentral()
-        maven { url "https://dl.bintray.com/kotlin/kotlin-dev" }
-        maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
         maven { url "https://dl.bintray.com/kotlin/kotlinx" }
         maven { url "https://plugins.gradle.org/m2/" }
     }
@@ -16,7 +21,7 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-native-gradle-plugin:$kotlin_version"
+
         classpath "com.android.tools.build:gradle:3.4.1"
     }
 }
@@ -25,53 +30,169 @@ repositories {
     google()
     jcenter()
     mavenCentral()
-    maven { url "https://dl.bintray.com/kotlin/kotlin-dev" }
-    maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
-    maven { url "https://dl.bintray.com/kotlin/kotlinx" }
+    mavenLocal()
+    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+    // artifacts are published to this repository
+    maven { url "https://kotlin.bintray.com/kotlinx" }
 }
 
-subprojects {
-    repositories {
-        google()
-        jcenter()
-        mavenCentral()
-        maven { url "https://dl.bintray.com/kotlin/kotlin-dev" }
-        maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
-        maven { url "https://dl.bintray.com/kotlin/kotlinx" }
+// common
+apply plugin: "kotlin-multiplatform"
+apply plugin: "kotlinx-serialization"
+
+// android
+apply plugin: "com.android.application"
+
+android {
+    compileSdkVersion 26
+
+    defaultConfig {
+        minSdkVersion 24
+        targetSdkVersion 26
+        versionName "1.0"
+    }
+
+    packagingOptions {
+        exclude "META-INF/*.kotlin_module"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            matchingFallbacks = ['release', 'debug']
+        }
+        debug {
+            applicationIdSuffix ".debug"
+            debuggable true
+            matchingFallbacks = ['release', 'debug']
+        }
+    }
+
+    sourceSets.main {
+        assets.srcDirs += "src/commonMain/resources"
     }
 }
 
-project(":common") {
-    apply plugin: "kotlin-platform-common"
-    apply plugin: "kotlinx-serialization"
+// jvm
+def platform = OperatingSystem.current()
+switch (platform) {
+    case OperatingSystem.WINDOWS:
+        project.ext.lwjgl_natives = "natives-windows"
+        break
+    case OperatingSystem.LINUX:
+        project.ext.lwjgl_natives = "natives-linux"
+        break
+    case OperatingSystem.MAC_OS:
+        project.ext.lwjgl_natives = "natives-macos"
+        extraJvmArgs = ["-XstartOnFirstThread"]
+        break
+}
 
-    sourceSets.main.kotlin.srcDirs += "../../src/commonMain/kotlin"
+kotlin {
+    jvm()
+    iosArm64('ios') {
+        binaries.executable {
+            entryPoint = "io.github.inouct.kotchan.example.main"
+        }
+    }
+    android()
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$kotlin_coroutines_version"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$kotlin_serialization_version"
 
-    dependencies {
-        implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
-        implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serialization_version"
+                implementation "io.github.inoutch:kotchan:$kotchan_version"
+            }
+        }
+        commonTest {
+            dependencies {
+                implementation "org.jetbrains.kotlin:kotlin-test-annotations-common:$kotlin_version"
+                implementation "org.jetbrains.kotlin:kotlin-test-common:$kotlin_version"
+            }
+        }
+        jvmMain {
+            dependencies {
+                api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+                api "io.github.inoutch:kotchan-jvm:$kotchan_version"
+
+                // HACK: Kotchan is not included runtime libraries
+                runtimeOnly "org.lwjgl:lwjgl:$lwjgl_version:$lwjgl_natives"
+                runtimeOnly "org.lwjgl:lwjgl-stb:$lwjgl_version:$lwjgl_natives"
+                runtimeOnly "org.lwjgl:lwjgl-glfw:$lwjgl_version:$lwjgl_natives"
+                if (platform == OperatingSystem.MAC_OS) {
+                    runtimeOnly "org.lwjgl:lwjgl-vulkan:$lwjgl_version:$lwjgl_natives"
+                }
+
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$kotlin_serialization_version"
+            }
+        }
+        iosMain {
+            dependencies {
+//                dependsOn commonMain
+//                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
+//                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$kotlin_coroutines_version"
+//                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:$kotlin_serialization_version"
+
+//                implementation "io.github.inoutch:kotchan-ios:$kotchan_version"
+            }
+        }
+        androidMain {
+            dependencies {
+                implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$kotlin_serialization_version"
+
+                implementation "io.github.inoutch:kotchan-android:$kotchan_version"
+            }
+        }
     }
 }
 
-project(":jvm") {
-    apply from: rootProject.file("jvm.gradle")
+task fatJar(type: Jar) {
+    baseName = "${project.name}-all"
+    manifest { attributes "Main-Class": mainClassName }
+    from { kotlin.jvm().compilations.main.runtimeDependencyFiles.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jvmJar
+}
 
-    sourceSets.main.resources.srcDirs += "../common/src/main/resources"
+task runJvm(type: JavaExec) {
+    classpath = kotlin.targets.jvm.compilations.test.runtimeDependencyFiles
+    main = mainClassName
+    jvmArgs extraJvmArgs
+}
 
-    dependencies {
-        expectedBy project(":common")
+task buildAppForXcode {
+    if (isCalledFromXcode()) {
+        dependsOn kotlin.targets.ios.binaries.getExecutable(getBuildTypeForXcode()).linkTask
+    }
+
+    doLast {
+        if (!isCalledFromXcode()) {
+            throw new Exception("Please run 'buildAppForXcode' task with all necessary properties!")
+        }
+
+        copy {
+            from file(kotlin.targets.ios.binaries.getExecutable(getBuildTypeForXcode()).outputFile)
+            into file(getBinaryLocationForXcode().parentFile)
+            rename {
+                getBinaryLocationForXcode().name
+            }
+        }
     }
 }
 
-project(":android") {
-    apply from: rootProject.file("android.gradle")
+private boolean isCalledFromXcode() {
+    project.hasProperty("configuration.name") && project.hasProperty("binary.location")
+}
 
-    android.sourceSets.main {
-        java.srcDirs += "src/main/kotlin"
-        assets.srcDirs += "../common/src/main/resources"
-    }
+private String getBuildTypeForXcode() {
+    project.properties["configuration.name"] as String
+}
 
-    dependencies {
-        expectedBy project(":common")
-    }
+private File getBinaryLocationForXcode() {
+    file(project.properties["binary.location"])
 }
