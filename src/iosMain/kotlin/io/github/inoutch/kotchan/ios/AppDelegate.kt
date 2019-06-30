@@ -4,12 +4,11 @@ import platform.UIKit.*
 
 class AppDelegate : UIResponder, UIApplicationDelegateProtocol {
 
-    companion object : UIResponderMeta(), UIApplicationDelegateProtocolMeta
+    @OverrideInit constructor() : super()
+
+    companion object : UIResponderMeta(), UIApplicationDelegateProtocolMeta {}
 
     private var _window: UIWindow? = null
-
-    @OverrideInit
-    constructor() : super()
 
     override fun window() = _window
 
