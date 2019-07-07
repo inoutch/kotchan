@@ -92,7 +92,7 @@ kotlin {
     jvm()
     iosArm64('ios') {
         binaries.executable {
-            entryPoint = "io.github.inouct.kotchan.example.main"
+            entryPoint = "io.github.inoutch.kotchan.example.main"
         }
     }
     android()

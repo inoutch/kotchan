@@ -1,7 +1,5 @@
-package io.github.inouct.kotchan.example
+package io.github.inoutch.kotchan.example
 
-import io.github.inoutch.kotchan.core.KotchanEngine
-import io.github.inoutch.kotchan.example.AppConfig
 import io.github.inoutch.kotchan.ios.DefaultConfig
 import kotlinx.cinterop.*
 import platform.Foundation.NSStringFromClass

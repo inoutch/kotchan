@@ -1,4 +1,4 @@
-package io.github.inouct.kotchan.example
+package io.github.inoutch.kotchan.example
 
 import platform.UIKit.*
 
