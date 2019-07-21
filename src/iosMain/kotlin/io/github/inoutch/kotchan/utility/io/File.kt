@@ -28,7 +28,7 @@ actual class File {
     }
 
     actual fun writeText(writableFilepath: String, text: String): Boolean {
-        return writeBytes(writableFilepath, text.toUtf8())
+        return writeBytes(writableFilepath, text.encodeToByteArray())
     }
 
     actual fun getResourcePath(name: String): String? {

@@ -36,9 +36,9 @@ class Batch : Disposable {
         }
 
         val material = polygon.material ?: return
-        if (polygon.mesh.size <= 0) {
-            return
-        }
+//        if (polygon.mesh.size <= 0) {
+//            return
+//        }
 
         val batchPolygonBundle = polygons.getOrPut(material) {
             BatchPolygonBundle(

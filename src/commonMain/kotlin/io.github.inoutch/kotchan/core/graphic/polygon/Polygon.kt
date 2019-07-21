@@ -19,16 +19,17 @@ open class Polygon(initMesh: Mesh, val material: Material?) : Updatable {
     var visible = true
         set(value) {
             if (field != value) {
-                isPositionsDirty = true
                 setDirtyPosition()
             }
             field = value
         }
 
+    val computedVisible: Boolean
+        get() = visible && (parent == null || parent?.computedVisible == true)
+
     open var position = Vector3()
         set(value) {
             if (field != value) {
-                isPositionsDirty = true
                 setDirtyPosition()
             }
             field = value
@@ -37,7 +38,6 @@ open class Polygon(initMesh: Mesh, val material: Material?) : Updatable {
     open var color = Vector4(1.0f, 1.0f, 1.0f, 1.0f)
         set(value) {
             if (field != value) {
-                isColorsDirty = true
                 setDirtyColor()
             }
             field = value
@@ -46,7 +46,6 @@ open class Polygon(initMesh: Mesh, val material: Material?) : Updatable {
     open var scale = Vector3(1.0f, 1.0f, 1.0f)
         set(value) {
             if (field != value) {
-                isPositionsDirty = true
                 setDirtyPosition()
             }
             field = value
@@ -56,7 +55,7 @@ open class Polygon(initMesh: Mesh, val material: Material?) : Updatable {
         if (isPositionsDirty) {
             val modelMatrix = transform()
             val pos = mesh.pos()
-            positionArray = if (visible) {
+            positionArray = if (computedVisible) {
                 pos.map { Vector3(modelMatrix * Vector4(it, 1.0f)) }
             } else {
                 pos.map { Vector3() }
@@ -193,12 +192,12 @@ open class Polygon(initMesh: Mesh, val material: Material?) : Updatable {
 
     override fun update(delta: Float) {}
 
-    private fun setDirtyPosition() {
+    protected fun setDirtyPosition() {
         isPositionsDirty = true
         privateChildren.forEach { it.setDirtyPosition() }
     }
 
-    private fun setDirtyColor() {
+    protected fun setDirtyColor() {
         isColorsDirty = true
         privateChildren.forEach { it.setDirtyColor() }
     }

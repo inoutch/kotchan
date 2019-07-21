@@ -82,7 +82,8 @@ class TileConverter {
     fun loadFromResource(filepath: String, name: String) = load(instance.file.getResourcePathWithError(filepath), name)
 
     fun convert(name: String, point: Point, input: (point: Point) -> Int, output: (point: Point, id: Int) -> Unit) {
-        val converters = this.converters[name] ?: return
+        val converters = this.converters[name]
+                ?: throw IllegalStateException("Converter name is not found: name = $name")
         for (converter in converters) {
             val sx = point.x - converter.output.x
             val sy = point.y - converter.output.y

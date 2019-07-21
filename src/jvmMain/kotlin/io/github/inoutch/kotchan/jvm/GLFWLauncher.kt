@@ -2,6 +2,7 @@ package io.github.inoutch.kotchan.jvm
 
 import io.github.inoutch.kotchan.core.KotchanCore
 import io.github.inoutch.kotchan.core.KotchanEngine
+import io.github.inoutch.kotchan.core.controller.keyboard.keyboardController
 import io.github.inoutch.kotchan.core.controller.touch.TouchEvent
 import io.github.inoutch.kotchan.utility.graphic.vulkan.VK
 import io.github.inoutch.kotchan.extension.toStringList
@@ -84,6 +85,14 @@ class GLFWLauncher(config: KotchanEngine.Config) {
                     }
                 }
             }
+        }
+        glfwSetKeyCallback(window) { _, key, _, action, _ ->
+            if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS) {
+                keyboardController.delete()
+            }
+        }
+        glfwSetCharCallback(window) { _, codepoint ->
+            keyboardController.input(codepoint.toChar().toString())
         }
 
         core.init()

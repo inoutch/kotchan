@@ -1,6 +1,7 @@
 import io.github.inoutch.kotchan.core.KotchanCore
 import io.github.inoutch.kotchan.core.controller.touch.TouchEvent
 import io.github.inoutch.kotchan.ios.DefaultConfig
+import io.github.inoutch.kotchan.ios.KotchanViewContext
 import io.github.inoutch.kotchan.utility.graphic.vulkan.VK
 import io.github.inoutch.kotchan.utility.graphic.vulkan.VkInstance
 import io.github.inoutch.kotchan.utility.graphic.vulkan.vkCreateIOSSurfaceMVK
@@ -28,6 +29,7 @@ class KotchanViewController(private val viewController: UIViewController) {
     private lateinit var windowRatio: Vector2
 
     fun viewDidLoad() {
+        KotchanViewContext.register(KotchanViewContext(viewController))
 
         this.viewController.view.contentScaleFactor = UIScreen.mainScreen.nativeScale
 

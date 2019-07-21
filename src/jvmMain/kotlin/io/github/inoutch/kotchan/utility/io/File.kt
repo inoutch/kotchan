@@ -11,6 +11,13 @@ actual class File {
     }
 
     actual fun readBytes(filepath: String): ByteArray? {
+        val jarScheme = filepath.split("!")
+        if (jarScheme.size == 2) {
+            return javaClass.getResourceAsStream(jarScheme[1])?.use {
+                it.readBytes()
+            }
+        }
+
         try {
             FileInputStream(File(filepath)).use {
                 return it.readBytes()
