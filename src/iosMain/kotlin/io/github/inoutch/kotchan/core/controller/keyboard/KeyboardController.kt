@@ -11,6 +11,12 @@ actual class KeyboardController {
     actual val isOpened: Boolean
         get() = currentTextField?.isFirstResponder == true
 
+    actual var text: String
+        get() = currentTextField?.text ?: ""
+        set(value) {
+            currentTextField?.text = value
+        }
+
     actual fun open(initialText: String, listener: KeyboardListener) {
         if (currentTextField != null) {
             close()

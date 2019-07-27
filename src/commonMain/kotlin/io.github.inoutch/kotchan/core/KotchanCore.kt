@@ -13,7 +13,11 @@ import io.github.inoutch.kotchan.core.graphic.camera.Camera
 import io.github.inoutch.kotchan.core.graphic.camera.Camera2D
 import io.github.inoutch.kotchan.core.graphic.camera.Camera3D
 import io.github.inoutch.kotchan.core.graphic.Api
+import io.github.inoutch.kotchan.core.graphic.Material
+import io.github.inoutch.kotchan.core.graphic.shader.SimpleShaderProgram
+import io.github.inoutch.kotchan.core.graphic.texture.Texture
 import io.github.inoutch.kotchan.core.logger.Logger
+import io.github.inoutch.kotchan.core.resource.ResourceManager.Companion.resourceManager
 import io.github.inoutch.kotchan.core.tool.TextureCacheManager
 import io.github.inoutch.kotchan.utility.graphic.gl.GL
 import io.github.inoutch.kotchan.utility.graphic.vulkan.VK
@@ -25,6 +29,8 @@ class KotchanCore(
     companion object {
         const val KOTCHAN_ENGINE_NAME = "kotchan-engine"
         const val KOTCHAN_LOGGER = "kotchan-logger"
+        const val KOTCHAN_RESOURCE_SHADER_SIMPLE = "shader/kotchan/simple"
+        const val KOTCHAN_RESOURCE_MATERIAL_PLAIN = "material/kotchan/plain"
 
         val instance: KotchanCore get() = KotchanInstance.manager().get(KOTCHAN_ENGINE_NAME) as KotchanCore
         val logger: Logger get() = KotchanInstance.manager().get(KOTCHAN_LOGGER) as Logger
@@ -83,7 +89,12 @@ class KotchanCore(
         this.viewport = calcViewport()
 
         beforeMillis = Timer.milliseconds()
-        sceneFactory = { config.initScene() }
+
+        sceneFactory = {
+            // Load preset resources
+            this.loadPresetResources()
+            config.initScene()
+        }
     }
 
     fun draw() {
@@ -189,5 +200,12 @@ class KotchanCore(
 
         currentScene = sceneFactory.invoke()
         this.sceneFactory = null
+    }
+
+    private fun loadPresetResources() {
+        val simpleShaderProgram = SimpleShaderProgram()
+        resourceManager.delegate(KOTCHAN_RESOURCE_SHADER_SIMPLE, simpleShaderProgram)
+
+        resourceManager.delegate(KOTCHAN_RESOURCE_MATERIAL_PLAIN, Material(Material.Config(simpleShaderProgram), listOf(Texture.emptyTexture())))
     }
 }

@@ -230,6 +230,12 @@ class BMFont private constructor(
                 .also { it.textureAutoRelease = true }
     }.toMap()
 
+    fun calcWidth(text: String): Float {
+        return text.mapNotNull { chars[it.toInt()] }
+                .map { it.xAdvance.toFloat() }
+                .sum()
+    }
+
     override fun dispose() {
         materials.forEach { it.value.dispose() }
     }

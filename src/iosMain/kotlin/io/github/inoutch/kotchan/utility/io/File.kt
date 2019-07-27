@@ -1,5 +1,6 @@
 package io.github.inoutch.kotchan.utility.io
 
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.logger
 import kotlinx.cinterop.*
 import platform.Foundation.*
 import io.github.inoutch.kotchan.extension.toUTF8String
@@ -7,9 +8,13 @@ import io.github.inoutch.kotchan.utility.path.Path
 import platform.Foundation.NSDataWritingAtomic
 import platform.Foundation.create
 import platform.Foundation.dataWithContentsOfFile
+import platform.posix.err
 
 @ExperimentalUnsignedTypes
 actual class File {
+    init {
+        makeDirectories("")
+    }
 
     actual fun readBytes(filepath: String): ByteArray? {
         val fileData = NSData.dataWithContentsOfFile(filepath) ?: return null
@@ -21,10 +26,21 @@ actual class File {
     }
 
     actual fun writeBytes(writableFilepath: String, bytes: ByteArray): Boolean {
-        return bytes.usePinned { p ->
+        val data = bytes.usePinned { p ->
             val pointer = p.addressOf(0)
             NSData.create(bytes = pointer, length = bytes.size.toULong())
-        }.writeToFile(getWritablePath(writableFilepath), NSDataWritingAtomic, null)
+        }
+        val fullpath = getWritablePath(writableFilepath)
+
+        return memScoped {
+            val error = alloc<ObjCObjectVar<NSError?>>()
+            val ret = data.writeToFile(fullpath, NSDataWritingAtomic, error.ptr)
+            val errorValue = error.value
+            if (errorValue != null) {
+                logger.error("${errorValue.localizedDescription} [code=${errorValue.code}, path=$fullpath]")
+            }
+            ret
+        }
     }
 
     actual fun writeText(writableFilepath: String, text: String): Boolean {
@@ -42,7 +58,7 @@ actual class File {
     }
 
     actual fun makeDirectory(writablePath: String): Boolean {
-        return NSFileManager.defaultManager().createDirectoryAtPath(getWritablePath(writablePath), false, null, null)
+        return NSFileManager.defaultManager().createDirectoryAtPath(getWritablePath(writablePath), true, null, null)
     }
 
     actual fun makeDirectories(writablePath: String): Boolean {

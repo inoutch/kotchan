@@ -87,8 +87,11 @@ class GLFWLauncher(config: KotchanEngine.Config) {
             }
         }
         glfwSetKeyCallback(window) { _, key, _, action, _ ->
-            if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS) {
-                keyboardController.delete()
+            if (action == GLFW_PRESS) {
+                when (key) {
+                    GLFW_KEY_BACKSPACE -> keyboardController.delete()
+                    GLFW_KEY_ENTER -> keyboardController.enter()
+                }
             }
         }
         glfwSetCharCallback(window) { _, codepoint ->

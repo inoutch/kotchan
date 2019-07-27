@@ -5,3 +5,15 @@ expect class Timer {
         fun milliseconds(): Long
     }
 }
+
+class TimerInterval {
+    private val start = Timer.milliseconds()
+
+    fun lap(): Long {
+        return Timer.milliseconds() - start
+    }
+}
+
+fun Timer.Companion.measure(scope: (interval: TimerInterval) -> Unit) {
+    scope(TimerInterval())
+}

@@ -1,5 +1,6 @@
 package io.github.inoutch.kotchan.utility.io
 
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.logger
 import io.github.inoutch.kotchan.extension.toUTF8String
 import io.github.inoutch.kotchan.utility.path.Path
 import java.io.*
@@ -38,6 +39,7 @@ actual class File {
                 true
             }
         } catch (e: FileNotFoundException) {
+            logger.debug(e.message ?: "FileNotFoundException(null)")
             false
         }
     }

@@ -4,7 +4,6 @@ private class KeyboardContext(
         initialText: String,
         val listener: KeyboardListener) {
     var text: String = initialText
-        private set
 
     fun input(char: String) {
         text += char
@@ -18,11 +17,21 @@ private class KeyboardContext(
         text = text.substring(0, text.length - 1)
         listener.onInput(text)
     }
+
+    fun enter() {
+        listener.onReturn()
+    }
 }
 
 actual class KeyboardController actual constructor() {
     actual val isOpened: Boolean
         get() = currentContext != null
+
+    actual var text: String
+        get() = currentContext?.text ?: ""
+        set(value) {
+            currentContext?.text = value
+        }
 
     private var currentContext: KeyboardContext? = null
 
@@ -40,5 +49,10 @@ actual class KeyboardController actual constructor() {
 
     fun delete() {
         currentContext?.delete()
+    }
+
+    fun enter() {
+        // Ignore for Japanese
+//        currentContext?.enter()
     }
 }

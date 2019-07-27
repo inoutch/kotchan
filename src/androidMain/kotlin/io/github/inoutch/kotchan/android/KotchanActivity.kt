@@ -1,13 +1,19 @@
 package io.github.inoutch.kotchan.android
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.res.AssetManager
 import android.os.Bundle
+import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import io.github.inoutch.kotchan.core.KotchanEngine
 import io.github.inoutch.kotchan.utility.path.Path
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import android.widget.FrameLayout
 
 abstract class KotchanActivity : Activity() {
 
@@ -17,6 +23,10 @@ abstract class KotchanActivity : Activity() {
         private var assetManager: AssetManager? = null
 
         private var fileDirectory: String? = null
+
+        @SuppressLint("StaticFieldLeak")
+        var keyboard: KotchanKeyboard? = null
+            private set
 
         fun inputStream(filepath: String) = if (filepath.startsWith(ASSET_PREFIX)) {
             assetManager?.open(filepath.removePrefix(ASSET_PREFIX))
@@ -45,6 +55,13 @@ abstract class KotchanActivity : Activity() {
 
         assetManager = assets
         fileDirectory = applicationContext.filesDir.path
+        val inputMethodManager = applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+        val rootLayout = findViewById<FrameLayout>(android.R.id.content)
+        val editText = EditText(applicationContext)
+        editText.layoutParams = ViewGroup.LayoutParams(0, 0)
+        rootLayout.addView(editText)
+        keyboard = KotchanKeyboard(editText, inputMethodManager)
     }
 
     override fun onPause() {
@@ -55,6 +72,12 @@ abstract class KotchanActivity : Activity() {
     override fun onResume() {
         super.onResume()
         surfaceView.onResume()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        assetManager = null
+        keyboard = null
     }
 
     abstract fun config(): KotchanEngine.Config

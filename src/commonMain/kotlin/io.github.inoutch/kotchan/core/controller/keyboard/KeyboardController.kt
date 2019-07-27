@@ -10,6 +10,8 @@ interface KeyboardListener {
 expect class KeyboardController() {
     val isOpened: Boolean
 
+    var text: String
+
     fun open(initialText: String, listener: KeyboardListener)
 
     fun close()
