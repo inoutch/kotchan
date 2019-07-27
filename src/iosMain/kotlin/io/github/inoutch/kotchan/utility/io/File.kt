@@ -57,6 +57,27 @@ actual class File {
         return Path.resolve(paths.first() as String, name)
     }
 
+    actual fun getFileList(filepath: String): List<FileItem> {
+        val manager = NSFileManager.defaultManager()
+        return memScoped {
+            val error = alloc<ObjCObjectVar<NSError?>>()
+            val files = manager.contentsOfDirectoryAtPath(filepath, error.ptr)
+            val errorValue = error.value
+            if (errorValue != null) {
+                logger.error("${errorValue.localizedDescription} [code=${errorValue.code}, path=$filepath]")
+                return@memScoped emptyList()
+            } else if (files == null) {
+                return@memScoped emptyList()
+            }
+            files.map {
+                val name = it as String
+                val isDirectory = alloc<BooleanVar>()
+                manager.fileExistsAtPath(Path.resolve(filepath, name), isDirectory.ptr)
+                FileItem(name, if (isDirectory.value) FileType.Directory else FileType.File)
+            }
+        }
+    }
+
     actual fun makeDirectory(writablePath: String): Boolean {
         return NSFileManager.defaultManager().createDirectoryAtPath(getWritablePath(writablePath), true, null, null)
     }

@@ -58,6 +58,12 @@ actual class File {
         return Path.resolve(File(decodedPath).parent, "data", name)
     }
 
+    actual fun getFileList(filepath: String): List<FileItem> {
+        return File(filepath).listFiles().map {
+            FileItem(it.name, if (it.isFile) FileType.File else FileType.Directory)
+        }
+    }
+
     actual fun makeDirectory(writablePath: String): Boolean {
         return File(getWritablePath(writablePath)).mkdir()
     }

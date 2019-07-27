@@ -14,22 +14,28 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import android.widget.FrameLayout
+import io.github.inoutch.kotchan.utility.io.FileItem
+import io.github.inoutch.kotchan.utility.io.FileType
+import java.io.IOException
 
 abstract class KotchanActivity : Activity() {
 
     companion object {
         private const val ASSET_PREFIX = "@assets:"
 
-        private var assetManager: AssetManager? = null
+        private val assetManager: AssetManager
+            get() = currentAssetManager ?: throw IllegalStateException("assetManager is null")
 
         private var fileDirectory: String? = null
+
+        private var currentAssetManager: AssetManager? = null
 
         @SuppressLint("StaticFieldLeak")
         var keyboard: KotchanKeyboard? = null
             private set
 
         fun inputStream(filepath: String) = if (filepath.startsWith(ASSET_PREFIX)) {
-            assetManager?.open(filepath.removePrefix(ASSET_PREFIX))
+            assetManager.open(filepath.removePrefix(ASSET_PREFIX))
         } else {
             FileInputStream(File(filepath))
         }
@@ -38,10 +44,30 @@ abstract class KotchanActivity : Activity() {
 
         fun filesDir(name: String) = Path.resolve(*listOfNotNull(fileDirectory, name).toTypedArray())
 
+        fun fileList(filepath: String): List<FileItem> {
+            return if (filepath.startsWith(ASSET_PREFIX)) {
+                val writeFilepath = filepath.removePrefix(ASSET_PREFIX)
+                assetManager.list(writeFilepath)?.map {
+                    FileItem(it, fileTypeForAssets(Path.resolve(writeFilepath, it)))
+                } ?: emptyList()
+            } else {
+                File(filepath).listFiles().map {
+                    FileItem(it.name, if (it.isFile) FileType.File else FileType.Directory)
+                }
+            }
+        }
+
         fun assetFileDescriptor(filepath: String) = if (filepath.startsWith(ASSET_PREFIX)) {
-            assetManager?.openFd(filepath.removePrefix(ASSET_PREFIX))
+            assetManager.openFd(filepath.removePrefix(ASSET_PREFIX))
         } else {
             null
+        }
+
+        private fun fileTypeForAssets(filepath: String) = try {
+            assetManager.open(filepath)
+            FileType.File
+        } catch (e: IOException) {
+            FileType.Directory
         }
     }
 
@@ -53,7 +79,7 @@ abstract class KotchanActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(surfaceView)
 
-        assetManager = assets
+        currentAssetManager = assets
         fileDirectory = applicationContext.filesDir.path
         val inputMethodManager = applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
@@ -76,7 +102,7 @@ abstract class KotchanActivity : Activity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        assetManager = null
+        currentAssetManager = null
         keyboard = null
     }
 

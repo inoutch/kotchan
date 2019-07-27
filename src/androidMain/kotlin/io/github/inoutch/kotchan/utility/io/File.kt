@@ -39,6 +39,8 @@ actual class File {
         return KotchanActivity.filesDir(name)
     }
 
+    actual fun getFileList(filepath: String): List<FileItem> = KotchanActivity.fileList(filepath)
+
     actual fun makeDirectory(writablePath: String): Boolean {
         return File(getWritablePath(writablePath)).mkdir()
     }

@@ -17,10 +17,19 @@ expect class File() {
 
     fun getWritablePath(name: String): String
 
+    fun getFileList(filepath: String): List<FileItem>
+
     fun makeDirectory(writablePath: String): Boolean
 
     fun makeDirectories(writablePath: String): Boolean
 }
+
+enum class FileType {
+    File,
+    Directory,
+}
+
+class FileItem(val name: String, val fileType: FileType)
 
 class NoSuchDirectoryError(e: String) : Error("$e: no such directory")
 
