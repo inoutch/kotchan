@@ -206,6 +206,8 @@ class KotchanCore(
         val simpleShaderProgram = SimpleShaderProgram()
         resourceManager.delegate(KOTCHAN_RESOURCE_SHADER_SIMPLE, simpleShaderProgram)
 
-        resourceManager.delegate(KOTCHAN_RESOURCE_MATERIAL_PLAIN, Material(Material.Config(simpleShaderProgram), listOf(Texture.emptyTexture())))
+        val material = Material(Material.Config(simpleShaderProgram).also { it.depthTest = false },
+                listOf(Texture.emptyTexture()))
+        resourceManager.delegate(KOTCHAN_RESOURCE_MATERIAL_PLAIN, material)
     }
 }
