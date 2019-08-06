@@ -26,4 +26,8 @@ class Map2D<T> {
             }
         }.flatten()
     }
+
+    fun remove(p: Point) {
+        data[p.y]?.remove(p.x)
+    }
 }
