@@ -8,6 +8,8 @@ data class Rect(val origin: Vector2, val size: Vector2) {
         val Zero = Rect(Vector2.Zero, Vector2.Zero)
     }
 
+    constructor(origin: Point, size: Point) : this(origin.toVector2(), size.toVector2())
+
     operator fun plus(other: Vector2) = Rect(origin + other, size)
 
     operator fun minus(other: Vector2) = Rect(origin - other, size)

@@ -20,6 +20,9 @@ class TouchControllerEntity : TouchEmitter, TouchController {
 
     private var incremental = 0
 
+    override val touchSize: Int
+        get() = touches.size
+
     override fun onTouchesBegan(touchEvents: List<TouchEvent>) {
         touchEvents.forEach {
             val touch = TouchEntity(incremental++, it.point, TouchType.Began)

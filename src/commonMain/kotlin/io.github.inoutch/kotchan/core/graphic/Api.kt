@@ -146,7 +146,7 @@ class Api(private val vk: VK?, private val gl: GL?) {
         }
     })
 
-    val createGraphicsPipeline = checkSupportGraphics({ vk ->
+    val createGraphicsPipeline: (shaderProgram: ShaderProgram, config: GraphicsPipeline.Config) -> GraphicsPipeline = checkSupportGraphics({ vk ->
         pipeline@{ shaderProgram: ShaderProgram, config: GraphicsPipeline.Config ->
             val shader = shaderProgram.shader.vkShader ?: throw Error("no vulkan shader module")
             val uniforms = shaderProgram.descriptorSets

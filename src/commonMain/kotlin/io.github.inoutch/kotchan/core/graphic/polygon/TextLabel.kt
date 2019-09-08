@@ -27,7 +27,6 @@ open class TextLabel(
                 val polygon = polygons.getValue(it.key)
                 polygon.replaceMesh(it.value.toMesh())
                 polygon.size = size
-                polygon.position = Vector3(size / 2.0f, 0.0f)
             }
         }
 
