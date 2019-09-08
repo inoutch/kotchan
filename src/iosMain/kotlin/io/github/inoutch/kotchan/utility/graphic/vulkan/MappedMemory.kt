@@ -25,6 +25,9 @@ actual class MappedMemory actual constructor(size: Long) : Disposable {
 
     @ExperimentalUnsignedTypes
     actual fun copy(offset: Long, size: Long, array: FloatArray) = memScoped {
+        if (size <= 0) {
+            return@memScoped
+        }
         array.usePinned {
             val p = (native.rawValue.toLong() + offset * FLOAT_SIZE).toCPointer<FloatVar>()
             memcpy(p, it.addressOf(0), (size * FLOAT_SIZE).toULong())

@@ -33,6 +33,9 @@ data class Vector2(val x: Float, val y: Float) {
     operator fun div(other: Vector2) = Vector2(x / other.x, y / other.y)
     operator fun div(other: Point) = Vector2(x / other.x, y / other.y)
 
+    fun toVector3(z: Float = 0.0f) = Vector3(x, y, z)
+    fun toVector4(z: Float = 0.0f, w: Float = 0.0f) = Vector4(x, y, z, w)
+
     companion object {
         val Zero = Vector2(0.0f, 0.0f)
     }

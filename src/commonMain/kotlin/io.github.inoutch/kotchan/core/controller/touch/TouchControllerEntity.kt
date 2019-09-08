@@ -20,6 +20,9 @@ class TouchControllerEntity : TouchEmitter, TouchController {
 
     private var incremental = 0
 
+    override val touchSize: Int
+        get() = touches.size
+
     override fun onTouchesBegan(touchEvents: List<TouchEvent>) {
         touchEvents.forEach {
             val touch = TouchEntity(incremental++, it.point, TouchType.Began)
@@ -77,15 +80,9 @@ class TouchControllerEntity : TouchEmitter, TouchController {
         val sortedTouchListener = touchListeners
                 .filter { it.enable }
                 .sortedBy { -it.priority }
-        var currentChain = true
         var nextChain = true
-        var priority = Int.MAX_VALUE
         for (touchListener in sortedTouchListener) {
-            if (priority > touchListener.priority) {
-                currentChain = nextChain
-                priority = touchListener.priority
-            }
-            nextChain = nextChain.and(touchListener.on(toucheEntity, currentChain))
+            nextChain = nextChain.and(touchListener.on(toucheEntity, nextChain))
         }
     }
 }

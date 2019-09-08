@@ -28,6 +28,9 @@ data class Vector4(var x: Float, val y: Float, val z: Float, val w: Float) {
         it[2] = z
         it[3] = w
     }
+
+    fun toVector2() = Vector2(x, y)
+    fun toVector3() = Vector3(x, y, z)
 }
 
 fun List<Vector4>.flatten() = FloatArray(this.size * 4).also {

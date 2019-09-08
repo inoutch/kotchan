@@ -32,6 +32,8 @@ data class Vector3(val x: Float, val y: Float, val z: Float) {
     operator fun plus(other: Vector3) = Vector3(x + other.x, y + other.y, z + other.z)
     operator fun times(other: Float) = Vector3(x * other, y * other, z * other)
     operator fun times(other: Vector3) = Vector3(x * other.x, y * other.y, z * other.z)
+    operator fun div(other: Vector3) = Vector3(x / other.x, y / other.y, z / other.z)
+    operator fun div(other: Float) = Vector3(x / other, y / other, z / other)
 
     companion object {
         val Zero = Vector3(0.0f, 0.0f, 0.0f)

@@ -1,0 +1,87 @@
+{
+  "formatVersion": "1.0",
+  "component": {
+    "url": "../../kotchan/0.4.0/kotchan-0.4.0.module",
+    "group": "io.github.inoutch",
+    "module": "kotchan",
+    "version": "0.4.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "5.4.1",
+      "buildId": "d35lzk32rffyvfp3ye7ns2vz7y"
+    }
+  },
+  "variants": [
+    {
+      "name": "ios-api",
+      "attributes": {
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "ios_arm64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.3.50"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-serialization-runtime-native",
+          "version": {
+            "requires": "0.12.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-serialization-runtime-common",
+          "version": {
+            "requires": "0.12.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "kotchan.klib",
+          "url": "kotchan-ios-0.4.0.klib",
+          "size": 1289884,
+          "sha1": "f1033b0bded6803162663e71f3fc55aee0da3d3a",
+          "md5": "a6a29ee72985575823b3a9136f4754c7"
+        },
+        {
+          "name": "kotchan-cinterop-vulkan.klib",
+          "url": "kotchan-ios-0.4.0-cinterop-vulkan.klib",
+          "size": 6246506,
+          "sha1": "2e6a84cfbc22eccea208eee57a0668d7aa23fac5",
+          "md5": "430cb2b2b1f7294f7d219f13c4d275fd"
+        },
+        {
+          "name": "kotchan-cinterop-kmvk.klib",
+          "url": "kotchan-ios-0.4.0-cinterop-kmvk.klib",
+          "size": 32978,
+          "sha1": "89f8798928e8e9040911ec3e456f385ba991dd16",
+          "md5": "3a1f6b8de2d95606052e78fcfa916dbb"
+        }
+      ]
+    },
+    {
+      "name": "metadata-api",
+      "attributes": {
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.platform.type": "common"
+      },
+      "available-at": {
+        "url": "../../kotchan-metadata/0.4.0/kotchan-metadata-0.4.0.module",
+        "group": "io.github.inoutch",
+        "module": "kotchan-metadata",
+        "version": "0.4.0"
+      }
+    }
+  ]
+}

@@ -18,13 +18,13 @@ class TexturePacker {
         fun loadFileFromResource(textureDir: String, filepath: String, enableCache: Boolean = true) =
                 loadFile(instance.file.getResourcePath(textureDir) ?: throw NoSuchFileError(textureDir),
                         instance.file.getResourcePath(filepath) ?: throw NoSuchFileError(filepath), enableCache)
-                        ?: throw NoSuchFileError(Path.resolve(textureDir, filepath))
+                        ?: throw NoSuchFileError(filepath)
 
         fun loadFile(textureDir: String, filepath: String, enableCache: Boolean = true): Bundle? {
             val file = KotchanCore.instance.file
             val json = file.readText(filepath)
             if (json == null) {
-                logger.error("this file is not json [$filepath]")
+                logger.error("This file is not existed or not text [$filepath]")
                 return null
             }
             val root = Json.parse(json) ?: return null // parse error

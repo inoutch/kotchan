@@ -31,30 +31,28 @@ class Batch : Disposable {
             return
         }
 
+        val material = polygon.material
+        if (material != null) {
+            val batchPolygonBundle = polygons.getOrPut(material) {
+                BatchPolygonBundle(
+                        BatchBuffer(BATCH_BUFFER_SIZE * 3),
+                        BatchBuffer(BATCH_BUFFER_SIZE * 4),
+                        BatchBuffer(BATCH_BUFFER_SIZE * 2))
+            }
+            batchPolygonBundle.apply {
+                val positionBufferData = positionBuffer.add(polygon.positions())
+                val texcoordBufferData = texcoordBuffer.add(polygon.texcoords())
+                val colorBufferData = colorBuffer.add(polygon.colors())
+                val bundle = BatchBundle(polygon, positionBufferData, colorBufferData, texcoordBufferData)
+                invPolygonBundleCache[polygon] = bundle
+                polygons.add(bundle)
+            }
+            invPolygonCache[polygon] = material
+        }
+
         if (autoAddChildren) {
-            add(polygon.children)
+            polygon.children.forEach { add(it) }
         }
-
-        val material = polygon.material ?: return
-        if (polygon.mesh.size <= 0) {
-            return
-        }
-
-        val batchPolygonBundle = polygons.getOrPut(material) {
-            BatchPolygonBundle(
-                    BatchBuffer(BATCH_BUFFER_SIZE * 3),
-                    BatchBuffer(BATCH_BUFFER_SIZE * 4),
-                    BatchBuffer(BATCH_BUFFER_SIZE * 2))
-        }
-        batchPolygonBundle.apply {
-            val positionBufferData = positionBuffer.add(polygon.positions())
-            val texcoordBufferData = texcoordBuffer.add(polygon.texcoords())
-            val colorBufferData = colorBuffer.add(polygon.colors())
-            val bundle = BatchBundle(polygon, positionBufferData, colorBufferData, texcoordBufferData)
-            invPolygonBundleCache[polygon] = bundle
-            polygons.add(bundle)
-        }
-        invPolygonCache[polygon] = material
     }
 
     fun remove(polygon: Polygon) {
