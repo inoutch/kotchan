@@ -3,10 +3,12 @@ package io.github.inoutch.kotchan.utility.graphic.vulkan.helper
 import io.github.inoutch.kotchan.utility.Disposable
 import io.github.inoutch.kotchan.utility.graphic.vulkan.*
 
-class DescriptorSetProvider(private val vk: VK,
-                            private val layout: VkDescriptorSetLayout,
-                            private val uniforms: List<VKUniformBuffer>,
-                            private val samplerSize: Int) : Disposable {
+class DescriptorSetProvider(
+    private val vk: VK,
+    private val layout: VkDescriptorSetLayout,
+    private val uniforms: List<VKUniformBuffer>,
+    private val samplerSize: Int
+) : Disposable {
     private data class Bundle(val textures: List<VKTexture>, val descriptorSets: List<VkDescriptorSet>)
 
     private val bundles = mutableListOf<Bundle>()

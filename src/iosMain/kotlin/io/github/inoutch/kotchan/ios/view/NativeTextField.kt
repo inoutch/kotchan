@@ -13,9 +13,10 @@ import platform.UIKit.UITextFieldTextDidChangeNotification
 
 @ExportObjCClass
 class NativeTextField(
-        rect: CValue<CGRect>,
-        val onChange: (text: String) -> Unit,
-        private val onInputReturn: (text: String) -> Unit) : UITextField(rect), UITextFieldDelegateProtocol {
+    rect: CValue<CGRect>,
+    val onChange: (text: String) -> Unit,
+    private val onInputReturn: (text: String) -> Unit
+) : UITextField(rect), UITextFieldDelegateProtocol {
     companion object {
         fun textFieldDidChange(notification: NSNotification) {
             val native = notification.`object` as NativeTextField

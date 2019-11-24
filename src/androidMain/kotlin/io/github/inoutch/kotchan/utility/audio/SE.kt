@@ -1,7 +1,7 @@
 package io.github.inoutch.kotchan.utility.audio
 
-import android.media.SoundPool;
 import android.media.AudioAttributes
+import android.media.SoundPool
 import io.github.inoutch.kotchan.android.KotchanActivity
 
 actual class SE actual constructor(filepath: String) : SoundBase() {

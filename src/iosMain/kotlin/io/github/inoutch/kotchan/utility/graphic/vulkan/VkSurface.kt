@@ -16,9 +16,10 @@ actual class VkSurface {
 
 @ExperimentalUnsignedTypes
 actual fun vkGetPhysicalDeviceSurfaceSupportKHR(
-        physicalDevice: VkPhysicalDevice,
-        queueFamilyIndex: Int,
-        surface: VkSurface) = memScoped {
+    physicalDevice: VkPhysicalDevice,
+    queueFamilyIndex: Int,
+    surface: VkSurface
+) = memScoped {
     val supportedPresentation = alloc<UIntVar>()
 
     vulkan.vkGetPhysicalDeviceSurfaceSupportKHR(

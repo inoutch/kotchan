@@ -5,8 +5,8 @@ allprojects {
 
 buildscript {
     ext.kotlin_version = "1.3.50"
-    ext.lwjgl_version = "3.2.3"
-    ext.serialization_version = "0.12.0"
+    ext.lwjgl_version = "3.2.2"
+    ext.serialization_version = "0.13.0"
 
     repositories {
         google()
@@ -38,6 +38,10 @@ repositories {
     mavenCentral()
     maven { url "https://dl.bintray.com/kotlin/kotlin-dev" }
     maven { url "https://dl.bintray.com/kotlin/kotlinx" }
+}
+
+configurations {
+    ktlint
 }
 
 kotlin {
@@ -131,4 +135,24 @@ cinteropVulkanIos.dependsOn copyNativeLibs
 def repo = new File(rootDir, "repository")
 publishing.repositories.maven {
     url "file://${repo.absolutePath}"
+}
+
+// linter
+dependencies {
+    ktlint "com.pinterest:ktlint:0.35.0"
+}
+
+task ktlint(type: JavaExec, group: "verification") {
+    description = "Check Kotlin code style."
+    classpath = configurations.ktlint
+    main = "com.pinterest.ktlint.Main"
+    args "src/**/*.kt"
+}
+check.dependsOn ktlint
+
+task ktlintFormat(type: JavaExec, group: "formatting") {
+    description = "Fix Kotlin code style deviations."
+    classpath = configurations.ktlint
+    main = "com.pinterest.ktlint.Main"
+    args "-F", "src/**/*.kt"
 }

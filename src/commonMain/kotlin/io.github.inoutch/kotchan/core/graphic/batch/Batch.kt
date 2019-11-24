@@ -1,6 +1,6 @@
 package io.github.inoutch.kotchan.core.graphic.batch
 
-import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.core
 import io.github.inoutch.kotchan.core.graphic.Material
 import io.github.inoutch.kotchan.core.graphic.camera.Camera
 import io.github.inoutch.kotchan.core.graphic.polygon.Polygon
@@ -104,7 +104,7 @@ class Batch : Disposable {
             polygonBundle.polygons.filter { it.polygon.isTexcoordsDirty }
                     .forEach { polygonBundle.texcoordBuffer.copy(it.texcoordBufferData, it.polygon.texcoords()) }
 
-            instance.graphicsApi.drawTriangles(polygonBundle)
+            core.graphicsApi.drawTriangles(polygonBundle)
         }
     }
 

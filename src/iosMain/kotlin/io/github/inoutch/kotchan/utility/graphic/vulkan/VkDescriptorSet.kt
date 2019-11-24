@@ -44,9 +44,10 @@ actual fun vkAllocateDescriptorSets(device: VkDevice, allocateInfo: VkDescriptor
 
 @ExperimentalUnsignedTypes
 actual fun vkUpdateDescriptorSets(
-        device: VkDevice,
-        descriptorWrites: List<VkWriteDescriptorSet>,
-        descriptorCopies: List<VkCopyDescriptorSet>) = memScoped {
+    device: VkDevice,
+    descriptorWrites: List<VkWriteDescriptorSet>,
+    descriptorCopies: List<VkCopyDescriptorSet>
+) = memScoped {
     vulkan.vkUpdateDescriptorSets(
             device.native,
             descriptorWrites.size.toUInt(),

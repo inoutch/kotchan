@@ -4,8 +4,9 @@ import io.github.inoutch.kotchan.utility.MemScope
 import org.lwjgl.vulkan.VK10
 
 fun VkCommandBufferBeginInfo.copyToNative(
-        native: org.lwjgl.vulkan.VkCommandBufferBeginInfo,
-        scope: MemScope) {
+    native: org.lwjgl.vulkan.VkCommandBufferBeginInfo,
+    scope: MemScope
+) {
     native.sType(VK10.VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO)
             .flags(flags.sumBy { it.value })
             .pInheritanceInfo(inheritanceInfo?.toNative(scope))

@@ -19,7 +19,7 @@ fun VkPipelineRasterizationStateCreateInfo.copyToNative(native: org.lwjgl.vulkan
             .lineWidth(lineWidth)
 }
 
-fun VkPipelineRasterizationStateCreateInfo.toNative(memScope: MemScope)
-        : org.lwjgl.vulkan.VkPipelineRasterizationStateCreateInfo =
+fun VkPipelineRasterizationStateCreateInfo.toNative(memScope: MemScope):
+        org.lwjgl.vulkan.VkPipelineRasterizationStateCreateInfo =
         memScope.add(org.lwjgl.vulkan.VkPipelineRasterizationStateCreateInfo.calloc()
                 .also { copyToNative(it) })

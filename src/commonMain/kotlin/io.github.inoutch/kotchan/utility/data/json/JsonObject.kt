@@ -1,7 +1,7 @@
 package io.github.inoutch.kotchan.utility.data.json
 
-import io.github.inoutch.kotchan.extension.*
 import interop.data.json.JsonType
+import io.github.inoutch.kotchan.extension.*
 
 class JsonObject {
 

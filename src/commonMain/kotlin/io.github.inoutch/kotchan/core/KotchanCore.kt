@@ -4,16 +4,13 @@ import io.github.inoutch.kotchan.core.constant.ScreenType
 import io.github.inoutch.kotchan.core.controller.event.listener.EventController
 import io.github.inoutch.kotchan.core.controller.event.listener.TimerEventController
 import io.github.inoutch.kotchan.core.controller.touch.TouchControllerEntity
+import io.github.inoutch.kotchan.core.graphic.Api
+import io.github.inoutch.kotchan.core.graphic.Material
 import io.github.inoutch.kotchan.core.graphic.Scene
-import io.github.inoutch.kotchan.utility.io.File
-import io.github.inoutch.kotchan.utility.time.Timer
-import io.github.inoutch.kotchan.utility.type.*
 import io.github.inoutch.kotchan.core.graphic.animator.Animator
 import io.github.inoutch.kotchan.core.graphic.camera.Camera
 import io.github.inoutch.kotchan.core.graphic.camera.Camera2D
 import io.github.inoutch.kotchan.core.graphic.camera.Camera3D
-import io.github.inoutch.kotchan.core.graphic.Api
-import io.github.inoutch.kotchan.core.graphic.Material
 import io.github.inoutch.kotchan.core.graphic.shader.SimpleShaderProgram
 import io.github.inoutch.kotchan.core.graphic.texture.Texture
 import io.github.inoutch.kotchan.core.logger.Logger
@@ -21,19 +18,30 @@ import io.github.inoutch.kotchan.core.resource.ResourceManager.Companion.resourc
 import io.github.inoutch.kotchan.core.tool.TextureCacheManager
 import io.github.inoutch.kotchan.utility.graphic.gl.GL
 import io.github.inoutch.kotchan.utility.graphic.vulkan.VK
+import io.github.inoutch.kotchan.utility.io.File
+import io.github.inoutch.kotchan.utility.time.Timer
+import io.github.inoutch.kotchan.utility.type.*
+import kotlin.native.concurrent.ThreadLocal
 
 class KotchanCore(
-        private val config: KotchanEngine.Config,
-        actualSizeWindowSize: Point) {
+    private val config: KotchanEngine.Config,
+    actualSizeWindowSize: Point
+) {
 
+    @ThreadLocal
     companion object {
-        const val KOTCHAN_ENGINE_NAME = "kotchan-engine"
-        const val KOTCHAN_LOGGER = "kotchan-logger"
         const val KOTCHAN_RESOURCE_SHADER_SIMPLE = "shader/kotchan/simple"
         const val KOTCHAN_RESOURCE_MATERIAL_PLAIN = "material/kotchan/plain"
 
-        val instance: KotchanCore get() = KotchanInstance.manager().get(KOTCHAN_ENGINE_NAME) as KotchanCore
-        val logger: Logger get() = KotchanInstance.manager().get(KOTCHAN_LOGGER) as Logger
+        val core: KotchanCore
+            get() = privateCore ?: throw IllegalStateException("KotchanCore is not initialized.")
+
+        val logger: Logger
+            get() = privateLogger ?: throw IllegalStateException("KotchanCore is not initialized.")
+
+        private var privateCore: KotchanCore? = null
+
+        private var privateLogger: Logger? = null
     }
 
     private var currentScene: Scene? = null
@@ -77,8 +85,8 @@ class KotchanCore(
 
     init {
         // add engine instance to manager
-        KotchanInstance.manager().add(KOTCHAN_ENGINE_NAME, this)
-        KotchanInstance.manager().add(KOTCHAN_LOGGER, config.loggerFactory?.create() ?: Logger())
+        privateCore = this
+        privateLogger = config.loggerFactory?.create() ?: Logger()
     }
 
     fun init() {

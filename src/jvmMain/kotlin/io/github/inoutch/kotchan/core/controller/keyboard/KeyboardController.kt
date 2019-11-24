@@ -1,8 +1,9 @@
 package io.github.inoutch.kotchan.core.controller.keyboard
 
 private class KeyboardContext(
-        initialText: String,
-        val listener: KeyboardListener) {
+    initialText: String,
+    val listener: KeyboardListener
+) {
     var text: String = initialText
 
     fun input(char: String) {

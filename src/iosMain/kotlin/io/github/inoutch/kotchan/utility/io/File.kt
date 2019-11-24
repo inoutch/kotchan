@@ -1,14 +1,13 @@
 package io.github.inoutch.kotchan.utility.io
 
 import io.github.inoutch.kotchan.core.KotchanCore.Companion.logger
-import kotlinx.cinterop.*
-import platform.Foundation.*
 import io.github.inoutch.kotchan.extension.toUTF8String
 import io.github.inoutch.kotchan.utility.path.Path
+import kotlinx.cinterop.*
+import platform.Foundation.*
 import platform.Foundation.NSDataWritingAtomic
 import platform.Foundation.create
 import platform.Foundation.dataWithContentsOfFile
-import platform.posix.err
 
 @ExperimentalUnsignedTypes
 actual class File {

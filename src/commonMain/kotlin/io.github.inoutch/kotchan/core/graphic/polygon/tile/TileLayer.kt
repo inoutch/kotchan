@@ -11,11 +11,13 @@ class TileLayer(private val config: TileMap.Config, layer: Array2D<Int>) : Polyg
     data class Config(val layers: List<Array2D<Int>>)
 
     companion object {
-        fun createMesh(layer: Array2D<Int>,
-                       tileSize: Point,
-                       textureTileSize: Point,
-                       textureSize: Point,
-                       biasPerPixel: Float): Mesh {
+        fun createMesh(
+            layer: Array2D<Int>,
+            tileSize: Point,
+            textureTileSize: Point,
+            textureSize: Point,
+            biasPerPixel: Float
+        ): Mesh {
             val bundle = layer.getAll().map {
                 Sprite.createSquarePositions(it.p.toVector2() * tileSize, tileSize.toVector2()) to
                         calcTexcoords(it.value, calcTileNumber(textureSize, textureTileSize).toPoint(),
@@ -33,11 +35,13 @@ class TileLayer(private val config: TileMap.Config, layer: Array2D<Int>) : Polyg
             return Vector2(u, v) * tileTexcoordSize
         }
 
-        fun calcTexcoords(id: Int,
-                          tileNumber: Point,
-                          tileTexcoordSize: Vector2,
-                          tileTextureSize: Point,
-                          biasPerPixel: Float): List<Vector2> {
+        fun calcTexcoords(
+            id: Int,
+            tileNumber: Point,
+            tileTexcoordSize: Vector2,
+            tileTextureSize: Point,
+            biasPerPixel: Float
+        ): List<Vector2> {
             val bias = tileTexcoordSize / tileTextureSize
             return Sprite.createSquareTexcoords(
                     calcTexcoord(id, tileNumber, tileTexcoordSize) + bias * biasPerPixel,

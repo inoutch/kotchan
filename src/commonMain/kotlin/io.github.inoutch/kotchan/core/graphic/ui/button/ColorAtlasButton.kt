@@ -9,10 +9,12 @@ import io.github.inoutch.kotchan.core.graphic.texture.TextureAtlas
 import io.github.inoutch.kotchan.core.graphic.ui.Touchable
 import io.github.inoutch.kotchan.utility.type.Vector4
 
-class ColorAtlasButton(material: Material,
-                       textureAtlas: TextureAtlas,
-                       camera: Camera,
-                       onClick: () -> Unit) : SpriteAtlas(material, textureAtlas), Touchable {
+class ColorAtlasButton(
+    material: Material,
+    textureAtlas: TextureAtlas,
+    camera: Camera,
+    onClick: () -> Unit
+) : SpriteAtlas(material, textureAtlas), Touchable {
 
     var normalColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f)
         set(value) {

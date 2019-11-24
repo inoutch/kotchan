@@ -5,8 +5,9 @@ import vulkan.VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO
 
 @ExperimentalUnsignedTypes
 fun VkRenderPassBeginInfo.copyToNative(
-        native: vulkan.VkRenderPassBeginInfo,
-        scope: MemScope) {
+    native: vulkan.VkRenderPassBeginInfo,
+    scope: MemScope
+) {
     native.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO
     native.pNext = null
     native.renderPass = renderPass.native

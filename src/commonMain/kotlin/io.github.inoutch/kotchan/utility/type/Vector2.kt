@@ -1,7 +1,7 @@
 package io.github.inoutch.kotchan.utility.type
 
-import kotlinx.serialization.Serializable
 import kotlin.math.sqrt
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class Vector2(val x: Float, val y: Float) {
@@ -50,4 +50,3 @@ fun List<Vector2>.flatten() = FloatArray(this.size * 2).also {
 
 fun List<Float>.toVector2(offset: Int = 0) =
         if (this.size >= 2 + offset) Vector2(this[offset], this[offset + 1]) else Vector2()
-

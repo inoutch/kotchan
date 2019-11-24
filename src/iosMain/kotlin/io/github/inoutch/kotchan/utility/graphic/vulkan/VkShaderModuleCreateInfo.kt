@@ -5,8 +5,9 @@ import vulkan.VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO
 
 @ExperimentalUnsignedTypes
 fun VkShaderModuleCreateInfo.copyToNative(
-        native: vulkan.VkShaderModuleCreateInfo,
-        scope: MemScope) {
+    native: vulkan.VkShaderModuleCreateInfo,
+    scope: MemScope
+) {
     native.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO
     native.pNext = null
     native.flags = flags.toUInt()

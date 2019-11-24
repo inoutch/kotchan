@@ -1,6 +1,6 @@
 package io.github.inoutch.kotchan.utility.graphic
 
-import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.core
 import io.github.inoutch.kotchan.utility.io.readBytesFromResourceWithError
 import io.github.inoutch.kotchan.utility.type.Point
 
@@ -14,4 +14,4 @@ expect class Image constructor(byteArray: ByteArray, size: Point) {
     val size: Point
 }
 
-fun Image.Companion.loadFromResource(filepath: String) = load(instance.file.readBytesFromResourceWithError(filepath))
+fun Image.Companion.loadFromResource(filepath: String) = load(core.file.readBytesFromResourceWithError(filepath))

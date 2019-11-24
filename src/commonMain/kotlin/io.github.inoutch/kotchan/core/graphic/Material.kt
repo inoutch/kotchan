@@ -1,6 +1,6 @@
 package io.github.inoutch.kotchan.core.graphic
 
-import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.core
 import io.github.inoutch.kotchan.core.graphic.shader.ShaderProgram
 import io.github.inoutch.kotchan.core.graphic.texture.Texture
 import io.github.inoutch.kotchan.utility.Disposable
@@ -21,7 +21,7 @@ class Material(config: Config, extraTextures: List<Texture> = listOf()) : Dispos
     val texture: Texture
         get() = textures.first()
 
-    val graphicsPipeline = instance.graphicsApi.createGraphicsPipeline(
+    val graphicsPipeline = core.graphicsApi.createGraphicsPipeline(
             config.shaderProgram,
             GraphicsPipeline.Config(
                     config.depthTest,

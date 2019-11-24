@@ -5,9 +5,10 @@ import io.github.inoutch.kotchan.utility.font.BMFont
 import io.github.inoutch.kotchan.utility.type.*
 
 open class TextLabel(
-        private val bmFont: BMFont,
-        initText: String,
-        private val fontSize: Float = 0.0f) : Polygon2D(Mesh(), null, Vector2.Zero) {
+    private val bmFont: BMFont,
+    initText: String,
+    private val fontSize: Float = 0.0f
+) : Polygon2D(Mesh(), null, Vector2.Zero) {
 
     private val polygons: Map<Int, Polygon2D> = bmFont.pages
             .map { it.id to Polygon2D(Mesh(), bmFont.materials.getValue(it.id), Vector2.Zero) }
@@ -31,11 +32,12 @@ open class TextLabel(
         }
 
     private data class LabelMesh(
-            val page: Int,
-            val material: Material,
-            val positions: MutableList<Vector3> = mutableListOf(),
-            val texcoords: MutableList<Vector2> = mutableListOf(),
-            val colors: MutableList<Vector4> = mutableListOf()) {
+        val page: Int,
+        val material: Material,
+        val positions: MutableList<Vector3> = mutableListOf(),
+        val texcoords: MutableList<Vector2> = mutableListOf(),
+        val colors: MutableList<Vector4> = mutableListOf()
+    ) {
         fun toMesh() = Mesh(positions, texcoords, colors)
     }
 

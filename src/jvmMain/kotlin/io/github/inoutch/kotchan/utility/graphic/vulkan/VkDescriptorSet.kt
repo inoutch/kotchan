@@ -34,9 +34,10 @@ actual fun vkAllocateDescriptorSets(device: VkDevice, allocateInfo: VkDescriptor
 }
 
 actual fun vkUpdateDescriptorSets(
-        device: VkDevice,
-        descriptorWrites: List<VkWriteDescriptorSet>,
-        descriptorCopies: List<VkCopyDescriptorSet>) = memScoped {
+    device: VkDevice,
+    descriptorWrites: List<VkWriteDescriptorSet>,
+    descriptorCopies: List<VkCopyDescriptorSet>
+) = memScoped {
     VK10.vkUpdateDescriptorSets(
             device.native,
             descriptorWrites.toNative(this),

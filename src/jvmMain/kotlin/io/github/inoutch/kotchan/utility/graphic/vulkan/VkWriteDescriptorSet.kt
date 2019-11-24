@@ -5,8 +5,9 @@ import io.github.inoutch.kotchan.utility.MemScope
 import org.lwjgl.vulkan.VK10
 
 fun VkWriteDescriptorSet.copyToNative(
-        native: org.lwjgl.vulkan.VkWriteDescriptorSet,
-        scope: MemScope) {
+    native: org.lwjgl.vulkan.VkWriteDescriptorSet,
+    scope: MemScope
+) {
     val texelBufferViews = texelBufferView.map { it.native }.toLongArray().toNative(scope)
     native.sType(VK10.VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET)
             .pNext(VK10.VK_NULL_HANDLE)
@@ -22,4 +23,3 @@ fun VkWriteDescriptorSet.copyToNative(
 fun List<VkWriteDescriptorSet>.toNative(scope: MemScope): org.lwjgl.vulkan.VkWriteDescriptorSet.Buffer =
         scope.add(org.lwjgl.vulkan.VkWriteDescriptorSet.calloc(size)
                 .also { forEachIndexed { index, x -> x.copyToNative(it[index], scope) } })
-

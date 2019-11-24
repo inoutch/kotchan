@@ -5,8 +5,9 @@ import vulkan.VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO
 
 @ExperimentalUnsignedTypes
 fun VkDescriptorPoolCreateInfo.copyToNative(
-        native: vulkan.VkDescriptorPoolCreateInfo,
-        scope: MemScope) {
+    native: vulkan.VkDescriptorPoolCreateInfo,
+    scope: MemScope
+) {
     native.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO
     native.pNext = null
     native.flags = flags.sumBy { it.value }.toUInt()

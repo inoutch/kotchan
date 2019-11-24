@@ -6,8 +6,9 @@ import vulkan.VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO
 
 @ExperimentalUnsignedTypes
 fun VkBufferCreateInfo.copyToNative(
-        native: vulkan.VkBufferCreateInfo,
-        scope: MemScope) {
+    native: vulkan.VkBufferCreateInfo,
+    scope: MemScope
+) {
     native.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO
     native.pNext = null
     native.flags = flags.toUInt()

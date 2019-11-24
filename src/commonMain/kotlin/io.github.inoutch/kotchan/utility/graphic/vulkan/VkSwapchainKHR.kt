@@ -9,8 +9,9 @@ expect fun vkCreateSwapchainKHR(device: VkDevice, createInfo: VkSwapchainCreateI
 expect fun vkGetSwapchainImagesKHR(device: VkDevice, swapchain: VkSwapchainKHR): List<VkImage>
 
 expect fun vkAcquireNextImageKHR(
-        device: VkDevice,
-        swapchain: VkSwapchainKHR,
-        timeout: Long,
-        semaphore: VkSemaphore,
-        fence: VkFence?): Int
+    device: VkDevice,
+    swapchain: VkSwapchainKHR,
+    timeout: Long,
+    semaphore: VkSemaphore,
+    fence: VkFence?
+): Int

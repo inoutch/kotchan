@@ -1,7 +1,7 @@
 package io.github.inoutch.kotchan.utility.type
 
-import kotlinx.serialization.Serializable
 import kotlin.math.sqrt
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class Vector3(val x: Float, val y: Float, val z: Float) {

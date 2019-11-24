@@ -1,11 +1,11 @@
 package io.github.inoutch.kotchan.core.graphic
 
-import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
-import io.github.inoutch.kotchan.core.graphic.shader.ShaderProgram
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.core
 import io.github.inoutch.kotchan.core.graphic.batch.BatchPolygonBundle
 import io.github.inoutch.kotchan.core.graphic.shader.DescriptorSet
 import io.github.inoutch.kotchan.core.graphic.shader.Sampler
 import io.github.inoutch.kotchan.core.graphic.shader.Shader
+import io.github.inoutch.kotchan.core.graphic.shader.ShaderProgram
 import io.github.inoutch.kotchan.core.graphic.shader.unform.*
 import io.github.inoutch.kotchan.core.graphic.texture.Texture
 import io.github.inoutch.kotchan.extension.getOrCreate
@@ -20,8 +20,10 @@ import io.github.inoutch.kotchan.utility.type.*
 
 class Api(private val vk: VK?, private val gl: GL?) {
 
-    data class TextureBundle(val vkTexture: VKTexture? = null,
-                             val glTexture: GLTexture? = null)
+    data class TextureBundle(
+        val vkTexture: VKTexture? = null,
+        val glTexture: GLTexture? = null
+    )
 
     private var sharedTexture: Texture? = null
 
@@ -257,7 +259,6 @@ class Api(private val vk: VK?, private val gl: GL?) {
                     VkImageLayout.VK_IMAGE_LAYOUT_GENERAL,
                     VkClearDepthStencilValue(depthColor, 0),
                     listOf(VkImageSubresourceRange(listOf(VkImageAspectFlagBits.VK_IMAGE_ASPECT_DEPTH_BIT), 0, 1, 0, 1)))
-
         }
     }, {
         { depthColor: Float ->
@@ -327,7 +328,7 @@ class Api(private val vk: VK?, private val gl: GL?) {
 
     val loadTexture = checkSupportGraphics({
         loadTexture@{ filepath: String ->
-            val data = instance.file.readBytes(filepath) ?: return@loadTexture null
+            val data = core.file.readBytes(filepath) ?: return@loadTexture null
             val tex = VKTexture(it, Image.load(data))
             TextureBundle(tex, null)
         }

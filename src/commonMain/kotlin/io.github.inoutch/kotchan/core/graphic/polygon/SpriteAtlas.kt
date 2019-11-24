@@ -7,9 +7,11 @@ import io.github.inoutch.kotchan.utility.type.Vector2
 import io.github.inoutch.kotchan.utility.type.Vector3
 
 open class SpriteAtlas(
-        material: Material?,
-        private val textureAtlas: TextureAtlas, size: Vector2? = null)
-    : Sprite(material, size ?: textureAtlas.frame(0)
+    material: Material?,
+    private val textureAtlas: TextureAtlas,
+    size: Vector2? = null
+) :
+    Sprite(material, size ?: textureAtlas.frame(0)
         ?.frame?.size ?: throw Error("no frame at texture atlas")) {
 
     init {

@@ -11,8 +11,9 @@ import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 class KotchanRenderer(
-        private val config: KotchanEngine.Config,
-        private val windowManager: WindowManager) : GLSurfaceView.Renderer {
+    private val config: KotchanEngine.Config,
+    private val windowManager: WindowManager
+) : GLSurfaceView.Renderer {
 
     lateinit var core: KotchanCore
 

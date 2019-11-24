@@ -5,8 +5,9 @@ import vulkan.VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO
 
 @ExperimentalUnsignedTypes
 fun VkDescriptorSetLayoutCreateInfo.copyToNative(
-        native: vulkan.VkDescriptorSetLayoutCreateInfo,
-        scope: MemScope) {
+    native: vulkan.VkDescriptorSetLayoutCreateInfo,
+    scope: MemScope
+) {
     native.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO
     native.pNext = null
     native.flags = flags.toUInt()

@@ -6,8 +6,9 @@ import vulkan.VK_STRUCTURE_TYPE_SUBMIT_INFO
 
 @ExperimentalUnsignedTypes
 fun VkSubmitInfo.copyToNative(
-        native: vulkan.VkSubmitInfo,
-        scope: MemScope) {
+    native: vulkan.VkSubmitInfo,
+    scope: MemScope
+) {
     native.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO
     native.waitSemaphoreCount = waitSemaphores.size.toUInt()
     native.pWaitSemaphores = waitSemaphores.map { it.native }.toNative(scope)

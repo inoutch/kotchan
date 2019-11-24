@@ -15,9 +15,11 @@ actual class VkCommandBuffer : Disposable {
 
     private lateinit var commandPool: VkCommandPool
 
-    fun init(nativeCommandBuffer: vulkan.VkCommandBuffer,
-             device: VkDevice,
-             commandPool: VkCommandPool) {
+    fun init(
+        nativeCommandBuffer: vulkan.VkCommandBuffer,
+        device: VkDevice,
+        commandPool: VkCommandPool
+    ) {
         this.native = nativeCommandBuffer
         this.device = device
         this.commandPool = commandPool
@@ -56,9 +58,10 @@ actual fun vkEndCommandBuffer(commandBuffer: VkCommandBuffer) {
 
 @ExperimentalUnsignedTypes
 actual fun vkCmdBeginRenderPass(
-        commandBuffer: VkCommandBuffer,
-        beginInfo: VkRenderPassBeginInfo,
-        contents: VkSubpassContents) = memScoped {
+    commandBuffer: VkCommandBuffer,
+    beginInfo: VkRenderPassBeginInfo,
+    contents: VkSubpassContents
+) = memScoped {
     vulkan.vkCmdBeginRenderPass(commandBuffer.native, beginInfo.toNative(this), contents.value.toUInt())
 }
 
@@ -84,10 +87,11 @@ actual fun vkCmdBindPipeline(commandBuffer: VkCommandBuffer, pipelineBindPoint: 
 
 @ExperimentalUnsignedTypes
 actual fun vkCmdBindVertexBuffers(
-        commandBuffer: VkCommandBuffer,
-        firstBinding: Int,
-        buffers: List<VkBuffer>,
-        offsets: List<Long>) = memScoped {
+    commandBuffer: VkCommandBuffer,
+    firstBinding: Int,
+    buffers: List<VkBuffer>,
+    offsets: List<Long>
+) = memScoped {
     vulkan.vkCmdBindVertexBuffers(
             commandBuffer.native,
             firstBinding.toUInt(),
@@ -103,13 +107,14 @@ actual fun vkCmdDraw(commandBuffer: VkCommandBuffer, vertexCount: Int, instanceC
 
 @ExperimentalUnsignedTypes
 actual fun vkCmdPipelineBarrier(
-        commandBuffer: VkCommandBuffer,
-        srcStageMask: List<VkPipelineStageFlagBits>,
-        dstStageMask: List<VkPipelineStageFlagBits>,
-        dependencyFlags: List<VkDependencyFlagBits>,
-        memoryBarriers: List<VkMemoryBarrier>,
-        bufferMemoryBarriers: List<VkBufferMemoryBarrier>,
-        imageMemoryBarriers: List<VkImageMemoryBarrier>) = memScoped {
+    commandBuffer: VkCommandBuffer,
+    srcStageMask: List<VkPipelineStageFlagBits>,
+    dstStageMask: List<VkPipelineStageFlagBits>,
+    dependencyFlags: List<VkDependencyFlagBits>,
+    memoryBarriers: List<VkMemoryBarrier>,
+    bufferMemoryBarriers: List<VkBufferMemoryBarrier>,
+    imageMemoryBarriers: List<VkImageMemoryBarrier>
+) = memScoped {
 
     vulkan.vkCmdPipelineBarrier(
             commandBuffer.native,
@@ -126,11 +131,12 @@ actual fun vkCmdPipelineBarrier(
 
 @ExperimentalUnsignedTypes
 actual fun vkCmdClearColorImage(
-        commandBuffer: VkCommandBuffer,
-        image: VkImage,
-        imageLayout: VkImageLayout,
-        clearColor: Vector4,
-        ranges: List<VkImageSubresourceRange>) = memScoped {
+    commandBuffer: VkCommandBuffer,
+    image: VkImage,
+    imageLayout: VkImageLayout,
+    clearColor: Vector4,
+    ranges: List<VkImageSubresourceRange>
+) = memScoped {
     vulkan.vkCmdClearColorImage(
             commandBuffer.native,
             image.native,
@@ -142,11 +148,12 @@ actual fun vkCmdClearColorImage(
 
 @ExperimentalUnsignedTypes
 actual fun vkCmdClearDepthStencilImage(
-        commandBuffer: VkCommandBuffer,
-        image: VkImage,
-        imageLayout: VkImageLayout,
-        depthStencilValue: VkClearDepthStencilValue,
-        ranges: List<VkImageSubresourceRange>) = memScoped {
+    commandBuffer: VkCommandBuffer,
+    image: VkImage,
+    imageLayout: VkImageLayout,
+    depthStencilValue: VkClearDepthStencilValue,
+    ranges: List<VkImageSubresourceRange>
+) = memScoped {
     vulkan.vkCmdClearDepthStencilImage(
             commandBuffer.native,
             image.native,
@@ -163,11 +170,12 @@ actual fun vkResetCommandBuffer(commandBuffer: VkCommandBuffer, flags: List<VkCo
 
 @ExperimentalUnsignedTypes
 actual fun vkCmdCopyBufferToImage(
-        commandBuffer: VkCommandBuffer,
-        srcBuffer: VkBuffer,
-        srcImage: VkImage,
-        dstImageLayout: VkImageLayout,
-        regions: List<VkBufferImageCopy>) = memScoped {
+    commandBuffer: VkCommandBuffer,
+    srcBuffer: VkBuffer,
+    srcImage: VkImage,
+    dstImageLayout: VkImageLayout,
+    regions: List<VkBufferImageCopy>
+) = memScoped {
     vulkan.vkCmdCopyImageToBuffer(
             commandBuffer.native,
             srcImage.native,
@@ -179,12 +187,13 @@ actual fun vkCmdCopyBufferToImage(
 
 @ExperimentalUnsignedTypes
 actual fun vkCmdBindDescriptorSets(
-        commandBuffer: VkCommandBuffer,
-        pipelineBindPoint: VkPipelineBindPoint,
-        layout: VkPipelineLayout,
-        firstSet: Int,
-        descriptorSets: List<VkDescriptorSet>,
-        dynamicOffsets: List<Int>) = memScoped {
+    commandBuffer: VkCommandBuffer,
+    pipelineBindPoint: VkPipelineBindPoint,
+    layout: VkPipelineLayout,
+    firstSet: Int,
+    descriptorSets: List<VkDescriptorSet>,
+    dynamicOffsets: List<Int>
+) = memScoped {
     vulkan.vkCmdBindDescriptorSets(
             commandBuffer.native,
             pipelineBindPoint.value.toUInt(),

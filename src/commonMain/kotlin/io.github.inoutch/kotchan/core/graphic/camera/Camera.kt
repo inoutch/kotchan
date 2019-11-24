@@ -1,14 +1,19 @@
 package io.github.inoutch.kotchan.core.graphic.camera
 
-import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.core
 import io.github.inoutch.kotchan.utility.type.*
 
 abstract class Camera {
     companion object {
-        fun createOrthographic(left: Float, right: Float,
-                               bottom: Float, top: Float,
-                               near: Float, far: Float): Matrix4 {
-            return if (instance.vk != null) {
+        fun createOrthographic(
+            left: Float,
+            right: Float,
+            bottom: Float,
+            top: Float,
+            near: Float,
+            far: Float
+        ): Matrix4 {
+            return if (core.vk != null) {
                 // for vulkan [z:0.0 ~ 1.0]
                 val m3 = Matrix3.createDiagonal(
                         2 / (right - left),

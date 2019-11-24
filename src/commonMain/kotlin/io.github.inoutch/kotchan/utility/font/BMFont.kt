@@ -1,6 +1,6 @@
 package io.github.inoutch.kotchan.utility.font
 
-import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.core
 import io.github.inoutch.kotchan.core.KotchanCore.Companion.logger
 import io.github.inoutch.kotchan.core.error.NoSuchFileError
 import io.github.inoutch.kotchan.core.graphic.Material
@@ -14,22 +14,23 @@ import io.github.inoutch.kotchan.utility.type.Point
 import io.github.inoutch.kotchan.utility.type.PointRect
 
 class BMFont private constructor(
-        textureDir: String,
-        materialConfig: Material.Config,
-        val info: Info,
-        val common: Common,
-        val pages: List<Page>,
-        val chars: Map<Int, Char>,
+    textureDir: String,
+    materialConfig: Material.Config,
+    val info: Info,
+    val common: Common,
+    val pages: List<Page>,
+    val chars: Map<Int, Char>,
         // first char id, second char id, amount
-        val kernings: Map<Int, Map<Int, Int>>) : Disposable {
+    val kernings: Map<Int, Map<Int, Int>>
+) : Disposable {
 
     companion object {
         fun load(filepath: String, textureDir: String, materialConfig: Material.Config) =
-                instance.file.readText(filepath)?.let { parse(it, textureDir, materialConfig) }
+                core.file.readText(filepath)?.let { parse(it, textureDir, materialConfig) }
 
         fun loadFromResource(filepath: String, textureDir: String, materialConfig: Material.Config) =
-                instance.file.readTextFromResource(filepath)?.let {
-                    parse(it, instance.file.getResourcePathWithError(textureDir), materialConfig)
+                core.file.readTextFromResource(filepath)?.let {
+                    parse(it, core.file.getResourcePathWithError(textureDir), materialConfig)
                 } ?: throw NoSuchFileError(filepath)
 
         fun parse(text: String, textureDir: String, materialConfig: Material.Config): BMFont {
@@ -173,56 +174,64 @@ class BMFont private constructor(
     abstract class Chunk(val type: ChunkType)
 
     class Info(
-            type: ChunkType,
-            val face: String,
-            val size: Int,
-            val bold: Int,
-            val italic: Int,
-            val charset: String,
-            val unicode: Int,
-            val stretchH: Int,
-            val smooth: Int,
-            val aa: Int,
-            val outline: Int) : Chunk(type)
+        type: ChunkType,
+        val face: String,
+        val size: Int,
+        val bold: Int,
+        val italic: Int,
+        val charset: String,
+        val unicode: Int,
+        val stretchH: Int,
+        val smooth: Int,
+        val aa: Int,
+        val outline: Int
+    ) : Chunk(type)
 
     class Common(
-            type: ChunkType,
-            val lineHeight: Int,
-            val base: Int,
-            val scale: Point,
-            val page: Int,
-            val packed: Int,
-            val alphaChnl: Int,
-            val redChnl: Int,
-            val greenChnl: Int,
-            val blueChnl: Int) : Chunk(type)
+        type: ChunkType,
+        val lineHeight: Int,
+        val base: Int,
+        val scale: Point,
+        val page: Int,
+        val packed: Int,
+        val alphaChnl: Int,
+        val redChnl: Int,
+        val greenChnl: Int,
+        val blueChnl: Int
+    ) : Chunk(type)
 
     class Page(
-            type: ChunkType,
-            val id: Int,
-            val file: String) : Chunk(type)
+        type: ChunkType,
+        val id: Int,
+        val file: String
+    ) : Chunk(type)
 
-    class Chars(type: ChunkType,
-                val count: Int) : Chunk(type)
+    class Chars(
+        type: ChunkType,
+        val count: Int
+    ) : Chunk(type)
 
     class Char(
-            type: ChunkType,
-            val id: Int,
-            val rect: PointRect,
-            val offset: Point,
-            val xAdvance: Int,
-            val page: Int,
-            val chnl: Int) : Chunk(type)
+        type: ChunkType,
+        val id: Int,
+        val rect: PointRect,
+        val offset: Point,
+        val xAdvance: Int,
+        val page: Int,
+        val chnl: Int
+    ) : Chunk(type)
 
     class Kernings(
-            type: ChunkType,
-            val count: Int) : Chunk(type)
+        type: ChunkType,
+        val count: Int
+    ) : Chunk(type)
 
     class Kerning(
-            type: ChunkType,
-            val first: Int,
-            val second: Int,
-            val amount: Int) : Chunk(type)
+        type: ChunkType,
+        val first: Int,
+        val second: Int,
+        val amount: Int
+    ) : Chunk(type)
 
     val materials = pages.map { page ->
         val texture = Texture.load(Path.resolve(textureDir, page.file))

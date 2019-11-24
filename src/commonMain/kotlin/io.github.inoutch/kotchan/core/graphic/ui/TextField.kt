@@ -21,12 +21,14 @@ import io.github.inoutch.kotchan.utility.type.Vector4
 import kotlin.math.PI
 import kotlin.math.sin
 
-class TextField(private val bmFont: BMFont,
-                material: Material,
-                size: Vector2,
-                fontSize: Float,
-                private val margin: Float,
-                camera: Camera) : Polygon2D(Mesh(), null, size), Touchable {
+class TextField(
+    private val bmFont: BMFont,
+    material: Material,
+    size: Vector2,
+    fontSize: Float,
+    private val margin: Float,
+    camera: Camera
+) : Polygon2D(Mesh(), null, size), Touchable {
     enum class EditTextState {
         General,
         Focused,

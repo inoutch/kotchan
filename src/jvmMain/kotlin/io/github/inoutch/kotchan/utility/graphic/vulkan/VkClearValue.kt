@@ -3,8 +3,9 @@ package io.github.inoutch.kotchan.utility.graphic.vulkan
 import io.github.inoutch.kotchan.utility.MemScope
 
 fun VkClearValue.copyToNative(
-        native: org.lwjgl.vulkan.VkClearValue,
-        scope: MemScope) {
+    native: org.lwjgl.vulkan.VkClearValue,
+    scope: MemScope
+) {
     when {
         color != null -> native.color(color.toNative(scope))
         depthStencil != null -> native.depthStencil(depthStencil.toNative(scope))

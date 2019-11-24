@@ -1,6 +1,6 @@
 package io.github.inoutch.kotchan.core.localization
 
-import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.core
 import io.github.inoutch.kotchan.core.KotchanCore.Companion.logger
 import io.github.inoutch.kotchan.utility.Locale
 import io.github.inoutch.kotchan.utility.data.json.Json
@@ -21,7 +21,7 @@ class LocalizationManager {
 
     fun load(dir: String, default: String = "en") {
         val language = Locale.language
-        val defaultJson = instance.file.readTextFromResourceWithError(Path.resolve(dir, "$default.json"))
+        val defaultJson = core.file.readTextFromResourceWithError(Path.resolve(dir, "$default.json"))
         val defaultLocalization = Json.parse(defaultJson)
                 ?: throw IllegalStateException("Invalid json format")
 
@@ -39,7 +39,7 @@ class LocalizationManager {
         if (language == default) {
             return
         }
-        val json = instance.file.readTextFromResource(Path.resolve(dir, "$language.json"))
+        val json = core.file.readTextFromResource(Path.resolve(dir, "$language.json"))
         if (json == null) {
             logger.warn("Unexpected language of $language")
             return

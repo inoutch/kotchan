@@ -4,13 +4,14 @@ import io.github.inoutch.kotchan.utility.Disposable
 import io.github.inoutch.kotchan.utility.graphic.vulkan.*
 
 class VKPipeline(
-        val vk: VK,
-        val pipeline: VkPipeline,
-        val descriptorSetLayout: VkDescriptorSetLayout,
-        val descriptorSetProvider: DescriptorSetProvider,
-        val pipelineLayout: VkPipelineLayout,
-        val uniforms: List<VKUniformBuffer>,
-        val samplers: List<VKSampler>) : Disposable {
+    val vk: VK,
+    val pipeline: VkPipeline,
+    val descriptorSetLayout: VkDescriptorSetLayout,
+    val descriptorSetProvider: DescriptorSetProvider,
+    val pipelineLayout: VkPipelineLayout,
+    val uniforms: List<VKUniformBuffer>,
+    val samplers: List<VKSampler>
+) : Disposable {
 
     override fun dispose() {
         vk.waitQueue {

@@ -4,8 +4,9 @@ import io.github.inoutch.kotchan.utility.MemScope
 import org.lwjgl.vulkan.VK10
 
 fun VkImageMemoryBarrier.copyToNative(
-        native: org.lwjgl.vulkan.VkImageMemoryBarrier,
-        scope: MemScope) {
+    native: org.lwjgl.vulkan.VkImageMemoryBarrier,
+    scope: MemScope
+) {
     native.sType(VK10.VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER)
             .pNext(VK10.VK_NULL_HANDLE)
             .srcAccessMask(srcAccessMask.sumBy { it.value })

@@ -5,8 +5,9 @@ import io.github.inoutch.kotchan.utility.MemScope
 import org.lwjgl.vulkan.VK10
 
 fun VkDeviceQueueCreateInfo.copyToNative(
-        native: org.lwjgl.vulkan.VkDeviceQueueCreateInfo,
-        scope: MemScope) {
+    native: org.lwjgl.vulkan.VkDeviceQueueCreateInfo,
+    scope: MemScope
+) {
     native.sType(VK10.VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO)
             .pNext(VK10.VK_NULL_HANDLE)
             .flags(flags)

@@ -8,13 +8,14 @@ import io.github.inoutch.kotchan.core.graphic.polygon.AnimatedSpriteAtlas
 import io.github.inoutch.kotchan.core.graphic.texture.TextureAtlas
 
 class AnimatedToggleButton(
-        material: Material,
-        textureAtlas: TextureAtlas,
-        camera: Camera,
-        onAnimationSet: AnimationSet,
-        offAnimationSet: AnimationSet,
-        override val onToggleOn: () -> Unit,
-        override val onToggleOff: () -> Unit) : AnimatedSpriteAtlas(
+    material: Material,
+    textureAtlas: TextureAtlas,
+    camera: Camera,
+    onAnimationSet: AnimationSet,
+    offAnimationSet: AnimationSet,
+    override val onToggleOn: () -> Unit,
+    override val onToggleOff: () -> Unit
+) : AnimatedSpriteAtlas(
         material,
         textureAtlas,
         AnimatedSpriteAtlas.Config(listOf(onAnimationSet, offAnimationSet))), ToggleButton {

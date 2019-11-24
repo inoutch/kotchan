@@ -5,8 +5,9 @@ import vulkan.VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO
 
 @ExperimentalUnsignedTypes
 fun VkCommandBufferBeginInfo.copyToNative(
-        native: vulkan.VkCommandBufferBeginInfo,
-        scope: MemScope) {
+    native: vulkan.VkCommandBufferBeginInfo,
+    scope: MemScope
+) {
     native.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO
     native.pNext = null
     native.flags = flags.sumBy { it.value }.toUInt()

@@ -4,8 +4,9 @@ import io.github.inoutch.kotchan.utility.MemScope
 import org.lwjgl.vulkan.VK10
 
 fun VkImageViewCreateInfo.copyToNative(
-        native: org.lwjgl.vulkan.VkImageViewCreateInfo,
-        scope: MemScope) {
+    native: org.lwjgl.vulkan.VkImageViewCreateInfo,
+    scope: MemScope
+) {
     native.sType(VK10.VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO)
             .pNext(VK10.VK_NULL_HANDLE)
             .flags(flags)

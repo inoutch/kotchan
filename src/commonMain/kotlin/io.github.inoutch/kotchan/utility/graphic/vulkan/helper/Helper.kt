@@ -7,10 +7,11 @@ import io.github.inoutch.kotchan.utility.type.Vector4
 class Helper {
     companion object {
         fun createDevice(
-                physicalDevice: VkPhysicalDevice,
-                deviceQueueFamilyIndices: DeviceQueueFamilyIndices,
-                deviceLayerNames: List<String>,
-                deviceExtensionNames: List<String>): VkDevice {
+            physicalDevice: VkPhysicalDevice,
+            deviceQueueFamilyIndices: DeviceQueueFamilyIndices,
+            deviceLayerNames: List<String>,
+            deviceExtensionNames: List<String>
+        ): VkDevice {
             val graphicsQueueCreateInfo = VkDeviceQueueCreateInfo(0, deviceQueueFamilyIndices.graphicsQueueFamilyIndex)
             val presentQueueCreateInfo = VkDeviceQueueCreateInfo(0, deviceQueueFamilyIndices.presentQueueFamilyIndex)
 
@@ -25,9 +26,10 @@ class Helper {
         }
 
         fun createRenderPass(
-                device: VkDevice,
-                surfaceFormat: VkSurfaceFormatKHR,
-                depthFormat: VkFormat): VkRenderPass {
+            device: VkDevice,
+            surfaceFormat: VkSurfaceFormatKHR,
+            depthFormat: VkFormat
+        ): VkRenderPass {
             val colorAttachment = VkAttachmentDescription(
                     0,
                     surfaceFormat.format,
@@ -86,16 +88,17 @@ class Helper {
         }
 
         fun createGraphicsPipeline(
-                device: VkDevice,
-                renderPass: VkRenderPass,
-                pipelineLayout: VkPipelineLayout,
-                vertShaderModule: VkShaderModule,
-                fragShaderModule: VkShaderModule,
-                depthTest: Boolean,
-                cullMode: VkCullMode,
-                polygonMode: VkPolygonMode,
-                srcFactor: VkBlendFactor,
-                dstFactor: VkBlendFactor): VkPipeline {
+            device: VkDevice,
+            renderPass: VkRenderPass,
+            pipelineLayout: VkPipelineLayout,
+            vertShaderModule: VkShaderModule,
+            fragShaderModule: VkShaderModule,
+            depthTest: Boolean,
+            cullMode: VkCullMode,
+            polygonMode: VkPolygonMode,
+            srcFactor: VkBlendFactor,
+            dstFactor: VkBlendFactor
+        ): VkPipeline {
 
             val shaderStages = createShaderStages(vertShaderModule, fragShaderModule)
 
@@ -200,11 +203,13 @@ class Helper {
             return vkCreateGraphicsPipelines(device, null, listOf(pipelineCreateInfo))
         }
 
-        fun createImage(device: VkDevice,
-                        size: Point,
-                        format: VkFormat,
-                        tiling: VkImageTiling,
-                        usage: List<VkImageUsageFlagBits>): VkImage {
+        fun createImage(
+            device: VkDevice,
+            size: Point,
+            format: VkFormat,
+            tiling: VkImageTiling,
+            usage: List<VkImageUsageFlagBits>
+        ): VkImage {
 
             val createInfo = VkImageCreateInfo(
                     0,

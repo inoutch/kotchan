@@ -6,12 +6,14 @@ import io.github.inoutch.kotchan.utility.Disposable
 import io.github.inoutch.kotchan.utility.type.Matrix4
 
 abstract class ShaderProgram(
-        val shader: Shader,
-        initDescriptorSets: List<DescriptorSet> = listOf()) : Disposable {
+    val shader: Shader,
+    initDescriptorSets: List<DescriptorSet> = listOf()
+) : Disposable {
 
     class ShaderSource(
-            val text: String,
-            val binary: ByteArray)
+        val text: String,
+        val binary: ByteArray
+    )
 
     private val viewProjectionMatrixUniform = UniformMatrix4fv(0, "u_viewProjectionMatrix")
 

@@ -1,8 +1,8 @@
 package io.github.inoutch.kotchan.core.graphic.texture
 
+import io.github.inoutch.kotchan.core.tool.TextureFrame
 import io.github.inoutch.kotchan.utility.type.Vector2
 import io.github.inoutch.kotchan.utility.type.Vector3
-import io.github.inoutch.kotchan.core.tool.TextureFrame
 
 data class TextureAtlas(private val frames: List<TextureFrame>, val textureSize: Vector2) {
 

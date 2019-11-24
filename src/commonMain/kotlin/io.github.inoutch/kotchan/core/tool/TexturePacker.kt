@@ -1,13 +1,12 @@
 package io.github.inoutch.kotchan.core.tool
 
-import io.github.inoutch.kotchan.utility.data.json.Json
 import interop.data.json.JsonType
-import io.github.inoutch.kotchan.core.KotchanCore
-import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.core
 import io.github.inoutch.kotchan.core.KotchanCore.Companion.logger
 import io.github.inoutch.kotchan.core.error.NoSuchFileError
 import io.github.inoutch.kotchan.core.graphic.texture.Texture
 import io.github.inoutch.kotchan.core.graphic.texture.TextureAtlas
+import io.github.inoutch.kotchan.utility.data.json.Json
 import io.github.inoutch.kotchan.utility.path.Path
 import io.github.inoutch.kotchan.utility.type.*
 
@@ -16,12 +15,12 @@ class TexturePacker {
 
     companion object {
         fun loadFileFromResource(textureDir: String, filepath: String, enableCache: Boolean = true) =
-                loadFile(instance.file.getResourcePath(textureDir) ?: throw NoSuchFileError(textureDir),
-                        instance.file.getResourcePath(filepath) ?: throw NoSuchFileError(filepath), enableCache)
+                loadFile(core.file.getResourcePath(textureDir) ?: throw NoSuchFileError(textureDir),
+                        core.file.getResourcePath(filepath) ?: throw NoSuchFileError(filepath), enableCache)
                         ?: throw NoSuchFileError(filepath)
 
         fun loadFile(textureDir: String, filepath: String, enableCache: Boolean = true): Bundle? {
-            val file = KotchanCore.instance.file
+            val file = core.file
             val json = file.readText(filepath)
             if (json == null) {
                 logger.error("This file is not existed or not text [$filepath]")
@@ -81,7 +80,7 @@ class TexturePacker {
             val meta = rootMap[1].byScheme(metaScheme) ?: return null
             val image = meta[0].toText() ?: return null
             val imagePath = Path.resolve(textureDir, image)
-            val texture = KotchanCore.instance.let {
+            val texture = core.let {
                 if (enableCache) {
                     it.textureCacheManager.load(imagePath)
                 } else {

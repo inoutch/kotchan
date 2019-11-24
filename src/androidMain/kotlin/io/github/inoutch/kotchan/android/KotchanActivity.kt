@@ -8,14 +8,14 @@ import android.os.Bundle
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.FrameLayout
 import io.github.inoutch.kotchan.core.KotchanEngine
+import io.github.inoutch.kotchan.utility.io.FileItem
+import io.github.inoutch.kotchan.utility.io.FileType
 import io.github.inoutch.kotchan.utility.path.Path
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
-import android.widget.FrameLayout
-import io.github.inoutch.kotchan.utility.io.FileItem
-import io.github.inoutch.kotchan.utility.io.FileType
 import java.io.IOException
 
 abstract class KotchanActivity : Activity() {

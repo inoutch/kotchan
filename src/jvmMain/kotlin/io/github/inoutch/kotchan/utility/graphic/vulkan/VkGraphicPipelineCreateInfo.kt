@@ -4,8 +4,9 @@ import io.github.inoutch.kotchan.utility.MemScope
 import org.lwjgl.vulkan.VK10
 
 fun VkGraphicsPipelineCreateInfo.copyToNative(
-        native: org.lwjgl.vulkan.VkGraphicsPipelineCreateInfo,
-        memScope: MemScope) {
+    native: org.lwjgl.vulkan.VkGraphicsPipelineCreateInfo,
+    memScope: MemScope
+) {
     native.sType(VK10.VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO)
             .pNext(VK10.VK_NULL_HANDLE)
             .flags(flags)

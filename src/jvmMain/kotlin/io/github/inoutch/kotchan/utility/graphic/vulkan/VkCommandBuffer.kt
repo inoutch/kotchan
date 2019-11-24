@@ -27,8 +27,9 @@ actual class VkCommandBuffer : Disposable {
 }
 
 actual fun vkAllocateCommandBuffers(
-        device: VkDevice,
-        allocateInfo: VkCommandBufferAllocateInfo) = memScoped {
+    device: VkDevice,
+    allocateInfo: VkCommandBufferAllocateInfo
+) = memScoped {
 
     val native = allocPointer(allocateInfo.commandBufferCount)
     checkError(VK10.vkAllocateCommandBuffers(
@@ -41,82 +42,91 @@ actual fun vkAllocateCommandBuffers(
             init(org.lwjgl.vulkan.VkCommandBuffer(it, device.native), device, allocateInfo.commandPool)
         }
     }
-
 }
 
 actual fun vkBeginCommandBuffer(
-        commandBuffer: VkCommandBuffer,
-        beginInfo: VkCommandBufferBeginInfo) = memScoped {
+    commandBuffer: VkCommandBuffer,
+    beginInfo: VkCommandBufferBeginInfo
+) = memScoped {
     checkError(VK10.vkBeginCommandBuffer(commandBuffer.native, beginInfo.toNative(this)))
 }
 
 actual fun vkEndCommandBuffer(
-        commandBuffer: VkCommandBuffer) {
+    commandBuffer: VkCommandBuffer
+) {
     checkError(VK10.vkEndCommandBuffer(commandBuffer.native))
 }
 
 actual fun vkCmdBeginRenderPass(
-        commandBuffer: VkCommandBuffer,
-        beginInfo: VkRenderPassBeginInfo,
-        contents: VkSubpassContents) = memScoped {
+    commandBuffer: VkCommandBuffer,
+    beginInfo: VkRenderPassBeginInfo,
+    contents: VkSubpassContents
+) = memScoped {
     VK10.vkCmdBeginRenderPass(commandBuffer.native, beginInfo.toNative(this), contents.value)
 }
 
 actual fun vkCmdEndRenderPass(
-        commandBuffer: VkCommandBuffer) {
+    commandBuffer: VkCommandBuffer
+) {
     VK10.vkCmdEndRenderPass(commandBuffer.native)
 }
 
 actual fun vkCmdSetViewport(
-        commandBuffer: VkCommandBuffer,
-        firstViewport: Int,
-        viewports: List<VkViewport>) = memScoped {
+    commandBuffer: VkCommandBuffer,
+    firstViewport: Int,
+    viewports: List<VkViewport>
+) = memScoped {
     VK10.vkCmdSetViewport(commandBuffer.native, firstViewport, viewports.toNative(this)
             ?: throw VkNullError("viewports"))
 }
 
 actual fun vkCmdSetScissor(
-        commandBuffer: VkCommandBuffer,
-        firstScissor: Int,
-        scissors: List<VkRect2D>) = memScoped {
+    commandBuffer: VkCommandBuffer,
+    firstScissor: Int,
+    scissors: List<VkRect2D>
+) = memScoped {
     VK10.vkCmdSetScissor(commandBuffer.native, firstScissor, scissors.toNative(this)
             ?: throw VkNullError("scissors"))
 }
 
 actual fun vkCmdBindPipeline(
-        commandBuffer: VkCommandBuffer,
-        pipelineBindPoint: VkPipelineBindPoint,
-        pipeline: VkPipeline) {
+    commandBuffer: VkCommandBuffer,
+    pipelineBindPoint: VkPipelineBindPoint,
+    pipeline: VkPipeline
+) {
     VK10.vkCmdBindPipeline(commandBuffer.native, pipelineBindPoint.value, pipeline.native)
 }
 
 actual fun vkCmdBindVertexBuffers(
-        commandBuffer: VkCommandBuffer,
-        firstBinding: Int,
-        buffers: List<VkBuffer>,
-        offsets: List<Long>) = memScoped {
+    commandBuffer: VkCommandBuffer,
+    firstBinding: Int,
+    buffers: List<VkBuffer>,
+    offsets: List<Long>
+) = memScoped {
     VK10.vkCmdBindVertexBuffers(
             commandBuffer.native, firstBinding, buffers.map { it.native }.toLongArray(),
             offsets.toLongArray())
 }
 
 actual fun vkCmdDraw(
-        commandBuffer: VkCommandBuffer,
-        vertexCount: Int,
-        instanceCount: Int,
-        firstVertex: Int,
-        firstInstance: Int) {
+    commandBuffer: VkCommandBuffer,
+    vertexCount: Int,
+    instanceCount: Int,
+    firstVertex: Int,
+    firstInstance: Int
+) {
     VK10.vkCmdDraw(commandBuffer.native, vertexCount, instanceCount, firstVertex, firstInstance)
 }
 
 actual fun vkCmdPipelineBarrier(
-        commandBuffer: VkCommandBuffer,
-        srcStageMask: List<VkPipelineStageFlagBits>,
-        dstStageMask: List<VkPipelineStageFlagBits>,
-        dependencyFlags: List<VkDependencyFlagBits>,
-        memoryBarriers: List<VkMemoryBarrier>,
-        bufferMemoryBarriers: List<VkBufferMemoryBarrier>,
-        imageMemoryBarriers: List<VkImageMemoryBarrier>) = memScoped {
+    commandBuffer: VkCommandBuffer,
+    srcStageMask: List<VkPipelineStageFlagBits>,
+    dstStageMask: List<VkPipelineStageFlagBits>,
+    dependencyFlags: List<VkDependencyFlagBits>,
+    memoryBarriers: List<VkMemoryBarrier>,
+    bufferMemoryBarriers: List<VkBufferMemoryBarrier>,
+    imageMemoryBarriers: List<VkImageMemoryBarrier>
+) = memScoped {
     VK10.vkCmdPipelineBarrier(
             commandBuffer.native,
             srcStageMask.sumBy { it.value },
@@ -128,11 +138,12 @@ actual fun vkCmdPipelineBarrier(
 }
 
 actual fun vkCmdClearColorImage(
-        commandBuffer: VkCommandBuffer,
-        image: VkImage,
-        imageLayout: VkImageLayout,
-        clearColor: Vector4,
-        ranges: List<VkImageSubresourceRange>) = memScoped {
+    commandBuffer: VkCommandBuffer,
+    image: VkImage,
+    imageLayout: VkImageLayout,
+    clearColor: Vector4,
+    ranges: List<VkImageSubresourceRange>
+) = memScoped {
     VK10.vkCmdClearColorImage(
             commandBuffer.native,
             image.native,
@@ -142,11 +153,12 @@ actual fun vkCmdClearColorImage(
 }
 
 actual fun vkCmdClearDepthStencilImage(
-        commandBuffer: VkCommandBuffer,
-        image: VkImage,
-        imageLayout: VkImageLayout,
-        depthStencilValue: VkClearDepthStencilValue,
-        ranges: List<VkImageSubresourceRange>) = memScoped {
+    commandBuffer: VkCommandBuffer,
+    image: VkImage,
+    imageLayout: VkImageLayout,
+    depthStencilValue: VkClearDepthStencilValue,
+    ranges: List<VkImageSubresourceRange>
+) = memScoped {
     VK10.vkCmdClearDepthStencilImage(
             commandBuffer.native,
             image.native,
@@ -160,11 +172,12 @@ actual fun vkResetCommandBuffer(commandBuffer: VkCommandBuffer, flags: List<VkCo
 }
 
 actual fun vkCmdCopyBufferToImage(
-        commandBuffer: VkCommandBuffer,
-        srcBuffer: VkBuffer,
-        srcImage: VkImage,
-        dstImageLayout: VkImageLayout,
-        regions: List<VkBufferImageCopy>) = memScoped {
+    commandBuffer: VkCommandBuffer,
+    srcBuffer: VkBuffer,
+    srcImage: VkImage,
+    dstImageLayout: VkImageLayout,
+    regions: List<VkBufferImageCopy>
+) = memScoped {
     VK10.vkCmdCopyBufferToImage(
             commandBuffer.native,
             srcBuffer.native,
@@ -174,12 +187,13 @@ actual fun vkCmdCopyBufferToImage(
 }
 
 actual fun vkCmdBindDescriptorSets(
-        commandBuffer: VkCommandBuffer,
-        pipelineBindPoint: VkPipelineBindPoint,
-        layout: VkPipelineLayout,
-        firstSet: Int,
-        descriptorSets: List<VkDescriptorSet>,
-        dynamicOffsets: List<Int>) = memScoped {
+    commandBuffer: VkCommandBuffer,
+    pipelineBindPoint: VkPipelineBindPoint,
+    layout: VkPipelineLayout,
+    firstSet: Int,
+    descriptorSets: List<VkDescriptorSet>,
+    dynamicOffsets: List<Int>
+) = memScoped {
     VK10.vkCmdBindDescriptorSets(
             commandBuffer.native,
             pipelineBindPoint.value,

@@ -6,9 +6,10 @@ import kotlin.math.max
 import kotlin.math.min
 
 class SwapchainSupportDetails private constructor(
-        val capabilities: VkSurfaceCapabilitiesKHR,
-        val formats: List<VkSurfaceFormatKHR>,
-        val presentModes: List<VkPresentModeKHR>) {
+    val capabilities: VkSurfaceCapabilitiesKHR,
+    val formats: List<VkSurfaceFormatKHR>,
+    val presentModes: List<VkPresentModeKHR>
+) {
 
     companion object {
         fun querySwapchainSupport(physicalDevice: VkPhysicalDevice, surface: VkSurface): SwapchainSupportDetails {

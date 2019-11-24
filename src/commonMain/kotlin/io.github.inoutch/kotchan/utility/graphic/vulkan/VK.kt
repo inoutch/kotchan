@@ -1,20 +1,21 @@
 package io.github.inoutch.kotchan.utility.graphic.vulkan
 
-import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.DeviceQueueFamilyIndices
-import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.SwapchainSupportDetails
 import io.github.inoutch.kotchan.utility.Disposable
 import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.*
+import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.DeviceQueueFamilyIndices
+import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.SwapchainSupportDetails
 import io.github.inoutch.kotchan.utility.type.Point
-import io.github.inoutch.kotchan.utility.type.Vector4
 import io.github.inoutch.kotchan.utility.type.Version
 
-class VK(appName: String,
-         private val actualWindowSize: Point,
-         physicalDeviceLayerNames: List<String>,
-         physicalDeviceExtensionNames: List<String>,
-         deviceLayerNames: List<String>,
-         deviceExtensionNames: List<String>,
-         surfaceCreateCallback: (instance: VkInstance) -> VkSurface) : Disposable {
+class VK(
+    appName: String,
+    private val actualWindowSize: Point,
+    physicalDeviceLayerNames: List<String>,
+    physicalDeviceExtensionNames: List<String>,
+    deviceLayerNames: List<String>,
+    deviceExtensionNames: List<String>,
+    surfaceCreateCallback: (instance: VkInstance) -> VkSurface
+) : Disposable {
 
     companion object {
         const val MAX_FRAMES_IN_FLIGHT = 2
@@ -194,11 +195,12 @@ class VK(appName: String,
     }
 
     fun transitionImageLayout(
-            image: VkImage,
-            format: VkFormat,
-            oldLayout: VkImageLayout,
-            newLayout: VkImageLayout,
-            currentCommandBuffer: VkCommandBuffer?) {
+        image: VkImage,
+        format: VkFormat,
+        oldLayout: VkImageLayout,
+        newLayout: VkImageLayout,
+        currentCommandBuffer: VkCommandBuffer?
+    ) {
         val srcAccessMask: List<VkAccessFlagBits>
         val dstAccessMask: List<VkAccessFlagBits>
         val sourceStage: List<VkPipelineStageFlagBits>
@@ -280,19 +282,21 @@ class VK(appName: String,
     }
 
     fun createDescriptorSets(
-            device: VkDevice,
-            descriptorPool: VkDescriptorPool,
-            size: Int,
-            layout: VkDescriptorSetLayout): List<VkDescriptorSet> {
+        device: VkDevice,
+        descriptorPool: VkDescriptorPool,
+        size: Int,
+        layout: VkDescriptorSetLayout
+    ): List<VkDescriptorSet> {
 
         val allocateInfo = VkDescriptorSetAllocateInfo(descriptorPool, size, List(size) { layout })
         return vkAllocateDescriptorSets(device, allocateInfo)
     }
 
     fun findSupportedFormat(
-            candidates: List<VkFormat>,
-            tiling: VkImageTiling,
-            features: List<VkFormatFeatureFlagBits>): VkFormat {
+        candidates: List<VkFormat>,
+        tiling: VkImageTiling,
+        features: List<VkFormatFeatureFlagBits>
+    ): VkFormat {
         val featuresValue = features.sumBy { it.value }
         return candidates.find { format ->
             val props = vkGetPhysicalDeviceFormatProperties(physicalDevice, format)
@@ -320,8 +324,8 @@ class VK(appName: String,
         return format == VkFormat.VK_FORMAT_D32_SFLOAT_S8_UINT || format == VkFormat.VK_FORMAT_D24_UNORM_S8_UINT
     }
 
-    fun createImageMemory(device: VkDevice, image: VkImage, properties: List<VkMemoryPropertyFlagBits>)
-            : Pair<VkDeviceMemory, Long> {
+    fun createImageMemory(device: VkDevice, image: VkImage, properties: List<VkMemoryPropertyFlagBits>):
+            Pair<VkDeviceMemory, Long> {
         val requirements = vkGetImageMemoryRequirements(device, image)
         val allocateInfo = VkMemoryAllocateInfo(
                 requirements.size, findMemoryTypeIndex(requirements.memoryTypeBits, properties))

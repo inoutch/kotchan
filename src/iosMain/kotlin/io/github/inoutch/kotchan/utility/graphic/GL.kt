@@ -1,15 +1,15 @@
-//package io.github.inoutch.kotchan.utility.graphic
+// package io.github.inoutch.kotchan.utility.graphic
 //
-//import io.github.inoutch.kotchan.utility.type.Matrix4
-//import io.github.inoutch.kotchan.utility.type.Vector3
-//import io.github.inoutch.kotchan.utility.type.Vector4
-//import kotlinx.cinterop.*
-//import platform.glescommon.*
-//import platform.gles3.*
-//import platform.GLKit.*
+// import io.github.inoutch.kotchan.utility.type.Matrix4
+// import io.github.inoutch.kotchan.utility.type.Vector3
+// import io.github.inoutch.kotchan.utility.type.Vector4
+// import kotlinx.cinterop.*
+// import platform.glescommon.*
+// import platform.gles3.*
+// import platform.GLKit.*
 //
-//@ExperimentalUnsignedTypes
-//actual class GL {
+// @ExperimentalUnsignedTypes
+// actual class GL {
 //    private var defaultFrameBufferId: Int = 0
 //
 //    init {
@@ -347,4 +347,4 @@
 //        GLFactor.GL_CONSTANT_ALPHA -> GL_CONSTANT_ALPHA
 //        GLFactor.GL_ONE_MINUS_CONSTANT_ALPHA -> GL_ONE_MINUS_CONSTANT_ALPHA
 //    }
-//}
+// }

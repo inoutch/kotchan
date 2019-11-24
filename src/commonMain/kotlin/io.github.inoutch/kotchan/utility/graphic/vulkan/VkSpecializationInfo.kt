@@ -1,8 +1,9 @@
 package io.github.inoutch.kotchan.utility.graphic.vulkan
 
 data class VkSpecializationInfo(
-        val mapEntities: List<VkSpecializationMapEntry>,
-        val data: ByteArray) {
+    val mapEntities: List<VkSpecializationMapEntry>,
+    val data: ByteArray
+) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || this::class != other::class) return false
@@ -23,6 +24,7 @@ data class VkSpecializationInfo(
 }
 
 data class VkSpecializationMapEntry(
-        val constantID: Int,
-        val offset: Int,
-        val size: Long)
+    val constantID: Int,
+    val offset: Int,
+    val size: Long
+)

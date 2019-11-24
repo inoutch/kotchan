@@ -1,7 +1,7 @@
 package io.github.inoutch.kotchan.utility.graphic.vulkan
 
-import kotlinx.cinterop.UIntVar
 import kotlinx.cinterop.*
+import kotlinx.cinterop.UIntVar
 
 // not disposable because not created
 actual class VkPhysicalDevice actual constructor() {

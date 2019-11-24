@@ -10,7 +10,7 @@ fun VkPipelineTessellationStateCreateInfo.copyToNative(native: org.lwjgl.vulkan.
             .patchControlPoints(patchControlPoints)
 }
 
-fun VkPipelineTessellationStateCreateInfo.toNative(scope: MemScope)
-        : org.lwjgl.vulkan.VkPipelineTessellationStateCreateInfo =
+fun VkPipelineTessellationStateCreateInfo.toNative(scope: MemScope):
+        org.lwjgl.vulkan.VkPipelineTessellationStateCreateInfo =
         scope.add(org.lwjgl.vulkan.VkPipelineTessellationStateCreateInfo.calloc()
                 .also { copyToNative(it) })

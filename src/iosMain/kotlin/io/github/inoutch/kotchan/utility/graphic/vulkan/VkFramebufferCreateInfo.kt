@@ -5,8 +5,9 @@ import vulkan.VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO
 
 @ExperimentalUnsignedTypes
 fun VkFramebufferCreateInfo.copyToNative(
-        native: vulkan.VkFramebufferCreateInfo,
-        scope: MemScope) {
+    native: vulkan.VkFramebufferCreateInfo,
+    scope: MemScope
+) {
     native.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO
     native.pNext = null
     native.flags = flags.toUInt()

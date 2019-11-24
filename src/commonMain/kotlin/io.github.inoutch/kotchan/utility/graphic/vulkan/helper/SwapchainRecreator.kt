@@ -5,16 +5,18 @@ import io.github.inoutch.kotchan.utility.graphic.vulkan.*
 import io.github.inoutch.kotchan.utility.type.Point
 
 class SwapchainRecreator(
-        private val vk: VK,
-        newExtent: Point,
-        private val swapchainSupportDetails: SwapchainSupportDetails,
-        private val deviceQueueFamilyIndices: DeviceQueueFamilyIndices) : Disposable {
+    private val vk: VK,
+    newExtent: Point,
+    private val swapchainSupportDetails: SwapchainSupportDetails,
+    private val deviceQueueFamilyIndices: DeviceQueueFamilyIndices
+) : Disposable {
 
     data class ResultBundle(
-            val swapchainKHR: VkSwapchainKHR,
-            val framebuffers: List<VkFramebuffer>,
-            val commandBuffers: List<VkCommandBuffer>,
-            val depthResources: List<DepthResource>)
+        val swapchainKHR: VkSwapchainKHR,
+        val framebuffers: List<VkFramebuffer>,
+        val commandBuffers: List<VkCommandBuffer>,
+        val depthResources: List<DepthResource>
+    )
 
     var mustBeRecreate = false
 
@@ -100,8 +102,9 @@ class SwapchainRecreator(
     }
 
     private fun createSwapchain(
-            oldSwapchainKHR: VkSwapchainKHR?,
-            extent: Point): VkSwapchainKHR {
+        oldSwapchainKHR: VkSwapchainKHR?,
+        extent: Point
+    ): VkSwapchainKHR {
         val imageCount = swapchainSupportDetails.chooseImageCount()
         val presentMode = swapchainSupportDetails.chooseSwapPresentMode()
 
@@ -155,8 +158,8 @@ class SwapchainRecreator(
         return vkCreateImageView(vk.device, createInfo)
     }
 
-    private fun createFramebuffer(swapchainImageView: VkImageView, depthImageView: VkImageView, extent: Point)
-            : VkFramebuffer {
+    private fun createFramebuffer(swapchainImageView: VkImageView, depthImageView: VkImageView, extent: Point):
+            VkFramebuffer {
         val createInfo = VkFramebufferCreateInfo(
                 0,
                 vk.renderPass,
@@ -167,8 +170,9 @@ class SwapchainRecreator(
     }
 
     private fun createRenderCommandBuffer(
-            commandPool: VkCommandPool,
-            framebuffers: List<VkFramebuffer>): List<VkCommandBuffer> {
+        commandPool: VkCommandPool,
+        framebuffers: List<VkFramebuffer>
+    ): List<VkCommandBuffer> {
         val allocateInfo = VkCommandBufferAllocateInfo(
                 commandPool,
                 VkCommandBufferLevel.VK_COMMAND_BUFFER_LEVEL_PRIMARY.level,
@@ -177,9 +181,11 @@ class SwapchainRecreator(
         return vkAllocateCommandBuffers(vk.device, allocateInfo)
     }
 
-    data class DepthResource(val depthImage: VkImage,
-                             val depthImageMemory: VkDeviceMemory,
-                             val depthImageView: VkImageView)
+    data class DepthResource(
+        val depthImage: VkImage,
+        val depthImageMemory: VkDeviceMemory,
+        val depthImageView: VkImageView
+    )
 
     private fun createDepthResources(extent: Point): DepthResource {
         val depthFormat = vk.findDepthFormat()

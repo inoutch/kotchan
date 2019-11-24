@@ -5,8 +5,9 @@ import kotlinx.cinterop.*
 
 @ExperimentalUnsignedTypes
 fun VkDescriptorSetLayoutBinding.copyToNative(
-        native: vulkan.VkDescriptorSetLayoutBinding,
-        scope: MemScope) {
+    native: vulkan.VkDescriptorSetLayoutBinding,
+    scope: MemScope
+) {
     native.binding = binding.toUInt()
     native.descriptorType = descriptorType.value.toUInt()
     native.descriptorCount = descriptorCount.toUInt()

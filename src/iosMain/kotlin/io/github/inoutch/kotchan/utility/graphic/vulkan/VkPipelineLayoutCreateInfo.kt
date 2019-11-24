@@ -5,8 +5,9 @@ import vulkan.VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO
 
 @ExperimentalUnsignedTypes
 fun VkPipelineLayoutCreateInfo.copyToNative(
-        native: vulkan.VkPipelineLayoutCreateInfo,
-        scope: MemScope) {
+    native: vulkan.VkPipelineLayoutCreateInfo,
+    scope: MemScope
+) {
     native.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO
     native.pNext = null
     native.flags = flags.toUInt()

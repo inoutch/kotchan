@@ -1,6 +1,6 @@
 package io.github.inoutch.kotchan.core.graphic.template
 
-import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.core
 import io.github.inoutch.kotchan.core.graphic.polygon.Polygon
 import io.github.inoutch.kotchan.core.graphic.polygon.Polygon2D
 import io.github.inoutch.kotchan.utility.type.Rect
@@ -8,7 +8,7 @@ import io.github.inoutch.kotchan.utility.type.Vector2
 import io.github.inoutch.kotchan.utility.type.Vector3
 import io.github.inoutch.kotchan.utility.type.Vector4
 
-class Template(val rect: Rect = Rect(Vector2.Zero, instance.screenSize.toVector2())) {
+class Template(val rect: Rect = Rect(Vector2.Zero, core.screenSize.toVector2())) {
     companion object {
         fun createMargin(top: Float, right: Float, bottom: Float, left: Float) = Vector4(top, right, bottom, left)
     }
@@ -40,29 +40,35 @@ class Template(val rect: Rect = Rect(Vector2.Zero, instance.screenSize.toVector2
         add(type, appendType, Vector4(margin, margin, margin, margin), polygons)
     }
 
-    fun add(type: TemplateType,
-            appendType: TemplateAppendType,
-            margin: Vector4,
-            polygons: List<Polygon2D>) {
+    fun add(
+        type: TemplateType,
+        appendType: TemplateAppendType,
+        margin: Vector4,
+        polygons: List<Polygon2D>
+    ) {
         add(type, appendType, polygons.map { Fragment(it, margin) })
     }
 
-    fun add(type: TemplateType,
-            appendType: TemplateAppendType,
-            topBottomMargin: Vector2,
-            leftRightMargin: Vector2,
-            polygons: List<Polygon2D>) {
+    fun add(
+        type: TemplateType,
+        appendType: TemplateAppendType,
+        topBottomMargin: Vector2,
+        leftRightMargin: Vector2,
+        polygons: List<Polygon2D>
+    ) {
         add(type, appendType, polygons.map {
             Fragment(it, Vector4(
                     topBottomMargin.x, leftRightMargin.y, topBottomMargin.y, leftRightMargin.x))
         })
     }
 
-    fun add(type: TemplateType,
-            appendType: TemplateAppendType,
-            topBottomMargin: Float,
-            leftRightMargin: Float,
-            polygons: List<Polygon2D>) {
+    fun add(
+        type: TemplateType,
+        appendType: TemplateAppendType,
+        topBottomMargin: Float,
+        leftRightMargin: Float,
+        polygons: List<Polygon2D>
+    ) {
         add(type,
                 appendType,
                 Vector2(topBottomMargin, topBottomMargin),
@@ -70,9 +76,11 @@ class Template(val rect: Rect = Rect(Vector2.Zero, instance.screenSize.toVector2
                 polygons)
     }
 
-    fun add(type: TemplateType,
-            appendType: TemplateAppendType,
-            fragments: List<Fragment>) {
+    fun add(
+        type: TemplateType,
+        appendType: TemplateAppendType,
+        fragments: List<Fragment>
+    ) {
         this.fragments.getOrPut(type) { mutableMapOf() }
                 .getOrPut(appendType) { mutableListOf() }
                 .addAll(fragments)

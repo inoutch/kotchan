@@ -1,23 +1,23 @@
 package io.github.inoutch.kotchan.core.graphic
 
-import io.github.inoutch.kotchan.core.KotchanCore
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.core
 import io.github.inoutch.kotchan.utility.Disposable
 import io.github.inoutch.kotchan.utility.Disposer
 import io.github.inoutch.kotchan.utility.DisposerAppender
 
 abstract class Scene : Disposable {
 
-    protected val file = KotchanCore.instance.file
+    protected val file = core.file
 
-    protected val textureCacheManager = KotchanCore.instance.textureCacheManager
+    protected val textureCacheManager = core.textureCacheManager
 
-    protected val touchController = KotchanCore.instance.touchController
+    protected val touchController = core.touchController
 
-    protected val animator = KotchanCore.instance.animator
+    protected val animator = core.animator
 
-    protected val windowSize = KotchanCore.instance.windowSize
+    protected val windowSize = core.windowSize
 
-    protected val screenSize = KotchanCore.instance.screenSize
+    protected val screenSize = core.screenSize
 
     protected val disposer: DisposerAppender
         get() = privateDisposer

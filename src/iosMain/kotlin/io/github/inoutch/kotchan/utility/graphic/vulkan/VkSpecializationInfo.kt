@@ -5,8 +5,9 @@ import kotlinx.cinterop.refTo
 
 @ExperimentalUnsignedTypes
 fun VkSpecializationInfo.copyToNative(
-        native: vulkan.VkSpecializationInfo,
-        scope: MemScope) {
+    native: vulkan.VkSpecializationInfo,
+    scope: MemScope
+) {
     native.mapEntryCount = mapEntities.size.toUInt()
     native.pMapEntries = mapEntities.toNative(scope)
     native.dataSize = data.size.toULong()

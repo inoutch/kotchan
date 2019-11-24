@@ -1,6 +1,6 @@
 package io.github.inoutch.kotchan.core.graphic.shader
 
-import io.github.inoutch.kotchan.core.KotchanCore
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.core
 import io.github.inoutch.kotchan.extension.toByteArray
 
 val alphaTestSimpleFragCode = intArrayOf(
@@ -84,13 +84,12 @@ void main(void)
 }
 """
 
-
 class AlphaTestSimpleShaderProgram : ShaderProgram(createShader()) {
     companion object {
         fun createShader(): Shader {
             val vert = ShaderSource(simpleVertText, simpleVertCode)
             val frag = ShaderSource(alphaTestSimpleFragText, alphaTestSimpleFragCode)
-            return KotchanCore.instance.graphicsApi.createShader(vert, frag)
+            return core.graphicsApi.createShader(vert, frag)
         }
     }
 }

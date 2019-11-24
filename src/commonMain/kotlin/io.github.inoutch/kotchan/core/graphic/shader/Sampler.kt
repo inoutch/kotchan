@@ -1,6 +1,6 @@
 package io.github.inoutch.kotchan.core.graphic.shader
 
-import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.core
 import io.github.inoutch.kotchan.core.graphic.texture.Texture
 import io.github.inoutch.kotchan.utility.graphic.vulkan.helper.VKSampler
 
@@ -10,7 +10,7 @@ class Sampler(binding: Int, descriptorName: String) : DescriptorSet(binding, des
     var glSampler: Int? = null
 
     fun set(texture: Texture) {
-        instance.graphicsApi.setSampler(this, texture)
+        core.graphicsApi.setSampler(this, texture)
     }
 
     override fun dispose() {

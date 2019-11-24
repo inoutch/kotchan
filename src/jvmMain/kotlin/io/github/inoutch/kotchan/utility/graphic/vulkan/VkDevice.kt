@@ -18,8 +18,9 @@ actual class VkDevice : Disposable {
 }
 
 actual fun vkCreateDevice(
-        physicalDevice: VkPhysicalDevice,
-        createInfo: VkDeviceCreateInfo) = memScoped {
+    physicalDevice: VkPhysicalDevice,
+    createInfo: VkDeviceCreateInfo
+) = memScoped {
     val nativeCreateInfo = createInfo.toNative(this)
     val native = allocPointer()
 

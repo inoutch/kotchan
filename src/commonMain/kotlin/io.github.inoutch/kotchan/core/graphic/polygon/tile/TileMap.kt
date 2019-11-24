@@ -10,12 +10,13 @@ interface TileMapBase {
 
 class TileMap(val config: Config) : Polygon(Mesh(), config.material), TileMapBase {
     data class Config(
-            val material: Material,
-            val tileSize: Point,
-            val tileTextureSize: Point,
-            val mapSize: Point,
-            val layerConfig: TileLayer.Config,
-            val biasPerPixel: Float = 0.2f)
+        val material: Material,
+        val tileSize: Point,
+        val tileTextureSize: Point,
+        val mapSize: Point,
+        val layerConfig: TileLayer.Config,
+        val biasPerPixel: Float = 0.2f
+    )
 
     private val layers = config.layerConfig.layers.map { TileLayer(config, it) }.also { addChildren(it) }
 

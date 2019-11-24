@@ -5,8 +5,9 @@ import vulkan.VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO
 
 @ExperimentalUnsignedTypes
 fun VkRenderPassCreateInfo.copyToNative(
-        native: vulkan.VkRenderPassCreateInfo,
-        scope: MemScope) {
+    native: vulkan.VkRenderPassCreateInfo,
+    scope: MemScope
+) {
     native.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO
     native.pNext = null
     native.flags = flags.toUInt()

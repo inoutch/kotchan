@@ -5,8 +5,9 @@ import vulkan.VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO
 
 @ExperimentalUnsignedTypes
 fun VkGraphicsPipelineCreateInfo.copyToNative(
-        native: vulkan.VkGraphicsPipelineCreateInfo,
-        scope: MemScope) {
+    native: vulkan.VkGraphicsPipelineCreateInfo,
+    scope: MemScope
+) {
     native.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO
     native.pNext = null
     native.flags = flags.toUInt()

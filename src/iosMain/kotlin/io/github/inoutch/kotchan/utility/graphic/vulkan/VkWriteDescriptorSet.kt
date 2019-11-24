@@ -1,14 +1,15 @@
 package io.github.inoutch.kotchan.utility.graphic.vulkan
 
 import io.github.inoutch.kotchan.extension.toNative
+import kotlin.math.max
 import kotlinx.cinterop.*
 import vulkan.VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET
-import kotlin.math.max
 
 @ExperimentalUnsignedTypes
 fun VkWriteDescriptorSet.copyToNative(
-        native: vulkan.VkWriteDescriptorSet,
-        scope: MemScope) {
+    native: vulkan.VkWriteDescriptorSet,
+    scope: MemScope
+) {
     native.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET
     native.pNext = null
     native.dstSet = dstSet.native

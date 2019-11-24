@@ -12,8 +12,9 @@ fun vulkan.VkFormatProperties.toOrigin(): VkFormatProperties {
 
 @ExperimentalUnsignedTypes
 actual fun vkGetPhysicalDeviceFormatProperties(
-        physicalDevice: VkPhysicalDevice,
-        format: VkFormat): VkFormatProperties = memScoped {
+    physicalDevice: VkPhysicalDevice,
+    format: VkFormat
+): VkFormatProperties = memScoped {
     val native = alloc<vulkan.VkFormatProperties>()
 
     vulkan.vkGetPhysicalDeviceFormatProperties(physicalDevice.native, format.value.toUInt(), native.ptr)

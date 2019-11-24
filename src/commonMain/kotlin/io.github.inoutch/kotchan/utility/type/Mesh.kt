@@ -1,9 +1,11 @@
 package io.github.inoutch.kotchan.utility.type
 
-class Mesh(initPositions: List<Vector3> = emptyList(),
-           initTexcoords: List<Vector2> = emptyList(),
-           initColors: List<Vector4> = emptyList(),
-           initNormals: List<Vector3> = emptyList()) {
+class Mesh(
+    initPositions: List<Vector3> = emptyList(),
+    initTexcoords: List<Vector2> = emptyList(),
+    initColors: List<Vector4> = emptyList(),
+    initNormals: List<Vector3> = emptyList()
+) {
 
     private var positions: MutableList<Vector3> = initPositions.toMutableList()
     private var texcoords: MutableList<Vector2> = initTexcoords.toMutableList()

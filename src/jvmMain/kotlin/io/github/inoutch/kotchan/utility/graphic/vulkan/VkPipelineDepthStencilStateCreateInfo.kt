@@ -4,8 +4,9 @@ import io.github.inoutch.kotchan.utility.MemScope
 import org.lwjgl.vulkan.VK10
 
 fun VkPipelineDepthStencilStateCreateInfo.copyToNative(
-        native: org.lwjgl.vulkan.VkPipelineDepthStencilStateCreateInfo,
-        scope: MemScope) {
+    native: org.lwjgl.vulkan.VkPipelineDepthStencilStateCreateInfo,
+    scope: MemScope
+) {
 
     native.sType(VK10.VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO)
             .pNext(VK10.VK_NULL_HANDLE)

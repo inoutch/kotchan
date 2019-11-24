@@ -18,8 +18,9 @@ fun org.lwjgl.vulkan.VkSurfaceCapabilitiesKHR.toOrigin() =
                 VkImageUsageFlagBits.values().filter { it.value and supportedUsageFlags() != 0 })
 
 actual fun vkGetPhysicalDeviceSurfaceCapabilitiesKHR(
-        physicalDevice: VkPhysicalDevice,
-        surface: VkSurface) = memScoped {
+    physicalDevice: VkPhysicalDevice,
+    surface: VkSurface
+) = memScoped {
     val native = add(org.lwjgl.vulkan.VkSurfaceCapabilitiesKHR.calloc())
 
     checkError(KHRSurface.vkGetPhysicalDeviceSurfaceCapabilitiesKHR(

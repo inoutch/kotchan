@@ -4,8 +4,9 @@ import kotlinx.cinterop.*
 
 @ExperimentalUnsignedTypes
 fun VkSubpassDescription.copyToNative(
-        native: vulkan.VkSubpassDescription,
-        scope: MemScope) {
+    native: vulkan.VkSubpassDescription,
+    scope: MemScope
+) {
     native.flags = flags.toUInt()
     native.pipelineBindPoint = pipelineBindPoint.value.toUInt()
     native.inputAttachmentCount = inputAttachments.size.toUInt()

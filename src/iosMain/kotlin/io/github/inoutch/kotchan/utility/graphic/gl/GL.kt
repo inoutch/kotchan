@@ -2,9 +2,9 @@ package io.github.inoutch.kotchan.utility.graphic.gl
 
 import io.github.inoutch.kotchan.utility.type.*
 import kotlinx.cinterop.*
-import platform.glescommon.*
-import platform.gles3.*
 import platform.GLKit.*
+import platform.gles3.*
+import platform.glescommon.*
 
 @ExperimentalUnsignedTypes
 actual class GL {
@@ -13,7 +13,7 @@ actual class GL {
     init {
         memScoped {
             val buffer = alloc<GLintVar>()
-            glGetIntegerv(GL_FRAMEBUFFER_BINDING, buffer.ptr);
+            glGetIntegerv(GL_FRAMEBUFFER_BINDING, buffer.ptr)
             defaultFrameBufferId = buffer.value
         }
         checkError("GL init")

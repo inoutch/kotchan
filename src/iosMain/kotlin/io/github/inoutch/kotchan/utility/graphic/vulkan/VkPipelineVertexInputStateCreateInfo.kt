@@ -5,8 +5,9 @@ import vulkan.VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO
 
 @ExperimentalUnsignedTypes
 fun VkPipelineVertexInputStateCreateInfo.copyToNative(
-        native: vulkan.VkPipelineVertexInputStateCreateInfo,
-        scope: MemScope) {
+    native: vulkan.VkPipelineVertexInputStateCreateInfo,
+    scope: MemScope
+) {
     native.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO
     native.flags = flags.toUInt()
     native.vertexBindingDescriptionCount = vertexBindingDescriptions.size.toUInt()

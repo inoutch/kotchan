@@ -2,8 +2,8 @@ package io.github.inoutch.kotchan.utility.graphic.vulkan
 
 import io.github.inoutch.kotchan.utility.Disposable
 import io.github.inoutch.kotchan.utility.memScoped
-import org.lwjgl.vulkan.VK10
 import java.nio.LongBuffer
+import org.lwjgl.vulkan.VK10
 
 actual class VkPipelineCache : Disposable {
     var native: Long = 0

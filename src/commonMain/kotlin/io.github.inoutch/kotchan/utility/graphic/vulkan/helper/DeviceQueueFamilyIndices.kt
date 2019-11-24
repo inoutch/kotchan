@@ -3,8 +3,9 @@ package io.github.inoutch.kotchan.utility.graphic.vulkan.helper
 import io.github.inoutch.kotchan.utility.graphic.vulkan.*
 
 class DeviceQueueFamilyIndices private constructor(
-        val graphicsQueueFamilyIndex: Int,
-        val presentQueueFamilyIndex: Int) {
+    val graphicsQueueFamilyIndex: Int,
+    val presentQueueFamilyIndex: Int
+) {
     companion object {
         fun find(physicalDevice: VkPhysicalDevice, surface: VkSurface): DeviceQueueFamilyIndices {
             val deviceQueueFamilyProperties = vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice)

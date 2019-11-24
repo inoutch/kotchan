@@ -6,8 +6,9 @@ import vulkan.VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO
 
 @ExperimentalUnsignedTypes
 fun VkImageCreateInfo.copyToNative(
-        native: vulkan.VkImageCreateInfo,
-        scope: MemScope) {
+    native: vulkan.VkImageCreateInfo,
+    scope: MemScope
+) {
     native.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO
     native.pNext = null
     native.flags = flags.toUInt()

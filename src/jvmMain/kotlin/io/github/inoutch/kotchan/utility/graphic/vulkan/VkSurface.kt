@@ -3,7 +3,6 @@ package io.github.inoutch.kotchan.utility.graphic.vulkan
 import io.github.inoutch.kotchan.utility.memScoped
 import org.lwjgl.vulkan.KHRSurface
 import org.lwjgl.vulkan.VK10.VK_TRUE
-import java.nio.IntBuffer
 
 actual class VkSurface {
     var native: Long = 0
@@ -15,7 +14,10 @@ actual class VkSurface {
 }
 
 actual fun vkGetPhysicalDeviceSurfaceSupportKHR(
-        physicalDevice: VkPhysicalDevice, queueFamilyIndex: Int, surface: VkSurface) = memScoped {
+    physicalDevice: VkPhysicalDevice,
+    queueFamilyIndex: Int,
+    surface: VkSurface
+) = memScoped {
     val supportedPresentation = allocInt(1)
 
     checkError(KHRSurface.vkGetPhysicalDeviceSurfaceSupportKHR(

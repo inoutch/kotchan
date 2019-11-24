@@ -7,6 +7,7 @@ expect class VkDescriptorSet : Disposable
 expect fun vkAllocateDescriptorSets(device: VkDevice, allocateInfo: VkDescriptorSetAllocateInfo): List<VkDescriptorSet>
 
 expect fun vkUpdateDescriptorSets(
-        device: VkDevice,
-        descriptorWrites: List<VkWriteDescriptorSet>,
-        descriptorCopies: List<VkCopyDescriptorSet>)
+    device: VkDevice,
+    descriptorWrites: List<VkWriteDescriptorSet>,
+    descriptorCopies: List<VkCopyDescriptorSet>
+)

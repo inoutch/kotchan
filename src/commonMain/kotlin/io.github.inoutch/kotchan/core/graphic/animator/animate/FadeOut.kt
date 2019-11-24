@@ -1,9 +1,10 @@
 package io.github.inoutch.kotchan.core.graphic.animator.animate
 
 class FadeOut(
-        duration: Float,
-        private val colorCallback: (alpha: Float) -> Unit,
-        callback: () -> Unit) : Animate(duration, callback) {
+    duration: Float,
+    private val colorCallback: (alpha: Float) -> Unit,
+    callback: () -> Unit
+) : Animate(duration, callback) {
 
     override fun update(delta: Float) {
         colorCallback(elapsedTime / duration)

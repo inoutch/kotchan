@@ -11,8 +11,9 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class KotchanKeyboard(
-        private val editText: EditText,
-        private val inputMethodManager: InputMethodManager) {
+    private val editText: EditText,
+    private val inputMethodManager: InputMethodManager
+) {
     private var current: TextWatcher? = null
 
     fun isOpened(): Boolean {

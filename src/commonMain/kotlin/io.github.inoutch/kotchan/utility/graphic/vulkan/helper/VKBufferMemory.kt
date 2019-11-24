@@ -4,10 +4,11 @@ import io.github.inoutch.kotchan.utility.Disposable
 import io.github.inoutch.kotchan.utility.graphic.vulkan.*
 
 class VKBufferMemory(
-        vk: VK,
-        val size: Long,
-        usage: List<VkBufferUsageFlagBits>,
-        memoryTypes: List<VkMemoryPropertyFlagBits>) : Disposable {
+    vk: VK,
+    val size: Long,
+    usage: List<VkBufferUsageFlagBits>,
+    memoryTypes: List<VkMemoryPropertyFlagBits>
+) : Disposable {
 
     val buffer: VkBuffer
     val memory: VkDeviceMemory

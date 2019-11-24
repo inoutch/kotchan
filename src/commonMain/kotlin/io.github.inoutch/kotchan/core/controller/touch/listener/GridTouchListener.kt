@@ -9,10 +9,11 @@ import io.github.inoutch.kotchan.utility.type.Vector4
 import kotlin.math.floor
 
 open class GridTouchListener(
-        camera: Camera, // Use centered camera
-        private val tileSize: Point,
-        private val callback: (pointInTile: Point, type: TouchType) -> Boolean,
-        private val positionCallback: () -> Vector3 = { Vector3.Zero }) : TouchListener(camera) {
+    camera: Camera, // Use centered camera
+    private val tileSize: Point,
+    private val callback: (pointInTile: Point, type: TouchType) -> Boolean,
+    private val positionCallback: () -> Vector3 = { Vector3.Zero }
+) : TouchListener(camera) {
 
     override fun callback(index: Int, normalizedPoint: Vector2, type: TouchType, check: Boolean, chain: Boolean): Boolean {
         if (check && chain) {
@@ -28,4 +29,3 @@ open class GridTouchListener(
         return Point(floor(pointInTileMap.x / tileSize.x), floor(pointInTileMap.y / tileSize.y))
     }
 }
-

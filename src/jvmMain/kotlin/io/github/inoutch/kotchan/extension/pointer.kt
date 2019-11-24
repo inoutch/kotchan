@@ -1,14 +1,14 @@
 package io.github.inoutch.kotchan.extension
 
 import io.github.inoutch.kotchan.utility.MemScope
-import org.lwjgl.PointerBuffer
-import org.lwjgl.system.MemoryUtil
-import org.lwjgl.system.NativeResource
-import org.lwjgl.system.Pointer
 import java.nio.ByteBuffer
 import java.nio.FloatBuffer
 import java.nio.IntBuffer
 import java.nio.LongBuffer
+import org.lwjgl.PointerBuffer
+import org.lwjgl.system.MemoryUtil
+import org.lwjgl.system.NativeResource
+import org.lwjgl.system.Pointer
 
 fun List<String>.stringsToNative(scope: MemScope): PointerBuffer {
     val utf8Strings = this.map { MemoryUtil.memUTF8(it) }
@@ -79,7 +79,6 @@ class WrappedByteBuffer private constructor(val byteBuffer: ByteBuffer) : Native
         MemoryUtil.memFree(byteBuffer)
     }
 }
-
 
 fun PointerBuffer.toStringList(): List<String> {
     val size = remaining()

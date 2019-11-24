@@ -1,8 +1,9 @@
 package io.github.inoutch.kotchan.utility.graphic.vulkan
 
 data class VkShaderModuleCreateInfo(
-        val flags: Int,
-        val code: ByteArray) {
+    val flags: Int,
+    val code: ByteArray
+) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

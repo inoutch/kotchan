@@ -5,8 +5,9 @@ import vulkan.VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO
 
 @ExperimentalUnsignedTypes
 fun VkPipelineColorBlendStateCreateInfo.copyToNative(
-        native: vulkan.VkPipelineColorBlendStateCreateInfo,
-        scope: MemScope) {
+    native: vulkan.VkPipelineColorBlendStateCreateInfo,
+    scope: MemScope
+) {
     native.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO
     native.pNext = null
     native.flags = flags.toUInt()

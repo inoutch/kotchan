@@ -10,13 +10,15 @@ import io.github.inoutch.kotchan.utility.type.Vector3
 import io.github.inoutch.kotchan.utility.type.Vector4
 import kotlin.math.sin
 
-class HighlightToggleButton(material: Material,
-                            textureAtlas: TextureAtlas,
-                            camera: Camera,
-                            name: String,
-                            highlightName: String,
-                            override val onToggleOn: () -> Unit,
-                            override val onToggleOff: () -> Unit) : SpriteAtlas(material, textureAtlas), ToggleButton {
+class HighlightToggleButton(
+    material: Material,
+    textureAtlas: TextureAtlas,
+    camera: Camera,
+    name: String,
+    highlightName: String,
+    override val onToggleOn: () -> Unit,
+    override val onToggleOff: () -> Unit
+) : SpriteAtlas(material, textureAtlas), ToggleButton {
 
     override val touchListener = ButtonTouchListener({ }, { }, camera) { click() }
             .apply { decision = RectTouchDecision { rect() } }

@@ -6,8 +6,9 @@ import vulkan.VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO
 
 @ExperimentalUnsignedTypes
 fun VkPipelineMultisampleStateCreateInfo.copyToNative(
-        native: vulkan.VkPipelineMultisampleStateCreateInfo,
-        scope: MemScope) {
+    native: vulkan.VkPipelineMultisampleStateCreateInfo,
+    scope: MemScope
+) {
     native.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO
     native.pNext = null
     native.flags = flags.toUInt()

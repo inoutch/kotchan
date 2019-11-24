@@ -1,15 +1,16 @@
 package io.github.inoutch.kotchan.core.controller.touch.listener
 
-import io.github.inoutch.kotchan.core.KotchanCore
-import io.github.inoutch.kotchan.core.graphic.camera.Camera
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.core
 import io.github.inoutch.kotchan.core.controller.touch.TouchType
+import io.github.inoutch.kotchan.core.graphic.camera.Camera
 import io.github.inoutch.kotchan.utility.collection.FixedStack
 import io.github.inoutch.kotchan.utility.type.Vector2
 import kotlin.math.abs
 
 open class ScrollTouchListener(
-        camera: Camera,
-        private val setVelocity: (velocity: Vector2) -> Unit) : TouchListener(camera) {
+    camera: Camera,
+    private val setVelocity: (velocity: Vector2) -> Unit
+) : TouchListener(camera) {
     // settings
     var accelerationEnable = false
 
@@ -25,7 +26,7 @@ open class ScrollTouchListener(
             return true
         }
         // point is -1.0 ~ 1.0
-        val after = normalizedPoint * KotchanCore.instance.screenSize / 2.0f
+        val after = normalizedPoint * core.screenSize / 2.0f
         if (type == TouchType.Began && chain) {
             before = after
             return false

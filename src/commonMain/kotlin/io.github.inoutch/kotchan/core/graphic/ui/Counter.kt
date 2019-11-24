@@ -9,10 +9,12 @@ import kotlin.math.floor
 import kotlin.math.log10
 import kotlin.math.pow
 
-class Counter(material: Material,
-              private val textureAtlas: TextureAtlas,
-              initValue: Int,
-              private val numberNames: List<String>) :
+class Counter(
+    material: Material,
+    private val textureAtlas: TextureAtlas,
+    initValue: Int,
+    private val numberNames: List<String>
+) :
         Polygon2D(Mesh(), material, Vector2.Zero) {
 
     var value: Int = 0

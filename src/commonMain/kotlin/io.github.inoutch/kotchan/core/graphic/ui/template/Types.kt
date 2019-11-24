@@ -1,6 +1,6 @@
-//package io.github.inoutch.kotchan.core.graphic.ui.template
+// package io.github.inoutch.kotchan.core.graphic.ui.template
 //
-//enum class TemplateType {
+// enum class TemplateType {
 //    TopLeft,
 //    TopCenter,
 //    TopRight,
@@ -10,9 +10,9 @@
 //    BottomLeft,
 //    BottomCenter,
 //    BottomRight,
-//}
+// }
 //
-//enum class TemplateAppendType {
+// enum class TemplateAppendType {
 //    Row,
 //    Column,
-//}
+// }

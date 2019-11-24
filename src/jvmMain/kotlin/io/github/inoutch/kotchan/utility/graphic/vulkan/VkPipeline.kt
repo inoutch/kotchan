@@ -21,9 +21,10 @@ actual class VkPipeline : Disposable {
 }
 
 actual fun vkCreateGraphicsPipelines(
-        device: VkDevice,
-        pipelineCache: VkPipelineCache?,
-        createInfos: List<VkGraphicsPipelineCreateInfo>) = memScoped {
+    device: VkDevice,
+    pipelineCache: VkPipelineCache?,
+    createInfos: List<VkGraphicsPipelineCreateInfo>
+) = memScoped {
     val native = allocLong()
 
     checkError(VK10.vkCreateGraphicsPipelines(

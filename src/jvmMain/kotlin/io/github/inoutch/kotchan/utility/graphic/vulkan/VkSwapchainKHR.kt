@@ -53,11 +53,12 @@ actual fun vkGetSwapchainImagesKHR(device: VkDevice, swapchain: VkSwapchainKHR) 
 }
 
 actual fun vkAcquireNextImageKHR(
-        device: VkDevice,
-        swapchain: VkSwapchainKHR,
-        timeout: Long,
-        semaphore: VkSemaphore,
-        fence: VkFence?) = memScoped {
+    device: VkDevice,
+    swapchain: VkSwapchainKHR,
+    timeout: Long,
+    semaphore: VkSemaphore,
+    fence: VkFence?
+) = memScoped {
     val index = allocInt()
     KHRSwapchain.vkAcquireNextImageKHR(device.native, swapchain.native, timeout, semaphore.native, fence?.native
             ?: VK10.VK_NULL_HANDLE, index)

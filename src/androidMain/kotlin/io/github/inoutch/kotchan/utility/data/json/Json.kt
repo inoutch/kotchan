@@ -15,7 +15,7 @@ actual class Json {
             null
         }
 
-        actual fun write(jsonObject: JsonObject) =  try {
+        actual fun write(jsonObject: JsonObject) = try {
             mapper.writeValueAsString(outputNode(jsonObject))
         } catch (e: JsonProcessingException) {
             null

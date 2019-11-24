@@ -21,8 +21,9 @@ actual class VkSwapchainKHR : Disposable {
 
 @ExperimentalUnsignedTypes
 actual fun vkCreateSwapchainKHR(
-        device: VkDevice,
-        createInfo: VkSwapchainCreateInfoKHR) = memScoped {
+    device: VkDevice,
+    createInfo: VkSwapchainCreateInfoKHR
+) = memScoped {
     val native = alloc<vulkan.VkSwapchainKHRVar>()
 
     checkError(vulkan.vkCreateSwapchainKHR(device.native, createInfo.toNative(this), null, native.ptr))
@@ -49,11 +50,12 @@ actual fun vkGetSwapchainImagesKHR(device: VkDevice, swapchain: VkSwapchainKHR) 
 
 @ExperimentalUnsignedTypes
 actual fun vkAcquireNextImageKHR(
-        device: VkDevice,
-        swapchain: VkSwapchainKHR,
-        timeout: Long,
-        semaphore: VkSemaphore,
-        fence: VkFence?) = memScoped {
+    device: VkDevice,
+    swapchain: VkSwapchainKHR,
+    timeout: Long,
+    semaphore: VkSemaphore,
+    fence: VkFence?
+) = memScoped {
     val imageCount = alloc<UIntVar>()
 
     checkError(vulkan.vkAcquireNextImageKHR(

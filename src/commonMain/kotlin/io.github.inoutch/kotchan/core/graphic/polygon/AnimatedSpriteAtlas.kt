@@ -2,17 +2,19 @@ package io.github.inoutch.kotchan.core.graphic.polygon
 
 import io.github.inoutch.kotchan.core.graphic.Material
 import io.github.inoutch.kotchan.core.graphic.texture.TextureAtlas
-import io.github.inoutch.kotchan.utility.Updatable
 
 open class AnimatedSpriteAtlas(
-        material: Material?,
-        textureAtlas: TextureAtlas,
-        val config: Config) : SpriteAtlas(material, textureAtlas) {
+    material: Material?,
+    textureAtlas: TextureAtlas,
+    val config: Config
+) : SpriteAtlas(material, textureAtlas) {
 
     data class AnimationSet(val names: List<String>, val intervalSec: Float, val count: Int = -1)
 
-    data class Config(val animations: List<AnimationSet>,
-                      val defaultAnimationId: Int = 0)
+    data class Config(
+        val animations: List<AnimationSet>,
+        val defaultAnimationId: Int = 0
+    )
 
     var animationStateId = config.defaultAnimationId
         private set

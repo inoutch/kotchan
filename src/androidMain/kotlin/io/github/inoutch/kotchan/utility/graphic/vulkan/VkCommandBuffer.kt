@@ -49,22 +49,24 @@ actual fun vkCmdDraw(commandBuffer: VkCommandBuffer, vertexCount: Int, instanceC
 }
 
 actual fun vkCmdPipelineBarrier(
-        commandBuffer: VkCommandBuffer,
-        srcStageMask: List<VkPipelineStageFlagBits>,
-        dstStageMask: List<VkPipelineStageFlagBits>,
-        dependencyFlags: List<VkDependencyFlagBits>,
-        memoryBarriers: List<VkMemoryBarrier>,
-        bufferMemoryBarriers: List<VkBufferMemoryBarrier>,
-        imageMemoryBarriers: List<VkImageMemoryBarrier>) {
+    commandBuffer: VkCommandBuffer,
+    srcStageMask: List<VkPipelineStageFlagBits>,
+    dstStageMask: List<VkPipelineStageFlagBits>,
+    dependencyFlags: List<VkDependencyFlagBits>,
+    memoryBarriers: List<VkMemoryBarrier>,
+    bufferMemoryBarriers: List<VkBufferMemoryBarrier>,
+    imageMemoryBarriers: List<VkImageMemoryBarrier>
+) {
     // not implementation
 }
 
 actual fun vkCmdClearColorImage(
-        commandBuffer: VkCommandBuffer,
-        image: VkImage,
-        imageLayout: VkImageLayout,
-        clearColor: Vector4,
-        ranges: List<VkImageSubresourceRange>) {
+    commandBuffer: VkCommandBuffer,
+    image: VkImage,
+    imageLayout: VkImageLayout,
+    clearColor: Vector4,
+    ranges: List<VkImageSubresourceRange>
+) {
     // not implementation
 }
 

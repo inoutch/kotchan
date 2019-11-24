@@ -9,8 +9,9 @@ fun VkDescriptorSetLayoutBinding.toNative(memScope: MemScope): org.lwjgl.vulkan.
                 .also { copyToNative(it, memScope) })
 
 fun VkDescriptorSetLayoutBinding.copyToNative(
-        native: org.lwjgl.vulkan.VkDescriptorSetLayoutBinding,
-        scope: MemScope) {
+    native: org.lwjgl.vulkan.VkDescriptorSetLayoutBinding,
+    scope: MemScope
+) {
     native.binding(binding)
             .descriptorType(descriptorType.value)
             .descriptorCount(descriptorCount)

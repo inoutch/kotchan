@@ -50,7 +50,7 @@ class Dijkstra {
 
             do {
                 val p = queue.dequeue() ?: break
-                if (ends.any { endpoint = it;p.equals(it) }) {
+                if (ends.any { endpoint = it; p.equals(it) }) {
                     break
                 }
                 val current = getJoint(p.x, p.y) ?: break
@@ -86,5 +86,4 @@ class Dijkstra {
     }
 
     internal data class Joint(val cost: Float, val p: Point)
-
 }

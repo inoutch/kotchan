@@ -4,8 +4,9 @@ import kotlinx.cinterop.*
 
 @ExperimentalUnsignedTypes
 fun VkInstanceCreateInfo.copyToNative(
-        native: vulkan.VkInstanceCreateInfo,
-        scope: MemScope) {
+    native: vulkan.VkInstanceCreateInfo,
+    scope: MemScope
+) {
     native.sType = vulkan.VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO
     native.pNext = null
     native.flags = flags.toUInt()

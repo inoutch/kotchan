@@ -6,8 +6,9 @@ import vulkan.VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR
 
 @ExperimentalUnsignedTypes
 fun VkSwapchainCreateInfoKHR.copyToNative(
-        native: vulkan.VkSwapchainCreateInfoKHR,
-        scope: MemScope) {
+    native: vulkan.VkSwapchainCreateInfoKHR,
+    scope: MemScope
+) {
     native.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR
     native.pNext = null
     native.flags = flags.toUInt()

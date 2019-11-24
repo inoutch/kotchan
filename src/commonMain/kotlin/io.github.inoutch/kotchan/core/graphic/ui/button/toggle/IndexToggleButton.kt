@@ -8,11 +8,13 @@ import io.github.inoutch.kotchan.core.graphic.polygon.SpriteAtlas
 import io.github.inoutch.kotchan.core.graphic.texture.TextureAtlas
 import io.github.inoutch.kotchan.core.graphic.ui.Touchable
 
-class IndexToggleButton(material: Material,
-                        textureAtlas: TextureAtlas,
-                        camera: Camera,
-                        private val names: List<String>,
-                        private val onToggle: (index: Int) -> Unit) : SpriteAtlas(material, textureAtlas), Touchable {
+class IndexToggleButton(
+    material: Material,
+    textureAtlas: TextureAtlas,
+    camera: Camera,
+    private val names: List<String>,
+    private val onToggle: (index: Int) -> Unit
+) : SpriteAtlas(material, textureAtlas), Touchable {
     var index = 0
         private set
 

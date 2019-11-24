@@ -4,8 +4,9 @@ import io.github.inoutch.kotchan.utility.MemScope
 import org.lwjgl.vulkan.VK10
 
 fun VkPipelineMultisampleStateCreateInfo.copyToNative(
-        native: org.lwjgl.vulkan.VkPipelineMultisampleStateCreateInfo,
-        scope: MemScope) {
+    native: org.lwjgl.vulkan.VkPipelineMultisampleStateCreateInfo,
+    scope: MemScope
+) {
     native.sType(VK10.VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO)
             .pNext(VK10.VK_NULL_HANDLE)
             .flags(flags)

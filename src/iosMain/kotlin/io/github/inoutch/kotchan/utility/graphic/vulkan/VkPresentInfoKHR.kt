@@ -6,8 +6,9 @@ import vulkan.VK_STRUCTURE_TYPE_PRESENT_INFO_KHR
 
 @ExperimentalUnsignedTypes
 fun VkPresentInfoKHR.copyToNative(
-        native: vulkan.VkPresentInfoKHR,
-        scope: MemScope) {
+    native: vulkan.VkPresentInfoKHR,
+    scope: MemScope
+) {
     native.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR
     native.pNext = null
     native.waitSemaphoreCount = waitSemaphores.size.toUInt()

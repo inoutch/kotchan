@@ -3,8 +3,9 @@ package io.github.inoutch.kotchan.utility.graphic.vulkan
 import io.github.inoutch.kotchan.utility.MemScope
 
 fun VkBufferImageCopy.copyToNative(
-        native: org.lwjgl.vulkan.VkBufferImageCopy,
-        scope: MemScope) {
+    native: org.lwjgl.vulkan.VkBufferImageCopy,
+    scope: MemScope
+) {
     native.bufferOffset(bufferOffset)
             .bufferRowLength(bufferRowLength)
             .bufferImageHeight(bufferImageHeight)

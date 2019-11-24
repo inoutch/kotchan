@@ -5,8 +5,9 @@ import vulkan.VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
 
 @ExperimentalUnsignedTypes
 fun VkDeviceCreateInfo.copyToNative(
-        native: vulkan.VkDeviceCreateInfo,
-        scope: MemScope) {
+    native: vulkan.VkDeviceCreateInfo,
+    scope: MemScope
+) {
     native.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
     native.pNext = null
     native.flags = flags.toUInt()

@@ -1,10 +1,9 @@
 package io.github.inoutch.kotchan.utility.data.json
 
 import io.github.inoutch.kotchan.core.KotchanCore.Companion.logger
+import io.github.inoutch.kotchan.ios.extension.*
 import kotlinx.cinterop.*
 import platform.Foundation.*
-
-import io.github.inoutch.kotchan.ios.extension.*
 
 actual class Json {
     actual companion object {

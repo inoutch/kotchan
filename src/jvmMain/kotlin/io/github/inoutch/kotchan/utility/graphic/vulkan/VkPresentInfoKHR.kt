@@ -6,8 +6,9 @@ import org.lwjgl.vulkan.KHRSwapchain
 import org.lwjgl.vulkan.VK10
 
 fun VkPresentInfoKHR.copyToNative(
-        native: org.lwjgl.vulkan.VkPresentInfoKHR,
-        scope: MemScope) {
+    native: org.lwjgl.vulkan.VkPresentInfoKHR,
+    scope: MemScope
+) {
 
     native.sType(KHRSwapchain.VK_STRUCTURE_TYPE_PRESENT_INFO_KHR)
             .pNext(VK10.VK_NULL_HANDLE)

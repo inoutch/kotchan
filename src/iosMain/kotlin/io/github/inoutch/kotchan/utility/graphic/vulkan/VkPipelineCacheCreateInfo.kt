@@ -5,8 +5,9 @@ import vulkan.VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO
 
 @ExperimentalUnsignedTypes
 fun VkPipelineCacheCreateInfo.copyToNative(
-        native: vulkan.VkPipelineCacheCreateInfo,
-        scope: MemScope) {
+    native: vulkan.VkPipelineCacheCreateInfo,
+    scope: MemScope
+) {
     native.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO
     native.pNext = null
     native.flags = flags.toUInt()

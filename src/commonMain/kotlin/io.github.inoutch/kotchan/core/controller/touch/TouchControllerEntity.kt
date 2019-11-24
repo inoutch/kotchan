@@ -1,14 +1,14 @@
 package io.github.inoutch.kotchan.core.controller.touch
 
-import io.github.inoutch.kotchan.core.KotchanCore
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.core
+import io.github.inoutch.kotchan.core.controller.touch.listener.TouchListener
 import io.github.inoutch.kotchan.utility.type.Point
 import io.github.inoutch.kotchan.utility.type.Vector2
-import io.github.inoutch.kotchan.core.controller.touch.listener.TouchListener
 
 class TouchControllerEntity : TouchEmitter, TouchController {
     companion object {
         fun convertNormalPointInView(p: Vector2): Vector2 {
-            return p / KotchanCore.instance.windowSize * 2.0f - 1.0f
+            return p / core.windowSize * 2.0f - 1.0f
         }
     }
 

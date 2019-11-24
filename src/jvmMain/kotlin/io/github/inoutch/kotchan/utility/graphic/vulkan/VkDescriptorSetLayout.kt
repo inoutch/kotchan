@@ -21,8 +21,9 @@ actual class VkDescriptorSetLayout : Disposable {
 }
 
 actual fun vkCreateDescriptorSetLayout(
-        device: VkDevice,
-        createInfo: VkDescriptorSetLayoutCreateInfo): VkDescriptorSetLayout = memScoped {
+    device: VkDevice,
+    createInfo: VkDescriptorSetLayoutCreateInfo
+): VkDescriptorSetLayout = memScoped {
     val native = allocLong()
 
     checkError(VK10.vkCreateDescriptorSetLayout(

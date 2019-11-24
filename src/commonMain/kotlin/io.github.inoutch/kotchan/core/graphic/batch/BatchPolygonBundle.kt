@@ -1,9 +1,10 @@
 package io.github.inoutch.kotchan.core.graphic.batch
 
 data class BatchPolygonBundle(
-        val positionBuffer: BatchBuffer,
-        val colorBuffer: BatchBuffer,
-        val texcoordBuffer: BatchBuffer) {
+    val positionBuffer: BatchBuffer,
+    val colorBuffer: BatchBuffer,
+    val texcoordBuffer: BatchBuffer
+) {
 
     val polygons = mutableListOf<BatchBundle>()
 

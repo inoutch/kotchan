@@ -1,6 +1,6 @@
 package io.github.inoutch.kotchan.core.graphic.ui
 
-import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.core
 import io.github.inoutch.kotchan.core.graphic.batch.Batch
 import io.github.inoutch.kotchan.core.graphic.polygon.Polygon2D
 import io.github.inoutch.kotchan.utility.Disposable
@@ -20,7 +20,7 @@ abstract class UI(private val batch: Batch) : Updatable, Disposable {
         }
 
     open fun <T> add(touchable: T, priority: Int = 0): T where T : Touchable, T : Polygon2D {
-        instance.touchController.add(touchable.touchListener, priority)
+        core.touchController.add(touchable.touchListener, priority)
         touchables[touchable] = touchable
         batch.add(touchable)
         return touchable
@@ -33,7 +33,7 @@ abstract class UI(private val batch: Batch) : Updatable, Disposable {
     }
 
     open fun <T> remove(touchable: T) where T : Touchable, T : Polygon2D {
-        touchables[touchable]?.let { instance.touchController.remove(it.touchListener) }
+        touchables[touchable]?.let { core.touchController.remove(it.touchListener) }
         touchables.remove(touchable)
         batch.remove(touchable)
     }
@@ -41,7 +41,7 @@ abstract class UI(private val batch: Batch) : Updatable, Disposable {
     override fun dispose() {
         touchables.forEach {
             batch.remove(it.key)
-            it.value?.touchListener?.let { x -> instance.touchController.remove(x) }
+            it.value?.touchListener?.let { x -> core.touchController.remove(x) }
         }
         touchables.clear()
     }

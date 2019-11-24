@@ -8,7 +8,10 @@ fun org.lwjgl.vulkan.VkSubresourceLayout.toOrigin(): VkSubresourceLayout {
 }
 
 actual fun vkGetImageSubresourceLayout(
-        device: VkDevice, image: VkImage, subresource: VkImageSubresource) = memScoped {
+    device: VkDevice,
+    image: VkImage,
+    subresource: VkImageSubresource
+) = memScoped {
     val native = add(org.lwjgl.vulkan.VkSubresourceLayout.calloc())
 
     VK10.vkGetImageSubresourceLayout(device.native, image.native, subresource.toNative(this), native)

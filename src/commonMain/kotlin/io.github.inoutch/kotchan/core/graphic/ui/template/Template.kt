@@ -1,14 +1,14 @@
-//package io.github.inoutch.kotchan.core.graphic.ui.template
+// package io.github.inoutch.kotchan.core.graphic.ui.template
 //
-//import io.github.inoutch.kotchan.core.KotchanCore
-//import io.github.inoutch.kotchan.core.destruction.StrictDestruction
-//import io.github.inoutch.kotchan.core.graphic.view.View2DBase
-//import io.github.inoutch.kotchan.utility.type.Rect
-//import io.github.inoutch.kotchan.utility.type.Vector2
-//import io.github.inoutch.kotchan.utility.type.Vector3
-//import io.github.inoutch.kotchan.utility.type.Vector4
+// import io.github.inoutch.kotchan.core.KotchanCore
+// import io.github.inoutch.kotchan.core.destruction.StrictDestruction
+// import io.github.inoutch.kotchan.core.graphic.view.View2DBase
+// import io.github.inoutch.kotchan.utility.type.Rect
+// import io.github.inoutch.kotchan.utility.type.Vector2
+// import io.github.inoutch.kotchan.utility.type.Vector3
+// import io.github.inoutch.kotchan.utility.type.Vector4
 //
-//class Template(val rect: Rect = Rect(Vector2(), KotchanCore.instance.screenSize.toVector2())) : StrictDestruction() {
+// class Template(val rect: Rect = Rect(Vector2(), KotchanCore.instance.screenSize.toVector2())) : StrictDestruction() {
 //    companion object {
 //        fun createMargin(left: Float, right: Float, top: Float, bottom: Float) = Vector4(left, right, top, bottom)
 //    }
@@ -110,4 +110,4 @@
 //        TemplateType.BottomCenter -> Pair(HorizontalType.Center, VerticalType.Bottom)
 //        TemplateType.BottomRight -> Pair(HorizontalType.Right, VerticalType.Bottom)
 //    }
-//}
+// }

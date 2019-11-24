@@ -4,8 +4,9 @@ import io.github.inoutch.kotchan.utility.MemScope
 import org.lwjgl.vulkan.VK10
 
 fun VkRenderPassBeginInfo.copyToNative(
-        native: org.lwjgl.vulkan.VkRenderPassBeginInfo,
-        scope: MemScope) {
+    native: org.lwjgl.vulkan.VkRenderPassBeginInfo,
+    scope: MemScope
+) {
     native.sType(VK10.VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO)
             .pNext(VK10.VK_NULL_HANDLE)
             .renderPass(renderPass.native)

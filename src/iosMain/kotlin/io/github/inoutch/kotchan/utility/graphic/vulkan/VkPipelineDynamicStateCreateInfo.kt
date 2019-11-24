@@ -6,8 +6,9 @@ import vulkan.VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO
 
 @ExperimentalUnsignedTypes
 fun VkPipelineDynamicStateCreateInfo.copyToNative(
-        native: vulkan.VkPipelineDynamicStateCreateInfo,
-        scope: MemScope) {
+    native: vulkan.VkPipelineDynamicStateCreateInfo,
+    scope: MemScope
+) {
     native.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO
     native.pNext = null
     native.dynamicStateCount = dynamicStates.size.toUInt()

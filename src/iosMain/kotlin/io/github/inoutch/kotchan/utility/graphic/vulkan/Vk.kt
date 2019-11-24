@@ -3,7 +3,6 @@ package io.github.inoutch.kotchan.utility.graphic.vulkan
 import io.github.inoutch.kotchan.utility.type.Vector4
 import io.github.inoutch.kotchan.utility.type.Version
 import kotlinx.cinterop.*
-import kotlinx.cinterop.UIntVar
 
 @ExperimentalUnsignedTypes
 fun Version.toNative(): UInt {

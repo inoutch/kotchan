@@ -5,8 +5,9 @@ import vulkan.VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO
 
 @ExperimentalUnsignedTypes
 fun VkDescriptorSetAllocateInfo.copyToNative(
-        native: vulkan.VkDescriptorSetAllocateInfo,
-        scope: MemScope) {
+    native: vulkan.VkDescriptorSetAllocateInfo,
+    scope: MemScope
+) {
     native.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO
     native.pNext = null
     native.descriptorPool = descriptorPool.native

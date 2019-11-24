@@ -1,6 +1,6 @@
 package io.github.inoutch.kotchan.utility.audio
 
-import io.github.inoutch.kotchan.core.KotchanCore.Companion.instance
+import io.github.inoutch.kotchan.core.KotchanCore.Companion.core
 import io.github.inoutch.kotchan.utility.io.getResourcePathWithError
 
 expect class BGM(filepath: String) : SoundBase {
@@ -22,5 +22,5 @@ expect class BGM(filepath: String) : SoundBase {
 }
 
 fun BGM.Companion.loadFromResource(filepath: String): BGM {
-    return BGM(instance.file.getResourcePathWithError(filepath))
+    return BGM(core.file.getResourcePathWithError(filepath))
 }
