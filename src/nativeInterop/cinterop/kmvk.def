@@ -1,5 +1,0 @@
-language = Objective-C
-headers = MVKView/MVKView.h
-
-staticLibraries = libMVKView.a
-libraryPaths = ./native/MVKView/build/Release ../../native/MVKView/build/Release

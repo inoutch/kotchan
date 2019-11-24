@@ -1,59 +1,65 @@
-allprojects {
-    version "0.4.0"
-    group "io.github.inoutch"
-}
+version = "0.5.0"
+group = "io.github.inoutch"
 
 buildscript {
-    ext.kotlin_version = "1.3.50"
-    ext.lwjgl_version = "3.2.2"
-    ext.serialization_version = "0.13.0"
+    ext.kotlinVersion = "1.3.60"
+    ext.lwjglVersion = "3.2.2"
+    ext.serializationVersion = "0.14.0"
+    ext.coroutineVersion = "1.3.2-1.3.60"
 
     repositories {
         google()
         jcenter()
         mavenCentral()
-        maven { url "https://dl.bintray.com/kotlin/kotlin-dev" }
-        maven { url "https://dl.bintray.com/kotlin/kotlinx" }
-        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url = "https://plugins.gradle.org/m2/" }
+        maven { url = "https://dl.bintray.com/kotlin/kotlinx" }
+        maven { url = "https://dl.bintray.com/kotlin/kotlin-eap" }
     }
 
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
-        classpath "com.android.tools.build:gradle:3.4.1"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-frontend-plugin:0.0.45"
+        classpath "com.android.tools.build:gradle:3.5.2"
     }
 }
 
+// common
 apply plugin: "kotlin-multiplatform"
-apply plugin: "maven-publish"
+apply plugin: "kotlinx-serialization"
 // android
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android-extensions"
-// external
-apply plugin: "kotlinx-serialization"
+// others
+apply plugin: "maven-publish"
 
 repositories {
     google()
     jcenter()
     mavenCentral()
-    maven { url "https://dl.bintray.com/kotlin/kotlin-dev" }
-    maven { url "https://dl.bintray.com/kotlin/kotlinx" }
+    maven { url = "https://dl.bintray.com/kotlin/kotlinx" }
+    maven { url = "https://dl.bintray.com/kotlin/kotlin-eap" }
 }
 
 configurations {
     ktlint
 }
 
+dependencies {
+    ktlint "com.pinterest:ktlint:0.35.0"
+}
+
 kotlin {
     jvm {}
-    iosArm64("ios") {
+    js {}
+    iosArm64 {
         compilations.main {
             cinterops {
                 vulkan {
                     includeDirs "${System.getenv()["VULKAN_SDK"]}/MoltenVK/include"
                 }
-                kmvk {
-                    includeDirs "./native/MVKView/build/Release/include"
+                mvkview {
+                    includeDirs "./src/iosArm64Main/objc/MVKView"
                 }
             }
         }
@@ -64,49 +70,81 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
-                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serialization_version"
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlinVersion"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serializationVersion"
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutineVersion"
             }
         }
         jvmMain {
             dependencies {
-                implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization_version"
-                implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.8"
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion"
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion"
 
-                implementation "org.lwjgl:lwjgl:$lwjgl_version"
-                implementation "org.lwjgl:lwjgl-stb:$lwjgl_version"
-                implementation "org.lwjgl:lwjgl-glfw:$lwjgl_version"
-                implementation "org.lwjgl:lwjgl-vulkan:$lwjgl_version"
+                implementation "org.lwjgl:lwjgl:$lwjglVersion"
+                implementation "org.lwjgl:lwjgl-stb:$lwjglVersion"
+                implementation "org.lwjgl:lwjgl-glfw:$lwjglVersion"
+                implementation "org.lwjgl:lwjgl-vulkan:$lwjglVersion"
             }
         }
-        jvmTest {
+        jsMain {
             dependencies {
-                implementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-                implementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
-                implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlinVersion"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:$serializationVersion"
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$coroutineVersion"
             }
         }
-        iosMain {
+        iosArm64Main {
             dependencies {
-                implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
-                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:$serialization_version"
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlinVersion"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:$serializationVersion"
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$coroutineVersion"
             }
         }
         androidMain {
             dependencies {
-                implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization_version"
-                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0-RC"
+                implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion"
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutineVersion"
 
                 implementation "com.android.support.constraint:constraint-layout:1.1.3"
+            }
+        }
 
-                // utils
-                implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.9"
+        commonTest {
+            dependencies {
+                implementation "org.jetbrains.kotlin:kotlin-test-common:$kotlinVersion"
+                implementation "org.jetbrains.kotlin:kotlin-test-annotations-common:$kotlinVersion"
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutineVersion"
+            }
+        }
+        jvmTest {
+            dependencies {
+                implementation "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
+                implementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
+                implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+            }
+        }
+        jsTest {
+            dependencies {
+                implementation "org.jetbrains.kotlin:kotlin-test-js:$kotlinVersion"
+            }
+        }
+        iosArm64Test {
+            dependencies {
+                implementation "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
+            }
+        }
+        androidTest {
+            dependencies {
+                implementation "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
+                implementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
+                implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
             }
         }
     }
 }
+
 // android
 android {
     compileSdkVersion 26
@@ -114,7 +152,7 @@ android {
     defaultConfig {
         minSdkVersion 24
         targetSdkVersion 26
-        versionName "1.0"
+        versionCode 1
     }
 
     packagingOptions {
@@ -122,26 +160,11 @@ android {
     }
 }
 
-// ios
-// HACK: https://github.com/JetBrains/kotlin-native/issues/2314
-task copyNativeLibs(type: Copy) {
-    from "${System.getenv()["VULKAN_SDK"]}/MoltenVK"
-    into "build/externals/MoltenVK"
-}
-
-cinteropVulkanIos.dependsOn copyNativeLibs
-
-// publish
+// publish configure
 def repo = new File(rootDir, "repository")
-publishing.repositories.maven {
-    url "file://${repo.absolutePath}"
-}
+publishing.repositories.maven { url "file://${repo.absolutePath}" }
 
-// linter
-dependencies {
-    ktlint "com.pinterest:ktlint:0.35.0"
-}
-
+// extra tasks
 task ktlint(type: JavaExec, group: "verification") {
     description = "Check Kotlin code style."
     classpath = configurations.ktlint
@@ -156,3 +179,12 @@ task ktlintFormat(type: JavaExec, group: "formatting") {
     main = "com.pinterest.ktlint.Main"
     args "-F", "src/**/*.kt"
 }
+
+// ios
+// HACK: https://github.com/JetBrains/kotlin-native/issues/2314
+task copyNativeLibs(type: Copy) {
+    from "${System.getenv()["VULKAN_SDK"]}/MoltenVK"
+    into "build/externals/MoltenVK"
+}
+
+cinteropVulkanIosArm64.dependsOn copyNativeLibs
