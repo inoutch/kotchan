@@ -1,54 +1,99 @@
-import org.gradle.internal.os.OperatingSystem
-
-buildscript {
-    ext.kotlin_version = "1.3.50"
-    ext.kotlin_serialization_version = "0.11.0"
-    ext.kotchan_version = "0.4.0"
-    ext.mainClassName = "io.github.inoutch.kotchan.example.MainKt"
-    ext.extraJvmArgs = ""
-
-    ext.lwjgl_version = "3.2.1"
-
-    repositories {
-        google()
-        jcenter()
-        mavenCentral()
-        maven { url "https://dl.bintray.com/kotlin/kotlinx" }
-        maven { url "https://plugins.gradle.org/m2/" }
-    }
-
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
-
-        classpath "com.android.tools.build:gradle:3.4.1"
-    }
+plugins {
+    id "kotlin-multiplatform"
+    id "kotlinx-serialization"
+    id "com.android.application"
+    id "kotlin-android-extensions"
 }
 
-repositories {
-    google()
-    jcenter()
-    mavenCentral()
-    mavenLocal()
-    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
-    // artifacts are published to this repository
-    maven { url "https://kotlin.bintray.com/kotlinx" }
-//    maven { url "https://raw.githubusercontent.com/inoutch/kotchan/m2repo/repository" }
+def extraJvmArgs = ""
+def mainClassName = "io.github.inoutch.kotchan.example.MainKt"
+
+// jvm
+def platform = org.gradle.internal.os.OperatingSystem.current()
+switch (platform) {
+    case org.gradle.internal.os.OperatingSystem.WINDOWS:
+        project.ext.lwjglNatives = "natives-windows"
+        break
+    case org.gradle.internal.os.OperatingSystem.LINUX:
+        project.ext.lwjglNatives = "natives-linux"
+        break
+    case org.gradle.internal.os.OperatingSystem.MAC_OS:
+        project.ext.lwjglNatives = "natives-macos"
+        extraJvmArgs = ["-XstartOnFirstThread"]
+        break
 }
 
-// common
-apply plugin: "kotlin-multiplatform"
-apply plugin: "kotlinx-serialization"
+kotlin {
+    jvm()
+    iosArm64('ios') {
+        binaries.executable {
+            entryPoint = "io.github.inoutch.kotchan.example.main"
+        }
+    }
+    android()
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlinVersion"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serializationVersion"
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutineVersion"
 
-// android
-apply plugin: "com.android.application"
+                implementation project(":kotchan")
+            }
+        }
+        jvmMain {
+            dependencies {
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion"
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion"
+
+                implementation project(":kotchan")
+
+                runtimeOnly "org.lwjgl:lwjgl:$lwjglVersion:$lwjglNatives"
+                runtimeOnly "org.lwjgl:lwjgl-stb:$lwjglVersion:$lwjglNatives"
+                runtimeOnly "org.lwjgl:lwjgl-glfw:$lwjglVersion:$lwjglNatives"
+                if (platform == org.gradle.internal.os.OperatingSystem.MAC_OS) {
+                    runtimeOnly "org.lwjgl:lwjgl-vulkan:$lwjglVersion:$lwjglNatives"
+                }
+            }
+        }
+        jsMain {
+            dependencies {
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlinVersion"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:$serializationVersion"
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$coroutineVersion"
+
+                implementation project(":kotchan")
+            }
+        }
+        iosMain {
+            dependencies {
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlinVersion"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:$serializationVersion"
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$coroutineVersion"
+
+                implementation project(":kotchan")
+            }
+        }
+        androidMain {
+            dependencies {
+                implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion"
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutineVersion"
+                implementation "com.android.support.constraint:constraint-layout:1.1.3"
+
+                implementation project(":kotchan")
+            }
+        }
+    }
+}
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 28
 
     defaultConfig {
         minSdkVersion 24
-        targetSdkVersion 26
+        targetSdkVersion 28
         versionName "1.0"
     }
 
@@ -70,80 +115,6 @@ android {
 
     sourceSets.main {
         assets.srcDirs += "src/commonMain/resources"
-    }
-}
-
-// jvm
-def platform = OperatingSystem.current()
-switch (platform) {
-    case OperatingSystem.WINDOWS:
-        project.ext.lwjgl_natives = "natives-windows"
-        break
-    case OperatingSystem.LINUX:
-        project.ext.lwjgl_natives = "natives-linux"
-        break
-    case OperatingSystem.MAC_OS:
-        project.ext.lwjgl_natives = "natives-macos"
-        extraJvmArgs = ["-XstartOnFirstThread"]
-        break
-}
-
-kotlin {
-    jvm()
-    iosArm64('ios') {
-        binaries.executable {
-            entryPoint = "io.github.inoutch.kotchan.example.main"
-        }
-    }
-    android()
-    sourceSets {
-        commonMain {
-            dependencies {
-                implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
-                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$kotlin_serialization_version"
-
-                implementation "io.github.inoutch:kotchan:$kotchan_version"
-            }
-        }
-        commonTest {
-            dependencies {
-                implementation "org.jetbrains.kotlin:kotlin-test-annotations-common:$kotlin_version"
-                implementation "org.jetbrains.kotlin:kotlin-test-common:$kotlin_version"
-            }
-        }
-        jvmMain {
-            dependencies {
-                api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-
-                api "io.github.inoutch:kotchan-jvm:$kotchan_version"
-
-                // HACK: Kotchan is not included runtime libraries
-                runtimeOnly "org.lwjgl:lwjgl:$lwjgl_version:$lwjgl_natives"
-                runtimeOnly "org.lwjgl:lwjgl-stb:$lwjgl_version:$lwjgl_natives"
-                runtimeOnly "org.lwjgl:lwjgl-glfw:$lwjgl_version:$lwjgl_natives"
-                if (platform == OperatingSystem.MAC_OS) {
-                    runtimeOnly "org.lwjgl:lwjgl-vulkan:$lwjgl_version:$lwjgl_natives"
-                }
-
-                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$kotlin_serialization_version"
-            }
-        }
-        iosMain {
-            dependencies {
-                dependsOn commonMain
-                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:$kotlin_serialization_version"
-
-                implementation "io.github.inoutch:kotchan-ios:$kotchan_version"
-            }
-        }
-        androidMain {
-            dependencies {
-                implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$kotlin_serialization_version"
-
-                implementation "io.github.inoutch:kotchan-android:$kotchan_version"
-            }
-        }
     }
 }
 

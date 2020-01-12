@@ -1,7 +1,5 @@
 package io.github.inoutch.kotchan.math
 
-import io.github.inoutch.kotchan.core.math.Vector2F
-import io.github.inoutch.kotchan.core.math.Vector2I
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

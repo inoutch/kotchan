@@ -1,45 +1,28 @@
-import kotlinx.cinterop.*
+import io.github.inoutch.kotchan.core.platform.KotchanViewController
+import io.github.inoutch.kotchan.example.AppConfig
+import kotlinx.cinterop.ExportObjCClass
+import kotlinx.cinterop.ObjCAction
 import platform.Foundation.NSCoder
 import platform.QuartzCore.CADisplayLink
-import platform.UIKit.*
+import platform.UIKit.UIViewController
 
 @ExperimentalUnsignedTypes
 @ExportObjCClass
 class ViewController : UIViewController {
+    private val kotchanViewController = KotchanViewController(this, AppConfig())
 
-    @ExperimentalUnsignedTypes
-    private val viewController = KotchanViewController(this)
-
+    @Suppress("ConvertSecondaryConstructorToPrimary")
     @OverrideInit
     constructor(coder: NSCoder) : super(coder)
 
     override fun viewDidLoad() {
         super.viewDidLoad()
-        viewController.viewDidLoad()
+        kotchanViewController.viewDidLoad()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @ObjCAction
     fun render(sender: CADisplayLink) {
-        viewController.render()
-    }
-
-    override fun touchesBegan(touches: Set<*>, withEvent: UIEvent?) {
-        super.touchesBegan(touches, withEvent)
-        viewController.touchesBegan(touches)
-    }
-
-    override fun touchesMoved(touches: Set<*>, withEvent: UIEvent?) {
-        super.touchesMoved(touches, withEvent)
-        viewController.touchesMoved(touches)
-    }
-
-    override fun touchesEnded(touches: Set<*>, withEvent: UIEvent?) {
-        super.touchesEnded(touches, withEvent)
-        viewController.touchesEnded(touches)
-    }
-
-    override fun touchesCancelled(touches: Set<*>, withEvent: UIEvent?) {
-        super.touchesCancelled(touches, withEvent)
-        viewController.touchesCancelled()
+        kotchanViewController.render()
     }
 }

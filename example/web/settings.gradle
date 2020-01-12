@@ -1,0 +1,2 @@
+rootProject.name = "kotchan-example-web"
+enableFeaturePreview("GRADLE_METADATA")
