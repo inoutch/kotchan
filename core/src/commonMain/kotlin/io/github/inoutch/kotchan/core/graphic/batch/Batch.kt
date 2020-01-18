@@ -1,5 +1,7 @@
 package io.github.inoutch.kotchan.core.graphic.batch
 
-class Batch {
+import io.github.inoutch.kotchan.core.Disposer
+
+class Batch: Disposer() {
 
 }

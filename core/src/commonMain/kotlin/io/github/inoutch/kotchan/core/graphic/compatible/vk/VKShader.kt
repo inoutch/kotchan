@@ -4,6 +4,6 @@ import io.github.inoutch.kotlin.vulkan.api.vk
 
 class VKShader() {
     init {
-        vk.createShaderModule()
+//        vk.createShaderModule()
     }
 }

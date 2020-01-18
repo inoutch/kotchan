@@ -34,6 +34,10 @@ open class GLShader(vertSource: String, fragSource: String) : Shader {
         }
     }
 
+    override fun isDisposed(): Boolean {
+        return disposer.isDisposed()
+    }
+
     override fun dispose() {
         disposer.dispose()
     }

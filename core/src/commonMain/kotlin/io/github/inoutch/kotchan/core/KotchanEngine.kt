@@ -1,5 +1,6 @@
 package io.github.inoutch.kotchan.core
 
+import io.github.inoutch.kotchan.core.view.scene.SceneManager
 import io.github.inoutch.kotchan.math.Vector2I
 
 class KotchanEngine(config: KotchanStartupConfig) {
@@ -8,6 +9,8 @@ class KotchanEngine(config: KotchanStartupConfig) {
     var viewportSize: Vector2I = Vector2I.Zero
 
     private lateinit var platform: KotchanPlatform
+
+    private val sceneManager = SceneManager()
 
     suspend fun run(platformConfig: KotchanPlatformConfig? = null) {
         try {
@@ -22,7 +25,9 @@ class KotchanEngine(config: KotchanStartupConfig) {
     }
 
     suspend fun render(delta: Float) {
-
+        if (!sceneManager.isInitialized) {
+            sceneManager.init()
+        }
     }
 
     suspend fun reshape(windowSize: Vector2I, viewportSize: Vector2I) {

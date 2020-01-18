@@ -10,6 +10,8 @@ class KotchanGlobalContext {
 
         lateinit var graphic: Context
             private set
+
+        val config: KotchanConfig = KotchanConfig()
     }
 
     fun initialize() {
