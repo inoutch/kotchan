@@ -14,7 +14,8 @@ class KotchanGlobalContext {
         val config: KotchanConfig = KotchanConfig()
     }
 
-    fun initialize() {
+    fun initialize(platform: KotchanPlatform) {
         file = File()
+        graphic = platform.graphic
     }
 }

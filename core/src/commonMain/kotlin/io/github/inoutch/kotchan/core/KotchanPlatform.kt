@@ -1,5 +1,9 @@
 package io.github.inoutch.kotchan.core
 
-expect class KotchanPlatform constructor() {
-    suspend fun launch(engine: KotchanEngine, platformConfig: KotchanPlatformConfig? = null)
+import io.github.inoutch.kotchan.core.graphic.compatible.context.Context
+
+expect class KotchanPlatform constructor(engine: KotchanEngine, platformConfig: KotchanPlatformConfig?) {
+    val graphic: Context
+
+    suspend fun launch()
 }

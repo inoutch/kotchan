@@ -1,7 +1,7 @@
 package io.github.inoutch.kotchan.core.view.scene
 
 class SceneManager {
-    private val context = SceneContext()
+    private val context = SceneContext(this)
 
     private var currentScene: Scene? = null
 
@@ -9,7 +9,8 @@ class SceneManager {
 
     suspend fun render(delta: Float) {
         nextSceneCreateCallback?.let {
-            currentScene = it.invoke(context)
+            currentScene = it.invoke(context).apply { init() }
+            nextSceneCreateCallback = null
         }
 
         currentScene?.let {
@@ -18,7 +19,7 @@ class SceneManager {
         }
     }
 
-    suspend fun transitScene(sceneCreateCallback: (context: SceneContext) -> Scene) {
+    fun transitScene(sceneCreateCallback: (context: SceneContext) -> Scene) {
         nextSceneCreateCallback = sceneCreateCallback
     }
 }

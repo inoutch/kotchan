@@ -52,6 +52,7 @@ kotlin {
                 runtimeOnly "org.lwjgl:lwjgl:$lwjglVersion:$lwjglNatives"
                 runtimeOnly "org.lwjgl:lwjgl-stb:$lwjglVersion:$lwjglNatives"
                 runtimeOnly "org.lwjgl:lwjgl-glfw:$lwjglVersion:$lwjglNatives"
+                runtimeOnly "org.lwjgl:lwjgl-opengl:$lwjglVersion:$lwjglNatives"
                 if (platform == org.gradle.internal.os.OperatingSystem.MAC_OS) {
                     runtimeOnly "org.lwjgl:lwjgl-vulkan:$lwjglVersion:$lwjglNatives"
                 }

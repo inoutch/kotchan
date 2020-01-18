@@ -30,9 +30,10 @@ class VKBuffer(
                         VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)
         )) { "Invalid memory type index" }
         val memory = logicalDevice.allocateDeviceMemory(bufferMemoryRequirements.size, memoryTypeIndex)
-        add(memory)
+        logicalDevice.remove(memory)
 
         bindBufferMemory(memory, 0L)
         return VKBufferDeviceMemory(this, memory)
+                .also { add(it) }
     }
 }

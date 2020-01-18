@@ -8,33 +8,31 @@ class KotchanEngine(config: KotchanStartupConfig) {
 
     var viewportSize: Vector2I = Vector2I.Zero
 
-    private lateinit var platform: KotchanPlatform
+    lateinit var platform: KotchanPlatform
+        private set
 
     private val sceneManager = SceneManager()
 
     suspend fun run(platformConfig: KotchanPlatformConfig? = null) {
         try {
-            initialize()
+            platform = KotchanPlatform(this, platformConfig)
+            KotchanGlobalContext().initialize(platform)
 
-            platform = KotchanPlatform()
-            platform.launch(this, platformConfig)
-            initialize()
+            sceneManager.transitScene { startupConfig.createFirstScene(it) }
+
+            platform.launch()
         } catch (e: Error) {
-            startupConfig.onError(e)
+            if (startupConfig.onError(e)) {
+                throw e
+            }
         }
     }
 
     suspend fun render(delta: Float) {
-        if (!sceneManager.isInitialized) {
-            sceneManager.init()
-        }
+        sceneManager.render(delta)
     }
 
     suspend fun reshape(windowSize: Vector2I, viewportSize: Vector2I) {
 
-    }
-
-    private fun initialize() {
-        KotchanGlobalContext().initialize()
     }
 }

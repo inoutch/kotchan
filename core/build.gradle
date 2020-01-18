@@ -45,6 +45,8 @@ kotlin {
                 implementation "org.lwjgl:lwjgl:$lwjglVersion"
                 implementation "org.lwjgl:lwjgl-stb:$lwjglVersion"
                 implementation "org.lwjgl:lwjgl-glfw:$lwjglVersion"
+                implementation "org.lwjgl:lwjgl-opengl:$lwjglVersion"
+                implementation "org.lwjgl:lwjgl-egl:$lwjglVersion"
                 implementation "org.lwjgl:lwjgl-vulkan:$lwjglVersion"
             }
         }

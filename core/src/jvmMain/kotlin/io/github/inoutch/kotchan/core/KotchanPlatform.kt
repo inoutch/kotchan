@@ -3,12 +3,15 @@ package io.github.inoutch.kotchan.core
 import io.github.inoutch.kotchan.core.platform.GLFWLauncher
 import io.github.inoutch.kotchan.core.platform.GLFWLauncherConfig
 
-actual class KotchanPlatform {
-    private lateinit var launcher: GLFWLauncher
+actual class KotchanPlatform actual constructor(engine: KotchanEngine, platformConfig: KotchanPlatformConfig?) {
+    private val launcher: GLFWLauncher = GLFWLauncher(
+            engine,
+            GLFWLauncherConfig(engine.startupConfig, platformConfig)
+    )
 
-    actual suspend fun launch(engine: KotchanEngine, platformConfig: KotchanPlatformConfig?) {
-        val config = GLFWLauncherConfig(engine.startupConfig, platformConfig)
-        launcher = GLFWLauncher(engine, config)
+    actual val graphic = launcher.context
+
+    actual suspend fun launch() {
         launcher.startAnimation()
     }
 }

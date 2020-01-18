@@ -1,6 +1,7 @@
 package io.github.inoutch.kotchan.core.platform
 
 import io.github.inoutch.kotchan.core.KotchanEngine
+import io.github.inoutch.kotchan.core.graphic.compatible.gl.GLContext
 import io.github.inoutch.kotlin.gl.api.gl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -14,6 +15,8 @@ class WebGLLauncher(
         private val engine: KotchanEngine,
         config: WebGLPlatformConfig
 ) {
+    val context: GLContext
+
     init {
         val configCanvas = config.canvas
         val canvas = checkNotNull(configCanvas
@@ -24,6 +27,7 @@ class WebGLLauncher(
         val context = canvas.getContext("webgl") ?: canvas.getContext("experimental-webgl")
         check(context is WebGLRenderingContext) { "Invalid webgl rendering context" }
         gl.setContext(context)
+        this.context = GLContext()
     }
 
     fun startAnimation() {

@@ -1,10 +1,20 @@
 package io.github.inoutch.kotchan.core.platform
 
 import io.github.inoutch.kotchan.core.KotchanEngine
+import io.github.inoutch.kotchan.core.graphic.compatible.context.Context
+import io.github.inoutch.kotchan.core.graphic.compatible.gl.GLContext
+import io.github.inoutch.kotchan.core.graphic.compatible.vk.VKContext
 import io.github.inoutch.kotchan.math.Vector2I
 import io.github.inoutch.kotchan.utility.Timer
+import io.github.inoutch.kotlin.vulkan.api.VkApplicationInfo
+import io.github.inoutch.kotlin.vulkan.api.VkInstanceCreateInfo
+import io.github.inoutch.kotlin.vulkan.api.VkStructureType
+import io.github.inoutch.kotlin.vulkan.api.createWindowSurface
+import io.github.inoutch.kotlin.vulkan.extension.toStringList
 import kotlinx.coroutines.delay
 import org.lwjgl.BufferUtils
+import org.lwjgl.glfw.Callbacks
+import org.lwjgl.glfw.GLFW
 import org.lwjgl.glfw.GLFW.GLFW_CLIENT_API
 import org.lwjgl.glfw.GLFW.GLFW_FALSE
 import org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT
@@ -22,15 +32,21 @@ import org.lwjgl.glfw.GLFW.glfwPollEvents
 import org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback
 import org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback
 import org.lwjgl.glfw.GLFW.glfwShowWindow
+import org.lwjgl.glfw.GLFW.glfwSwapBuffers
 import org.lwjgl.glfw.GLFW.glfwWindowHint
 import org.lwjgl.glfw.GLFW.glfwWindowShouldClose
+import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.glfw.GLFWVulkan
+import org.lwjgl.opengl.GL
+import org.lwjgl.system.MemoryStack
 import org.lwjgl.system.MemoryUtil
 
 class GLFWLauncher(
         private val engine: KotchanEngine,
         private val config: GLFWLauncherConfig
 ) {
+    val context: Context
+
     private val window: Long
 
     private val useVulkan: Boolean
@@ -38,6 +54,8 @@ class GLFWLauncher(
     private var cursorPoint: Vector2I = Vector2I.Zero
 
     init {
+        GLFWErrorCallback.createPrint().set()
+
         val common = config.common
         val platform = config.platform as? GLFWPlatformConfig ?: GLFWPlatformConfig()
         val windowSize = platform.windowSize ?: config.common.windowSize
@@ -46,7 +64,9 @@ class GLFWLauncher(
         useVulkan = common.useVulkanIfSupported && GLFWVulkan.glfwVulkanSupported()
 
         glfwDefaultWindowHints()
-        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API)
+        if (useVulkan) {
+            glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API)
+        }
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE)
         glfwWindowHint(GLFW_RESIZABLE, if (platform.resizable) GLFW_TRUE else GLFW_FALSE)
 
@@ -65,6 +85,50 @@ class GLFWLauncher(
 
         engine.viewportSize = viewportSize
 
+        if (useVulkan) {
+            val requiredExtensions = GLFWVulkan.glfwGetRequiredInstanceExtensions()
+            checkNotNull(requiredExtensions) { "Failed to find list of required Vulkan extensions" }
+
+            val vulkanConfig = platform.vulkanConfig
+            val applicationInfo = VkApplicationInfo(
+                    VkStructureType.VK_STRUCTURE_TYPE_APPLICATION_INFO,
+                    vulkanConfig.applicationName ?: common.applicationName,
+                    vulkanConfig.version,
+                    vulkanConfig.engineName ?: common.applicationName,
+                    vulkanConfig.engineVersion,
+                    vulkanConfig.apiVersion
+            )
+            val createInfo = VkInstanceCreateInfo(
+                    VkStructureType.VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
+                    0,
+                    applicationInfo,
+                    vulkanConfig.enableLayerNames,
+                    vulkanConfig.enableExtensionNames ?: requiredExtensions.toStringList()
+            )
+            context = VKContext(createInfo, windowSize, vulkanConfig.maxFrameInFlight) { surface, instance ->
+                createWindowSurface(instance, window, surface)
+            }
+        } else {
+            context = GLContext()
+
+            MemoryStack.stackPush().use {
+                val pWidth = it.mallocInt(1)
+                val pHeight = it.mallocInt(1)
+
+                GLFW.glfwGetWindowSize(window, pWidth, pHeight)
+
+                val vidmode = checkNotNull(GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor()))
+                GLFW.glfwSetWindowPos(
+                        window,
+                        (vidmode.width() - pWidth.get(0)) / 2,
+                        (vidmode.height() - pHeight.get(0)) / 2
+                )
+            }
+            GLFW.glfwMakeContextCurrent(window)
+            GLFW.glfwSwapInterval(1)
+            GL.createCapabilities()
+        }
+
         setInputCallbacks(engine.startupConfig.windowSize)
         glfwShowWindow(window)
     }
@@ -82,7 +146,14 @@ class GLFWLauncher(
                 delay(ideal - now)
             }
             lastTime = now
+
+            if (!useVulkan) {
+                glfwSwapBuffers(window)
+            }
         }
+
+        Callbacks.glfwFreeCallbacks(window)
+        GLFW.glfwTerminate()
     }
 
     private fun setInputCallbacks(viewportSize: Vector2I) {

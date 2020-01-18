@@ -1,16 +1,26 @@
 package io.github.inoutch.kotchan.core.platform
 
 import eaglview.EAGLView
+import io.github.inoutch.kotchan.core.KotchanEngine
 import io.github.inoutch.kotchan.core.KotchanStartupConfig
 import io.github.inoutch.kotchan.math.Vector2I
+import io.github.inoutch.kotchan.utility.Timer
 import io.github.inoutch.kotlin.gl.api.GL_COLOR_BUFFER_BIT
 import io.github.inoutch.kotlin.gl.api.gl
+import io.github.inoutch.kotlin.vulkan.api.VkInstance
+import io.github.inoutch.kotlin.vulkan.api.VkSurface
+import io.github.inoutch.kotlin.vulkan.api.vk
+import io.github.inoutch.kotlin.vulkan.utility.MutableProperty
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.objcPtr
 import kotlinx.cinterop.ptr
+import kotlinx.cinterop.toCPointer
+import kotlinx.cinterop.useContents
 import kotlinx.cinterop.value
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import platform.EAGL.EAGLContext
 import platform.EAGL.kEAGLRenderingAPIOpenGLES2
 import platform.EAGL.presentRenderbuffer
@@ -21,6 +31,7 @@ import platform.Foundation.NSSelectorFromString
 import platform.QuartzCore.CADisplayLink
 import platform.QuartzCore.CAEAGLLayer
 import platform.UIKit.UIScreen
+import platform.UIKit.UIView
 import platform.UIKit.UIViewController
 import platform.UIKit.addSubview
 import platform.UIKit.contentScaleFactor
@@ -37,29 +48,76 @@ import platform.gles2.glFramebufferRenderbuffer
 import platform.gles2.glGenFramebuffers
 import platform.gles2.glGenRenderbuffers
 import platform.gles2.glGetRenderbufferParameteriv
-import platform.gles2.glViewport
 import platform.glescommon.GLintVar
 import platform.glescommon.GLuintVar
+import vulkan_ios.VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK
+import vulkan_ios.VkIOSSurfaceCreateInfoMVK
 
 @ExperimentalUnsignedTypes
 class KotchanViewController(
         private val viewController: UIViewController,
-        private val startupConfig: KotchanStartupConfig
+        private val startupConfig: KotchanStartupConfig,
+        private val viewControllerConfig: KotchanViewControllerConfig = KotchanViewControllerConfig()
 ) {
+    lateinit var windowSize: Vector2I
+        private set
+
+    lateinit var viewportSize: Vector2I
+        private set
+
+    val view: UIView
+        get() = viewController.view
+
     private lateinit var displayLink: CADisplayLink
 
     private lateinit var eagleContext: KotchanEAGLContext
+
+    private lateinit var engine: KotchanEngine
+
+    private var lastTime: Long = 0
 
     fun viewDidLoad() {
         displayLink = CADisplayLink.displayLinkWithTarget(this.viewController, NSSelectorFromString("render:"))
         displayLink.preferredFramesPerSecond = startupConfig.fps.toLong()
         displayLink.addToRunLoop(NSRunLoop.mainRunLoop, NSDefaultRunLoopMode)
 
+        windowSize = UIScreen.mainScreen().nativeBounds().useContents {
+            Vector2I(size.width.toInt(), size.height.toInt())
+        }
+        viewportSize = UIScreen.mainScreen().bounds().useContents {
+            Vector2I(size.width.toInt(), size.height.toInt())
+        }
+
+        engine = KotchanEngine(startupConfig)
+        val kotchanViewController = this
+        runBlocking {
+            engine.run(KotchanPlatformBridgeConfig(kotchanViewController, viewControllerConfig))
+        }
         initWithEAGL()
+
+        lastTime = Timer.milliseconds()
     }
 
     fun render() {
-        renderWithEAGL()
+        GlobalScope.launch(MainLoopDispatcher) {
+            val now = Timer.milliseconds()
+            renderWithEAGL {
+                gl.clearColor(1.0f, 0.0f, 0.0f, 1.0f)
+                gl.clear(GL_COLOR_BUFFER_BIT)
+
+                engine.render((now - lastTime) / 1000.0f)
+            }
+            lastTime = now
+        }
+    }
+
+    fun createSurface(surface: MutableProperty<VkSurface>, instance: VkInstance) = memScoped {
+        val createInfo = alloc<VkIOSSurfaceCreateInfoMVK>()
+        createInfo.sType = VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK
+        createInfo.pNext = null
+        createInfo.flags = 0u
+        createInfo.pView = viewController.view.objcPtr().toLong().toCPointer()
+        vk.createIOSSurfaceMVK(instance, createInfo, surface)
     }
 
     private fun initWithEAGL() {
@@ -110,28 +168,12 @@ class KotchanViewController(
         )
     }
 
-    private fun renderWithEAGL() {
-        EAGLContext.setCurrentContext(eagleContext.context)
-        setFramebuffer()
+    private suspend fun renderWithEAGL(scope: suspend () -> Unit) {
+        engine.platform.eagleContext.setContext()
+        engine.platform.eagleContext.setFramebuffer()
 
-        gl.clearColor(1.0f, 0.0f, 0.0f, 1.0f)
-        gl.clear(GL_COLOR_BUFFER_BIT)
+        scope()
 
-        presentFramebuffer()
-
-        GlobalScope.launch(MainLoopDispatcher) {
-
-        }
-    }
-
-    private fun setFramebuffer() {
-        glBindFramebuffer(GL_FRAMEBUFFER, eagleContext.framebuffer)
-        glViewport(0, 0, eagleContext.framebufferSize.x, eagleContext.framebufferSize.y)
-    }
-
-    private fun presentFramebuffer() {
-        glBindRenderbuffer(GL_RENDERBUFFER, eagleContext.colorRenderbuffer)
-        val isSucceeded = eagleContext.context.presentRenderbuffer(GL_RENDERBUFFER)
-        check(isSucceeded) { "Failed to present renderbuffer" }
+        engine.platform.eagleContext.presentFramebuffer()
     }
 }

@@ -17,14 +17,12 @@ class AppScene(context: SceneContext) : Scene(context) {
     override suspend fun init() {
         val pngByteArray = file.readBytesFromResourceWithErrorAsync("sprites/spritesheet.png").await()
         val image = Image.loadPNGByteArrayAsync(pngByteArray).await()
-        Texture.
+        texture = disposer.add(Texture.loadFromImage(image))
     }
 
     override suspend fun update(delta: Float) {
-
     }
 
     override suspend fun render(delta: Float) {
-
     }
 }

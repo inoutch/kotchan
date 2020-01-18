@@ -71,9 +71,11 @@ class VKImage(
         )
         checkNotNull(memoryTypeIndex) { "Failed to find memory type index" }
         val imageDeviceMemory = logicalDevice.allocateDeviceMemory(memoryRequirements.size, memoryTypeIndex)
-                .let { VKImageDeviceMemory(this, it.deviceMemory) }
+        logicalDevice.remove(imageDeviceMemory)
+
         bindImageMemory(imageDeviceMemory, 0)
-        return imageDeviceMemory
+        return VKImageDeviceMemory(this, imageDeviceMemory)
+                .also { add(it) }
     }
 
     fun allocateDepthImageDeviceMemory(commandPool: VKCommandPool): VKImageDeviceMemory {

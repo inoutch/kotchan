@@ -1,5 +1,6 @@
 package io.github.inoutch.kotchan.core.graphic.compatible.gl
 
+import io.github.inoutch.kotchan.core.graphic.compatible.Image
 import io.github.inoutch.kotchan.core.graphic.compatible.Texture
 import io.github.inoutch.kotchan.core.graphic.compatible.TextureAddressMode
 import io.github.inoutch.kotchan.core.graphic.compatible.TextureFilter
@@ -11,15 +12,19 @@ import io.github.inoutch.kotlin.gl.api.GL_LINEAR_MIPMAP_NEAREST
 import io.github.inoutch.kotlin.gl.api.GL_NEAREST
 import io.github.inoutch.kotlin.gl.api.GL_NEAREST_MIPMAP_LINEAR
 import io.github.inoutch.kotlin.gl.api.GL_NEAREST_MIPMAP_NEAREST
+import io.github.inoutch.kotlin.gl.api.GL_RGBA
 import io.github.inoutch.kotlin.gl.api.GL_TEXTURE_2D
 import io.github.inoutch.kotlin.gl.api.GL_TEXTURE_MAG_FILTER
 import io.github.inoutch.kotlin.gl.api.GL_TEXTURE_MIN_FILTER
 import io.github.inoutch.kotlin.gl.api.GL_TEXTURE_WRAP_S
 import io.github.inoutch.kotlin.gl.api.GL_TEXTURE_WRAP_T
+import io.github.inoutch.kotlin.gl.api.GL_UNSIGNED_BYTE
 import io.github.inoutch.kotlin.gl.api.GLint
 import io.github.inoutch.kotlin.gl.api.gl
 
-class GLTexture(override val size: Vector2I) : Texture() {
+class GLTexture(image: Image) : Texture() {
+    override val size: Vector2I = image.size
+
     private val id = gl.genTextures(1).first()
 
     private var isDisposedValue = false
@@ -63,6 +68,16 @@ class GLTexture(override val size: Vector2I) : Texture() {
             gl.texParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, computedMinFilter(minFilter, mipmapMode))
             super.mipmapMode = value
         }
+
+    init {
+        val format = GL_RGBA
+        gl.bindTexture(GL_TEXTURE_2D, id)
+        gl.texParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, computedMinFilter(minFilter, mipmapMode))
+        gl.texParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, computedMagFilter(magFilter))
+        gl.texParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, addressModeU.glParam)
+        gl.texParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, addressModeV.glParam)
+        gl.texImage2D(GL_TEXTURE_2D, 0, format, image.size.x, image.size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.byteArray)
+    }
 
     fun bind() {
         gl.bindTexture(GL_TEXTURE_2D, id)

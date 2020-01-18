@@ -42,7 +42,7 @@ fun File.readBytesFromResource(filepath: String): ByteArray? =
 
 @kotlin.ExperimentalStdlibApi
 fun File.readBytesFromResourceAsync(filepath: String): Deferred<ByteArray?> = GlobalScope.async {
-    getResourcePath(filepath)?.let { readBytesAsync(filepath).await() }
+    getResourcePath(filepath)?.let { readBytesAsync(it).await() }
 }
 
 @kotlin.ExperimentalStdlibApi
@@ -51,7 +51,7 @@ fun File.readTextFromResource(filepath: String) =
 
 @kotlin.ExperimentalStdlibApi
 fun File.readTextFromResourceAsync(filepath: String): Deferred<String?> = GlobalScope.async {
-    getResourcePath(filepath)?.let { readTextAsync(filepath).await() }
+    getResourcePath(filepath)?.let { readTextAsync(it).await() }
 }
 
 fun File.readBytesFromResourceWithError(filepath: String): ByteArray =
