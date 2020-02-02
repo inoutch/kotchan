@@ -23,11 +23,15 @@ class VKBuffer(
         vk.bindBufferMemory(logicalDevice.device, buffer, memory.deviceMemory, memoryOffset)
     }
 
-    fun allocateBufferDeviceMemory(): VKBufferDeviceMemory {
+    fun allocateBufferDeviceMemory(
+            memoryTypes: List<VkMemoryPropertyFlagBits> = listOf(
+                    VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+                    VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
+            )
+    ): VKBufferDeviceMemory {
         val memoryTypeIndex = checkNotNull(logicalDevice.physicalDevice.physicalDeviceMemoryProperties.findMemoryTypeIndex(
                 bufferMemoryRequirements,
-                listOf(VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
-                        VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)
+                memoryTypes
         )) { "Invalid memory type index" }
         val memory = logicalDevice.allocateDeviceMemory(bufferMemoryRequirements.size, memoryTypeIndex)
         logicalDevice.remove(memory)
