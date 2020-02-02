@@ -1,8 +1,11 @@
 package io.github.inoutch.kotchan.core.graphic.compatible.vk
 
 import io.github.inoutch.kotchan.core.Disposer
+import io.github.inoutch.kotchan.core.graphic.batch.BatchBufferBundle
 import io.github.inoutch.kotchan.core.graphic.compatible.Image
 import io.github.inoutch.kotchan.core.graphic.compatible.Texture
+import io.github.inoutch.kotchan.core.graphic.compatible.buffer.BufferStorageMode
+import io.github.inoutch.kotchan.core.graphic.compatible.buffer.VertexBuffer
 import io.github.inoutch.kotchan.core.graphic.compatible.context.Context
 import io.github.inoutch.kotchan.extension.getProperties
 import io.github.inoutch.kotchan.extension.getProperty
@@ -118,6 +121,14 @@ class VKContext(
     override fun resize(windowSize: Vector2I) {
         this.windowSize = windowSize
         mustRecreateSwapchainInFrame = true
+    }
+
+    override fun createVertexBuffer(vertices: FloatArray, bufferStorageMode: BufferStorageMode): VertexBuffer {
+        return VKVertexBuffer(primaryLogicalDevice, primaryGraphicCommandPool, vertices, bufferStorageMode)
+    }
+
+    override fun drawTriangles(batchBufferBundle: BatchBufferBundle) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun loadTexture(image: Image): Texture {
