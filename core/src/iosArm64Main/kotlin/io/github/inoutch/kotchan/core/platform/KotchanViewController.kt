@@ -89,6 +89,7 @@ class KotchanViewController(
         }
 
         engine = KotchanEngine(startupConfig)
+        engine.initSize(windowSize, viewportSize)
         val kotchanViewController = this
         runBlocking {
             engine.run(KotchanPlatformBridgeConfig(kotchanViewController, viewControllerConfig))
@@ -154,7 +155,7 @@ class KotchanViewController(
             glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, intVar.ptr)
             intVar.value
         }
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRenderbuffer);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRenderbuffer)
 
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE.toUInt()) {
             println("Failed to make complete framebuffer object ${glCheckFramebufferStatus(GL_FRAMEBUFFER)}")

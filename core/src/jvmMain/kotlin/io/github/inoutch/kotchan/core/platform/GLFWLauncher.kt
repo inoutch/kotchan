@@ -83,7 +83,7 @@ class GLFWLauncher(
         glfwGetFramebufferSize(window, viewportWidth, viewportHeight)
         val viewportSize = Vector2I(viewportWidth[0], viewportHeight[0])
 
-        engine.viewportSize = viewportSize
+        engine.initSize(windowSize, viewportSize)
 
         if (useVulkan) {
             val requiredExtensions = GLFWVulkan.glfwGetRequiredInstanceExtensions()

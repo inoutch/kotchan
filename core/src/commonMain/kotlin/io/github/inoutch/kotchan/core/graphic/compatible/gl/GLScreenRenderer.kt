@@ -28,7 +28,7 @@ class GLScreenRenderer : ScreenRenderer() {
         )
         val framebufferWidth = gl.getIntegerv(GL_VIEWPORT)
         val texture = gl.genTextures(1)
-        gl.copyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, config.viewportSize.x, config.viewportSize.y, 0)
+        // gl.copyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, config.viewportSize.x, config.viewportSize.y, 0)
         TODO()
     }
 }

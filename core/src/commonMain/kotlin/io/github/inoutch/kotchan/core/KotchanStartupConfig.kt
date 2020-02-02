@@ -8,6 +8,7 @@ import io.github.inoutch.kotchan.math.Vector2I
 abstract class KotchanStartupConfig {
     abstract val applicationName: String
     abstract val windowSize: Vector2I
+    abstract val screenSize: Vector2I
     open val screenType: ScreenType = ScreenType.EXTEND
     open val useVulkanIfSupported = true
     open val fps: Int = 60

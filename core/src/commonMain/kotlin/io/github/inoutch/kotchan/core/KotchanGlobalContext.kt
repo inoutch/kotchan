@@ -1,6 +1,7 @@
 package io.github.inoutch.kotchan.core
 
 import io.github.inoutch.kotchan.core.graphic.compatible.context.Context
+import io.github.inoutch.kotchan.core.graphic.compatible.vk.VKContext
 import io.github.inoutch.kotchan.core.io.file.File
 
 class KotchanGlobalContext {
@@ -11,12 +12,23 @@ class KotchanGlobalContext {
         lateinit var graphic: Context
             private set
 
-        lateinit var config: KotchanConfig
+        lateinit var startupConfig: KotchanStartupConfig
+            private set
+
+        var config: KotchanConfig = KotchanConfig()
+            private set
+
+        var useVulkan: Boolean = false
+            private set
     }
 
-    fun initialize(platform: KotchanPlatform) {
+    fun initialize(
+            startupConfig: KotchanStartupConfig,
+            platform: KotchanPlatform
+    ) {
+        KotchanGlobalContext.startupConfig = startupConfig
         file = File()
         graphic = platform.graphic
-        config = KotchanConfig(platform)
+        useVulkan = graphic is VKContext
     }
 }

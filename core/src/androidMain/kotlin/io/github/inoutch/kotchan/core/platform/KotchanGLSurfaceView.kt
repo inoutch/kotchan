@@ -42,6 +42,10 @@ class KotchanGLSurfaceView(
         display.getRealMetrics(displayMetrics)
 
         engine = KotchanEngine(startupConfig)
+        engine.initSize(
+                Vector2I(displayMetrics.widthPixels, displayMetrics.heightPixels),
+                Vector2I(displayMetrics.widthPixels, displayMetrics.heightPixels)
+        )
 
         val applicationContext = this.context.applicationContext
         runBlocking {
@@ -60,7 +64,7 @@ class KotchanGLSurfaceView(
 
     override fun onSurfaceChanged(p0: GL10?, p1: Int, p2: Int) {
         val size = Vector2I(p1, p2)
-        GlobalScope.launch(dispatcher) { engine.reshape(size, size) }
+        engine.resize(size, size)
     }
 
     override fun onDetachedFromWindow() {

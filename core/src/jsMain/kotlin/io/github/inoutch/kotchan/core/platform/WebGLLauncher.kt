@@ -2,6 +2,7 @@ package io.github.inoutch.kotchan.core.platform
 
 import io.github.inoutch.kotchan.core.KotchanEngine
 import io.github.inoutch.kotchan.core.graphic.compatible.gl.GLContext
+import io.github.inoutch.kotchan.math.Vector2I
 import io.github.inoutch.kotlin.gl.api.gl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -23,6 +24,10 @@ class WebGLLauncher(
                 ?: document.getElementById(config.canvasId) as? HTMLCanvasElement) { "Canvas not found" }
         canvas.width = config.canvasSize?.x ?: engine.startupConfig.windowSize.x
         canvas.height = config.canvasSize?.y ?: engine.startupConfig.windowSize.y
+        engine.initSize(
+                Vector2I(canvas.width, canvas.height),
+                Vector2I(canvas.width, canvas.height)
+        )
 
         val context = canvas.getContext("webgl") ?: canvas.getContext("experimental-webgl")
         check(context is WebGLRenderingContext) { "Invalid webgl rendering context" }

@@ -1,6 +1,6 @@
 package io.github.inoutch.kotchan.core.graphic
 
-import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.config
+import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.useVulkan
 import io.github.inoutch.kotchan.math.Matrix3F
 import io.github.inoutch.kotchan.math.Matrix4F
 import io.github.inoutch.kotchan.math.Vector3F
@@ -16,7 +16,7 @@ abstract class Camera {
                 near: Float,
                 far: Float
         ): Matrix4F {
-            return if (config.useVulkan) {
+            return if (useVulkan) {
                 // for vulkan [z:0.0 ~ 1.0]
                 val m3 = Matrix3F.createDiagonal(
                         2 / (right - left),
