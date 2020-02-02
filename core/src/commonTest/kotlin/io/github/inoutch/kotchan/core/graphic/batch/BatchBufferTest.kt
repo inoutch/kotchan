@@ -136,6 +136,43 @@ class BatchBufferTest {
         }
     }
 
+    @Test
+    fun checkSort() {
+        val nativeBuffer = FloatArray(100) { 0.0f }
+        val batchBuffer = BatchBuffer(100) {
+            object : VertexBuffer(BufferStorageMode.Dynamic) {
+                override fun copyToBuffer(vertices: FloatArray, offset: Int, size: Int) {
+                    vertices.copyOfRange(offset, offset + size).copyInto(nativeBuffer, offset)
+                }
+            }
+        }
+        val p2 = batchBuffer.allocate(1)
+        val p4 = batchBuffer.allocate(1)
+        val p1 = batchBuffer.allocate(1)
+        val p3 = batchBuffer.allocate(1)
+        copy(batchBuffer, p1, 1)
+        copy(batchBuffer, p2, 2)
+        copy(batchBuffer, p3, 3)
+        copy(batchBuffer, p4, 4)
+        batchBuffer.flush()
+        assertEquals(2.0f, nativeBuffer[0])
+        assertEquals(4.0f, nativeBuffer[1])
+        assertEquals(1.0f, nativeBuffer[2])
+        assertEquals(3.0f, nativeBuffer[3])
+
+        batchBuffer.sort {
+            it.invoke(p1)
+            it.invoke(p2)
+            it.invoke(p3)
+            it.invoke(p4)
+        }
+        batchBuffer.flush()
+        assertEquals(1.0f, nativeBuffer[0])
+        assertEquals(2.0f, nativeBuffer[1])
+        assertEquals(3.0f, nativeBuffer[2])
+        assertEquals(4.0f, nativeBuffer[3])
+    }
+
     private fun copy(batchBuffer: BatchBuffer, pointer: BatchBufferPointer, firstValue: Int) {
         batchBuffer.range(pointer.first, pointer.last())
         for (i in 0 until pointer.size) {

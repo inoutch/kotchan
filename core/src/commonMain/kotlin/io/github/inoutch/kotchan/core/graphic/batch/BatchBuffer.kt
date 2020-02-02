@@ -80,23 +80,33 @@ class BatchBuffer(
             return
         }
         val data = arrayListOf<BatchBufferPointer>()
+        var size = 0
         val adder = { pointer: BatchBufferPointer ->
             data.add(pointer)
+            size += pointer.size
             Unit
         }
         scope(adder)
-        check(data.last().last() == this.pointers.last().last())
+        check(size == this.pointers.last().last())
         this.pointers.clear()
         this.pointers.addAll(data)
 
+        val oldVertices = vertices.copyOf()
         var i = 0
-        var size = 0
+        size = 0
         while (i < data.size) {
             val pointer = pointers[i]
-            pointer.first = size
+            val nextFirst = size
+            var j = 0
+            while (j < pointer.size) {
+                vertices[nextFirst + j] = oldVertices[pointer.first + j]
+                j++
+            }
+            pointer.first = nextFirst
             size += pointer.size
             i++
         }
+        range(0, size)
     }
 
     fun copy(offset: Int, value: Float) {
