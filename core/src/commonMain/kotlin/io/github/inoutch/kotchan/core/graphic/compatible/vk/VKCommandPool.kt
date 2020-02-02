@@ -5,7 +5,7 @@ import io.github.inoutch.kotchan.extension.getProperties
 import io.github.inoutch.kotchan.math.Vector2I
 import io.github.inoutch.kotlin.vulkan.api.VK_QUEUE_FAMILY_IGNORED
 import io.github.inoutch.kotlin.vulkan.api.VkAccessFlagBits
-import io.github.inoutch.kotlin.vulkan.api.VkBuffer
+import io.github.inoutch.kotlin.vulkan.api.VkBufferCopy
 import io.github.inoutch.kotlin.vulkan.api.VkBufferImageCopy
 import io.github.inoutch.kotlin.vulkan.api.VkCommandBuffer
 import io.github.inoutch.kotlin.vulkan.api.VkCommandBufferAllocateInfo
@@ -20,7 +20,6 @@ import io.github.inoutch.kotlin.vulkan.api.VkImageSubresourceLayers
 import io.github.inoutch.kotlin.vulkan.api.VkImageSubresourceRange
 import io.github.inoutch.kotlin.vulkan.api.VkOffset3D
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineStageFlagBits
-import io.github.inoutch.kotlin.vulkan.api.VkQueue
 import io.github.inoutch.kotlin.vulkan.api.VkStructureType
 import io.github.inoutch.kotlin.vulkan.api.vk
 import io.github.inoutch.kotlin.vulkan.utility.SingleCommandBuffer
@@ -129,5 +128,19 @@ class VKCommandPool(
         singleCommandBuffer.submit {
             vk.cmdCopyBufferToImage(it, buffer.buffer, image.image, VkImageLayout.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, listOf(region))
         }
+        singleCommandBuffer.destroy()
+    }
+
+    fun copyBuffer(srcBuffer: VKBuffer, srcOffset: Long, dstBuffer: VKBuffer, dstOffset: Long, size: Long) {
+        val region = VkBufferCopy(
+                srcOffset,
+                dstOffset,
+                size
+        )
+        val singleCommandBuffer = SingleCommandBuffer(logicalDevice.device, commandPool, queue.queue)
+        singleCommandBuffer.submit {
+            vk.cmdCopyBuffer(it, srcBuffer.buffer, dstBuffer.buffer, listOf(region))
+        }
+        singleCommandBuffer.destroy()
     }
 }
