@@ -3,8 +3,8 @@ package io.github.inoutch.kotchan.core.graphic.batch
 import io.github.inoutch.kotchan.core.graphic.BufferInterface
 
 class BatchPolygonBuffer(
-        private val batchBuffer: BatchBuffer,
-        var batchBufferPointer: BatchBufferPointer
+    private val batchBuffer: BatchBuffer,
+    var batchBufferPointer: BatchBufferPointer
 ) : BufferInterface<Float> {
     override fun range(first: Int, last: Int) {
         val offset = batchBufferPointer.first

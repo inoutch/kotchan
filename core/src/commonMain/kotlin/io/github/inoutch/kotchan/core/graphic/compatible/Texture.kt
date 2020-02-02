@@ -4,7 +4,7 @@ import io.github.inoutch.kotchan.core.Disposer
 import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.graphic
 import io.github.inoutch.kotchan.math.Vector2I
 
-abstract class Texture: Disposer() {
+abstract class Texture : Disposer() {
     companion object {
         fun loadFromImage(image: Image): Texture {
             return graphic.loadTexture(image)

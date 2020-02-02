@@ -27,7 +27,6 @@ import io.github.inoutch.kotlin.vulkan.api.VkImageTiling
 import io.github.inoutch.kotlin.vulkan.api.VkImageType
 import io.github.inoutch.kotlin.vulkan.api.VkImageUsageFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkMemoryAllocateInfo
-import io.github.inoutch.kotlin.vulkan.api.VkMemoryPropertyFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineBindPoint
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineStageFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkRenderPassCreateInfo
@@ -36,7 +35,6 @@ import io.github.inoutch.kotlin.vulkan.api.VkSampleCountFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkSamplerAddressMode
 import io.github.inoutch.kotlin.vulkan.api.VkSamplerCreateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkSamplerMipmapMode
-import io.github.inoutch.kotlin.vulkan.api.VkSemaphore
 import io.github.inoutch.kotlin.vulkan.api.VkSemaphoreCreateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkSharingMode
 import io.github.inoutch.kotlin.vulkan.api.VkStructureType
@@ -47,9 +45,9 @@ import io.github.inoutch.kotlin.vulkan.api.VkSwapchainCreateInfoKHR
 import io.github.inoutch.kotlin.vulkan.api.vk
 
 class VKLogicalDevice(
-        val physicalDevice: VKPhysicalDevice,
-        val device: VkDevice
-): Disposer() {
+    val physicalDevice: VKPhysicalDevice,
+    val device: VkDevice
+) : Disposer() {
     val primaryGraphicQueue: VKQueue by lazy {
         add(VKQueue(
                 this,
@@ -169,10 +167,10 @@ class VKLogicalDevice(
     }
 
     fun createImage(
-            size: VkExtent2D,
-            format: VkFormat,
-            tiling: VkImageTiling,
-            usage: List<VkImageUsageFlagBits>
+        size: VkExtent2D,
+        format: VkFormat,
+        tiling: VkImageTiling,
+        usage: List<VkImageUsageFlagBits>
     ): VKImage {
         val createInfo = VkImageCreateInfo(
                 VkStructureType.VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
@@ -201,8 +199,8 @@ class VKLogicalDevice(
     }
 
     fun allocateDeviceMemory(
-            allocateSize: VkDeviceSize,
-            memoryTypeIndex: Int
+        allocateSize: VkDeviceSize,
+        memoryTypeIndex: Int
     ): VKDeviceMemory {
         val allocateInfo = VkMemoryAllocateInfo(
                 VkStructureType.VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
@@ -251,11 +249,11 @@ class VKLogicalDevice(
     }
 
     fun createSampler(
-            magFilter: VkFilter,
-            minFilter: VkFilter,
-            mipmapMode: VkSamplerMipmapMode,
-            addressModeU: VkSamplerAddressMode,
-            addressModeV: VkSamplerAddressMode
+        magFilter: VkFilter,
+        minFilter: VkFilter,
+        mipmapMode: VkSamplerMipmapMode,
+        addressModeU: VkSamplerAddressMode,
+        addressModeV: VkSamplerAddressMode
     ): VKSampler {
         val createInfo = VkSamplerCreateInfo(
                 VkStructureType.VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,

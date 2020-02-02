@@ -9,17 +9,17 @@ import io.github.inoutch.kotlin.vulkan.api.VkStructureType
 import io.github.inoutch.kotlin.vulkan.api.vk
 
 class VKRenderPass(
-        val logicalDevice: VKLogicalDevice,
-        val renderPass: VkRenderPass
-): Disposer() {
+    val logicalDevice: VKLogicalDevice,
+    val renderPass: VkRenderPass
+) : Disposer() {
     init {
         add { vk.destroyRenderPass(logicalDevice.device, renderPass) }
     }
 
     fun createFramebuffer(
-            imageView: VKImageView,
-            depthImageView: VKImageView,
-            extent: VkExtent2D
+        imageView: VKImageView,
+        depthImageView: VKImageView,
+        extent: VkExtent2D
     ): VKFramebuffer {
         val createInfo = VkFramebufferCreateInfo(
                 VkStructureType.VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,

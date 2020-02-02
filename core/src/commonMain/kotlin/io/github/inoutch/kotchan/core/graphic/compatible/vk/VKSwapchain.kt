@@ -8,9 +8,9 @@ import io.github.inoutch.kotlin.vulkan.api.VkSwapchainKHR
 import io.github.inoutch.kotlin.vulkan.api.vk
 
 class VKSwapchain(
-        val logicalDevice: VKLogicalDevice,
-        val swapchain: VkSwapchainKHR
-): Disposer() {
+    val logicalDevice: VKLogicalDevice,
+    val swapchain: VkSwapchainKHR
+) : Disposer() {
     init {
         add { vk.destroySwapchainKHR(logicalDevice.device, swapchain) }
     }

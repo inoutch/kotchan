@@ -26,9 +26,9 @@ import io.github.inoutch.kotlin.vulkan.utility.SingleCommandBuffer
 import io.github.inoutch.kotlin.vulkan.utility.hasStencilComponent
 
 class VKCommandPool(
-        val logicalDevice: VKLogicalDevice,
-        val queue: VKQueue,
-        val commandPool: VkCommandPool
+    val logicalDevice: VKLogicalDevice,
+    val queue: VKQueue,
+    val commandPool: VkCommandPool
 ) : Disposer() {
     fun allocateCommandBuffer(size: Int): List<VKCommandBuffer> {
         val allocateInfo = VkCommandBufferAllocateInfo(

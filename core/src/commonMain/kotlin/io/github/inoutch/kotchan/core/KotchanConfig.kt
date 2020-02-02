@@ -21,10 +21,10 @@ class KotchanConfig {
         private set
 
     fun updateSize(
-            windowSize: Vector2I,
-            viewportSize: Vector2I,
-            screenSize: Vector2I,
-            screenType: ScreenType
+        windowSize: Vector2I,
+        viewportSize: Vector2I,
+        screenSize: Vector2I,
+        screenType: ScreenType
     ) {
         this.windowSize = windowSize
         this.viewportSize = viewportSize

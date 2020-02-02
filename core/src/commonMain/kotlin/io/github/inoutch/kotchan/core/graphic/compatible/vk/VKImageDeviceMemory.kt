@@ -5,8 +5,8 @@ import io.github.inoutch.kotlin.vulkan.api.VkPipelineStageFlagBits
 import io.github.inoutch.kotlin.vulkan.utility.MappedMemory
 
 class VKImageDeviceMemory(
-        val image: VKImage,
-        val deviceMemory: VKDeviceMemory  // Must be instance where no one is managing disposing
+    val image: VKImage,
+    val deviceMemory: VKDeviceMemory // Must be instance where no one is managing disposing
 ) : Disposer() {
     init {
         add(deviceMemory)

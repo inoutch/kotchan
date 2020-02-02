@@ -23,8 +23,8 @@ class KotchanGlobalContext {
     }
 
     fun initialize(
-            startupConfig: KotchanStartupConfig,
-            platform: KotchanPlatform
+        startupConfig: KotchanStartupConfig,
+        platform: KotchanPlatform
     ) {
         KotchanGlobalContext.startupConfig = startupConfig
         file = File()

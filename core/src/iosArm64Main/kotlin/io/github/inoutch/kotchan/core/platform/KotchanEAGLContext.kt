@@ -12,11 +12,11 @@ import platform.gles2.glViewport
 import platform.glescommon.GLuint
 
 class KotchanEAGLContext(
-        val context: EAGLContext,
-        val view: EAGLView,
-        val framebuffer: GLuint,
-        val colorRenderbuffer: GLuint,
-        val framebufferSize: Vector2I
+    val context: EAGLContext,
+    val view: EAGLView,
+    val framebuffer: GLuint,
+    val colorRenderbuffer: GLuint,
+    val framebufferSize: Vector2I
 ) {
     fun setContext() {
         EAGLContext.setCurrentContext(context)

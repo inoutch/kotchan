@@ -4,17 +4,17 @@ import io.github.inoutch.kotchan.core.KotchanEngine
 import io.github.inoutch.kotchan.core.graphic.compatible.gl.GLContext
 import io.github.inoutch.kotchan.math.Vector2I
 import io.github.inoutch.kotlin.gl.api.gl
+import kotlin.browser.document
+import kotlin.browser.window
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.khronos.webgl.WebGLRenderingContext
 import org.w3c.dom.HTMLCanvasElement
-import kotlin.browser.document
-import kotlin.browser.window
 
 class WebGLLauncher(
-        private val engine: KotchanEngine,
-        config: WebGLPlatformConfig
+    private val engine: KotchanEngine,
+    config: WebGLPlatformConfig
 ) {
     val context: GLContext
 

@@ -2,35 +2,24 @@ package io.github.inoutch.kotchan.core.graphic.compatible.vk
 
 import io.github.inoutch.kotchan.core.Disposer
 import io.github.inoutch.kotchan.extension.getProperty
-import io.github.inoutch.kotlin.vulkan.api.VkDevice
 import io.github.inoutch.kotlin.vulkan.api.VkDeviceCreateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkDeviceQueueCreateInfo
-import io.github.inoutch.kotlin.vulkan.api.VkExtent2D
-import io.github.inoutch.kotlin.vulkan.api.VkExtent3D
 import io.github.inoutch.kotlin.vulkan.api.VkFormat
 import io.github.inoutch.kotlin.vulkan.api.VkFormatFeatureFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkFormatProperties
-import io.github.inoutch.kotlin.vulkan.api.VkImage
-import io.github.inoutch.kotlin.vulkan.api.VkImageCreateInfo
-import io.github.inoutch.kotlin.vulkan.api.VkImageLayout
 import io.github.inoutch.kotlin.vulkan.api.VkImageTiling
-import io.github.inoutch.kotlin.vulkan.api.VkImageType
-import io.github.inoutch.kotlin.vulkan.api.VkImageUsageFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkPhysicalDevice
 import io.github.inoutch.kotlin.vulkan.api.VkPhysicalDeviceMemoryProperties
-import io.github.inoutch.kotlin.vulkan.api.VkSampleCountFlagBits
-import io.github.inoutch.kotlin.vulkan.api.VkSharingMode
 import io.github.inoutch.kotlin.vulkan.api.VkStructureType
 import io.github.inoutch.kotlin.vulkan.api.VkSurface
 import io.github.inoutch.kotlin.vulkan.api.vk
 import io.github.inoutch.kotlin.vulkan.utility.DeviceQueueFamilyIndices
-import io.github.inoutch.kotlin.vulkan.utility.MutableProperty
 import io.github.inoutch.kotlin.vulkan.utility.SwapchainSupportDetails
 import io.github.inoutch.kotlin.vulkan.utility.findSupportedFormat
 
 class VKPhysicalDevice(
-        val physicalDevice: VkPhysicalDevice,
-        val surface: VkSurface
+    val physicalDevice: VkPhysicalDevice,
+    val surface: VkSurface
 ) : Disposer() {
     val physicalDeviceMemoryProperties: VkPhysicalDeviceMemoryProperties by lazy {
         getProperty<VkPhysicalDeviceMemoryProperties> { vk.getPhysicalDeviceMemoryProperties(physicalDevice, it) }

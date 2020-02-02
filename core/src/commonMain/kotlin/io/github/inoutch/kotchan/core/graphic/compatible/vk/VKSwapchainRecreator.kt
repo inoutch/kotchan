@@ -5,11 +5,11 @@ import io.github.inoutch.kotlin.vulkan.api.VkExtent2D
 import io.github.inoutch.kotlin.vulkan.api.VkSurface
 
 class VKSwapchainRecreator(
-        private val surface: VkSurface,
-        private val logicalDevice: VKLogicalDevice,
-        private val commandPool: VKCommandPool,
-        initialExtent: VkExtent2D
-): Disposer() {
+    private val surface: VkSurface,
+    private val logicalDevice: VKLogicalDevice,
+    private val commandPool: VKCommandPool,
+    initialExtent: VkExtent2D
+) : Disposer() {
     var current: VKSwapchainRecreatorProperties
         private set
 
@@ -37,7 +37,7 @@ class VKSwapchainRecreator(
                 val depthImage = localDisposer.add(logicalDevice.createDepthImage(newExtent))
                 val depthImageDeviceMemory = localDisposer.add(depthImage.allocateDepthImageDeviceMemory(commandPool))
                 val depthImageView = localDisposer.add(depthImage.createDepthImageView())
-                VKSwapchainRecreatorDepthResource(depthImage, depthImageView, depthImageDeviceMemory)
+                VKSwapchainRecreatorDepthResources(depthImage, depthImageView, depthImageDeviceMemory)
             }
             val commandBuffers = commandPool.allocateCommandBuffer(swapchainImages.size)
             commandBuffers.forEach { add(it) }

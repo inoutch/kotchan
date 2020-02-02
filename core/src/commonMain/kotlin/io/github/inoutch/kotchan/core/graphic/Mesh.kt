@@ -5,10 +5,10 @@ import io.github.inoutch.kotchan.math.Vector3F
 import io.github.inoutch.kotchan.math.Vector4F
 
 class Mesh(
-        initPositions: List<Vector3F> = emptyList(),
-        initTexcoords: List<Vector2F> = emptyList(),
-        initColors: List<Vector4F> = emptyList(),
-        initNormals: List<Vector3F> = emptyList()
+    initPositions: List<Vector3F> = emptyList(),
+    initTexcoords: List<Vector2F> = emptyList(),
+    initColors: List<Vector4F> = emptyList(),
+    initNormals: List<Vector3F> = emptyList()
 ) {
 
     private var positions: MutableList<Vector3F> = initPositions.toMutableList()

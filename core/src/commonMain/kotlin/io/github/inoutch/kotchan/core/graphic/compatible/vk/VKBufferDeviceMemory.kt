@@ -5,8 +5,8 @@ import io.github.inoutch.kotlin.vulkan.api.VkPipelineStageFlagBits
 import io.github.inoutch.kotlin.vulkan.utility.MappedMemory
 
 class VKBufferDeviceMemory(
-        val buffer: VKBuffer,
-        val deviceMemory: VKDeviceMemory
+    val buffer: VKBuffer,
+    val deviceMemory: VKDeviceMemory
 ) : Disposer() {
     init {
         add(deviceMemory)

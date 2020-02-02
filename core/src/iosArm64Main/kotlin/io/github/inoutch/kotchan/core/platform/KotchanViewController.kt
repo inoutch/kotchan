@@ -23,7 +23,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import platform.EAGL.EAGLContext
 import platform.EAGL.kEAGLRenderingAPIOpenGLES2
-import platform.EAGL.presentRenderbuffer
 import platform.EAGL.renderbufferStorage
 import platform.Foundation.NSDefaultRunLoopMode
 import platform.Foundation.NSRunLoop
@@ -55,9 +54,9 @@ import vulkan_ios.VkIOSSurfaceCreateInfoMVK
 
 @ExperimentalUnsignedTypes
 class KotchanViewController(
-        private val viewController: UIViewController,
-        private val startupConfig: KotchanStartupConfig,
-        private val viewControllerConfig: KotchanViewControllerConfig = KotchanViewControllerConfig()
+    private val viewController: UIViewController,
+    private val startupConfig: KotchanStartupConfig,
+    private val viewControllerConfig: KotchanViewControllerConfig = KotchanViewControllerConfig()
 ) {
     lateinit var windowSize: Vector2I
         private set

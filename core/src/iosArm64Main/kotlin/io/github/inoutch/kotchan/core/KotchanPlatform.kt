@@ -39,8 +39,8 @@ import platform.glescommon.GLuintVar
 
 @ExperimentalUnsignedTypes
 actual class KotchanPlatform actual constructor(
-        engine: KotchanEngine,
-        platformConfig: KotchanPlatformConfig?
+    engine: KotchanEngine,
+    platformConfig: KotchanPlatformConfig?
 ) {
     actual val graphic: Context
 
@@ -83,7 +83,6 @@ actual class KotchanPlatform actual constructor(
     }
 
     actual suspend fun launch() {
-
     }
 
     private fun initWithEAGL(config: KotchanPlatformBridgeConfig) {
@@ -121,7 +120,7 @@ actual class KotchanPlatform actual constructor(
             glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, intVar.ptr)
             intVar.value
         }
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRenderbuffer);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRenderbuffer)
 
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE.toUInt()) {
             println("Failed to make complete framebuffer object ${glCheckFramebufferStatus(GL_FRAMEBUFFER)}")

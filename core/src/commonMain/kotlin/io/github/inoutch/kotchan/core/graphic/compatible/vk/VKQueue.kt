@@ -12,9 +12,9 @@ import io.github.inoutch.kotlin.vulkan.api.VkSubmitInfo
 import io.github.inoutch.kotlin.vulkan.api.vk
 
 class VKQueue(
-        val logicalDevice: VKLogicalDevice,
-        val queue: VkQueue,
-        val queueFamilyIndex: Int
+    val logicalDevice: VKLogicalDevice,
+    val queue: VkQueue,
+    val queueFamilyIndex: Int
 ) : Disposer() {
     fun createCommandPool(): VKCommandPool {
         val createInfo = VkCommandPoolCreateInfo(

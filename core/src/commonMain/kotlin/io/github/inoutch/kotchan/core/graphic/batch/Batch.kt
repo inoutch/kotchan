@@ -3,10 +3,10 @@ package io.github.inoutch.kotchan.core.graphic.batch
 import io.github.inoutch.kotchan.core.Disposer
 import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.graphic
 import io.github.inoutch.kotchan.core.graphic.Camera
-import io.github.inoutch.kotchan.core.graphic.polygon.Polygon
 import io.github.inoutch.kotchan.core.graphic.compatible.Material
+import io.github.inoutch.kotchan.core.graphic.polygon.Polygon
 
-class Batch(private val material: Material): Disposer() {
+class Batch(private val material: Material) : Disposer() {
     private val bufferBundle = BatchBufferBundle()
 
     private val polygonBundles = mutableListOf<BatchPolygonBufferBundle>()

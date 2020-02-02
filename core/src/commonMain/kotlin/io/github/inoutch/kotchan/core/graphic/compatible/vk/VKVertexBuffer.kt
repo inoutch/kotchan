@@ -6,10 +6,10 @@ import io.github.inoutch.kotlin.vulkan.api.VkBufferUsageFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkMemoryPropertyFlagBits
 
 class VKVertexBuffer(
-        logicalDevice: VKLogicalDevice,
-        commandPool: VKCommandPool,
-        vertices: FloatArray,
-        mode: BufferStorageMode
+    logicalDevice: VKLogicalDevice,
+    commandPool: VKCommandPool,
+    vertices: FloatArray,
+    mode: BufferStorageMode
 ) : VertexBuffer(mode) {
     val buffer: VKBuffer
 

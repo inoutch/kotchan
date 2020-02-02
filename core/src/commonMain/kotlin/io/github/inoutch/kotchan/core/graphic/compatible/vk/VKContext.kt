@@ -27,10 +27,10 @@ import io.github.inoutch.kotlin.vulkan.extension.forEachIndexes
 import io.github.inoutch.kotlin.vulkan.utility.MutableProperty
 
 class VKContext(
-        instanceCreateInfo: VkInstanceCreateInfo,
-        private var windowSize: Vector2I,
-        private val maxFrameInFlight: Int = 3,
-        createSurface: (surface: MutableProperty<VkSurface>, instance: VkInstance) -> VkResult
+    instanceCreateInfo: VkInstanceCreateInfo,
+    private var windowSize: Vector2I,
+    private val maxFrameInFlight: Int = 3,
+    createSurface: (surface: MutableProperty<VkSurface>, instance: VkInstance) -> VkResult
 ) : Context, Disposer() {
     val instance: VkInstance
 
@@ -128,7 +128,7 @@ class VKContext(
     }
 
     override fun drawTriangles(batchBufferBundle: BatchBufferBundle) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     override fun loadTexture(image: Image): Texture {
@@ -150,11 +150,13 @@ class VKContext(
         }
     }
 
-    private fun submit(cmdScope: ((
+    private fun submit(
+        cmdScope: ((
             commandBuffer: VKCommandBuffer,
             framebuffer: VKFramebuffer,
             swapchainImage: VKImage
-    ) -> Unit)? = null) {
+        ) -> Unit)? = null
+    ) {
         val currentCmd = this.currentCmd
         if (currentCmd == null && cmdScope == null) {
             // Do noting
@@ -214,10 +216,10 @@ class VKContext(
     }
 
     private fun cmd(
-            commandBuffer: VKCommandBuffer,
-            framebuffer: VKFramebuffer,
-            swapchainImage: VKImage,
-            scope: (commandBuffer: VKCommandBuffer, framebuffer: VKFramebuffer, swapchainImage: VKImage) -> Unit
+        commandBuffer: VKCommandBuffer,
+        framebuffer: VKFramebuffer,
+        swapchainImage: VKImage,
+        scope: (commandBuffer: VKCommandBuffer, framebuffer: VKFramebuffer, swapchainImage: VKImage) -> Unit
     ) {
         val usage = listOf(VkCommandBufferUsageFlagBits.VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT)
         val beginInfo = VkCommandBufferBeginInfo(VkStructureType.VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO, usage, null)

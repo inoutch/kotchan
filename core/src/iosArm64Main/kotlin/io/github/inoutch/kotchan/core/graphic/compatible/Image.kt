@@ -25,8 +25,8 @@ import platform.Foundation.NSData
 import platform.Foundation.dataWithBytes
 
 actual class Image private actual constructor(
-        actual val byteArray: ByteArray,
-        actual val size: Vector2I
+    actual val byteArray: ByteArray,
+    actual val size: Vector2I
 ) {
     actual companion object {
         @ExperimentalUnsignedTypes

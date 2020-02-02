@@ -9,12 +9,12 @@ import io.github.inoutch.kotchan.math.Vector4F
 abstract class Camera {
     companion object {
         fun createOrthographic(
-                left: Float,
-                right: Float,
-                bottom: Float,
-                top: Float,
-                near: Float,
-                far: Float
+            left: Float,
+            right: Float,
+            bottom: Float,
+            top: Float,
+            near: Float,
+            far: Float
         ): Matrix4F {
             return if (useVulkan) {
                 // for vulkan [z:0.0 ~ 1.0]

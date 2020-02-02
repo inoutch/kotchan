@@ -6,8 +6,8 @@ import io.github.inoutch.kotchan.core.graphic.compatible.buffer.BufferStorageMod
 import io.github.inoutch.kotchan.core.graphic.compatible.buffer.VertexBuffer
 
 class BatchBuffer(
-        defaultSize: Int = DEFAULT_SIZE,
-        private val creator: (vertices: FloatArray) -> VertexBuffer = { VertexBuffer.create(it, BufferStorageMode.Dynamic) }
+    defaultSize: Int = DEFAULT_SIZE,
+    private val creator: (vertices: FloatArray) -> VertexBuffer = { VertexBuffer.create(it, BufferStorageMode.Dynamic) }
 ) : Disposer() {
     companion object {
         const val DEFAULT_SIZE = 1000

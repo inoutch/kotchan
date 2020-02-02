@@ -1,12 +1,12 @@
 package io.github.inoutch.kotchan.core.io.file
 
 import io.github.inoutch.kotchan.core.platform.KotchanFilePlatform
+import java.io.File
+import java.io.IOException
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import java.io.File
-import java.io.IOException
 
 actual class File actual constructor() {
     private var filePlatformRaw: KotchanFilePlatform? = null
@@ -37,8 +37,8 @@ actual class File actual constructor() {
         }
     }
 
-    actual fun writeBytesAsync(writableFilepath: String, bytes: ByteArray)
-            : Deferred<Boolean> = GlobalScope.async(Dispatchers.IO) {
+    actual fun writeBytesAsync(writableFilepath: String, bytes: ByteArray):
+            Deferred<Boolean> = GlobalScope.async(Dispatchers.IO) {
         writeBytes(writableFilepath, bytes)
     }
 

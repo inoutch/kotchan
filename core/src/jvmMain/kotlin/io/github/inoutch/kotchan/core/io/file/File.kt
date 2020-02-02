@@ -1,15 +1,15 @@
 package io.github.inoutch.kotchan.core.io.file
 
 import io.github.inoutch.kotchan.utility.Path
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.net.URLDecoder
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 
 actual class File actual constructor() {
     actual fun readBytes(filepath: String): ByteArray? {

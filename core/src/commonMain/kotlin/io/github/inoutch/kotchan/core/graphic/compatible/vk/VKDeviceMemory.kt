@@ -7,7 +7,7 @@ import io.github.inoutch.kotlin.vulkan.api.VkPipelineStageFlagBits
 import io.github.inoutch.kotlin.vulkan.api.vk
 import io.github.inoutch.kotlin.vulkan.utility.MappedMemory
 
-open class VKDeviceMemory(val logicalDevice: VKLogicalDevice, val deviceMemory: VkDeviceMemory): Disposer() {
+open class VKDeviceMemory(val logicalDevice: VKLogicalDevice, val deviceMemory: VkDeviceMemory) : Disposer() {
     init {
         add { vk.freeMemory(logicalDevice.device, deviceMemory) }
     }

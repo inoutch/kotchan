@@ -14,7 +14,7 @@ open class Disposer : Disposable {
 
     override fun isDisposed(): Boolean = isDisposedEntity
 
-    fun <T: Disposable>add(disposable: T) {
+    fun <T : Disposable> add(disposable: T) {
         val callback = {
             disposableCallbackMap[disposable]
             disposable.dispose()
@@ -33,7 +33,7 @@ open class Disposer : Disposable {
         disposableCallbacks.add(callback)
     }
 
-    fun <T: Disposer>add(disposer: T): T {
+    fun <T : Disposer> add(disposer: T): T {
         check(!parents.contains(disposer)) { "Already added the parent disposer" }
         disposer.register(this)
         add(disposer as Disposable)

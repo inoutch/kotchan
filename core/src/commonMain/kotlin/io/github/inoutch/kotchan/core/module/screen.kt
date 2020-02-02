@@ -5,9 +5,9 @@ import io.github.inoutch.kotchan.math.RectI
 import io.github.inoutch.kotchan.math.Vector2I
 
 fun calcViewport(
-        viewportSize: Vector2I,
-        screenSize: Vector2I,
-        screenType: ScreenType
+    viewportSize: Vector2I,
+    screenSize: Vector2I,
+    screenType: ScreenType
 ): RectI {
     val aspectRatio = viewportSize.y / viewportSize.x
     return when (screenType) {
@@ -34,9 +34,9 @@ fun calcViewport(
 }
 
 fun calcScreenSize(
-        viewportSize: Vector2I,
-        screenSize: Vector2I,
-        screenType: ScreenType
+    viewportSize: Vector2I,
+    screenSize: Vector2I,
+    screenType: ScreenType
 ): Vector2I {
     val windowRatio = viewportSize.y.toFloat() / viewportSize.x.toFloat()
     return when (screenType) {

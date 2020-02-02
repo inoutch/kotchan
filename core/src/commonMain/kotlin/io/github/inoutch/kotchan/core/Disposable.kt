@@ -7,6 +7,6 @@ interface Disposable {
     fun dispose()
 }
 
-fun <T: Disposable>List<T>.dispose() {
+fun <T : Disposable> List<T>.dispose() {
     forEach { it.dispose() }
 }

@@ -10,8 +10,8 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 class KotchanFilePlatform(
-        private val assetManager: AssetManager,
-        private val fileDirectory: String
+    private val assetManager: AssetManager,
+    private val fileDirectory: String
 ) {
     companion object {
         const val ASSET_PREFIX = "@asset:"

@@ -3,10 +3,10 @@ package io.github.inoutch.kotchan.core.graphic.batch
 import io.github.inoutch.kotchan.core.graphic.polygon.Polygon
 
 class BatchBufferBundle(
-        val positionBuffer: BatchBuffer = BatchBuffer(),
-        val colorBuffer: BatchBuffer = BatchBuffer(),
-        val texcoordBuffer: BatchBuffer = BatchBuffer(),
-        val normalBuffer: BatchBuffer = BatchBuffer()
+    val positionBuffer: BatchBuffer = BatchBuffer(),
+    val colorBuffer: BatchBuffer = BatchBuffer(),
+    val texcoordBuffer: BatchBuffer = BatchBuffer(),
+    val normalBuffer: BatchBuffer = BatchBuffer()
 ) {
     companion object {
         const val POSITION_SIZE = 3

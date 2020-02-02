@@ -2,10 +2,8 @@ package io.github.inoutch.kotchan.core.graphic.compatible.vk
 
 import io.github.inoutch.kotchan.core.Disposer
 import io.github.inoutch.kotchan.extension.getProperty
-import io.github.inoutch.kotlin.vulkan.api.VkCommandPool
 import io.github.inoutch.kotlin.vulkan.api.VkComponentMapping
 import io.github.inoutch.kotlin.vulkan.api.VkComponentSwizzle
-import io.github.inoutch.kotlin.vulkan.api.VkDeviceMemory
 import io.github.inoutch.kotlin.vulkan.api.VkFormat
 import io.github.inoutch.kotlin.vulkan.api.VkImage
 import io.github.inoutch.kotlin.vulkan.api.VkImageAspectFlagBits
@@ -21,9 +19,9 @@ import io.github.inoutch.kotlin.vulkan.api.VkSubresourceLayout
 import io.github.inoutch.kotlin.vulkan.api.vk
 
 class VKImage(
-        val logicalDevice: VKLogicalDevice,
-        val image: VkImage,
-        private val disposable: Boolean = true
+    val logicalDevice: VKLogicalDevice,
+    val image: VkImage,
+    private val disposable: Boolean = true
 ) : Disposer() {
     override fun isDisposed(): Boolean {
         return disposable && super.isDisposed()
@@ -34,8 +32,8 @@ class VKImage(
     }
 
     fun createImageView(
-            format: VkFormat,
-            aspectFlagBits: List<VkImageAspectFlagBits> = listOf(VkImageAspectFlagBits.VK_IMAGE_ASPECT_COLOR_BIT)
+        format: VkFormat,
+        aspectFlagBits: List<VkImageAspectFlagBits> = listOf(VkImageAspectFlagBits.VK_IMAGE_ASPECT_COLOR_BIT)
     ): VKImageView {
         val createInfo = VkImageViewCreateInfo(
                 VkStructureType.VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
@@ -62,7 +60,7 @@ class VKImage(
     }
 
     fun allocateImageDeviceMemory(
-            memoryProperties: List<VkMemoryPropertyFlagBits>
+        memoryProperties: List<VkMemoryPropertyFlagBits>
     ): VKImageDeviceMemory {
         val physicalDeviceMemoryProperties = logicalDevice.physicalDevice.physicalDeviceMemoryProperties
         val memoryTypeIndex = physicalDeviceMemoryProperties.findMemoryTypeIndex(

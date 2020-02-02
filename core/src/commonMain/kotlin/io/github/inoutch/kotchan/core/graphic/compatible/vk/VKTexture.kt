@@ -15,9 +15,9 @@ import io.github.inoutch.kotlin.vulkan.api.VkImageUsageFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkMemoryPropertyFlagBits
 
 class VKTexture(
-        logicalDevice: VKLogicalDevice,
-        commandPool: VKCommandPool,
-        imageRaw: Image
+    logicalDevice: VKLogicalDevice,
+    commandPool: VKCommandPool,
+    imageRaw: Image
 ) : Texture() {
 
     override val size: Vector2I = imageRaw.size

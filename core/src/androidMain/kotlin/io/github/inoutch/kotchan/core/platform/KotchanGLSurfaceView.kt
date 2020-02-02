@@ -11,17 +11,17 @@ import io.github.inoutch.kotchan.core.KotchanPlatformConfig
 import io.github.inoutch.kotchan.core.KotchanStartupConfig
 import io.github.inoutch.kotchan.math.Vector2I
 import io.github.inoutch.kotchan.utility.Timer
+import javax.microedition.khronos.egl.EGLConfig
+import javax.microedition.khronos.opengles.GL10
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import javax.microedition.khronos.egl.EGLConfig
-import javax.microedition.khronos.opengles.GL10
 
 @SuppressLint("ViewConstructor")
 class KotchanGLSurfaceView(
-        private val startupConfig: KotchanStartupConfig,
-        private val platformConfig: KotchanPlatformConfig?,
-        context: Context
+    private val startupConfig: KotchanStartupConfig,
+    private val platformConfig: KotchanPlatformConfig?,
+    context: Context
 ) : GLSurfaceView(context), GLSurfaceView.Renderer {
     private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
@@ -51,7 +51,7 @@ class KotchanGLSurfaceView(
         runBlocking {
             engine.run(platformConfig)
 
-            val filePlatform = KotchanFilePlatform(applicationContext.assets,  applicationContext.filesDir.path)
+            val filePlatform = KotchanFilePlatform(applicationContext.assets, applicationContext.filesDir.path)
             KotchanGlobalContext.file.initialize(filePlatform)
 
             beforeMillis = Timer.milliseconds()

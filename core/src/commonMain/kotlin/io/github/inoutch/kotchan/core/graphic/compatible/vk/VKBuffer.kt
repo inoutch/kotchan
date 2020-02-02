@@ -8,8 +8,8 @@ import io.github.inoutch.kotlin.vulkan.api.VkMemoryRequirements
 import io.github.inoutch.kotlin.vulkan.api.vk
 
 class VKBuffer(
-        val logicalDevice: VKLogicalDevice,
-        val buffer: VkBuffer
+    val logicalDevice: VKLogicalDevice,
+    val buffer: VkBuffer
 ) : Disposer() {
     val bufferMemoryRequirements by lazy {
         getProperty<VkMemoryRequirements> { vk.getBufferMemoryRequirements(logicalDevice.device, buffer, it) }
@@ -24,10 +24,10 @@ class VKBuffer(
     }
 
     fun allocateBufferDeviceMemory(
-            memoryTypes: List<VkMemoryPropertyFlagBits> = listOf(
-                    VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
-                    VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
-            )
+        memoryTypes: List<VkMemoryPropertyFlagBits> = listOf(
+                VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+                VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
+        )
     ): VKBufferDeviceMemory {
         val memoryTypeIndex = checkNotNull(logicalDevice.physicalDevice.physicalDeviceMemoryProperties.findMemoryTypeIndex(
                 bufferMemoryRequirements,

@@ -2,6 +2,8 @@ package io.github.inoutch.kotchan.core.graphic.compatible
 
 import io.github.inoutch.kotchan.extension.toByteArray
 import io.github.inoutch.kotchan.math.Vector2I
+import kotlin.browser.document
+import kotlin.js.Promise
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.asDeferred
 import org.khronos.webgl.Uint8Array
@@ -10,12 +12,10 @@ import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.url.URL
 import org.w3c.files.Blob
 import org.w3c.files.BlobPropertyBag
-import kotlin.browser.document
-import kotlin.js.Promise
 
 actual class Image private actual constructor(
-        actual val byteArray: ByteArray,
-        actual val size: Vector2I
+    actual val byteArray: ByteArray,
+    actual val size: Vector2I
 ) {
     actual companion object {
         actual fun loadPNGByteArrayAsync(byteArray: ByteArray): Deferred<Image> {

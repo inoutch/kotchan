@@ -42,8 +42,8 @@ import org.lwjgl.system.MemoryStack
 import org.lwjgl.system.MemoryUtil
 
 class GLFWLauncher(
-        private val engine: KotchanEngine,
-        private val config: GLFWLauncherConfig
+    private val engine: KotchanEngine,
+    private val config: GLFWLauncherConfig
 ) {
     val context: Context
 

@@ -95,7 +95,7 @@ class GLTexture(image: Image) : Texture() {
     }
 
     private fun computedMagFilter(magFilter: TextureFilter): GLint {
-        return when(magFilter) {
+        return when (magFilter) {
             TextureFilter.NEAREST -> GL_NEAREST
             TextureFilter.LINEAR -> GL_LINEAR
         }
