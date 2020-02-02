@@ -87,7 +87,7 @@ open class Disposer : Disposable {
         disposableCallbacks.reversed().forEach { it.invoke() }
 
         // Notify itself was disposed to the parents
-        parents.forEach { it.remove(this) }
+        parents.toList().forEach { it.remove(this) }
         parents.clear()
     }
 
