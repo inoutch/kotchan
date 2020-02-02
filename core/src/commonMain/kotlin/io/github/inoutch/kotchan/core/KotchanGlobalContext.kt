@@ -11,11 +11,12 @@ class KotchanGlobalContext {
         lateinit var graphic: Context
             private set
 
-        val config: KotchanConfig = KotchanConfig()
+        lateinit var config: KotchanConfig
     }
 
     fun initialize(platform: KotchanPlatform) {
         file = File()
         graphic = platform.graphic
+        config = KotchanConfig(platform)
     }
 }
