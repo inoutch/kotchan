@@ -6,7 +6,9 @@ import io.github.inoutch.kotchan.core.graphic.compatible.Image
 import io.github.inoutch.kotchan.core.graphic.compatible.Texture
 import io.github.inoutch.kotchan.core.graphic.compatible.buffer.BufferStorageMode
 import io.github.inoutch.kotchan.core.graphic.compatible.buffer.VertexBuffer
+import io.github.inoutch.kotchan.math.RectI
 import io.github.inoutch.kotchan.math.Vector2I
+import io.github.inoutch.kotchan.math.Vector4F
 
 interface Context : Disposable {
     fun begin()
@@ -18,10 +20,10 @@ interface Context : Disposable {
 //    fun createShader(shaderSource: ShaderSource): Shader
 //    fun createGraphicsPipeline()
 //    fun bindGraphicsPipeline()
-//    fun setViewport(viewport: RectI)
-//    fun setScissor(scissor: RectI)
-//    fun clearColor()
-//    fun clearDepth()
+    fun setViewport(viewport: RectI)
+    fun setScissor(scissor: RectI)
+    fun clearColor(color: Vector4F)
+    fun clearDepth(depth: Float)
 //    fun setUniform1f()
 //    fun setUniform1i()
 //    fun setUniform3f()

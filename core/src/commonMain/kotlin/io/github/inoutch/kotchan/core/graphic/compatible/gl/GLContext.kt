@@ -6,16 +6,17 @@ import io.github.inoutch.kotchan.core.graphic.compatible.Texture
 import io.github.inoutch.kotchan.core.graphic.compatible.buffer.BufferStorageMode
 import io.github.inoutch.kotchan.core.graphic.compatible.buffer.VertexBuffer
 import io.github.inoutch.kotchan.core.graphic.compatible.context.Context
+import io.github.inoutch.kotchan.math.RectI
 import io.github.inoutch.kotchan.math.Vector2I
+import io.github.inoutch.kotchan.math.Vector4F
+import io.github.inoutch.kotlin.gl.api.GL_COLOR_BUFFER_BIT
+import io.github.inoutch.kotlin.gl.api.GL_DEPTH_BUFFER_BIT
+import io.github.inoutch.kotlin.gl.api.gl
 
 class GLContext : Context {
-    override fun begin() {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
-    }
+    override fun begin() {}
 
-    override fun end() {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
-    }
+    override fun end() {}
 
     override fun resize(windowSize: Vector2I) {
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
@@ -31,6 +32,24 @@ class GLContext : Context {
 
     override fun loadTexture(image: Image): Texture {
         return GLTexture(image)
+    }
+
+    override fun setViewport(viewport: RectI) {
+        gl.viewport(viewport.origin.x, viewport.origin.y, viewport.size.x, viewport.size.y)
+    }
+
+    override fun setScissor(scissor: RectI) {
+        gl.scissor(scissor.origin.x, scissor.origin.y, scissor.size.x, scissor.size.y)
+    }
+
+    override fun clearColor(color: Vector4F) {
+        gl.clearColor(color.x, color.y, color.z, color.w)
+        gl.clear(GL_COLOR_BUFFER_BIT)
+    }
+
+    override fun clearDepth(depth: Float) {
+        gl.clearDepthf(depth)
+        gl.clear(GL_DEPTH_BUFFER_BIT)
     }
 
     override fun isDisposed(): Boolean {

@@ -29,7 +29,11 @@ class KotchanEngine(config: KotchanStartupConfig) {
     }
 
     suspend fun render(delta: Float) {
+        graphic.begin()
+
         sceneManager.render(delta)
+
+        graphic.end()
     }
 
     fun resize(windowSize: Vector2I, viewportSize: Vector2I) {

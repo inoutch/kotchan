@@ -9,28 +9,38 @@ import io.github.inoutch.kotchan.core.graphic.compatible.buffer.VertexBuffer
 import io.github.inoutch.kotchan.core.graphic.compatible.context.Context
 import io.github.inoutch.kotchan.extension.getProperties
 import io.github.inoutch.kotchan.extension.getProperty
+import io.github.inoutch.kotchan.math.RectI
 import io.github.inoutch.kotchan.math.Vector2I
+import io.github.inoutch.kotchan.math.Vector4F
+import io.github.inoutch.kotlin.vulkan.api.VkClearColorValue
+import io.github.inoutch.kotlin.vulkan.api.VkClearDepthStencilValue
 import io.github.inoutch.kotlin.vulkan.api.VkCommandBufferBeginInfo
 import io.github.inoutch.kotlin.vulkan.api.VkCommandBufferUsageFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkExtent2D
+import io.github.inoutch.kotlin.vulkan.api.VkImageAspectFlagBits
+import io.github.inoutch.kotlin.vulkan.api.VkImageSubresourceRange
 import io.github.inoutch.kotlin.vulkan.api.VkInstance
 import io.github.inoutch.kotlin.vulkan.api.VkInstanceCreateInfo
+import io.github.inoutch.kotlin.vulkan.api.VkOffset2D
 import io.github.inoutch.kotlin.vulkan.api.VkPhysicalDevice
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineStageFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkPresentInfoKHR
+import io.github.inoutch.kotlin.vulkan.api.VkRect2D
 import io.github.inoutch.kotlin.vulkan.api.VkResult
 import io.github.inoutch.kotlin.vulkan.api.VkStructureType
 import io.github.inoutch.kotlin.vulkan.api.VkSubmitInfo
 import io.github.inoutch.kotlin.vulkan.api.VkSurface
+import io.github.inoutch.kotlin.vulkan.api.VkViewport
 import io.github.inoutch.kotlin.vulkan.api.vk
 import io.github.inoutch.kotlin.vulkan.extension.forEachIndexes
 import io.github.inoutch.kotlin.vulkan.utility.MutableProperty
+import kotlin.math.min
 
 class VKContext(
-    instanceCreateInfo: VkInstanceCreateInfo,
-    private var windowSize: Vector2I,
-    private val maxFrameInFlight: Int = 3,
-    createSurface: (surface: MutableProperty<VkSurface>, instance: VkInstance) -> VkResult
+        instanceCreateInfo: VkInstanceCreateInfo,
+        private var windowSize: Vector2I,
+        private val maxFrameInFlight: Int = 3,
+        createSurface: (surface: MutableProperty<VkSurface>, instance: VkInstance) -> VkResult
 ) : Context, Disposer() {
     val instance: VkInstance
 
@@ -60,9 +70,7 @@ class VKContext(
 
     private var mustRecreateSwapchainInFrame = false
 
-    private var currentCmd: ((commandBuffer: VKCommandBuffer, framebuffer: VKFramebuffer, swapchainImage: VKImage) -> Unit)? = null
-
-    private val currentCmdQueue = mutableListOf<(commandBuffer: VKCommandBuffer, framebuffer: VKFramebuffer, swapchainImage: VKImage) -> Unit>()
+    private var currentRenderContext: VKRenderContext
 
     init {
         try {
@@ -95,9 +103,16 @@ class VKContext(
             renderCompleteSemaphores = List(swapchainRecreator.current.swapchainImages.size) {
                 add(primaryLogicalDevice.createSemaphore())
             }
-            inFlightFences = List(swapchainRecreator.current.swapchainImages.size) {
+            inFlightFences = List(min(maxFrameInFlight, swapchainRecreator.current.swapchainImages.size)) {
                 add(primaryLogicalDevice.createFence())
             }
+
+            currentRenderContext = VKRenderContext(
+                    swapchainRecreator.current.commandBuffers.first(),
+                    swapchainRecreator.current.framebuffers.first(),
+                    swapchainRecreator.current.swapchainImages.first(),
+                    swapchainRecreator.current.depthResources.first()
+            )
         } catch (e: Error) {
             dispose()
             throw e
@@ -106,16 +121,63 @@ class VKContext(
 
     override fun begin() {
         // Do noting
+        if (mustRecreateSwapchainInFrame) {
+            primaryLogicalDevice.primaryGraphicQueue.queueWaitIdle()
+            swapchainRecreator.recreate(VkExtent2D(windowSize.x, windowSize.y))
+            mustRecreateSwapchainInFrame = false
+        }
+
+        val currentInFlightFence = inFlightFences[currentFrame]
+        val currentImageAvailableSemaphore = imageAvailableSemaphores[currentFrame]
+
+        primaryLogicalDevice.waitForFences(listOf(currentInFlightFence))
+        primaryLogicalDevice.resetFences(listOf(currentInFlightFence))
+
+        currentSwapchainImageIndex = swapchainRecreator.current.swapchain
+                .acquireNextImageKHR(currentImageAvailableSemaphore, null)
+
+        currentRenderContext = VKRenderContext(
+                swapchainRecreator.current.commandBuffers[currentSwapchainImageIndex],
+                swapchainRecreator.current.framebuffers[currentSwapchainImageIndex],
+                swapchainRecreator.current.swapchainImages[currentSwapchainImageIndex],
+                swapchainRecreator.current.depthResources[currentSwapchainImageIndex]
+        )
+
+        val usage = listOf(VkCommandBufferUsageFlagBits.VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT)
+        val beginInfo = VkCommandBufferBeginInfo(VkStructureType.VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO, usage, null)
+        currentRenderContext.commandBuffer.resetCommandBuffer()
+        currentRenderContext.commandBuffer.beginCommandBuffer(beginInfo)
     }
 
     override fun end() {
-        submit { commandBuffer, framebuffer, swapchainImage ->
-            currentCmdQueue.forEach { it.invoke(commandBuffer, framebuffer, swapchainImage) }
-        }
-        currentCmdQueue.clear()
+        currentRenderContext.commandBuffer.endCommandBuffer()
 
-        present()
-        currentFrame = (currentFrame + 1) % maxFrameInFlight
+        val currentInFlightFence = inFlightFences[currentFrame]
+        val currentImageAvailableSemaphore = imageAvailableSemaphores[currentFrame]
+        val currentRenderCompleteSemaphore = renderCompleteSemaphores[currentFrame]
+
+        val submitInfo = VkSubmitInfo(
+                VkStructureType.VK_STRUCTURE_TYPE_SUBMIT_INFO,
+                listOf(currentImageAvailableSemaphore.semaphore),
+                listOf(VkPipelineStageFlagBits.VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT),
+                listOf(currentRenderContext.commandBuffer.commandBuffer),
+                listOf(currentRenderCompleteSemaphore.semaphore)
+        )
+
+        primaryLogicalDevice.primaryGraphicQueue.queueSubmit(listOf(submitInfo), currentInFlightFence)
+
+        val presentInfo = VkPresentInfoKHR(
+                VkStructureType.VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
+                listOf(currentRenderCompleteSemaphore.semaphore),
+                listOf(swapchainRecreator.current.swapchain.swapchain),
+                listOf(currentSwapchainImageIndex),
+                null
+        )
+        val queuePresentResult = primaryLogicalDevice.primaryPresentQueue.queuePresentKHR(presentInfo)
+        if (queuePresentResult == VkResult.VK_ERROR_OUT_OF_DATE_KHR || queuePresentResult == VkResult.VK_SUBOPTIMAL_KHR) {
+            mustRecreateSwapchainInFrame = true
+        }
+        currentFrame = (currentFrame + 1) % inFlightFences.size
     }
 
     override fun resize(windowSize: Vector2I) {
@@ -135,98 +197,36 @@ class VKContext(
         return VKTexture(primaryLogicalDevice, primaryGraphicCommandPool, image)
     }
 
-    private fun present() {
-        val currentRenderCompleteSemaphore = renderCompleteSemaphores[currentFrame]
-        val presentInfo = VkPresentInfoKHR(
-                VkStructureType.VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
-                listOf(currentRenderCompleteSemaphore.semaphore),
-                listOf(swapchainRecreator.current.swapchain.swapchain),
-                listOf(currentSwapchainImageIndex),
-                null
-        )
-        val queuePresentResult = primaryLogicalDevice.primaryPresentQueue.queuePresentKHR(presentInfo)
-        if (queuePresentResult == VkResult.VK_ERROR_OUT_OF_DATE_KHR || queuePresentResult == VkResult.VK_SUBOPTIMAL_KHR) {
-            mustRecreateSwapchainInFrame = true
-        }
+    override fun setViewport(viewport: RectI) {
+        currentRenderContext.commandBuffer.cmdSetViewport(VkViewport(
+                viewport.origin.x.toFloat(),
+                viewport.origin.y.toFloat(),
+                viewport.size.x.toFloat(),
+                viewport.size.y.toFloat(),
+                0.0f,
+                1.0f
+        ))
     }
 
-    private fun submit(
-        cmdScope: ((
-            commandBuffer: VKCommandBuffer,
-            framebuffer: VKFramebuffer,
-            swapchainImage: VKImage
-        ) -> Unit)? = null
-    ) {
-        val currentCmd = this.currentCmd
-        if (currentCmd == null && cmdScope == null) {
-            // Do noting
-            return
-        }
-
-        if (mustRecreateSwapchainInFrame) {
-            primaryLogicalDevice.primaryGraphicQueue.queueWaitIdle()
-            swapchainRecreator.recreate(VkExtent2D(windowSize.x, windowSize.y))
-            mustRecreateSwapchainInFrame = false
-            currentCmd?.let { cmd(it) }
-        }
-
-        val currentInFlightFence = inFlightFences[currentFrame]
-        val currentImageAvailableSemaphore = imageAvailableSemaphores[currentFrame]
-        val currentRenderCompleteSemaphore = renderCompleteSemaphores[currentFrame]
-
-        primaryLogicalDevice.waitForFences(listOf(currentInFlightFence))
-        primaryLogicalDevice.resetFences(listOf(currentInFlightFence))
-
-        currentSwapchainImageIndex = swapchainRecreator.current.swapchain
-                .acquireNextImageKHR(currentImageAvailableSemaphore, null)
-
-        val current = swapchainRecreator.current
-        val currentCommandBuffer = current.commandBuffers[currentSwapchainImageIndex]
-        val currentFramebuffer = current.framebuffers[currentSwapchainImageIndex]
-        val currentSwapchainImage = current.swapchainImages[currentSwapchainImageIndex]
-
-        if (cmdScope != null) {
-            currentCommandBuffer.resetCommandBuffer()
-            cmd(currentCommandBuffer, currentFramebuffer, currentSwapchainImage, cmdScope)
-        }
-
-        val submitInfo = VkSubmitInfo(
-                VkStructureType.VK_STRUCTURE_TYPE_SUBMIT_INFO,
-                listOf(currentImageAvailableSemaphore.semaphore),
-                listOf(VkPipelineStageFlagBits.VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT),
-                listOf(currentCommandBuffer.commandBuffer),
-                listOf(currentRenderCompleteSemaphore.semaphore)
-        )
-
-        primaryLogicalDevice.primaryGraphicQueue.queueSubmit(listOf(submitInfo), currentInFlightFence)
-
-        currentFrame = (currentFrame + 1) % maxFrameInFlight
+    override fun setScissor(scissor: RectI) {
+        currentRenderContext.commandBuffer.cmdSetScissor(VkRect2D(
+                VkOffset2D(scissor.origin.x, scissor.origin.y),
+                VkExtent2D(scissor.size.x, scissor.size.y)
+        ))
     }
 
-    private fun cmd(scope: (commandBuffer: VKCommandBuffer, framebuffer: VKFramebuffer, swapchainImage: VKImage) -> Unit) {
-        currentCmd = scope
-        swapchainRecreator.current.swapchainImages.size.forEachIndexes {
-            cmd(
-                    swapchainRecreator.current.commandBuffers[it],
-                    swapchainRecreator.current.framebuffers[it],
-                    swapchainRecreator.current.swapchainImages[it],
-                    scope
-            )
-        }
+    override fun clearColor(color: Vector4F) {
+        currentRenderContext.commandBuffer.cmdClearColorImage(
+                currentRenderContext.swapchainImage,
+                VkClearColorValue(color.x, color.y, color.z, color.w),
+                listOf(VkImageSubresourceRange(listOf(VkImageAspectFlagBits.VK_IMAGE_ASPECT_COLOR_BIT), 0, 1, 0, 1)))
     }
 
-    private fun cmd(
-        commandBuffer: VKCommandBuffer,
-        framebuffer: VKFramebuffer,
-        swapchainImage: VKImage,
-        scope: (commandBuffer: VKCommandBuffer, framebuffer: VKFramebuffer, swapchainImage: VKImage) -> Unit
-    ) {
-        val usage = listOf(VkCommandBufferUsageFlagBits.VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT)
-        val beginInfo = VkCommandBufferBeginInfo(VkStructureType.VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO, usage, null)
-        commandBuffer.resetCommandBuffer()
-        commandBuffer.beginCommandBuffer(beginInfo)
-        scope(commandBuffer, framebuffer, swapchainImage)
-        commandBuffer.endCommandBuffer()
+    override fun clearDepth(depth: Float) {
+        currentRenderContext.commandBuffer.cmdClearDepthStencilImage(
+                currentRenderContext.swapchainImage,
+                VkClearDepthStencilValue(depth, 0),
+                listOf(VkImageSubresourceRange(listOf(VkImageAspectFlagBits.VK_IMAGE_ASPECT_DEPTH_BIT), 0, 1, 0, 1)))
     }
 
     override fun dispose() {

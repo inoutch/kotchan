@@ -1,6 +1,7 @@
 package io.github.inoutch.kotchan.example
 
 import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.file
+import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.graphic
 import io.github.inoutch.kotchan.core.graphic.batch.Batch
 import io.github.inoutch.kotchan.core.graphic.compatible.Image
 import io.github.inoutch.kotchan.core.graphic.compatible.Texture
@@ -40,5 +41,6 @@ class AppScene(context: SceneContext) : Scene(context) {
     }
 
     override suspend fun render(delta: Float) {
+        graphic.clearColor(Vector4F(1.0f, .0f, .0f, 1.0f))
     }
 }
