@@ -36,6 +36,7 @@ import io.github.inoutch.kotlin.vulkan.api.VkSamplerAddressMode
 import io.github.inoutch.kotlin.vulkan.api.VkSamplerCreateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkSamplerMipmapMode
 import io.github.inoutch.kotlin.vulkan.api.VkSemaphoreCreateInfo
+import io.github.inoutch.kotlin.vulkan.api.VkShaderModuleCreateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkSharingMode
 import io.github.inoutch.kotlin.vulkan.api.VkStructureType
 import io.github.inoutch.kotlin.vulkan.api.VkSubpassDependency
@@ -246,6 +247,7 @@ class VKLogicalDevice(
                 null
         )
         return VKBuffer(this, getProperty { vk.createBuffer(device, createInfo, it).value })
+                .also { add(it) }
     }
 
     fun createSampler(
@@ -275,5 +277,16 @@ class VKLogicalDevice(
                 false
         )
         return VKSampler(this, getProperty { vk.createSampler(device, createInfo, it).value })
+                .also { add(it) }
+    }
+
+    fun createShaderModule(code: ByteArray): VKShaderModule {
+        val createInfo = VkShaderModuleCreateInfo(
+                VkStructureType.VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
+                0,
+                code
+        )
+        return VKShaderModule(this, getProperty { vk.createShaderModule(device, createInfo, it) })
+                .also { add(it) }
     }
 }

@@ -8,10 +8,10 @@ import io.github.inoutch.kotlin.gl.api.GLenum
 import io.github.inoutch.kotlin.gl.api.GLuint
 import io.github.inoutch.kotlin.gl.api.gl
 
-open class GLShader(vertSource: String, fragSource: String) : Shader {
+class GLShader(vertSource: String, fragSource: String) : Shader() {
     private val disposer = Disposer()
 
-    protected val program: GLuint
+    private val program: GLuint
 
     init {
         try {

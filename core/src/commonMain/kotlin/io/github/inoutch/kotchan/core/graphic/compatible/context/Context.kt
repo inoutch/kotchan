@@ -6,6 +6,8 @@ import io.github.inoutch.kotchan.core.graphic.compatible.Image
 import io.github.inoutch.kotchan.core.graphic.compatible.Texture
 import io.github.inoutch.kotchan.core.graphic.compatible.buffer.BufferStorageMode
 import io.github.inoutch.kotchan.core.graphic.compatible.buffer.VertexBuffer
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.Shader
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.ShaderSource
 import io.github.inoutch.kotchan.math.RectI
 import io.github.inoutch.kotchan.math.Vector2I
 import io.github.inoutch.kotchan.math.Vector4F
@@ -17,7 +19,7 @@ interface Context : Disposable {
     fun createVertexBuffer(vertices: FloatArray, bufferStorageMode: BufferStorageMode): VertexBuffer
 //    fun copyToBuffer()
     fun drawTriangles(batchBufferBundle: BatchBufferBundle)
-//    fun createShader(shaderSource: ShaderSource): Shader
+    fun createShader(shaderSource: ShaderSource): Shader
 //    fun createGraphicsPipeline()
 //    fun bindGraphicsPipeline()
     fun setViewport(viewport: RectI)

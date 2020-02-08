@@ -7,6 +7,8 @@ import io.github.inoutch.kotchan.core.graphic.compatible.Texture
 import io.github.inoutch.kotchan.core.graphic.compatible.buffer.BufferStorageMode
 import io.github.inoutch.kotchan.core.graphic.compatible.buffer.VertexBuffer
 import io.github.inoutch.kotchan.core.graphic.compatible.context.Context
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.Shader
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.ShaderSource
 import io.github.inoutch.kotchan.extension.getProperties
 import io.github.inoutch.kotchan.extension.getProperty
 import io.github.inoutch.kotchan.math.RectI
@@ -191,6 +193,10 @@ class VKContext(
 
     override fun drawTriangles(batchBufferBundle: BatchBufferBundle) {
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun createShader(shaderSource: ShaderSource): Shader {
+        return VKShader(primaryLogicalDevice, shaderSource)
     }
 
     override fun loadTexture(image: Image): Texture {

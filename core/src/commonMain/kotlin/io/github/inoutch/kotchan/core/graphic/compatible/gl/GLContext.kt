@@ -6,6 +6,8 @@ import io.github.inoutch.kotchan.core.graphic.compatible.Texture
 import io.github.inoutch.kotchan.core.graphic.compatible.buffer.BufferStorageMode
 import io.github.inoutch.kotchan.core.graphic.compatible.buffer.VertexBuffer
 import io.github.inoutch.kotchan.core.graphic.compatible.context.Context
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.Shader
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.ShaderSource
 import io.github.inoutch.kotchan.math.RectI
 import io.github.inoutch.kotchan.math.Vector2I
 import io.github.inoutch.kotchan.math.Vector4F
@@ -28,6 +30,10 @@ class GLContext : Context {
 
     override fun drawTriangles(batchBufferBundle: BatchBufferBundle) {
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun createShader(shaderSource: ShaderSource): Shader {
+        return GLShader(shaderSource.glslVertSource, shaderSource.glslFragSource)
     }
 
     override fun loadTexture(image: Image): Texture {

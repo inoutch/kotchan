@@ -1,5 +1,5 @@
 package io.github.inoutch.kotchan.core.graphic.compatible.shader
 
-import io.github.inoutch.kotchan.core.Disposable
+import io.github.inoutch.kotchan.core.Disposer
 
-interface Shader : Disposable
+abstract class Shader : Disposer()

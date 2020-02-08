@@ -1,9 +1,23 @@
 package io.github.inoutch.kotchan.core.graphic.compatible.vk
 
-import io.github.inoutch.kotlin.vulkan.api.vk
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.Shader
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.ShaderSource
 
-class VKShader() {
+class VKShader(logicalDevice: VKLogicalDevice, shaderSource: ShaderSource): Shader() {
+    private val vertShaderModule: VKShaderModule
+
+    private val fragShaderModule: VKShaderModule
+
     init {
-//        vk.createShaderModule()
+        try {
+            vertShaderModule = logicalDevice.createShaderModule(shaderSource.spirvVertSource)
+            add(vertShaderModule)
+
+            fragShaderModule = logicalDevice.createShaderModule(shaderSource.spirvFragSource)
+            add(fragShaderModule)
+        } catch (e: Error) {
+            dispose()
+            throw e
+        }
     }
 }
