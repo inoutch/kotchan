@@ -11,7 +11,7 @@ import io.github.inoutch.kotlin.gl.api.gl
 class GLShader(vertSource: String, fragSource: String) : Shader() {
     private val disposer = Disposer()
 
-    private val program: GLuint
+    val program: GLuint
 
     init {
         try {
@@ -32,6 +32,10 @@ class GLShader(vertSource: String, fragSource: String) : Shader() {
             disposer.dispose()
             throw e
         }
+    }
+
+    fun use() {
+        gl.useProgram(program)
     }
 
     override fun isDisposed(): Boolean {

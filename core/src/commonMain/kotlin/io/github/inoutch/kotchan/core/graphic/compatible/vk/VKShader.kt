@@ -4,9 +4,9 @@ import io.github.inoutch.kotchan.core.graphic.compatible.shader.Shader
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.ShaderSource
 
 class VKShader(logicalDevice: VKLogicalDevice, shaderSource: ShaderSource): Shader() {
-    private val vertShaderModule: VKShaderModule
+    val vertShaderModule: VKShaderModule
 
-    private val fragShaderModule: VKShaderModule
+    val fragShaderModule: VKShaderModule
 
     init {
         try {

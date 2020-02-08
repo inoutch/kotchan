@@ -8,27 +8,53 @@ import io.github.inoutch.kotlin.vulkan.api.VkAttachmentDescription
 import io.github.inoutch.kotlin.vulkan.api.VkAttachmentLoadOp
 import io.github.inoutch.kotlin.vulkan.api.VkAttachmentReference
 import io.github.inoutch.kotlin.vulkan.api.VkAttachmentStoreOp
+import io.github.inoutch.kotlin.vulkan.api.VkBlendFactor
+import io.github.inoutch.kotlin.vulkan.api.VkBlendOp
 import io.github.inoutch.kotlin.vulkan.api.VkBorderColor
 import io.github.inoutch.kotlin.vulkan.api.VkBufferCreateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkBufferUsageFlagBits
+import io.github.inoutch.kotlin.vulkan.api.VkColorComponentFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkCompareOp
 import io.github.inoutch.kotlin.vulkan.api.VkCompositeAlphaFlagBitsKHR
+import io.github.inoutch.kotlin.vulkan.api.VkCullModeFlagBits
+import io.github.inoutch.kotlin.vulkan.api.VkDescriptorSetLayoutBinding
+import io.github.inoutch.kotlin.vulkan.api.VkDescriptorSetLayoutCreateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkDevice
 import io.github.inoutch.kotlin.vulkan.api.VkDeviceSize
+import io.github.inoutch.kotlin.vulkan.api.VkDynamicState
 import io.github.inoutch.kotlin.vulkan.api.VkExtent2D
 import io.github.inoutch.kotlin.vulkan.api.VkExtent3D
 import io.github.inoutch.kotlin.vulkan.api.VkFenceCreateFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkFenceCreateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkFilter
 import io.github.inoutch.kotlin.vulkan.api.VkFormat
+import io.github.inoutch.kotlin.vulkan.api.VkFrontFace
+import io.github.inoutch.kotlin.vulkan.api.VkGraphicsPipelineCreateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkImageCreateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkImageLayout
 import io.github.inoutch.kotlin.vulkan.api.VkImageTiling
 import io.github.inoutch.kotlin.vulkan.api.VkImageType
 import io.github.inoutch.kotlin.vulkan.api.VkImageUsageFlagBits
+import io.github.inoutch.kotlin.vulkan.api.VkLogicOp
 import io.github.inoutch.kotlin.vulkan.api.VkMemoryAllocateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineBindPoint
+import io.github.inoutch.kotlin.vulkan.api.VkPipelineCache
+import io.github.inoutch.kotlin.vulkan.api.VkPipelineColorBlendAttachmentState
+import io.github.inoutch.kotlin.vulkan.api.VkPipelineColorBlendStateCreateInfo
+import io.github.inoutch.kotlin.vulkan.api.VkPipelineDepthStencilStateCreateInfo
+import io.github.inoutch.kotlin.vulkan.api.VkPipelineDynamicStateCreateInfo
+import io.github.inoutch.kotlin.vulkan.api.VkPipelineInputAssemblyStateCreateInfo
+import io.github.inoutch.kotlin.vulkan.api.VkPipelineLayout
+import io.github.inoutch.kotlin.vulkan.api.VkPipelineLayoutCreateInfo
+import io.github.inoutch.kotlin.vulkan.api.VkPipelineMultisampleStateCreateInfo
+import io.github.inoutch.kotlin.vulkan.api.VkPipelineRasterizationStateCreateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineStageFlagBits
+import io.github.inoutch.kotlin.vulkan.api.VkPipelineVertexInputStateCreateInfo
+import io.github.inoutch.kotlin.vulkan.api.VkPipelineViewportStateCreateInfo
+import io.github.inoutch.kotlin.vulkan.api.VkPolygonMode
+import io.github.inoutch.kotlin.vulkan.api.VkPrimitiveTopology
+import io.github.inoutch.kotlin.vulkan.api.VkRect2D
+import io.github.inoutch.kotlin.vulkan.api.VkRenderPass
 import io.github.inoutch.kotlin.vulkan.api.VkRenderPassCreateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkResult
 import io.github.inoutch.kotlin.vulkan.api.VkSampleCountFlagBits
@@ -37,17 +63,21 @@ import io.github.inoutch.kotlin.vulkan.api.VkSamplerCreateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkSamplerMipmapMode
 import io.github.inoutch.kotlin.vulkan.api.VkSemaphoreCreateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkShaderModuleCreateInfo
+import io.github.inoutch.kotlin.vulkan.api.VkShaderStageFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkSharingMode
+import io.github.inoutch.kotlin.vulkan.api.VkStencilOp
+import io.github.inoutch.kotlin.vulkan.api.VkStencilOpState
 import io.github.inoutch.kotlin.vulkan.api.VkStructureType
 import io.github.inoutch.kotlin.vulkan.api.VkSubpassDependency
 import io.github.inoutch.kotlin.vulkan.api.VkSubpassDescription
 import io.github.inoutch.kotlin.vulkan.api.VkSurface
 import io.github.inoutch.kotlin.vulkan.api.VkSwapchainCreateInfoKHR
+import io.github.inoutch.kotlin.vulkan.api.VkViewport
 import io.github.inoutch.kotlin.vulkan.api.vk
 
 class VKLogicalDevice(
-    val physicalDevice: VKPhysicalDevice,
-    val device: VkDevice
+        val physicalDevice: VKPhysicalDevice,
+        val device: VkDevice
 ) : Disposer() {
     val primaryGraphicQueue: VKQueue by lazy {
         add(VKQueue(
@@ -168,10 +198,10 @@ class VKLogicalDevice(
     }
 
     fun createImage(
-        size: VkExtent2D,
-        format: VkFormat,
-        tiling: VkImageTiling,
-        usage: List<VkImageUsageFlagBits>
+            size: VkExtent2D,
+            format: VkFormat,
+            tiling: VkImageTiling,
+            usage: List<VkImageUsageFlagBits>
     ): VKImage {
         val createInfo = VkImageCreateInfo(
                 VkStructureType.VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
@@ -200,8 +230,8 @@ class VKLogicalDevice(
     }
 
     fun allocateDeviceMemory(
-        allocateSize: VkDeviceSize,
-        memoryTypeIndex: Int
+            allocateSize: VkDeviceSize,
+            memoryTypeIndex: Int
     ): VKDeviceMemory {
         val allocateInfo = VkMemoryAllocateInfo(
                 VkStructureType.VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
@@ -251,11 +281,11 @@ class VKLogicalDevice(
     }
 
     fun createSampler(
-        magFilter: VkFilter,
-        minFilter: VkFilter,
-        mipmapMode: VkSamplerMipmapMode,
-        addressModeU: VkSamplerAddressMode,
-        addressModeV: VkSamplerAddressMode
+            magFilter: VkFilter,
+            minFilter: VkFilter,
+            mipmapMode: VkSamplerMipmapMode,
+            addressModeU: VkSamplerAddressMode,
+            addressModeV: VkSamplerAddressMode
     ): VKSampler {
         val createInfo = VkSamplerCreateInfo(
                 VkStructureType.VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
@@ -286,7 +316,163 @@ class VKLogicalDevice(
                 0,
                 code
         )
-        return VKShaderModule(this, getProperty { vk.createShaderModule(device, createInfo, it) })
+        return VKShaderModule(this, getProperty { vk.createShaderModule(device, createInfo, it).value })
                 .also { add(it) }
+    }
+
+    fun createDescriptorSetLayout(descriptorSetLayoutBindings: List<VkDescriptorSetLayoutBinding>): VKDescriptorSetLayout {
+        val createInfo = VkDescriptorSetLayoutCreateInfo(
+                VkStructureType.VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
+                listOf(),
+                descriptorSetLayoutBindings
+        )
+        return VKDescriptorSetLayout(this, getProperty { vk.createDescriptorSetLayout(device, createInfo, it).value })
+                .also { add(it) }
+    }
+
+    fun createPipelineLayout(descriptorSetLayout: VKDescriptorSetLayout): VKPipelineLayout {
+        val createInfo = VkPipelineLayoutCreateInfo(
+                VkStructureType.VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
+                0,
+                listOf(descriptorSetLayout.descriptorSetLayout),
+                listOf()
+        )
+        return VKPipelineLayout(this, getProperty { vk.createPipelineLayout(device, createInfo, it).value })
+    }
+
+    fun createPipeline(
+            pipelineCache: VkPipelineCache?,
+            pipelineLayout: VKPipelineLayout,
+            renderPass: VKRenderPass,
+            vertShaderModule: VKShaderModule,
+            fragShaderModule: VKShaderModule,
+            depthTest: Boolean,
+            cullMode: VkCullModeFlagBits,
+            polygonMode: VkPolygonMode,
+            srcFactor: VkBlendFactor,
+            dstFactor: VkBlendFactor
+    ): VKPipeline {
+        val shaderStages = listOf(
+                vertShaderModule.createShaderStage(VkShaderStageFlagBits.VK_SHADER_STAGE_VERTEX_BIT),
+                fragShaderModule.createShaderStage(VkShaderStageFlagBits.VK_SHADER_STAGE_FRAGMENT_BIT)
+        )
+
+        val vertexInputState = VkPipelineVertexInputStateCreateInfo(
+                VkStructureType.VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
+                0,
+                listOf()/* create2DVertexBindingDescriptions() */,
+                listOf()/* create2DVertexAttributeDescriptions() */)
+
+        val inputAssemblyStateCreateInfo = VkPipelineInputAssemblyStateCreateInfo(
+                VkStructureType.VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO,
+                0,
+                VkPrimitiveTopology.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
+                false)
+
+        val viewportStateCreateInfo = VkPipelineViewportStateCreateInfo(
+                VkStructureType.VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO,
+                0,
+                listOf(),
+                listOf())
+
+        val rasterizationStateCreateInfo = VkPipelineRasterizationStateCreateInfo(
+                VkStructureType.VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO,
+                0,
+                polygonMode,
+                cullMode,
+                VkFrontFace.VK_FRONT_FACE_COUNTER_CLOCKWISE,
+                false,
+                false,
+                false,
+                0.0f,
+                0.0f,
+                0.0f,
+                1.0f
+        )
+
+        val multisampleStencilOpState = VkPipelineMultisampleStateCreateInfo(
+                VkStructureType.VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO,
+                0,
+                listOf(VkSampleCountFlagBits.VK_SAMPLE_COUNT_1_BIT),
+                false,
+                0.0f,
+                null,
+                alphaToCoverageEnable = false,
+                alphaToOneEnable = false
+        )
+
+        val stencilOpState = VkStencilOpState(
+                VkStencilOp.VK_STENCIL_OP_KEEP,
+                VkStencilOp.VK_STENCIL_OP_KEEP,
+                VkStencilOp.VK_STENCIL_OP_KEEP,
+                VkCompareOp.VK_COMPARE_OP_ALWAYS,
+                0,
+                0,
+                0
+        )
+        val depthStencilStateCreateInfo = VkPipelineDepthStencilStateCreateInfo(
+                VkStructureType.VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO,
+                0,
+                depthTest,
+                depthTest,
+                VkCompareOp.VK_COMPARE_OP_LESS,
+                false,
+                false,
+                stencilOpState,
+                stencilOpState,
+                0.0f,
+                1.0f
+        )
+
+        val colorWriteMask = VkPipelineColorBlendAttachmentState(
+                true,
+                srcFactor,
+                dstFactor,
+                VkBlendOp.VK_BLEND_OP_ADD,
+                VkBlendFactor.VK_BLEND_FACTOR_ONE,
+                VkBlendFactor.VK_BLEND_FACTOR_ZERO,
+                VkBlendOp.VK_BLEND_OP_ADD,
+                listOf(VkColorComponentFlagBits.VK_COLOR_COMPONENT_R_BIT,
+                        VkColorComponentFlagBits.VK_COLOR_COMPONENT_G_BIT,
+                        VkColorComponentFlagBits.VK_COLOR_COMPONENT_B_BIT,
+                        VkColorComponentFlagBits.VK_COLOR_COMPONENT_A_BIT)
+        )
+        val colorBlendStateCreateInfo = VkPipelineColorBlendStateCreateInfo(
+                0,
+                false,
+                VkLogicOp.VK_LOGIC_OP_CLEAR,
+                listOf(colorWriteMask),
+                floatArrayOf(0.0f, 0.0f, 0.0f, 0.0f)
+        )
+
+        val dynamicStateCreateInfo = VkPipelineDynamicStateCreateInfo(
+                VkStructureType.VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO,
+                0,
+                listOf(VkDynamicState.VK_DYNAMIC_STATE_VIEWPORT,
+                        VkDynamicState.VK_DYNAMIC_STATE_SCISSOR))
+
+        val pipelineCreateInfo = VkGraphicsPipelineCreateInfo(
+                VkStructureType.VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
+                emptyList(),
+                shaderStages,
+                vertexInputState,
+                inputAssemblyStateCreateInfo,
+                null,
+                viewportStateCreateInfo,
+                rasterizationStateCreateInfo,
+                multisampleStencilOpState,
+                depthStencilStateCreateInfo,
+                colorBlendStateCreateInfo,
+                dynamicStateCreateInfo,
+                pipelineLayout.pipelineLayout,
+                renderPass.renderPass,
+                0,
+                null,
+                0
+        )
+        return VKPipeline(
+                this,
+                getProperty { vk.createGraphicsPipelines(device, pipelineCache, listOf(pipelineCreateInfo), it).value }
+        ).also { add(it) }
     }
 }
