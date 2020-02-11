@@ -5,6 +5,7 @@ import io.github.inoutch.kotchan.core.graphic.compatible.GraphicsPipelineConfig
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.ShaderProgram
 import io.github.inoutch.kotlin.gl.api.GL_CULL_FACE
 import io.github.inoutch.kotlin.gl.api.GL_DEPTH_TEST
+import io.github.inoutch.kotlin.gl.api.GL_LESS
 import io.github.inoutch.kotlin.gl.api.gl
 
 class GLGraphicsPipeline(
@@ -37,6 +38,7 @@ class GLGraphicsPipeline(
 
         if (config.depthTest) {
             gl.enable(GL_DEPTH_TEST)
+            gl.depthFunc(GL_LESS)
         } else {
             gl.disable(GL_DEPTH_TEST)
         }

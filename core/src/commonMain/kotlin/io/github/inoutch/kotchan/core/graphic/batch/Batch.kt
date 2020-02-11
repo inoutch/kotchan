@@ -38,5 +38,26 @@ class Batch(private val material: Material) : Disposer() {
                 i++
             }
         }
+        bufferBundle.colorBuffer.sort {
+            var i = 0
+            while (i < polygonBundles.size) {
+                it.invoke(polygonBundles[i].colorsPolygonBuffer.batchBufferPointer)
+                i++
+            }
+        }
+        bufferBundle.texcoordBuffer.sort {
+            var i = 0
+            while (i < polygonBundles.size) {
+                it.invoke(polygonBundles[i].texcoordsPolygonBuffer.batchBufferPointer)
+                i++
+            }
+        }
+        bufferBundle.normalBuffer.sort {
+            var i = 0
+            while (i < polygonBundles.size) {
+                it.invoke(polygonBundles[i].normalsPolygonBuffer.batchBufferPointer)
+                i++
+            }
+        }
     }
 }
