@@ -24,13 +24,17 @@ import io.github.inoutch.kotchan.math.Vector4F
 import io.github.inoutch.kotlin.gl.api.GL_ARRAY_BUFFER
 import io.github.inoutch.kotlin.gl.api.GL_COLOR_BUFFER_BIT
 import io.github.inoutch.kotlin.gl.api.GL_DEPTH_BUFFER_BIT
-import io.github.inoutch.kotlin.gl.api.GL_FALSE
 import io.github.inoutch.kotlin.gl.api.GL_FLOAT
 import io.github.inoutch.kotlin.gl.api.GL_TRIANGLES
 import io.github.inoutch.kotlin.gl.api.gl
+import io.github.inoutch.kotlin.gl.constant.FLOAT_BYTE_SIZE
 
 class GLContext : Context {
     private val emptyTexture = loadTexture(Image(byteArrayOf(-1, -1, -1, -1), Vector2I(1, 1)))
+
+    init {
+        gl.enableVertexAttribArray(0)
+    }
 
     override fun begin() {}
 
@@ -142,7 +146,7 @@ class GLContext : Context {
     }
 
     private fun vertexPointer(attributeLocation: GLAttribLocation, dimension: Int, stride: Int) {
+        gl.vertexAttribPointer(attributeLocation.value, dimension, GL_FLOAT, false, stride * FLOAT_BYTE_SIZE)
         gl.enableVertexAttribArray(attributeLocation.value)
-        gl.vertexAttribPointer(attributeLocation.value, dimension, GL_FLOAT, GL_FALSE == 1, stride * 4)
     }
 }

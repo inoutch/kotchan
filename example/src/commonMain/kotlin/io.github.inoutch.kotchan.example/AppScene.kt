@@ -1,5 +1,6 @@
 package io.github.inoutch.kotchan.example
 
+import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.config
 import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.file
 import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.graphic
 import io.github.inoutch.kotchan.core.graphic.batch.Batch
@@ -30,7 +31,7 @@ class AppScene(context: SceneContext) : Scene(context) {
     private var texture: Texture? = null
 
     private val mesh = Mesh(
-            listOf(Vector3F(0.0f, 0.0f, 0.0f), Vector3F(100.0f, 0.0f, 0.0f), Vector3F(50.0f, 50.0f, 0.0f)),
+            listOf(Vector3F(0.0f, 0.0f, 0.0f), Vector3F(1.0f, 0.0f, 0.0f), Vector3F(0.5f, 0.5f, 0.0f)),
             listOf(Vector2F.Zero, Vector2F.Zero, Vector2F.Zero),
             listOf(Vector4F(1.0f, 0.0f, 0.0f, 1.0f), Vector4F(0.0f, 1.0f, 0.0f, 1.0f), Vector4F(0.0f, 0.0f, 1.0f, 1.0f))
     )
@@ -49,7 +50,9 @@ class AppScene(context: SceneContext) : Scene(context) {
     }
 
     override suspend fun render(delta: Float) {
-        graphic.clearColor(Vector4F(1.0f, .0f, .0f, 1.0f))
+        graphic.setViewport(config.viewport)
+        graphic.clearColor(Vector4F(.3f, .3f, .3f, 1.0f))
+        graphic.clearDepth(0.0f)
         batch.render()
     }
 }

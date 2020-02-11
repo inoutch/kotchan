@@ -24,6 +24,10 @@ class GLShader(vertSource: String, fragSource: String) : Shader() {
             program = gl.createProgram()
             gl.attachShader(program, vertShader)
             gl.attachShader(program, fragShader)
+
+            bindAttribute(GLAttribLocation.ATTRIBUTE_POSITION)
+            bindAttribute(GLAttribLocation.ATTRIBUTE_COLOR)
+            bindAttribute(GLAttribLocation.ATTRIBUTE_TEXCOORD)
             linkShader(program)
 
             disposer.dispose(vertShader)
@@ -69,5 +73,9 @@ class GLShader(vertSource: String, fragSource: String) : Shader() {
         if (programInfoLog != null) {
             throw IllegalStateException(programInfoLog)
         }
+    }
+
+    private fun bindAttribute(location: GLAttribLocation) {
+        gl.bindAttribLocation(program, location.value, location.locationName)
     }
 }
