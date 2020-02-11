@@ -2,8 +2,7 @@ package io.github.inoutch.kotchan.core.graphic.batch
 
 import io.github.inoutch.kotchan.core.Disposer
 import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.graphic
-import io.github.inoutch.kotchan.core.graphic.Camera
-import io.github.inoutch.kotchan.core.graphic.compatible.Material
+import io.github.inoutch.kotchan.core.graphic.material.Material
 import io.github.inoutch.kotchan.core.graphic.polygon.Polygon
 
 class Batch(private val material: Material) : Disposer() {
@@ -11,11 +10,11 @@ class Batch(private val material: Material) : Disposer() {
 
     private val polygonBundles = mutableListOf<BatchPolygonBufferBundle>()
 
-    fun add(polygon: Polygon, index: Int = 0) {
-        polygonBundles.add(bufferBundle.allocate(polygon, index))
+    fun add(polygon: Polygon, drawOrder: Int = 0) {
+        polygonBundles.add(bufferBundle.allocate(polygon, drawOrder))
     }
 
-    fun render(delta: Float, camera: Camera) {
+    fun render() {
         material.bind()
 
         var i = 0
@@ -30,7 +29,7 @@ class Batch(private val material: Material) : Disposer() {
         graphic.drawTriangles(bufferBundle)
     }
 
-    fun sortPositions() {
+    fun sortPositionsByDrawOrder() {
         polygonBundles.sortBy { it.index }
         bufferBundle.positionBuffer.sort {
             var i = 0

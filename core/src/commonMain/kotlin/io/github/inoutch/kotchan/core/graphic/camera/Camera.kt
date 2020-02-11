@@ -1,4 +1,4 @@
-package io.github.inoutch.kotchan.core.graphic
+package io.github.inoutch.kotchan.core.graphic.camera
 
 import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.useVulkan
 import io.github.inoutch.kotchan.math.Matrix3F

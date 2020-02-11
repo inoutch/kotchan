@@ -21,8 +21,12 @@ import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Unifo
 import io.github.inoutch.kotchan.math.RectI
 import io.github.inoutch.kotchan.math.Vector2I
 import io.github.inoutch.kotchan.math.Vector4F
+import io.github.inoutch.kotlin.gl.api.GL_ARRAY_BUFFER
 import io.github.inoutch.kotlin.gl.api.GL_COLOR_BUFFER_BIT
 import io.github.inoutch.kotlin.gl.api.GL_DEPTH_BUFFER_BIT
+import io.github.inoutch.kotlin.gl.api.GL_FALSE
+import io.github.inoutch.kotlin.gl.api.GL_FLOAT
+import io.github.inoutch.kotlin.gl.api.GL_TRIANGLES
 import io.github.inoutch.kotlin.gl.api.gl
 
 class GLContext : Context {
@@ -41,7 +45,17 @@ class GLContext : Context {
     }
 
     override fun drawTriangles(batchBufferBundle: BatchBufferBundle) {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        val positionBuffer = batchBufferBundle.positionBuffer.vertexBuffer as GLVertexBuffer
+        val colorBuffer = batchBufferBundle.colorBuffer.vertexBuffer as GLVertexBuffer
+        val texcoordBuffer = batchBufferBundle.texcoordBuffer.vertexBuffer as GLVertexBuffer
+        gl.bindBuffer(GL_ARRAY_BUFFER, positionBuffer.id)
+        vertexPointer(GLAttribLocation.ATTRIBUTE_POSITION, 3, 0)
+        gl.bindBuffer(GL_ARRAY_BUFFER, colorBuffer.id)
+        vertexPointer(GLAttribLocation.ATTRIBUTE_COLOR, 4, 0)
+        gl.bindBuffer(GL_ARRAY_BUFFER, texcoordBuffer.id)
+        vertexPointer(GLAttribLocation.ATTRIBUTE_TEXCOORD, 2, 0)
+
+        gl.drawArrays(GL_TRIANGLES, 0, batchBufferBundle.size)
     }
 
     override fun createShader(shaderSource: ShaderSource): Shader {
@@ -125,5 +139,10 @@ class GLContext : Context {
 
     override fun dispose() {
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+    }
+
+    private fun vertexPointer(attributeLocation: GLAttribLocation, dimension: Int, stride: Int) {
+        gl.enableVertexAttribArray(attributeLocation.value)
+        gl.vertexAttribPointer(attributeLocation.value, dimension, GL_FLOAT, GL_FALSE == 1, stride * 4)
     }
 }

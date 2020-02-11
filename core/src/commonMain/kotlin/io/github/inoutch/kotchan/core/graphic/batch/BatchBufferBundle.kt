@@ -15,6 +15,9 @@ class BatchBufferBundle(
         const val NORMAL_SIZE = 3
     }
 
+    val size: Int
+        get() = positionBuffer.size / POSITION_SIZE
+
     fun allocate(polygon: Polygon, index: Int): BatchPolygonBufferBundle {
         val posData = positionBuffer.allocate(polygon.mesh.size * POSITION_SIZE)
         val colData = colorBuffer.allocate(polygon.mesh.size * COLOR_SIZE)
