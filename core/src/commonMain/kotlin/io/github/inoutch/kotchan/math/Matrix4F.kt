@@ -15,6 +15,8 @@ data class Matrix4F(val col1: Vector4F, val col2: Vector4F, val col3: Vector4F, 
                 Vector4F(0.0f, vector.y, 0.0f, 0.0f),
                 Vector4F(0.0f, 0.0f, vector.z, 0.0f),
                 Vector4F(0.0f, 0.0f, 0.0f, 1.0f))
+
+        fun createIdentity() = Matrix4F()
     }
 
     constructor() : this(

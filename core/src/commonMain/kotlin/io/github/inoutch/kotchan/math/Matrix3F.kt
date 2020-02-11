@@ -10,6 +10,10 @@ data class Matrix3F(val col1: Vector3F, val col2: Vector3F, val col3: Vector3F) 
                 col2 = Vector3F(0.0f, d2, 0.0f),
                 col3 = Vector3F(0.0f, 0.0f, d3)
         )
+
+        fun createIdentity(): Matrix3F {
+            return Matrix3F()
+        }
     }
 
     constructor() : this(
