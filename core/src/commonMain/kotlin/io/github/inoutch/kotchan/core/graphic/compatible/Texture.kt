@@ -9,6 +9,10 @@ abstract class Texture : Disposer() {
         fun loadFromImage(image: Image): Texture {
             return graphic.loadTexture(image)
         }
+
+        fun empty(): Texture {
+            return graphic.emptyTexture()
+        }
     }
 
     abstract val size: Vector2I
