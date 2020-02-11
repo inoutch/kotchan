@@ -9,11 +9,11 @@ import io.github.inoutch.kotlin.vulkan.api.VkStructureType
 import io.github.inoutch.kotlin.vulkan.api.vk
 
 class VKDescriptorPool(
-        val logicalDevice: VKLogicalDevice,
-        val descriptorPool: VkDescriptorPool
+    val logicalDevice: VKLogicalDevice,
+    val descriptorPool: VkDescriptorPool
 ) : Disposer() {
     fun allocateDescriptorSets(
-            descriptorSetLayouts: List<VKDescriptorSetLayout>
+        descriptorSetLayouts: List<VKDescriptorSetLayout>
     ): List<VKDescriptorSet> {
         val allocateInfo = VkDescriptorSetAllocateInfo(
                 VkStructureType.VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,

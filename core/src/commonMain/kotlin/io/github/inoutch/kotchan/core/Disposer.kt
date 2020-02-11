@@ -40,7 +40,7 @@ open class Disposer : Disposable {
         return disposer
     }
 
-    fun <T : Disposer>add(disposers: List<T>): List<T> {
+    fun <T : Disposer> add(disposers: List<T>): List<T> {
         disposers.forEach { add(it) }
         return disposers
     }

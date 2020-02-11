@@ -40,7 +40,6 @@ import io.github.inoutch.kotlin.vulkan.api.VkImageType
 import io.github.inoutch.kotlin.vulkan.api.VkImageUsageFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkLogicOp
 import io.github.inoutch.kotlin.vulkan.api.VkMemoryAllocateInfo
-import io.github.inoutch.kotlin.vulkan.api.VkOffset2D
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineBindPoint
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineCache
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineColorBlendAttachmentState
@@ -48,7 +47,6 @@ import io.github.inoutch.kotlin.vulkan.api.VkPipelineColorBlendStateCreateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineDepthStencilStateCreateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineDynamicStateCreateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineInputAssemblyStateCreateInfo
-import io.github.inoutch.kotlin.vulkan.api.VkPipelineLayout
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineLayoutCreateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineMultisampleStateCreateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineRasterizationStateCreateInfo
@@ -57,8 +55,6 @@ import io.github.inoutch.kotlin.vulkan.api.VkPipelineVertexInputStateCreateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineViewportStateCreateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkPolygonMode
 import io.github.inoutch.kotlin.vulkan.api.VkPrimitiveTopology
-import io.github.inoutch.kotlin.vulkan.api.VkRect2D
-import io.github.inoutch.kotlin.vulkan.api.VkRenderPass
 import io.github.inoutch.kotlin.vulkan.api.VkRenderPassCreateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkResult
 import io.github.inoutch.kotlin.vulkan.api.VkSampleCountFlagBits
@@ -76,13 +72,12 @@ import io.github.inoutch.kotlin.vulkan.api.VkSubpassDependency
 import io.github.inoutch.kotlin.vulkan.api.VkSubpassDescription
 import io.github.inoutch.kotlin.vulkan.api.VkSurface
 import io.github.inoutch.kotlin.vulkan.api.VkSwapchainCreateInfoKHR
-import io.github.inoutch.kotlin.vulkan.api.VkViewport
 import io.github.inoutch.kotlin.vulkan.api.VkWriteDescriptorSet
 import io.github.inoutch.kotlin.vulkan.api.vk
 
 class VKLogicalDevice(
-        val physicalDevice: VKPhysicalDevice,
-        val device: VkDevice
+    val physicalDevice: VKPhysicalDevice,
+    val device: VkDevice
 ) : Disposer() {
     val primaryGraphicQueue: VKQueue by lazy {
         add(VKQueue(
@@ -203,10 +198,10 @@ class VKLogicalDevice(
     }
 
     fun createImage(
-            size: VkExtent2D,
-            format: VkFormat,
-            tiling: VkImageTiling,
-            usage: List<VkImageUsageFlagBits>
+        size: VkExtent2D,
+        format: VkFormat,
+        tiling: VkImageTiling,
+        usage: List<VkImageUsageFlagBits>
     ): VKImage {
         val createInfo = VkImageCreateInfo(
                 VkStructureType.VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
@@ -235,8 +230,8 @@ class VKLogicalDevice(
     }
 
     fun allocateDeviceMemory(
-            allocateSize: VkDeviceSize,
-            memoryTypeIndex: Int
+        allocateSize: VkDeviceSize,
+        memoryTypeIndex: Int
     ): VKDeviceMemory {
         val allocateInfo = VkMemoryAllocateInfo(
                 VkStructureType.VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
@@ -286,11 +281,11 @@ class VKLogicalDevice(
     }
 
     fun createSampler(
-            magFilter: VkFilter,
-            minFilter: VkFilter,
-            mipmapMode: VkSamplerMipmapMode,
-            addressModeU: VkSamplerAddressMode,
-            addressModeV: VkSamplerAddressMode
+        magFilter: VkFilter,
+        minFilter: VkFilter,
+        mipmapMode: VkSamplerMipmapMode,
+        addressModeU: VkSamplerAddressMode,
+        addressModeV: VkSamplerAddressMode
     ): VKSampler {
         val createInfo = VkSamplerCreateInfo(
                 VkStructureType.VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
@@ -346,16 +341,16 @@ class VKLogicalDevice(
     }
 
     fun createPipeline(
-            pipelineCache: VkPipelineCache?,
-            pipelineLayout: VKPipelineLayout,
-            renderPass: VKRenderPass,
-            vertShaderModule: VKShaderModule,
-            fragShaderModule: VKShaderModule,
-            depthTest: Boolean,
-            cullMode: VkCullModeFlagBits,
-            polygonMode: VkPolygonMode,
-            srcFactor: VkBlendFactor,
-            dstFactor: VkBlendFactor
+        pipelineCache: VkPipelineCache?,
+        pipelineLayout: VKPipelineLayout,
+        renderPass: VKRenderPass,
+        vertShaderModule: VKShaderModule,
+        fragShaderModule: VKShaderModule,
+        depthTest: Boolean,
+        cullMode: VkCullModeFlagBits,
+        polygonMode: VkPolygonMode,
+        srcFactor: VkBlendFactor,
+        dstFactor: VkBlendFactor
     ): VKPipeline {
         val shaderStages = listOf(
                 vertShaderModule.createShaderStage(VkShaderStageFlagBits.VK_SHADER_STAGE_VERTEX_BIT),
@@ -486,11 +481,11 @@ class VKLogicalDevice(
     }
 
     fun createDescriptorPool(
-            maxSets: Int = 64,
-            poolSizes: List<VkDescriptorPoolSize> = listOf(
-                    VkDescriptorPoolSize(VkDescriptorType.VK_DESCRIPTOR_TYPE_SAMPLER, 32),
-                    VkDescriptorPoolSize(VkDescriptorType.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 32)
-            )
+        maxSets: Int = 64,
+        poolSizes: List<VkDescriptorPoolSize> = listOf(
+                VkDescriptorPoolSize(VkDescriptorType.VK_DESCRIPTOR_TYPE_SAMPLER, 32),
+                VkDescriptorPoolSize(VkDescriptorType.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 32)
+        )
     ): VKDescriptorPool {
         val createInfo = VkDescriptorPoolCreateInfo(
                 VkStructureType.VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,

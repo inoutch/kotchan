@@ -8,8 +8,8 @@ import io.github.inoutch.kotlin.vulkan.api.VkStructureType
 import io.github.inoutch.kotlin.vulkan.api.vk
 
 class VKShaderModule(
-        val device: VKLogicalDevice,
-        val shaderModule: VkShaderModule
+    val device: VKLogicalDevice,
+    val shaderModule: VkShaderModule
 ) : Disposer() {
     init {
         add { vk.destroyShaderModule(device.device, shaderModule) }

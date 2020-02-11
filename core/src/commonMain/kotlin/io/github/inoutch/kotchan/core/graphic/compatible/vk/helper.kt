@@ -4,8 +4,8 @@ import io.github.inoutch.kotchan.core.graphic.BlendFactor
 import io.github.inoutch.kotchan.core.graphic.CullMode
 import io.github.inoutch.kotchan.core.graphic.PolygonMode
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.DescriptorSet
-import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformTexture
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformTexture
 import io.github.inoutch.kotlin.vulkan.api.VkBlendFactor
 import io.github.inoutch.kotlin.vulkan.api.VkCullModeFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkDescriptorSetLayoutBinding
@@ -49,7 +49,7 @@ fun CullMode.toVkCullModeFlagBits(): VkCullModeFlagBits {
 }
 
 fun PolygonMode.toVkPolygonMode(): VkPolygonMode {
-    return when(this) {
+    return when (this) {
         PolygonMode.Fill -> VkPolygonMode.VK_POLYGON_MODE_FILL
         PolygonMode.Line -> VkPolygonMode.VK_POLYGON_MODE_LINE
         PolygonMode.Point -> VkPolygonMode.VK_POLYGON_MODE_POINT

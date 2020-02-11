@@ -3,7 +3,7 @@ package io.github.inoutch.kotchan.core.graphic.compatible.vk
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.Shader
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.ShaderSource
 
-class VKShader(logicalDevice: VKLogicalDevice, shaderSource: ShaderSource): Shader() {
+class VKShader(logicalDevice: VKLogicalDevice, shaderSource: ShaderSource) : Shader() {
     val vertShaderModule: VKShaderModule
 
     val fragShaderModule: VKShaderModule

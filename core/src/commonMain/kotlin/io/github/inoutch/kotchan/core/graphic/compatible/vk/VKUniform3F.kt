@@ -4,9 +4,9 @@ import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Unifo
 import io.github.inoutch.kotchan.math.Vector3F
 
 class VKUniform3F(
-        buffer: VKValuePerSwapchainImage<VKUniformBuffer>,
-        binding: Int,
-        uniformName: String
+    buffer: VKValuePerSwapchainImage<VKUniformBuffer>,
+    binding: Int,
+    uniformName: String
 ) : VKUniform(buffer, binding, uniformName), Uniform3F {
     override val size: Int = Uniform3F.SIZE
 

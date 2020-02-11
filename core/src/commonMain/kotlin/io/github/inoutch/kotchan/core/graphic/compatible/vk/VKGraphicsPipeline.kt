@@ -5,15 +5,15 @@ import io.github.inoutch.kotchan.core.graphic.compatible.GraphicsPipelineConfig
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.ShaderProgram
 
 class VKGraphicsPipeline(
-        shaderProgram: ShaderProgram,
-        config: GraphicsPipelineConfig,
-        val pipeline: VKPipeline,
-        val uniforms: List<VKUniform>,
-        val uniformTextures: List<VKUniformTexture>,
-        val descriptorSetLayout: VKDescriptorSetLayout,
-        val descriptorPool: VKDescriptorPool,
-        val descriptorSetUniformProviders: List<VKValuePerSwapchainImage<VKDescriptorSetUniformProvider>>,
-        val descriptorSetTextureProviders: List<VKValuePerSwapchainImage<VKDescriptorSetTextureProvider>>
+    shaderProgram: ShaderProgram,
+    config: GraphicsPipelineConfig,
+    val pipeline: VKPipeline,
+    val uniforms: List<VKUniform>,
+    val uniformTextures: List<VKUniformTexture>,
+    val descriptorSetLayout: VKDescriptorSetLayout,
+    val descriptorPool: VKDescriptorPool,
+    val descriptorSetUniformProviders: List<VKValuePerSwapchainImage<VKDescriptorSetUniformProvider>>,
+    val descriptorSetTextureProviders: List<VKValuePerSwapchainImage<VKDescriptorSetTextureProvider>>
 ) : GraphicsPipeline(shaderProgram, config) {
 
     override fun bind() {

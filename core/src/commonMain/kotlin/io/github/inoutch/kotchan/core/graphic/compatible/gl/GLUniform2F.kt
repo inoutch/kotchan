@@ -5,8 +5,8 @@ import io.github.inoutch.kotchan.math.Vector2F
 import io.github.inoutch.kotlin.gl.api.gl
 
 class GLUniform2F(
-        binding: Int,
-        uniformName: String
+    binding: Int,
+    uniformName: String
 ) : GLUniform(binding, uniformName), Uniform2F {
     override val size: Int = Uniform2F.SIZE
 

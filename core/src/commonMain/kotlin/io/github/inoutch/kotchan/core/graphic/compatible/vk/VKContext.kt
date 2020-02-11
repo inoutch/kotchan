@@ -12,13 +12,13 @@ import io.github.inoutch.kotchan.core.graphic.compatible.context.Context
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.Shader
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.ShaderProgram
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.ShaderSource
-import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformTexture
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform1F
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform1I
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform2F
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform3F
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform4F
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformMatrix4F
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformTexture
 import io.github.inoutch.kotchan.extension.getProperties
 import io.github.inoutch.kotchan.extension.getProperty
 import io.github.inoutch.kotchan.math.RectI
@@ -49,10 +49,10 @@ import io.github.inoutch.kotlin.vulkan.utility.MutableProperty
 import kotlin.math.min
 
 class VKContext(
-        instanceCreateInfo: VkInstanceCreateInfo,
-        private var windowSize: Vector2I,
-        maxFrameInFlight: Int = 3,
-        createSurface: (surface: MutableProperty<VkSurface>, instance: VkInstance) -> VkResult
+    instanceCreateInfo: VkInstanceCreateInfo,
+    private var windowSize: Vector2I,
+    maxFrameInFlight: Int = 3,
+    createSurface: (surface: MutableProperty<VkSurface>, instance: VkInstance) -> VkResult
 ) : Context, Disposer() {
 
     val instance: VkInstance

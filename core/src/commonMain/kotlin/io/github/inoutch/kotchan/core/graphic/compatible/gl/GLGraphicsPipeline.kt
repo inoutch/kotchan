@@ -7,11 +7,11 @@ import io.github.inoutch.kotlin.gl.api.GL_DEPTH_TEST
 import io.github.inoutch.kotlin.gl.api.gl
 
 class GLGraphicsPipeline(
-        shaderProgram: ShaderProgram,
-        config: GraphicsPipelineConfig,
-        private val shader: GLShader,
-        private val uniforms: List<GLUniform>,
-        private val uniformTextures: List<GLUniformTexture>
+    shaderProgram: ShaderProgram,
+    config: GraphicsPipelineConfig,
+    private val shader: GLShader,
+    private val uniforms: List<GLUniform>,
+    private val uniformTextures: List<GLUniformTexture>
 ) : GraphicsPipeline(shaderProgram, config) {
     private val uniformProviders = uniforms.map {
         GLUniformLocationProvider(shader, it.descriptorName)

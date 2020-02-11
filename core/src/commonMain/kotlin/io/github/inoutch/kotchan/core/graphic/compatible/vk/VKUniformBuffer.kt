@@ -4,8 +4,8 @@ import io.github.inoutch.kotchan.core.Disposer
 import io.github.inoutch.kotlin.vulkan.api.VkBufferUsageFlagBits
 
 class VKUniformBuffer(
-        val logicalDevice: VKLogicalDevice,
-        val size: Int
+    val logicalDevice: VKLogicalDevice,
+    val size: Int
 ) : Disposer() {
     val buffer: VKBuffer
 

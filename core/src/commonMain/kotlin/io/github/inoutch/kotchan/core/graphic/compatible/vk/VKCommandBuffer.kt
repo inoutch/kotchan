@@ -6,7 +6,6 @@ import io.github.inoutch.kotlin.vulkan.api.VkClearDepthStencilValue
 import io.github.inoutch.kotlin.vulkan.api.VkCommandBuffer
 import io.github.inoutch.kotlin.vulkan.api.VkCommandBufferBeginInfo
 import io.github.inoutch.kotlin.vulkan.api.VkCommandBufferResetFlagBits
-import io.github.inoutch.kotlin.vulkan.api.VkImageAspectFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkImageLayout
 import io.github.inoutch.kotlin.vulkan.api.VkImageSubresourceRange
 import io.github.inoutch.kotlin.vulkan.api.VkRect2D
@@ -40,9 +39,9 @@ class VKCommandBuffer(val commandPool: VKCommandPool, val commandBuffer: VkComma
     }
 
     fun cmdClearColorImage(
-            image: VKImage,
-            clearColor: VkClearColorValue,
-            ranges: List<VkImageSubresourceRange>
+        image: VKImage,
+        clearColor: VkClearColorValue,
+        ranges: List<VkImageSubresourceRange>
     ) {
         vk.cmdClearColorImage(
                 commandBuffer,
@@ -54,9 +53,9 @@ class VKCommandBuffer(val commandPool: VKCommandPool, val commandBuffer: VkComma
     }
 
     fun cmdClearDepthStencilImage(
-            image: VKImage,
-            depthStencilValue: VkClearDepthStencilValue,
-            ranges: List<VkImageSubresourceRange>
+        image: VKImage,
+        depthStencilValue: VkClearDepthStencilValue,
+        ranges: List<VkImageSubresourceRange>
     ) {
         vk.cmdClearDepthStencilImage(
                 commandBuffer,

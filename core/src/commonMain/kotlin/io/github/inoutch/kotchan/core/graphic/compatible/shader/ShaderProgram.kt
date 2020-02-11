@@ -5,8 +5,8 @@ import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.graphic
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.DescriptorSet
 
 abstract class ShaderProgram(
-        shaderSource: ShaderSource,
-        initialDescriptorSets: List<DescriptorSet>
+    shaderSource: ShaderSource,
+    initialDescriptorSets: List<DescriptorSet>
 ) : Disposer() {
     val shader = graphic.createShader(shaderSource)
 

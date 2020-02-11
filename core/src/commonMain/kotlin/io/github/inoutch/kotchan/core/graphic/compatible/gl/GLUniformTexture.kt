@@ -5,8 +5,8 @@ import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Unifo
 import io.github.inoutch.kotlin.gl.api.gl
 
 class GLUniformTexture(
-        binding: Int,
-        descriptorName: String
+    binding: Int,
+    descriptorName: String
 ) : UniformTexture(binding, descriptorName) {
     private var provider: GLUniformLocationProvider? = null
 

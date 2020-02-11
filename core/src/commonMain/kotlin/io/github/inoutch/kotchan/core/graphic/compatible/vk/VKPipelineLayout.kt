@@ -5,8 +5,8 @@ import io.github.inoutch.kotlin.vulkan.api.VkPipelineLayout
 import io.github.inoutch.kotlin.vulkan.api.vk
 
 class VKPipelineLayout(
-        val logicalDevice: VKLogicalDevice,
-        val pipelineLayout: VkPipelineLayout
+    val logicalDevice: VKLogicalDevice,
+    val pipelineLayout: VkPipelineLayout
 ) : Disposer() {
     init {
         add { vk.destroyPipelineLayout(logicalDevice.device, pipelineLayout) }
