@@ -109,8 +109,6 @@ class GLFWLauncher(
                 createWindowSurface(instance, window, surface)
             }
         } else {
-            context = GLContext()
-
             MemoryStack.stackPush().use {
                 val pWidth = it.mallocInt(1)
                 val pHeight = it.mallocInt(1)
@@ -127,6 +125,8 @@ class GLFWLauncher(
             GLFW.glfwMakeContextCurrent(window)
             GLFW.glfwSwapInterval(1)
             GL.createCapabilities()
+
+            context = GLContext()
         }
 
         setInputCallbacks(engine.startupConfig.windowSize)

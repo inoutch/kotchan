@@ -17,8 +17,11 @@ import io.github.inoutch.kotlin.vulkan.api.VkColorComponentFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkCompareOp
 import io.github.inoutch.kotlin.vulkan.api.VkCompositeAlphaFlagBitsKHR
 import io.github.inoutch.kotlin.vulkan.api.VkCullModeFlagBits
+import io.github.inoutch.kotlin.vulkan.api.VkDescriptorPoolCreateInfo
+import io.github.inoutch.kotlin.vulkan.api.VkDescriptorPoolSize
 import io.github.inoutch.kotlin.vulkan.api.VkDescriptorSetLayoutBinding
 import io.github.inoutch.kotlin.vulkan.api.VkDescriptorSetLayoutCreateInfo
+import io.github.inoutch.kotlin.vulkan.api.VkDescriptorType
 import io.github.inoutch.kotlin.vulkan.api.VkDevice
 import io.github.inoutch.kotlin.vulkan.api.VkDeviceSize
 import io.github.inoutch.kotlin.vulkan.api.VkDynamicState
@@ -73,6 +76,7 @@ import io.github.inoutch.kotlin.vulkan.api.VkSubpassDescription
 import io.github.inoutch.kotlin.vulkan.api.VkSurface
 import io.github.inoutch.kotlin.vulkan.api.VkSwapchainCreateInfoKHR
 import io.github.inoutch.kotlin.vulkan.api.VkViewport
+import io.github.inoutch.kotlin.vulkan.api.VkWriteDescriptorSet
 import io.github.inoutch.kotlin.vulkan.api.vk
 
 class VKLogicalDevice(
@@ -470,9 +474,34 @@ class VKLogicalDevice(
                 null,
                 0
         )
-        return VKPipeline(
-                this,
-                getProperty { vk.createGraphicsPipelines(device, pipelineCache, listOf(pipelineCreateInfo), it).value }
-        ).also { add(it) }
+        val pipeline = VKPipeline(this, getProperty {
+            vk.createGraphicsPipelines(device, pipelineCache, listOf(pipelineCreateInfo), it).value
+        })
+        pipeline.add { vk.destroyPipeline(device, pipeline.pipeline) }
+        add(pipeline)
+        return pipeline
+    }
+
+    fun createDescriptorPool(
+            maxSets: Int = 64,
+            poolSizes: List<VkDescriptorPoolSize> = listOf(
+                    VkDescriptorPoolSize(VkDescriptorType.VK_DESCRIPTOR_TYPE_SAMPLER, 32),
+                    VkDescriptorPoolSize(VkDescriptorType.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 32)
+            )
+    ): VKDescriptorPool {
+        val createInfo = VkDescriptorPoolCreateInfo(
+                VkStructureType.VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
+                listOf(),
+                maxSets,
+                poolSizes
+        )
+        val descriptorPool = VKDescriptorPool(this, getProperty { vk.createDescriptorPool(device, createInfo, it) })
+        descriptorPool.add { vk.destroyDescriptorPool(device, descriptorPool.descriptorPool) }
+        add(descriptorPool)
+        return descriptorPool
+    }
+
+    fun updateDescriptorSets(descriptorWrites: List<VkWriteDescriptorSet>) {
+        vk.updateDescriptorSets(device, descriptorWrites, emptyList())
     }
 }

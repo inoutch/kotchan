@@ -9,12 +9,24 @@ class VKGraphicsPipeline(
         config: GraphicsPipelineConfig,
         val pipeline: VKPipeline,
         val uniforms: List<VKUniform>,
-        val samplers: List<VKSampler>
+        val uniformTextures: List<VKUniformTexture>,
+        val descriptorSetLayout: VKDescriptorSetLayout,
+        val descriptorPool: VKDescriptorPool,
+        val descriptorSetUniformProviders: List<VKValuePerSwapchainImage<VKDescriptorSetUniformProvider>>,
+        val descriptorSetTextureProviders: List<VKValuePerSwapchainImage<VKDescriptorSetTextureProvider>>
 ) : GraphicsPipeline(shaderProgram, config) {
-    init {
-        add(pipeline)
-    }
 
     override fun bind() {
+        // Provide descriptorSets
+        var i = 0
+        while (i < uniforms.size) {
+            uniforms[i].bind(descriptorSetUniformProviders[i].value)
+            i++
+        }
+        i = 0
+        while (i < uniformTextures.size) {
+            uniformTextures[i].bind(descriptorSetTextureProviders[i].value)
+            i++
+        }
     }
 }

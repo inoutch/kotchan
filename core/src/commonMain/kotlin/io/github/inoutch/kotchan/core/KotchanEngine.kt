@@ -15,11 +15,14 @@ class KotchanEngine(config: KotchanStartupConfig) {
 
     suspend fun run(platformConfig: KotchanPlatformConfig? = null) {
         try {
+            // Initialize platform
             platform = KotchanPlatform(this, platformConfig)
             KotchanGlobalContext().initialize(startupConfig, platform)
 
+            // Initialize kotchan engine
             sceneManager.transitScene { startupConfig.createFirstScene(it) }
 
+            // Launch application
             platform.launch()
         } catch (e: Error) {
             if (startupConfig.onError(e)) {

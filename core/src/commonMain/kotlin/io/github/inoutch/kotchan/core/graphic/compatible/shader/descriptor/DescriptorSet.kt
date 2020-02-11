@@ -1,8 +1,8 @@
 package io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor
 
-import io.github.inoutch.kotchan.core.Disposer
+import io.github.inoutch.kotchan.core.Disposable
 
-abstract class DescriptorSet(
-        val binding: Int,
-        val descriptorName: String
-) : Disposer()
+interface DescriptorSet : Disposable {
+    val binding: Int
+    val descriptorName: String
+}

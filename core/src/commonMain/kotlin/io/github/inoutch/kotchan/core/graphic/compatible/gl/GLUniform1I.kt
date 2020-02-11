@@ -11,13 +11,8 @@ class GLUniform1I(
 ) : Uniform1I, GLUniform(binding, uniformName) {
     override val size: Int = 1 * INT_BYTE_SIZE
 
-    private var value: Int = 0
-
     override fun set(value: Int) {
-        this.value = value
-    }
-
-    override fun copy(location: GLuint) {
-        gl.uniform1i(location, value)
+        val provider = this.provider ?: return
+        gl.uniform1i(provider.location, value)
     }
 }

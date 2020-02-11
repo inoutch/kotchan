@@ -10,35 +10,28 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import org.lwjgl.stb.STBImage
 
-actual class Image private actual constructor(
-    actual val byteArray: ByteArray,
-    actual val size: Vector2I
-) {
-    actual companion object {
-        actual fun loadPNGByteArrayAsync(byteArray: ByteArray): Deferred<Image> {
-            return loadByteArrayAsync(byteArray)
-        }
+actual fun loadPNGByteArrayAsync(byteArray: ByteArray): Deferred<Image> {
+    return loadByteArrayAsync(byteArray)
+}
 
-        fun loadByteArrayAsync(byteArray: ByteArray): Deferred<Image> = GlobalScope.async(Dispatchers.Unconfined) {
-            memScoped {
-                val width = allocInt()
-                val height = allocInt()
-                val channels = allocInt()
-                // 1           grey
-                // 2           grey, alpha
-                // 3           red, green, blue
-                // 4           red, green, blue, alpha
+fun loadByteArrayAsync(byteArray: ByteArray): Deferred<Image> = GlobalScope.async(Dispatchers.Unconfined) {
+    memScoped {
+        val width = allocInt()
+        val height = allocInt()
+        val channels = allocInt()
+        // 1           grey
+        // 2           grey, alpha
+        // 3           red, green, blue
+        // 4           red, green, blue, alpha
 
-                val pixels = STBImage.stbi_load_from_memory(
-                        byteArray.toNative(this),
-                        width,
-                        height,
-                        channels,
-                        0
-                )
-                checkNotNull(pixels) { "Failed to read image information: ${STBImage.stbi_failure_reason()}" }
-                Image(pixels.toByteArray(), Vector2I(width[0], height[0]))
-            }
-        }
+        val pixels = STBImage.stbi_load_from_memory(
+                byteArray.toNative(this),
+                width,
+                height,
+                channels,
+                0
+        )
+        checkNotNull(pixels) { "Failed to read image information: ${STBImage.stbi_failure_reason()}" }
+        Image(pixels.toByteArray(), Vector2I(width[0], height[0]))
     }
 }

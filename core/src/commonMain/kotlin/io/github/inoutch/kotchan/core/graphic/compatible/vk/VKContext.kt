@@ -12,6 +12,7 @@ import io.github.inoutch.kotchan.core.graphic.compatible.context.Context
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.Shader
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.ShaderProgram
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.ShaderSource
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformTexture
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform1F
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform1I
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform2F
@@ -42,6 +43,7 @@ import io.github.inoutch.kotlin.vulkan.api.VkStructureType
 import io.github.inoutch.kotlin.vulkan.api.VkSubmitInfo
 import io.github.inoutch.kotlin.vulkan.api.VkSurface
 import io.github.inoutch.kotlin.vulkan.api.VkViewport
+import io.github.inoutch.kotlin.vulkan.api.VkWriteDescriptorSet
 import io.github.inoutch.kotlin.vulkan.api.vk
 import io.github.inoutch.kotlin.vulkan.utility.MutableProperty
 import kotlin.math.min
@@ -85,6 +87,10 @@ class VKContext(
 
     private var currentRenderContext: VKRenderContext
 
+    private var currentGraphicsPipeline: VKGraphicsPipeline? = null
+
+    private val emptyTexture: Texture
+
     init {
         try {
             instance = getProperty { vk.createInstance(instanceCreateInfo, it).value }
@@ -126,6 +132,9 @@ class VKContext(
                     swapchainRecreator.current.swapchainImages.first(),
                     swapchainRecreator.current.depthResources.first()
             )
+
+            emptyTexture = loadTexture(Image(byteArrayOf(-1, -1, -1, -1), Vector2I(1, 1)))
+            add(emptyTexture)
         } catch (e: Error) {
             dispose()
             throw e
@@ -204,7 +213,24 @@ class VKContext(
     }
 
     override fun drawTriangles(batchBufferBundle: BatchBufferBundle) {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        val graphicsPipeline = currentGraphicsPipeline ?: return
+        val descriptorSetUniformProviders = graphicsPipeline.descriptorSetUniformProviders
+        val descriptorSetTextureProviders = graphicsPipeline.descriptorSetTextureProviders
+
+        // TODO: Improve performance
+        graphicsPipeline.uniforms.forEachIndexed { index, uniform ->
+            uniform.bind(descriptorSetUniformProviders[index].value)
+        }
+        graphicsPipeline.uniformTextures.forEachIndexed { index, texture ->
+            texture.bind(descriptorSetTextureProviders[index].value)
+        }
+
+        val writeDescriptorSets = mutableListOf<VkWriteDescriptorSet>()
+        writeDescriptorSets.addAll(descriptorSetTextureProviders.mapNotNull { it.value.writeDescriptorSet() })
+        writeDescriptorSets.addAll(descriptorSetUniformProviders.mapNotNull { it.value.writeDescriptorSet() })
+        if (writeDescriptorSets.isNotEmpty()) {
+            primaryLogicalDevice.updateDescriptorSets(writeDescriptorSets)
+        }
     }
 
     override fun createShader(shaderSource: ShaderSource): Shader {
@@ -216,7 +242,7 @@ class VKContext(
         try {
             val shader = shaderProgram.shader as VKShader
             val uniforms = shaderProgram.descriptorSets.filterIsInstance<VKUniform>()
-            val samplers = shaderProgram.descriptorSets.filterIsInstance<VKSampler>()
+            val uniformTextures = shaderProgram.descriptorSets.filterIsInstance<VKUniformTexture>()
             val descriptorSetLayout = primaryLogicalDevice.createDescriptorSetLayout(shaderProgram.descriptorSets.map {
                 convertToDescriptorSetLayoutBinding(it)
             })
@@ -237,17 +263,55 @@ class VKContext(
                     config.srcBlendFactor.toVkBlendFactor(),
                     config.dstBlendFactor.toVkBlendFactor()
             )
-            localDisposer.removeAll()
+            localDisposer.add(pipeline)
 
-            return VKGraphicsPipeline(shaderProgram, config, pipeline, uniforms, samplers)
-                    .also {
-                        add(descriptorSetLayout)
-                        add(pipelineLayout)
-                    }
+            val descriptorPool = primaryLogicalDevice.createDescriptorPool()
+            localDisposer.add(descriptorPool)
+
+            val descriptorSetUniformProviders = uniforms.map {
+                val descriptorSets = descriptorPool.allocateDescriptorSets(
+                        List(swapchainRecreator.size) { descriptorSetLayout }
+                )
+                localDisposer.add(descriptorSets)
+                VKValuePerSwapchainImage(
+                        currentSwapchainImageIndexManager,
+                        descriptorSets.map { VKDescriptorSetUniformProvider(it) }
+                )
+            }
+
+            val descriptorSetSamplerProviders = uniformTextures.map {
+                val descriptorSets = descriptorPool.allocateDescriptorSets(
+                        List(swapchainRecreator.size) { descriptorSetLayout }
+                )
+                localDisposer.add(descriptorSets)
+                VKValuePerSwapchainImage(
+                        currentSwapchainImageIndexManager,
+                        descriptorSets.map { VKDescriptorSetTextureProvider(it) }
+                )
+            }
+
+            localDisposer.removeAll()
+            val graphicsPipeline = VKGraphicsPipeline(
+                    shaderProgram,
+                    config,
+                    pipeline,
+                    uniforms,
+                    uniformTextures,
+                    descriptorSetLayout,
+                    descriptorPool,
+                    descriptorSetUniformProviders,
+                    descriptorSetSamplerProviders
+            )
+            graphicsPipeline.add(localDisposer)
+            return graphicsPipeline
         } catch (e: Error) {
             localDisposer.dispose()
             throw e
         }
+    }
+
+    override fun bindGraphicsPipeline(graphicsPipeline: GraphicsPipeline) {
+        currentGraphicsPipeline = graphicsPipeline as? VKGraphicsPipeline ?: return
     }
 
     override fun setViewport(viewport: RectI) {
@@ -286,8 +350,12 @@ class VKContext(
         return VKTexture(primaryLogicalDevice, primaryGraphicCommandPool, image)
     }
 
+    override fun emptyTexture(): Texture {
+        return emptyTexture
+    }
+
     override fun createUniform1I(binding: Int, uniformName: String): Uniform1I {
-        val buffers = swapchainRecreator.current.swapchainImages.map {
+        val buffers = List(swapchainRecreator.size) {
             VKUniformBuffer(primaryLogicalDevice, Uniform1I.SIZE)
         }
         return VKUniform1I(
@@ -298,58 +366,72 @@ class VKContext(
     }
 
     override fun createUniform1F(binding: Int, uniformName: String): Uniform1F {
-        val buffers = swapchainRecreator.current.swapchainImages.map {
+        val buffers = List(swapchainRecreator.size) {
             VKUniformBuffer(primaryLogicalDevice, Uniform1F.SIZE)
         }
-        return VKUniform1F(
+        val uniform = VKUniform1F(
                 VKValuePerSwapchainImage(currentSwapchainImageIndexManager, buffers),
                 binding,
                 uniformName
         )
+        uniform.add(buffers)
+        return uniform
     }
 
     override fun createUniform2F(binding: Int, uniformName: String): Uniform2F {
-        val buffers = swapchainRecreator.current.swapchainImages.map {
+        val buffers = List(swapchainRecreator.size) {
             VKUniformBuffer(primaryLogicalDevice, Uniform2F.SIZE)
         }
-        return VKUniform2F(
+        val uniform = VKUniform2F(
                 VKValuePerSwapchainImage(currentSwapchainImageIndexManager, buffers),
                 binding,
                 uniformName
         )
+        uniform.add(buffers)
+        return uniform
     }
 
     override fun createUniform3F(binding: Int, uniformName: String): Uniform3F {
-        val buffers = swapchainRecreator.current.swapchainImages.map {
+        val buffers = List(swapchainRecreator.size) {
             VKUniformBuffer(primaryLogicalDevice, Uniform3F.SIZE)
         }
-        return VKUniform3F(
+        val uniform = VKUniform3F(
                 VKValuePerSwapchainImage(currentSwapchainImageIndexManager, buffers),
                 binding,
                 uniformName
         )
+        uniform.add(buffers)
+        return uniform
     }
 
     override fun createUniform4F(binding: Int, uniformName: String): Uniform4F {
-        val buffers = swapchainRecreator.current.swapchainImages.map {
+        val buffers = List(swapchainRecreator.size) {
             VKUniformBuffer(primaryLogicalDevice, Uniform4F.SIZE)
         }
-        return VKUniform4F(
+        val uniform = VKUniform4F(
                 VKValuePerSwapchainImage(currentSwapchainImageIndexManager, buffers),
                 binding,
                 uniformName
         )
+        uniform.add(buffers)
+        return uniform
     }
 
     override fun createUniformMatrix4F(binding: Int, uniformName: String): UniformMatrix4F {
-        val buffers = swapchainRecreator.current.swapchainImages.map {
+        val buffers = List(swapchainRecreator.size) {
             VKUniformBuffer(primaryLogicalDevice, UniformMatrix4F.SIZE)
         }
-        return VKUniformMatrix4F(
+        val uniform = VKUniformMatrix4F(
                 VKValuePerSwapchainImage(currentSwapchainImageIndexManager, buffers),
                 binding,
                 uniformName
         )
+        uniform.add(buffers)
+        return uniform
+    }
+
+    override fun createUniformTexture(binding: Int, uniformName: String): UniformTexture {
+        return VKUniformTexture(binding, uniformName)
     }
 
     override fun dispose() {

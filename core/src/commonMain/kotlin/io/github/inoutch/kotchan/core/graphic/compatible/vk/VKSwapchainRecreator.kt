@@ -13,6 +13,9 @@ class VKSwapchainRecreator(
     var current: VKSwapchainRecreatorProperties
         private set
 
+    val size: Int
+        get() = current.swapchainImages.size
+
     init {
         current = recreateProperties(initialExtent)
     }

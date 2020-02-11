@@ -6,4 +6,10 @@ abstract class VKUniform(
         val buffer: VKValuePerSwapchainImage<VKUniformBuffer>,
         binding: Int,
         uniformName: String
-) : Uniform(binding, uniformName)
+) : Uniform(binding, uniformName) {
+    protected var provider: VKDescriptorSetUniformProvider? = null
+
+    fun bind(provider: VKDescriptorSetUniformProvider) {
+        this.provider = provider
+    }
+}

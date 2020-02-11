@@ -17,6 +17,7 @@ import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Unifo
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform3F
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform4F
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformMatrix4F
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformTexture
 import io.github.inoutch.kotchan.math.RectI
 import io.github.inoutch.kotchan.math.Vector2I
 import io.github.inoutch.kotchan.math.Vector4F
@@ -25,6 +26,8 @@ import io.github.inoutch.kotlin.gl.api.GL_DEPTH_BUFFER_BIT
 import io.github.inoutch.kotlin.gl.api.gl
 
 class GLContext : Context {
+    private val emptyTexture = loadTexture(Image(byteArrayOf(-1, -1, -1, -1), Vector2I(1, 1)))
+
     override fun begin() {}
 
     override fun end() {}
@@ -49,8 +52,18 @@ class GLContext : Context {
             shaderProgram: ShaderProgram,
             config: GraphicsPipelineConfig
     ): GraphicsPipeline {
-        return GLGraphicsPipeline(shaderProgram, config)
+        val uniforms = shaderProgram.descriptorSets.filterIsInstance<GLUniform>()
+        val uniformTextures = shaderProgram.descriptorSets.filterIsInstance<GLUniformTexture>()
+        return GLGraphicsPipeline(
+                shaderProgram,
+                config,
+                shaderProgram.shader as GLShader,
+                uniforms,
+                uniformTextures
+        )
     }
+
+    override fun bindGraphicsPipeline(graphicsPipeline: GraphicsPipeline) {}
 
     override fun setViewport(viewport: RectI) {
         gl.viewport(viewport.origin.x, viewport.origin.y, viewport.size.x, viewport.size.y)
@@ -72,6 +85,10 @@ class GLContext : Context {
 
     override fun loadTexture(image: Image): Texture {
         return GLTexture(image)
+    }
+
+    override fun emptyTexture(): Texture {
+        return emptyTexture
     }
 
     override fun createUniform1I(binding: Int, uniformName: String): Uniform1I {
@@ -96,6 +113,10 @@ class GLContext : Context {
 
     override fun createUniformMatrix4F(binding: Int, uniformName: String): UniformMatrix4F {
         return GLUniformMatrix4F(binding, uniformName)
+    }
+
+    override fun createUniformTexture(binding: Int, uniformName: String): UniformTexture {
+        return GLUniformTexture(binding, uniformName)
     }
 
     override fun isDisposed(): Boolean {

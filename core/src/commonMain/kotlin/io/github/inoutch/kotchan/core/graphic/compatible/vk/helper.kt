@@ -4,7 +4,7 @@ import io.github.inoutch.kotchan.core.graphic.BlendFactor
 import io.github.inoutch.kotchan.core.graphic.CullMode
 import io.github.inoutch.kotchan.core.graphic.PolygonMode
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.DescriptorSet
-import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Sampler
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformTexture
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform
 import io.github.inoutch.kotlin.vulkan.api.VkBlendFactor
 import io.github.inoutch.kotlin.vulkan.api.VkCullModeFlagBits
@@ -22,7 +22,7 @@ fun convertToDescriptorSetLayoutBinding(descriptorSet: DescriptorSet): VkDescrip
 fun findDescriptorType(descriptorSet: DescriptorSet): VkDescriptorType {
     return when (descriptorSet) {
         is Uniform -> VkDescriptorType.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER
-        is Sampler -> VkDescriptorType.VK_DESCRIPTOR_TYPE_SAMPLER
+        is UniformTexture -> VkDescriptorType.VK_DESCRIPTOR_TYPE_SAMPLER
         else -> throw IllegalStateException("Invalid descriptor type")
     }
 }

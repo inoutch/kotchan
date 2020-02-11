@@ -6,18 +6,14 @@ import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Descr
 
 abstract class ShaderProgram(
         shaderSource: ShaderSource,
-        descriptorSets: List<DescriptorSet>
+        initialDescriptorSets: List<DescriptorSet>
 ) : Disposer() {
     val shader = graphic.createShader(shaderSource)
 
-    val descriptorSets = listOf(*descriptorSets.toTypedArray())
-//    private val viewProjectionMatrixUniform = Uniform
+    val descriptorSets: List<DescriptorSet> = initialDescriptorSets
 
     init {
         add(shader)
-    }
-
-    fun prepare() {
-
+        initialDescriptorSets.forEach { add(it) }
     }
 }

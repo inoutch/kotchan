@@ -7,5 +7,9 @@ abstract class GLUniform(
         binding: Int,
         uniformName: String
 ) : Uniform(binding, uniformName) {
-    abstract fun copy(location: GLuint)
+    protected var provider: GLUniformLocationProvider? = null
+
+    fun bind(provider: GLUniformLocationProvider) {
+        this.provider = provider
+    }
 }

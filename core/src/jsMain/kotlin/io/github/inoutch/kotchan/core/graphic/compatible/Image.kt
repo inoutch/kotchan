@@ -13,34 +13,27 @@ import org.w3c.dom.url.URL
 import org.w3c.files.Blob
 import org.w3c.files.BlobPropertyBag
 
-actual class Image private actual constructor(
-    actual val byteArray: ByteArray,
-    actual val size: Vector2I
-) {
-    actual companion object {
-        actual fun loadPNGByteArrayAsync(byteArray: ByteArray): Deferred<Image> {
-            val data = Uint8Array(byteArray.toTypedArray())
-            val oUrl = URL.createObjectURL(Blob(arrayOf(data), BlobPropertyBag("image/png")))
-            val image = org.w3c.dom.Image()
-            return Promise<Image> { resolve, reject ->
-                image.onload = {
-                    resolve(convertImage(image))
-                    URL.revokeObjectURL(oUrl)
-                }
-                image.onerror = { errMsg, _, _, _, _ ->
-                    reject(IllegalStateException(errMsg as String))
-                }
-                image.src = oUrl
-            }.asDeferred()
+actual fun loadPNGByteArrayAsync(byteArray: ByteArray): Deferred<Image> {
+    val data = Uint8Array(byteArray.toTypedArray())
+    val oUrl = URL.createObjectURL(Blob(arrayOf(data), BlobPropertyBag("image/png")))
+    val image = org.w3c.dom.Image()
+    return Promise<Image> { resolve, reject ->
+        image.onload = {
+            resolve(convertImage(image))
+            URL.revokeObjectURL(oUrl)
         }
-
-        private fun convertImage(image: org.w3c.dom.Image): Image {
-            val canvas = document.createElement("canvas") as HTMLCanvasElement
-            val context = canvas.getContext("2d") as CanvasRenderingContext2D
-            context.drawImage(image, 0.0, 0.0, image.width.toDouble(), image.height.toDouble())
-
-            val imageData = context.getImageData(0.0, 0.0, image.width.toDouble(), image.height.toDouble())
-            return Image(imageData.data.toByteArray(), Vector2I(image.width, image.height))
+        image.onerror = { errMsg, _, _, _, _ ->
+            reject(IllegalStateException(errMsg as String))
         }
-    }
+        image.src = oUrl
+    }.asDeferred()
+}
+
+private fun convertImage(image: org.w3c.dom.Image): Image {
+    val canvas = document.createElement("canvas") as HTMLCanvasElement
+    val context = canvas.getContext("2d") as CanvasRenderingContext2D
+    context.drawImage(image, 0.0, 0.0, image.width.toDouble(), image.height.toDouble())
+
+    val imageData = context.getImageData(0.0, 0.0, image.width.toDouble(), image.height.toDouble())
+    return Image(imageData.data.toByteArray(), Vector2I(image.width, image.height))
 }

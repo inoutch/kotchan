@@ -3,15 +3,17 @@ package io.github.inoutch.kotchan.example
 import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.file
 import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.graphic
 import io.github.inoutch.kotchan.core.graphic.batch.Batch
-import io.github.inoutch.kotchan.core.graphic.compatible.Image
 import io.github.inoutch.kotchan.core.graphic.compatible.Texture
 import io.github.inoutch.kotchan.core.io.file.readBytesFromResourceWithErrorAsync
 import io.github.inoutch.kotchan.core.view.scene.Scene
 import io.github.inoutch.kotchan.core.view.scene.SceneContext
 import io.github.inoutch.kotchan.core.graphic.Mesh
+import io.github.inoutch.kotchan.core.graphic.compatible.GraphicsPipeline
 import io.github.inoutch.kotchan.core.graphic.compatible.Material
 import io.github.inoutch.kotchan.core.graphic.compatible.buffer.BufferStorageMode
 import io.github.inoutch.kotchan.core.graphic.compatible.buffer.VertexBuffer
+import io.github.inoutch.kotchan.core.graphic.compatible.loadPNGByteArrayAsync
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.StandardShaderProgram
 import io.github.inoutch.kotchan.math.Vector2F
 import io.github.inoutch.kotchan.math.Vector3F
 import io.github.inoutch.kotchan.math.Vector4F
@@ -31,9 +33,13 @@ class AppScene(context: SceneContext) : Scene(context) {
 
     private val vertexBuffer = VertexBuffer.create(mesh.pos().flatten(), BufferStorageMode.Dynamic)
 
+    private val shaderProgram = StandardShaderProgram.create()
+
+    private val graphicsPipeline = GraphicsPipeline.create(shaderProgram)
+
     override suspend fun init() {
         val pngByteArray = file.readBytesFromResourceWithErrorAsync("sprites/spritesheet.png").await()
-        val image = Image.loadPNGByteArrayAsync(pngByteArray).await()
+        val image = loadPNGByteArrayAsync(pngByteArray).await()
         texture = disposer.add(Texture.loadFromImage(image))
     }
 

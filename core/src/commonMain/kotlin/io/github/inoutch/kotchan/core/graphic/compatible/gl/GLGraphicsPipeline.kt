@@ -8,9 +8,32 @@ import io.github.inoutch.kotlin.gl.api.gl
 
 class GLGraphicsPipeline(
         shaderProgram: ShaderProgram,
-        config: GraphicsPipelineConfig
+        config: GraphicsPipelineConfig,
+        private val shader: GLShader,
+        private val uniforms: List<GLUniform>,
+        private val uniformTextures: List<GLUniformTexture>
 ) : GraphicsPipeline(shaderProgram, config) {
+    private val uniformProviders = uniforms.map {
+        GLUniformLocationProvider(shader, it.descriptorName)
+    }
+
+    private val uniformTextureProviders = uniformTextures.map {
+        GLUniformLocationProvider(shader, it.descriptorName)
+    }
+
     override fun bind() {
+        // Provide locations
+        var i = 0
+        while (i < uniforms.size) {
+            uniforms[i].bind(uniformProviders[i])
+            i++
+        }
+        i = 0
+        while (i < uniformTextures.size) {
+            uniformTextures[i].bind(uniformTextureProviders[i])
+            i++
+        }
+
         if (config.depthTest) {
             gl.enable(GL_DEPTH_TEST)
         } else {
