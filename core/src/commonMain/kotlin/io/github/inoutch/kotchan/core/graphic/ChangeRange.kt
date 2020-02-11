@@ -7,7 +7,7 @@ class ChangeRange(size: Int) {
     var size: Int = size
         private set
 
-    var change: IntRange? = null
+    var change: IntRange? = IntRange(0, size)
         private set
 
     fun resize(size: Int) {

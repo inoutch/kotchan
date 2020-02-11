@@ -9,8 +9,6 @@ import io.github.inoutch.kotchan.core.view.scene.Scene
 import io.github.inoutch.kotchan.core.view.scene.SceneContext
 import io.github.inoutch.kotchan.core.graphic.Mesh
 import io.github.inoutch.kotchan.core.graphic.camera.Camera2D
-import io.github.inoutch.kotchan.core.graphic.compatible.buffer.BufferStorageMode
-import io.github.inoutch.kotchan.core.graphic.compatible.buffer.VertexBuffer
 import io.github.inoutch.kotchan.core.graphic.compatible.loadPNGByteArrayAsync
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.StandardShaderProgram
 import io.github.inoutch.kotchan.core.graphic.material.StandardMaterial
@@ -18,7 +16,6 @@ import io.github.inoutch.kotchan.core.graphic.polygon.Polygon
 import io.github.inoutch.kotchan.math.Vector2F
 import io.github.inoutch.kotchan.math.Vector3F
 import io.github.inoutch.kotchan.math.Vector4F
-import io.github.inoutch.kotchan.math.flatten
 
 @ExperimentalStdlibApi
 class AppScene(context: SceneContext) : Scene(context) {
@@ -33,7 +30,7 @@ class AppScene(context: SceneContext) : Scene(context) {
     private var texture: Texture? = null
 
     private val mesh = Mesh(
-            listOf(Vector3F(0.5f, 1.0f, .0f), Vector3F(1.0f, 0.0f, .0f), Vector3F(0.0f, 0.0f, .0f)),
+            listOf(Vector3F(0.0f, 0.0f, 0.0f), Vector3F(100.0f, 0.0f, 0.0f), Vector3F(50.0f, 50.0f, 0.0f)),
             listOf(Vector2F.Zero, Vector2F.Zero, Vector2F.Zero),
             listOf(Vector4F(1.0f, 0.0f, 0.0f, 1.0f), Vector4F(0.0f, 1.0f, 0.0f, 1.0f), Vector4F(0.0f, 0.0f, 1.0f, 1.0f))
     )

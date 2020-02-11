@@ -45,74 +45,6 @@ open class Polygon(initMesh: Mesh) {
             field = value
         }
 
-    fun copyPositionsTo(target: BufferInterface<Float>) {
-        val change = positionsChange.change ?: return
-        val modelMatrix = transform()
-        val pos = mesh.pos()
-        var i = change.first
-        if (childVisible) {
-            while (i < change.last) {
-                target.copy(i * 3 + 0, 0.0f)
-                target.copy(i * 3 + 1, 0.0f)
-                target.copy(i * 3 + 2, 0.0f)
-                i++
-            }
-        } else {
-            while (i < change.last) {
-                val p = modelMatrix * Vector4F(pos[i], 1.0f)
-                target.copy(i * 3 + 0, p.x)
-                target.copy(i * 3 + 0, p.y)
-                target.copy(i * 3 + 0, p.z)
-                i++
-            }
-        }
-        positionsChange.reset()
-    }
-
-    fun copyColorsTo(target: BufferInterface<Float>) {
-        val change = colorsChange.change ?: return
-        val parent = this.parent
-        val nodeColor = if (parent == null) color else color * parent.color
-        val col = mesh.col()
-        var i = change.first
-        while (i < change.last) {
-            val c = col[i] * nodeColor
-            target.copy(i * 4 + 0, c.x)
-            target.copy(i * 4 + 1, c.y)
-            target.copy(i * 4 + 2, c.z)
-            target.copy(i * 4 + 3, c.w)
-            i++
-        }
-        colorsChange.reset()
-    }
-
-    fun copyTexcoordsTo(target: BufferInterface<Float>) {
-        val change = texcoordsChange.change ?: return
-        val tex = mesh.tex()
-        var i = change.first
-        while (i < change.last) {
-            val t = tex[i]
-            target.copy(i * 2 + 0, t.x)
-            target.copy(i * 2 + 1, t.y)
-            i++
-        }
-        texcoordsChange.reset()
-    }
-
-    fun copyNormalsTo(target: BufferInterface<Float>) {
-        val change = normalsChange.change ?: return
-        val nom = mesh.nom()
-        var i = change.first
-        while (i < change.last) {
-            val n = nom[i]
-            target.copy(i * 3 + 0, n.x)
-            target.copy(i * 3 + 1, n.y)
-            target.copy(i * 3 + 2, n.z)
-            i++
-        }
-        normalsChange.reset()
-    }
-
     val children: List<Polygon>
         get() = privateChildren
 
@@ -189,6 +121,75 @@ open class Polygon(initMesh: Mesh) {
             children[i].allPolygons(callback)
             i++
         }
+    }
+
+    fun copyPositionsTo(target: BufferInterface<Float>) {
+        val change = positionsChange.change ?: return
+        val modelMatrix = transform()
+        val pos = mesh.pos()
+        var i = change.first
+        if (childVisible) {
+            while (i < change.last) {
+                val p = modelMatrix * Vector4F(pos[i], 1.0f)
+                target.copy(i * 3 + 0, p.x)
+                target.copy(i * 3 + 1, p.y)
+                target.copy(i * 3 + 2, p.z)
+                i++
+            }
+        } else {
+            while (i < change.last) {
+                target.copy(i * 3 + 0, 0.0f)
+                target.copy(i * 3 + 1, 0.0f)
+                target.copy(i * 3 + 2, 0.0f)
+                i++
+            }
+        }
+        target.range(change.first * 3, change.last * 3)
+        positionsChange.reset()
+    }
+
+    fun copyColorsTo(target: BufferInterface<Float>) {
+        val change = colorsChange.change ?: return
+        val parent = this.parent
+        val nodeColor = if (parent == null) color else color * parent.color
+        val col = mesh.col()
+        var i = change.first
+        while (i < change.last) {
+            val c = col[i] * nodeColor
+            target.copy(i * 4 + 0, c.x)
+            target.copy(i * 4 + 1, c.y)
+            target.copy(i * 4 + 2, c.z)
+            target.copy(i * 4 + 3, c.w)
+            i++
+        }
+        colorsChange.reset()
+    }
+
+    fun copyTexcoordsTo(target: BufferInterface<Float>) {
+        val change = texcoordsChange.change ?: return
+        val tex = mesh.tex()
+        var i = change.first
+        while (i < change.last) {
+            val t = tex[i]
+            target.copy(i * 2 + 0, t.x)
+            target.copy(i * 2 + 1, t.y)
+            i++
+        }
+        texcoordsChange.reset()
+    }
+
+    fun copyNormalsTo(target: BufferInterface<Float>) {
+        val change = normalsChange.change ?: return
+        val nom = mesh.nom()
+        var i = change.first
+        while (i < change.last) {
+            val n = nom[i]
+            target.copy(i * 3 + 0, n.x)
+            target.copy(i * 3 + 1, n.y)
+            target.copy(i * 3 + 2, n.z)
+            i++
+        }
+        normalsChange.reset()
     }
 
     protected open fun transform(): Matrix4F {

@@ -14,6 +14,7 @@ class GLVertexBuffer(vertices: FloatArray, mode: BufferStorageMode) : VertexBuff
     }
 
     override fun copyToBuffer(vertices: FloatArray, offset: Int, size: Int) {
+        gl.bindBuffer(GL_ARRAY_BUFFER, id)
         gl.bufferSubData(GL_ARRAY_BUFFER, offset.toLong(), vertices, size)
     }
 }
