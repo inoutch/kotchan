@@ -14,6 +14,7 @@ class Camera2D private constructor() : Camera() {
                         -10000.0f,
                         10000.0f
                 )
+                update()
             }
         }
     }

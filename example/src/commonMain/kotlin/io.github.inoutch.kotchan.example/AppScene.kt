@@ -31,7 +31,7 @@ class AppScene(context: SceneContext) : Scene(context) {
     private var texture: Texture? = null
 
     private val mesh = Mesh(
-            listOf(Vector3F(0.0f, 0.0f, 0.0f), Vector3F(1.0f, 0.0f, 0.0f), Vector3F(0.5f, 0.5f, 0.0f)),
+            listOf(Vector3F(0.0f, 0.0f, 0.0f), Vector3F(500.0f, 0.0f, 0.0f), Vector3F(250.0f, 500.0f, 0.0f)),
             listOf(Vector2F.Zero, Vector2F.Zero, Vector2F.Zero),
             listOf(Vector4F(1.0f, 0.0f, 0.0f, 1.0f), Vector4F(0.0f, 1.0f, 0.0f, 1.0f), Vector4F(0.0f, 0.0f, 1.0f, 1.0f))
     )

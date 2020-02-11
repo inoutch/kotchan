@@ -162,6 +162,7 @@ open class Polygon(initMesh: Mesh) {
             target.copy(i * 4 + 3, c.w)
             i++
         }
+        target.range(change.first * 4, change.last * 4)
         colorsChange.reset()
     }
 
@@ -175,6 +176,7 @@ open class Polygon(initMesh: Mesh) {
             target.copy(i * 2 + 1, t.y)
             i++
         }
+        target.range(change.first * 2, change.last * 2)
         texcoordsChange.reset()
     }
 
@@ -189,6 +191,7 @@ open class Polygon(initMesh: Mesh) {
             target.copy(i * 3 + 2, n.z)
             i++
         }
+        target.range(change.first * 3, change.last * 3)
         normalsChange.reset()
     }
 
