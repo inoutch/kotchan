@@ -21,7 +21,7 @@ abstract class Camera {
                 val m3 = Matrix3F.createDiagonal(
                         2 / (right - left),
                         2 / (top - bottom),
-                        -1 / (far - near))
+                        1 / (far - near))
 
                 val tx = -(right + left) / (right - left)
                 val ty = -(top + bottom) / (top - bottom)
@@ -32,7 +32,7 @@ abstract class Camera {
                 val m3 = Matrix3F.createDiagonal(
                         2 / (right - left),
                         2 / (top - bottom),
-                        -2 / (far - near))
+                        2 / (far - near))
 
                 val tx = -(right + left) / (right - left)
                 val ty = -(top + bottom) / (top - bottom)
