@@ -40,6 +40,7 @@ import io.github.inoutch.kotlin.vulkan.api.VkImageType
 import io.github.inoutch.kotlin.vulkan.api.VkImageUsageFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkLogicOp
 import io.github.inoutch.kotlin.vulkan.api.VkMemoryAllocateInfo
+import io.github.inoutch.kotlin.vulkan.api.VkOffset2D
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineBindPoint
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineCache
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineColorBlendAttachmentState
@@ -364,8 +365,9 @@ class VKLogicalDevice(
         val vertexInputState = VkPipelineVertexInputStateCreateInfo(
                 VkStructureType.VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
                 0,
-                listOf()/* create2DVertexBindingDescriptions() */,
-                listOf()/* create2DVertexAttributeDescriptions() */)
+                create2DVertexBindingDescriptions(),
+                create2DVertexAttributeDescriptions()
+        )
 
         val inputAssemblyStateCreateInfo = VkPipelineInputAssemblyStateCreateInfo(
                 VkStructureType.VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO,
@@ -377,7 +379,8 @@ class VKLogicalDevice(
                 VkStructureType.VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO,
                 0,
                 listOf(),
-                listOf())
+                listOf()
+        )
 
         val rasterizationStateCreateInfo = VkPipelineRasterizationStateCreateInfo(
                 VkStructureType.VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO,

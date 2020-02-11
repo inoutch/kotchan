@@ -48,5 +48,6 @@ class AppScene(context: SceneContext) : Scene(context) {
 
     override suspend fun render(delta: Float) {
         graphic.clearColor(Vector4F(1.0f, .0f, .0f, 1.0f))
+        graphicsPipeline.bind()
     }
 }
