@@ -30,6 +30,8 @@ import io.github.inoutch.kotlin.vulkan.api.VkCommandBufferBeginInfo
 import io.github.inoutch.kotlin.vulkan.api.VkCommandBufferUsageFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkExtent2D
 import io.github.inoutch.kotlin.vulkan.api.VkImageAspectFlagBits
+import io.github.inoutch.kotlin.vulkan.api.VkImageLayout.VK_IMAGE_LAYOUT_GENERAL
+import io.github.inoutch.kotlin.vulkan.api.VkImageLayout.VK_IMAGE_LAYOUT_PRESENT_SRC_KHR
 import io.github.inoutch.kotlin.vulkan.api.VkImageSubresourceRange
 import io.github.inoutch.kotlin.vulkan.api.VkInstance
 import io.github.inoutch.kotlin.vulkan.api.VkInstanceCreateInfo
@@ -170,9 +172,19 @@ class VKContext(
         val beginInfo = VkCommandBufferBeginInfo(VkStructureType.VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO, usage, null)
         currentRenderContext.commandBuffer.resetCommandBuffer()
         currentRenderContext.commandBuffer.beginCommandBuffer(beginInfo)
+        currentRenderContext.commandBuffer.transitionImageLayout(
+                currentRenderContext.swapchainImage,
+                VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+                VK_IMAGE_LAYOUT_GENERAL
+        )
     }
 
     override fun end() {
+        currentRenderContext.commandBuffer.transitionImageLayout(
+                currentRenderContext.swapchainImage,
+                VK_IMAGE_LAYOUT_GENERAL,
+                VK_IMAGE_LAYOUT_PRESENT_SRC_KHR
+        )
         currentRenderContext.commandBuffer.endCommandBuffer()
 
         val currentInFlightFence = inFlightFences[currentFrame]

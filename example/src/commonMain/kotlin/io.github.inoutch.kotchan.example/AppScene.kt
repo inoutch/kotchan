@@ -59,7 +59,7 @@ class AppScene(context: SceneContext) : Scene(context) {
     override suspend fun render(delta: Float) {
         graphic.setViewport(config.viewport)
         graphic.clearColor(Vector4F(.3f, .3f, .3f, 1.0f))
-        graphic.clearDepth(1.0f)
+//        graphic.clearDepth(1.0f)
         batch.render()
     }
 }

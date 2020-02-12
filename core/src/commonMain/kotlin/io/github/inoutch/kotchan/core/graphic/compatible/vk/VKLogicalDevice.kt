@@ -40,6 +40,7 @@ import io.github.inoutch.kotlin.vulkan.api.VkImageType
 import io.github.inoutch.kotlin.vulkan.api.VkImageUsageFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkLogicOp
 import io.github.inoutch.kotlin.vulkan.api.VkMemoryAllocateInfo
+import io.github.inoutch.kotlin.vulkan.api.VkOffset2D
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineBindPoint
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineCache
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineColorBlendAttachmentState
@@ -55,6 +56,7 @@ import io.github.inoutch.kotlin.vulkan.api.VkPipelineVertexInputStateCreateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineViewportStateCreateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkPolygonMode
 import io.github.inoutch.kotlin.vulkan.api.VkPrimitiveTopology
+import io.github.inoutch.kotlin.vulkan.api.VkRect2D
 import io.github.inoutch.kotlin.vulkan.api.VkRenderPassCreateInfo
 import io.github.inoutch.kotlin.vulkan.api.VkResult
 import io.github.inoutch.kotlin.vulkan.api.VkSampleCountFlagBits
@@ -72,6 +74,7 @@ import io.github.inoutch.kotlin.vulkan.api.VkSubpassDependency
 import io.github.inoutch.kotlin.vulkan.api.VkSubpassDescription
 import io.github.inoutch.kotlin.vulkan.api.VkSurface
 import io.github.inoutch.kotlin.vulkan.api.VkSwapchainCreateInfoKHR
+import io.github.inoutch.kotlin.vulkan.api.VkViewport
 import io.github.inoutch.kotlin.vulkan.api.VkWriteDescriptorSet
 import io.github.inoutch.kotlin.vulkan.api.vk
 
@@ -373,8 +376,8 @@ class VKLogicalDevice(
         val viewportStateCreateInfo = VkPipelineViewportStateCreateInfo(
                 VkStructureType.VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO,
                 0,
-                listOf(),
-                listOf()
+                listOf(VkViewport(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f)),
+                listOf(VkRect2D(VkOffset2D(0, 0), VkExtent2D(0, 0)))
         )
 
         val rasterizationStateCreateInfo = VkPipelineRasterizationStateCreateInfo(
