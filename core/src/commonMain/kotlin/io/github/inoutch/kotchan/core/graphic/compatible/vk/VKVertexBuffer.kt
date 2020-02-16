@@ -4,6 +4,7 @@ import io.github.inoutch.kotchan.core.graphic.compatible.buffer.BufferStorageMod
 import io.github.inoutch.kotchan.core.graphic.compatible.buffer.VertexBuffer
 import io.github.inoutch.kotlin.vulkan.api.VkBufferUsageFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkMemoryPropertyFlagBits
+import io.github.inoutch.kotlin.vulkan.constant.FLOAT_SIZE
 
 class VKVertexBuffer(
     logicalDevice: VKLogicalDevice,
@@ -18,7 +19,7 @@ class VKVertexBuffer(
     init {
         val size = vertices.size.toLong()
         val bufferTmp = logicalDevice.createBuffer(
-                size,
+                size * FLOAT_SIZE,
                 listOf(VkBufferUsageFlagBits.VK_BUFFER_USAGE_VERTEX_BUFFER_BIT)
         )
         add(bufferTmp)

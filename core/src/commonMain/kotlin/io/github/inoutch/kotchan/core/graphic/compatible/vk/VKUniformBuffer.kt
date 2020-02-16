@@ -1,6 +1,7 @@
 package io.github.inoutch.kotchan.core.graphic.compatible.vk
 
 import io.github.inoutch.kotchan.core.Disposer
+import io.github.inoutch.kotlin.gl.constant.FLOAT_BYTE_SIZE
 import io.github.inoutch.kotlin.vulkan.api.VkBufferUsageFlagBits
 
 class VKUniformBuffer(
@@ -13,7 +14,7 @@ class VKUniformBuffer(
 
     init {
         buffer = logicalDevice.createBuffer(
-                size.toLong(),
+                size.toLong() * FLOAT_BYTE_SIZE,
                 listOf(VkBufferUsageFlagBits.VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT)
         )
         add(buffer)

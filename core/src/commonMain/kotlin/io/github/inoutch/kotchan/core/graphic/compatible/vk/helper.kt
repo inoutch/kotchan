@@ -76,7 +76,8 @@ fun create2DVertexBindingDescriptions(): List<VkVertexInputBindingDescription> {
     return listOf(
             VkVertexInputBindingDescription(0, 3 * FLOAT_SIZE.toInt(), inputRate), // pos
             VkVertexInputBindingDescription(1, 4 * FLOAT_SIZE.toInt(), inputRate), // col
-            VkVertexInputBindingDescription(2, 2 * FLOAT_SIZE.toInt(), inputRate)) // tex
+            VkVertexInputBindingDescription(2, 2 * FLOAT_SIZE.toInt(), inputRate)  // tex
+    )
 }
 
 fun create2DVertexAttributeDescriptions(): List<VkVertexInputAttributeDescription> {

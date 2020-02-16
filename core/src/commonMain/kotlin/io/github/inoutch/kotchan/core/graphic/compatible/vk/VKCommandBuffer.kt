@@ -5,6 +5,7 @@ import io.github.inoutch.kotlin.vulkan.api.VK_QUEUE_FAMILY_IGNORED
 import io.github.inoutch.kotlin.vulkan.api.VkAccessFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkClearColorValue
 import io.github.inoutch.kotlin.vulkan.api.VkClearDepthStencilValue
+import io.github.inoutch.kotlin.vulkan.api.VkClearValue
 import io.github.inoutch.kotlin.vulkan.api.VkCommandBuffer
 import io.github.inoutch.kotlin.vulkan.api.VkCommandBufferBeginInfo
 import io.github.inoutch.kotlin.vulkan.api.VkCommandBufferResetFlagBits
@@ -18,8 +19,12 @@ import io.github.inoutch.kotlin.vulkan.api.VkPipelineStageFlagBits.VK_PIPELINE_S
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineStageFlagBits.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineStageFlagBits.VK_PIPELINE_STAGE_TRANSFER_BIT
 import io.github.inoutch.kotlin.vulkan.api.VkRect2D
+import io.github.inoutch.kotlin.vulkan.api.VkRenderPassBeginInfo
 import io.github.inoutch.kotlin.vulkan.api.VkResult
 import io.github.inoutch.kotlin.vulkan.api.VkStructureType.VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER
+import io.github.inoutch.kotlin.vulkan.api.VkStructureType.VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO
+import io.github.inoutch.kotlin.vulkan.api.VkStructureType.VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO
+import io.github.inoutch.kotlin.vulkan.api.VkSubpassContents
 import io.github.inoutch.kotlin.vulkan.api.VkViewport
 import io.github.inoutch.kotlin.vulkan.api.vk
 import io.github.inoutch.kotlin.vulkan.utility.SingleCommandBuffer
@@ -76,6 +81,39 @@ class VKCommandBuffer(val commandPool: VKCommandPool, val commandBuffer: VkComma
                 depthStencilValue,
                 ranges
         )
+    }
+
+    fun cmdBeginRenderPass(
+            renderPass: VKRenderPass,
+            framebuffer: VKFramebuffer,
+            renderArea: VkRect2D,
+            clearValues: List<VkClearValue>
+    ) {
+        val renderPassBeginInfo = VkRenderPassBeginInfo(
+                VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+                renderPass.renderPass,
+                framebuffer.framebuffer,
+                renderArea,
+                clearValues
+        )
+        vk.cmdBeginRenderPass(commandBuffer, renderPassBeginInfo, VkSubpassContents.VK_SUBPASS_CONTENTS_INLINE)
+    }
+
+    fun cmdEndRenderPass() {
+        vk.cmdEndRenderPass(commandBuffer)
+    }
+
+    fun cmdBindVertexBuffers(vertexBuffers: List<VKVertexBuffer>) {
+        vk.cmdBindVertexBuffers(
+                commandBuffer,
+                0,
+                vertexBuffers.map { it.buffer.buffer },
+                vertexBuffers.map { 0L }
+        )
+    }
+
+    fun cmdDraw(vertexCount: Int, instanceCount: Int, firstVertex: Int, firstInstance: Int) {
+        vk.cmdDraw(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance)
     }
 
     fun transitionImageLayout(

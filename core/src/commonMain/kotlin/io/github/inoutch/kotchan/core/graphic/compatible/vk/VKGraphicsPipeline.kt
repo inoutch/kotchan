@@ -1,5 +1,6 @@
 package io.github.inoutch.kotchan.core.graphic.compatible.vk
 
+import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.graphic
 import io.github.inoutch.kotchan.core.graphic.compatible.GraphicsPipeline
 import io.github.inoutch.kotchan.core.graphic.compatible.GraphicsPipelineConfig
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.ShaderProgram
@@ -28,5 +29,6 @@ class VKGraphicsPipeline(
             uniformTextures[i].bind(descriptorSetTextureProviders[i].value)
             i++
         }
+        graphic.bindGraphicsPipeline(this)
     }
 }

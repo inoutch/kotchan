@@ -26,6 +26,7 @@ import io.github.inoutch.kotchan.math.Vector2I
 import io.github.inoutch.kotchan.math.Vector4F
 import io.github.inoutch.kotlin.vulkan.api.VkClearColorValue
 import io.github.inoutch.kotlin.vulkan.api.VkClearDepthStencilValue
+import io.github.inoutch.kotlin.vulkan.api.VkClearValue
 import io.github.inoutch.kotlin.vulkan.api.VkCommandBufferBeginInfo
 import io.github.inoutch.kotlin.vulkan.api.VkCommandBufferUsageFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkExtent2D
@@ -226,6 +227,14 @@ class VKContext(
 
     override fun drawTriangles(batchBufferBundle: BatchBufferBundle) {
         val graphicsPipeline = currentGraphicsPipeline ?: return
+        val buffers = batchBufferBundle.let {
+            listOf(
+                    it.positionBuffer.vertexBuffer as VKVertexBuffer,
+                    it.colorBuffer.vertexBuffer as VKVertexBuffer,
+                    it.texcoordBuffer.vertexBuffer as VKVertexBuffer
+            )
+        }
+
         val descriptorSetUniformProviders = graphicsPipeline.descriptorSetUniformProviders
         val descriptorSetTextureProviders = graphicsPipeline.descriptorSetTextureProviders
 
@@ -243,6 +252,20 @@ class VKContext(
         if (writeDescriptorSets.isNotEmpty()) {
             primaryLogicalDevice.updateDescriptorSets(writeDescriptorSets)
         }
+
+        currentRenderContext.commandBuffer.cmdBeginRenderPass(
+                swapchainRecreator.current.renderPass,
+                currentRenderContext.framebuffer,
+                VkRect2D(VkOffset2D(0, 0), swapchainRecreator.current.extent),
+                listOf(
+                        VkClearValue(VkClearColorValue(0.5f, 0.5f, 0.5f, 1.0f)),
+                        VkClearValue(VkClearDepthStencilValue(1.0f, 0))
+                )
+        )
+
+        currentRenderContext.commandBuffer.cmdBindVertexBuffers(buffers)
+        currentRenderContext.commandBuffer.cmdDraw(3, 1, 0, 0)
+        currentRenderContext.commandBuffer.cmdEndRenderPass()
     }
 
     override fun createShader(shaderSource: ShaderSource): Shader {
@@ -353,7 +376,7 @@ class VKContext(
 
     override fun clearDepth(depth: Float) {
         currentRenderContext.commandBuffer.cmdClearDepthStencilImage(
-                currentRenderContext.swapchainImage,
+                currentRenderContext.depthResource.depthImage,
                 VkClearDepthStencilValue(depth, 0),
                 listOf(VkImageSubresourceRange(listOf(VkImageAspectFlagBits.VK_IMAGE_ASPECT_DEPTH_BIT), 0, 1, 0, 1)))
     }
