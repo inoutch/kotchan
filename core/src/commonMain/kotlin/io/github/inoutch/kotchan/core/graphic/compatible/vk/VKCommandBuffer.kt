@@ -9,27 +9,22 @@ import io.github.inoutch.kotlin.vulkan.api.VkClearValue
 import io.github.inoutch.kotlin.vulkan.api.VkCommandBuffer
 import io.github.inoutch.kotlin.vulkan.api.VkCommandBufferBeginInfo
 import io.github.inoutch.kotlin.vulkan.api.VkCommandBufferResetFlagBits
-import io.github.inoutch.kotlin.vulkan.api.VkFormat
 import io.github.inoutch.kotlin.vulkan.api.VkImageAspectFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkImageLayout
 import io.github.inoutch.kotlin.vulkan.api.VkImageMemoryBarrier
 import io.github.inoutch.kotlin.vulkan.api.VkImageSubresourceRange
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineBindPoint.VK_PIPELINE_BIND_POINT_GRAPHICS
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineStageFlagBits
-import io.github.inoutch.kotlin.vulkan.api.VkPipelineStageFlagBits.VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineStageFlagBits.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineStageFlagBits.VK_PIPELINE_STAGE_TRANSFER_BIT
 import io.github.inoutch.kotlin.vulkan.api.VkRect2D
 import io.github.inoutch.kotlin.vulkan.api.VkRenderPassBeginInfo
 import io.github.inoutch.kotlin.vulkan.api.VkResult
 import io.github.inoutch.kotlin.vulkan.api.VkStructureType.VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER
-import io.github.inoutch.kotlin.vulkan.api.VkStructureType.VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO
 import io.github.inoutch.kotlin.vulkan.api.VkStructureType.VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO
 import io.github.inoutch.kotlin.vulkan.api.VkSubpassContents
 import io.github.inoutch.kotlin.vulkan.api.VkViewport
 import io.github.inoutch.kotlin.vulkan.api.vk
-import io.github.inoutch.kotlin.vulkan.utility.SingleCommandBuffer
-import io.github.inoutch.kotlin.vulkan.utility.hasStencilComponent
 
 class VKCommandBuffer(val commandPool: VKCommandPool, val commandBuffer: VkCommandBuffer) : Disposer() {
     init {
@@ -89,10 +84,10 @@ class VKCommandBuffer(val commandPool: VKCommandPool, val commandBuffer: VkComma
     }
 
     fun cmdBeginRenderPass(
-            renderPass: VKRenderPass,
-            framebuffer: VKFramebuffer,
-            renderArea: VkRect2D,
-            clearValues: List<VkClearValue>
+        renderPass: VKRenderPass,
+        framebuffer: VKFramebuffer,
+        renderArea: VkRect2D,
+        clearValues: List<VkClearValue>
     ) {
         val renderPassBeginInfo = VkRenderPassBeginInfo(
                 VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
@@ -122,9 +117,9 @@ class VKCommandBuffer(val commandPool: VKCommandPool, val commandBuffer: VkComma
     }
 
     fun transitionImageLayout(
-            image: VKImage,
-            oldLayout: VkImageLayout,
-            newLayout: VkImageLayout
+        image: VKImage,
+        oldLayout: VkImageLayout,
+        newLayout: VkImageLayout
     ) {
         val srcAccessMask: List<VkAccessFlagBits> = listOf()
         val dstAccessMask: List<VkAccessFlagBits> = listOf()
