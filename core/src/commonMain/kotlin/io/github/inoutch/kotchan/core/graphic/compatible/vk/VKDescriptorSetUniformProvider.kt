@@ -20,6 +20,9 @@ class VKDescriptorSetUniformProvider(private val descriptorSet: VKDescriptorSet)
     }
 
     fun writeDescriptorSet(): VkWriteDescriptorSet? {
+        if (!isChanged) {
+            return null
+        }
         val bundle = this.bundle ?: return null
         val bufferInfo = VkDescriptorBufferInfo(
                 bundle.uniform.buffer.buffer,

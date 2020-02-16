@@ -25,7 +25,7 @@ class VKVertexBuffer(
         add(bufferTmp)
 
         val bufferDeviceMemoryTmp = bufferTmp.allocateBufferDeviceMemory()
-        add(bufferTmp)
+        add(bufferDeviceMemoryTmp)
 
         val data = bufferDeviceMemoryTmp.mapMemory(0, listOf())
         data.copy(0, size, vertices)
@@ -33,7 +33,7 @@ class VKVertexBuffer(
 
         if (mode == BufferStorageMode.Static) {
             buffer = logicalDevice.createBuffer(
-                    size,
+                    size * FLOAT_SIZE,
                     listOf(VkBufferUsageFlagBits.VK_BUFFER_USAGE_TRANSFER_DST_BIT,
                             VkBufferUsageFlagBits.VK_BUFFER_USAGE_VERTEX_BUFFER_BIT)
             )
@@ -43,7 +43,7 @@ class VKVertexBuffer(
                     VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
             ))
             add(bufferDeviceMemory)
-            commandPool.copyBuffer(bufferTmp, 0L, buffer, 0L, size)
+            commandPool.copyBuffer(bufferTmp, 0L, buffer, 0L, size * FLOAT_SIZE)
 
             dispose(bufferDeviceMemoryTmp)
             dispose(bufferTmp)

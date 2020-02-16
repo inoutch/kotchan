@@ -9,10 +9,12 @@ class VKGraphicsPipeline(
     shaderProgram: ShaderProgram,
     config: GraphicsPipelineConfig,
     val pipeline: VKPipeline,
+    val pipelineLayout: VKPipelineLayout,
     val uniforms: List<VKUniform>,
     val uniformTextures: List<VKUniformTexture>,
     val descriptorSetLayout: VKDescriptorSetLayout,
     val descriptorPool: VKDescriptorPool,
+    val descriptorSets: List<VKValuePerSwapchainImage<VKDescriptorSet>>,
     val descriptorSetUniformProviders: List<VKValuePerSwapchainImage<VKDescriptorSetUniformProvider>>,
     val descriptorSetTextureProviders: List<VKValuePerSwapchainImage<VKDescriptorSetTextureProvider>>
 ) : GraphicsPipeline(shaderProgram, config) {

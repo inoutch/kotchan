@@ -33,7 +33,7 @@ class AppScene(context: SceneContext) : Scene(context) {
     private var texture: Texture? = null
 
     private val mesh = Mesh(
-            listOf(Vector3F(0.0f, 0.0f, 0.0f), Vector3F(500.0f, 0.0f, 0.0f), Vector3F(250.0f, 500.0f, 0.0f)),
+            listOf(Vector3F(0.0f, -0.5f, 0.0f), Vector3F(0.5f, 0.5f, 0.0f), Vector3F(-0.5f, 0.5f, 0.0f)),
             listOf(Vector2F.Zero, Vector2F.Zero, Vector2F.Zero),
             listOf(Vector4F(1.0f, 1.0f, 1.0f, 1.0f), Vector4F(1.0f, 1.0f, 1.0f, 1.0f), Vector4F(1.0f, 1.0f, 1.0f, 1.0f))
     )
@@ -43,7 +43,7 @@ class AppScene(context: SceneContext) : Scene(context) {
         val polygon2 = Polygon(mesh)
         polygon1.position = Vector3F(50.0f, 0.0f, 0.0f)
         polygon1.color = Vector4F(1.0f, 0.0f, 0.0f, 1.0f)
-        polygon2.position = Vector3F(0.0f, 0.0f, 10.0f)
+        polygon2.position = Vector3F(0.0f, 0.0f, 0.0f)
         polygon2.color = Vector4F(0.0f, 0.0f, 1.0f, 1.0f)
         batch.add(polygon1, 1)
         batch.add(polygon2, 0)

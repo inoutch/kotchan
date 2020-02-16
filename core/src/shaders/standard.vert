@@ -11,18 +11,9 @@ layout(binding = 0) uniform Matrix {
 layout(location = 0) out vec4 outColor;
 layout(location = 1) out vec2 outTexcoord;
 
-vec3 positions[6] = vec3[](
-vec3(0.0, -0.5, 0.0),
-vec3(0.5, 0.5, 0.0),
-vec3(-0.5, 0.5, 0.0),
-vec3(0.0, -0.5, 0.0),
-vec3(0.5, 0.5, 0.0),
-vec3(-0.5, 0.5, 0.0)
-);
-
 void main(void) {
     outColor = color;
     outTexcoord = texcoord;
     gl_Position = viewProjectionMatrix * vec4(position, 1.0);
-    gl_Position = vec4(positions[gl_VertexIndex], 1.0);
+    gl_Position = vec4(position, 1.0);
 }

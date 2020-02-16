@@ -264,8 +264,13 @@ class VKContext(
                 )
         )
 
+        currentRenderContext.commandBuffer.cmdBindDescriptorSets(
+                graphicsPipeline.pipelineLayout,
+                0,
+                graphicsPipeline.descriptorSets.map { it.value }
+        )
         currentRenderContext.commandBuffer.cmdBindVertexBuffers(buffers)
-        currentRenderContext.commandBuffer.cmdDraw(3, 1, 0, 0)
+        currentRenderContext.commandBuffer.cmdDraw(batchBufferBundle.size, 1, 0, 0)
         currentRenderContext.commandBuffer.cmdEndRenderPass()
     }
 
@@ -304,11 +309,14 @@ class VKContext(
             val descriptorPool = primaryLogicalDevice.createDescriptorPool()
             localDisposer.add(descriptorPool)
 
+            val descriptorSetValues = mutableListOf<VKValuePerSwapchainImage<VKDescriptorSet>>()
             val descriptorSetUniformProviders = uniforms.map { uniform ->
                 val descriptorSets = descriptorPool.allocateDescriptorSets(
                         List(swapchainRecreator.size) { descriptorSetLayout }
                 )
                 localDisposer.add(descriptorSets)
+
+                descriptorSetValues.add(VKValuePerSwapchainImage(currentSwapchainImageIndexManager, descriptorSets))
                 VKValuePerSwapchainImage(
                         currentSwapchainImageIndexManager,
                         descriptorSets.mapIndexed { index, d ->
@@ -324,6 +332,8 @@ class VKContext(
                         List(swapchainRecreator.size) { descriptorSetLayout }
                 )
                 localDisposer.add(descriptorSets)
+
+                descriptorSetValues.add(VKValuePerSwapchainImage(currentSwapchainImageIndexManager, descriptorSets))
                 VKValuePerSwapchainImage(
                         currentSwapchainImageIndexManager,
                         descriptorSets.map { VKDescriptorSetTextureProvider(it) }
@@ -335,10 +345,12 @@ class VKContext(
                     shaderProgram,
                     config,
                     pipeline,
+                    pipelineLayout,
                     uniforms,
                     uniformTextures,
                     descriptorSetLayout,
                     descriptorPool,
+                    descriptorSetValues,
                     descriptorSetUniformProviders,
                     descriptorSetSamplerProviders
             )

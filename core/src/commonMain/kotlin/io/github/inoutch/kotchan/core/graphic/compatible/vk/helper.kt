@@ -84,7 +84,8 @@ fun create2DVertexAttributeDescriptions(): List<VkVertexInputAttributeDescriptio
     return listOf(
             VkVertexInputAttributeDescription(0, 0, VkFormat.VK_FORMAT_R32G32B32_SFLOAT, 0),
             VkVertexInputAttributeDescription(1, 1, VkFormat.VK_FORMAT_R32G32B32A32_SFLOAT, 0),
-            VkVertexInputAttributeDescription(2, 2, VkFormat.VK_FORMAT_R32G32_SFLOAT, 0))
+            VkVertexInputAttributeDescription(2, 2, VkFormat.VK_FORMAT_R32G32_SFLOAT, 0)
+    )
 }
 
 fun create3DVertexBindingDescriptions(): List<VkVertexInputBindingDescription> {
@@ -93,7 +94,8 @@ fun create3DVertexBindingDescriptions(): List<VkVertexInputBindingDescription> {
             VkVertexInputBindingDescription(0, 3 * FLOAT_SIZE.toInt(), inputRate), // pos
             VkVertexInputBindingDescription(1, 4 * FLOAT_SIZE.toInt(), inputRate), // col
             VkVertexInputBindingDescription(2, 2 * FLOAT_SIZE.toInt(), inputRate), // tex
-            VkVertexInputBindingDescription(3, 3 * FLOAT_SIZE.toInt(), inputRate)) // nom
+            VkVertexInputBindingDescription(3, 3 * FLOAT_SIZE.toInt(), inputRate) // nom
+    )
 }
 
 fun create3DVertexAttributeDescriptions(): List<VkVertexInputAttributeDescription> {
@@ -101,5 +103,6 @@ fun create3DVertexAttributeDescriptions(): List<VkVertexInputAttributeDescriptio
             VkVertexInputAttributeDescription(0, 0, VkFormat.VK_FORMAT_R32G32B32_SFLOAT, 0),
             VkVertexInputAttributeDescription(1, 1, VkFormat.VK_FORMAT_R32G32B32A32_SFLOAT, 0),
             VkVertexInputAttributeDescription(2, 2, VkFormat.VK_FORMAT_R32G32_SFLOAT, 0),
-            VkVertexInputAttributeDescription(3, 3, VkFormat.VK_FORMAT_R32G32B32_SFLOAT, 0))
+            VkVertexInputAttributeDescription(3, 3, VkFormat.VK_FORMAT_R32G32B32_SFLOAT, 0)
+    )
 }

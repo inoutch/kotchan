@@ -21,6 +21,9 @@ class VKDescriptorSetTextureProvider(private val descriptorSet: VKDescriptorSet)
     }
 
     fun writeDescriptorSet(): VkWriteDescriptorSet? {
+        if (!isChanged) {
+            return null
+        }
         val bundle = this.bundle ?: return null
         val imageInfo = VkDescriptorImageInfo(
                 bundle.texture.sampler.sampler,

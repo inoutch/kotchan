@@ -13,6 +13,7 @@ import io.github.inoutch.kotlin.vulkan.api.VkImageAspectFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkImageLayout
 import io.github.inoutch.kotlin.vulkan.api.VkImageMemoryBarrier
 import io.github.inoutch.kotlin.vulkan.api.VkImageSubresourceRange
+import io.github.inoutch.kotlin.vulkan.api.VkPipelineBindPoint
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineBindPoint.VK_PIPELINE_BIND_POINT_GRAPHICS
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineStageFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkPipelineStageFlagBits.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT
@@ -101,6 +102,22 @@ class VKCommandBuffer(val commandPool: VKCommandPool, val commandBuffer: VkComma
 
     fun cmdEndRenderPass() {
         vk.cmdEndRenderPass(commandBuffer)
+    }
+
+    fun cmdBindDescriptorSets(
+            pipelineLayout: VKPipelineLayout,
+            firstSet: Int,
+            descriptorSets: List<VKDescriptorSet>,
+            dynamicOffsets: List<Int> = emptyList()
+    ) {
+        vk.cmdBindDescriptorSets(
+                commandBuffer,
+                VK_PIPELINE_BIND_POINT_GRAPHICS,
+                pipelineLayout.pipelineLayout,
+                firstSet,
+                descriptorSets.map { it.descriptorSet },
+                dynamicOffsets
+        )
     }
 
     fun cmdBindVertexBuffers(vertexBuffers: List<VKVertexBuffer>) {
