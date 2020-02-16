@@ -267,7 +267,7 @@ class VKContext(
         currentRenderContext.commandBuffer.cmdBindDescriptorSets(
                 graphicsPipeline.pipelineLayout,
                 0,
-                graphicsPipeline.descriptorSets.map { it.value }
+                listOf(graphicsPipeline.descriptorSet.value)
         )
         currentRenderContext.commandBuffer.cmdBindVertexBuffers(buffers)
         currentRenderContext.commandBuffer.cmdDraw(batchBufferBundle.size, 1, 0, 0)
@@ -284,6 +284,7 @@ class VKContext(
             val shader = shaderProgram.shader as VKShader
             val uniforms = shaderProgram.descriptorSets.filterIsInstance<VKUniform>()
             val uniformTextures = shaderProgram.descriptorSets.filterIsInstance<VKUniformTexture>()
+
             val descriptorSetLayout = primaryLogicalDevice.createDescriptorSetLayout(shaderProgram.descriptorSets.map {
                 convertToDescriptorSetLayoutBinding(it)
             })
@@ -309,38 +310,30 @@ class VKContext(
             val descriptorPool = primaryLogicalDevice.createDescriptorPool()
             localDisposer.add(descriptorPool)
 
-            val descriptorSetValues = mutableListOf<VKValuePerSwapchainImage<VKDescriptorSet>>()
-            val descriptorSetUniformProviders = uniforms.map { uniform ->
-                val descriptorSets = descriptorPool.allocateDescriptorSets(
-                        List(swapchainRecreator.size) { descriptorSetLayout }
-                )
-                localDisposer.add(descriptorSets)
+            val descriptorSets = descriptorPool.allocateDescriptorSets(
+                    List(swapchainRecreator.size) { descriptorSetLayout }
+            )
+            localDisposer.add(descriptorSets)
 
-                descriptorSetValues.add(VKValuePerSwapchainImage(currentSwapchainImageIndexManager, descriptorSets))
+            val descriptorSet = VKValuePerSwapchainImage(currentSwapchainImageIndexManager, descriptorSets)
+            val descriptorSetUniformProviders = uniforms.map { uniform ->
                 VKValuePerSwapchainImage(
                         currentSwapchainImageIndexManager,
                         descriptorSets.mapIndexed { index, d ->
-                            val descriptorSet = VKDescriptorSetUniformProvider(d)
-                            descriptorSet.set(uniform.binding, uniform.buffer.get(index))
-                            descriptorSet
+                            VKDescriptorSetUniformProvider(d).also {
+                                it.set(uniform.binding, uniform.buffer.get(index))
+                            }
                         }
                 )
             }
 
             val descriptorSetSamplerProviders = uniformTextures.map {
-                val descriptorSets = descriptorPool.allocateDescriptorSets(
-                        List(swapchainRecreator.size) { descriptorSetLayout }
-                )
-                localDisposer.add(descriptorSets)
-
-                descriptorSetValues.add(VKValuePerSwapchainImage(currentSwapchainImageIndexManager, descriptorSets))
                 VKValuePerSwapchainImage(
                         currentSwapchainImageIndexManager,
                         descriptorSets.map { VKDescriptorSetTextureProvider(it) }
                 )
             }
 
-            localDisposer.removeAll()
             val graphicsPipeline = VKGraphicsPipeline(
                     shaderProgram,
                     config,
@@ -350,7 +343,7 @@ class VKContext(
                     uniformTextures,
                     descriptorSetLayout,
                     descriptorPool,
-                    descriptorSetValues,
+                    descriptorSet,
                     descriptorSetUniformProviders,
                     descriptorSetSamplerProviders
             )
@@ -371,9 +364,9 @@ class VKContext(
     override fun setViewport(viewport: RectI) {
         currentRenderContext.commandBuffer.cmdSetViewport(VkViewport(
                 viewport.origin.x.toFloat(),
-                viewport.origin.y.toFloat(),
+                viewport.size.y.toFloat() - viewport.origin.y.toFloat(),
                 viewport.size.x.toFloat(),
-                viewport.size.y.toFloat(),
+                -viewport.size.y.toFloat(),
                 0.0f,
                 1.0f
         ))

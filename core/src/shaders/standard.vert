@@ -15,5 +15,4 @@ void main(void) {
     outColor = color;
     outTexcoord = texcoord;
     gl_Position = viewProjectionMatrix * vec4(position, 1.0);
-    gl_Position = vec4(position, 1.0);
 }

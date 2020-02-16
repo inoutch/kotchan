@@ -9,5 +9,4 @@ layout(location=0) out vec4 outColor;
 
 void main(void) {
     outColor = texture(texSampler, texcoord) * color;
-    outColor = vec4(outColor.rgb, 1.0);
 }
