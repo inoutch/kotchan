@@ -26,19 +26,22 @@ class AppScene(context: SceneContext) : Scene(context) {
 
     private val camera = Camera2D.create()
 
-    private val material = StandardMaterial.create(shaderProgram, camera, Texture.empty())
-
-    private val batch = Batch(material)
-
-    private var texture: Texture? = null
+    private var batch: Batch? = null
 
     private val mesh = Mesh(
             listOf(Vector3F(0.0f, 0.0f, 0.0f), Vector3F(500.0f, 0.0f, 0.0f), Vector3F(250.0f, 500.0f, 0.0f)),
-            listOf(Vector2F.Zero, Vector2F.Zero, Vector2F.Zero),
+            listOf(Vector2F(0.0f, 1.0f), Vector2F(1.0f, 1.0f), Vector2F(0.5f, 0.0f)),
             listOf(Vector4F(1.0f, 1.0f, 1.0f, 1.0f), Vector4F(1.0f, 1.0f, 1.0f, 1.0f), Vector4F(1.0f, 1.0f, 1.0f, 1.0f))
     )
 
-    init {
+    override suspend fun init() {
+        val pngByteArray = file.readBytesFromResourceWithErrorAsync("sprites/spritesheet.png").await()
+        val image = loadPNGByteArrayAsync(pngByteArray).await()
+        val texture = disposer.add(Texture.loadFromImage(image))
+
+        val material = StandardMaterial.create(shaderProgram, camera, texture)
+        val batch = disposer.add(Batch(material))
+
         val polygon1 = Polygon(mesh)
         val polygon2 = Polygon(mesh)
         polygon1.position = Vector3F(50.0f, 0.0f, 10.0f)
@@ -47,12 +50,8 @@ class AppScene(context: SceneContext) : Scene(context) {
         polygon2.color = Vector4F(0.0f, 0.0f, 1.0f, 1.0f)
         batch.add(polygon1, 1)
         batch.add(polygon2, 0)
-    }
 
-    override suspend fun init() {
-        val pngByteArray = file.readBytesFromResourceWithErrorAsync("sprites/spritesheet.png").await()
-        val image = loadPNGByteArrayAsync(pngByteArray).await()
-        texture = disposer.add(Texture.loadFromImage(image))
+        this.batch = batch
     }
 
     override suspend fun update(delta: Float) {
@@ -63,6 +62,6 @@ class AppScene(context: SceneContext) : Scene(context) {
         graphic.setViewport(config.viewport)
         graphic.clearColor(Vector4F(.3f, .3f, .3f, 1.0f))
         graphic.clearDepth(1.0f)
-        batch.render()
+        batch?.render()
     }
 }
