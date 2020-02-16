@@ -27,14 +27,14 @@ fun convertToDescriptorSetLayoutBinding(descriptorSet: DescriptorSet): VkDescrip
 fun findDescriptorType(descriptorSet: DescriptorSet): VkDescriptorType {
     return when (descriptorSet) {
         is Uniform -> VkDescriptorType.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER
-        is UniformTexture -> VkDescriptorType.VK_DESCRIPTOR_TYPE_SAMPLER
+        is UniformTexture -> VkDescriptorType.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
         else -> throw IllegalStateException("Invalid descriptor type")
     }
 }
 
 fun findShaderStageFlag(type: VkDescriptorType): VkShaderStageFlagBits {
     return when (type) {
-        VkDescriptorType.VK_DESCRIPTOR_TYPE_SAMPLER -> VkShaderStageFlagBits.VK_SHADER_STAGE_FRAGMENT_BIT
+        VkDescriptorType.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER -> VkShaderStageFlagBits.VK_SHADER_STAGE_FRAGMENT_BIT
         else -> VkShaderStageFlagBits.VK_SHADER_STAGE_ALL_GRAPHICS
     }
 }

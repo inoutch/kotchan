@@ -14,7 +14,10 @@ import io.github.inoutch.kotchan.core.graphic.compatible.loadPNGByteArrayAsync
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.StandardShaderProgram
 import io.github.inoutch.kotchan.core.graphic.material.StandardMaterial
 import io.github.inoutch.kotchan.core.graphic.polygon.Polygon
+import io.github.inoutch.kotchan.math.RectI
 import io.github.inoutch.kotchan.math.Vector2F
+import io.github.inoutch.kotchan.math.Vector2I
+import io.github.inoutch.kotchan.math.Vector2I.Companion
 import io.github.inoutch.kotchan.math.Vector3F
 import io.github.inoutch.kotchan.math.Vector4F
 
@@ -57,9 +60,10 @@ class AppScene(context: SceneContext) : Scene(context) {
     }
 
     override suspend fun render(delta: Float) {
+        graphic.setScissor(RectI(Vector2I.Zero, config.viewportSize))
         graphic.setViewport(config.viewport)
-        graphic.clearColor(Vector4F(.3f, .3f, .3f, 1.0f))
-        graphic.clearDepth(1.0f)
+//        graphic.clearColor(Vector4F(.3f, .3f, .3f, 1.0f))
+//        graphic.clearDepth(1.0f)
         batch.render()
     }
 }

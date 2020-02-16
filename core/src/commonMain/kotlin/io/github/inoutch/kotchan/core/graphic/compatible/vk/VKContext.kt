@@ -33,6 +33,7 @@ import io.github.inoutch.kotlin.vulkan.api.VkExtent2D
 import io.github.inoutch.kotlin.vulkan.api.VkImageAspectFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkImageLayout.VK_IMAGE_LAYOUT_GENERAL
 import io.github.inoutch.kotlin.vulkan.api.VkImageLayout.VK_IMAGE_LAYOUT_PRESENT_SRC_KHR
+import io.github.inoutch.kotlin.vulkan.api.VkImageLayout.VK_IMAGE_LAYOUT_UNDEFINED
 import io.github.inoutch.kotlin.vulkan.api.VkImageSubresourceRange
 import io.github.inoutch.kotlin.vulkan.api.VkInstance
 import io.github.inoutch.kotlin.vulkan.api.VkInstanceCreateInfo
@@ -183,7 +184,7 @@ class VKContext(
     override fun end() {
         currentRenderContext.commandBuffer.transitionImageLayout(
                 currentRenderContext.swapchainImage,
-                VK_IMAGE_LAYOUT_GENERAL,
+                VK_IMAGE_LAYOUT_UNDEFINED,
                 VK_IMAGE_LAYOUT_PRESENT_SRC_KHR
         )
         currentRenderContext.commandBuffer.endCommandBuffer()
@@ -346,7 +347,9 @@ class VKContext(
     }
 
     override fun bindGraphicsPipeline(graphicsPipeline: GraphicsPipeline) {
-        currentGraphicsPipeline = graphicsPipeline as? VKGraphicsPipeline ?: return
+        check(graphicsPipeline is VKGraphicsPipeline)
+        currentGraphicsPipeline = graphicsPipeline
+        currentRenderContext.commandBuffer.cmdBindPipeline(graphicsPipeline.pipeline)
     }
 
     override fun setViewport(viewport: RectI) {

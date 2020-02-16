@@ -32,7 +32,7 @@ class VKDescriptorSetTextureProvider(private val descriptorSet: VKDescriptorSet)
                 descriptorSet.descriptorSet,
                 bundle.binding,
                 0,
-                VkDescriptorType.VK_DESCRIPTOR_TYPE_SAMPLER,
+                VkDescriptorType.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
                 listOf(imageInfo),
                 listOf(),
                 listOf()

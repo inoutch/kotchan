@@ -487,7 +487,7 @@ class VKLogicalDevice(
     fun createDescriptorPool(
         maxSets: Int = 64,
         poolSizes: List<VkDescriptorPoolSize> = listOf(
-                VkDescriptorPoolSize(VkDescriptorType.VK_DESCRIPTOR_TYPE_SAMPLER, 32),
+                VkDescriptorPoolSize(VkDescriptorType.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 32),
                 VkDescriptorPoolSize(VkDescriptorType.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 32)
         )
     ): VKDescriptorPool {
