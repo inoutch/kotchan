@@ -304,14 +304,18 @@ class VKContext(
             val descriptorPool = primaryLogicalDevice.createDescriptorPool()
             localDisposer.add(descriptorPool)
 
-            val descriptorSetUniformProviders = uniforms.map {
+            val descriptorSetUniformProviders = uniforms.map { uniform ->
                 val descriptorSets = descriptorPool.allocateDescriptorSets(
                         List(swapchainRecreator.size) { descriptorSetLayout }
                 )
                 localDisposer.add(descriptorSets)
                 VKValuePerSwapchainImage(
                         currentSwapchainImageIndexManager,
-                        descriptorSets.map { VKDescriptorSetUniformProvider(it) }
+                        descriptorSets.mapIndexed { index, d ->
+                            val descriptorSet = VKDescriptorSetUniformProvider(d)
+                            descriptorSet.set(uniform.binding, uniform.buffer.get(index))
+                            descriptorSet
+                        }
                 )
             }
 

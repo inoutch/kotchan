@@ -31,7 +31,7 @@ class VKDescriptorSetUniformProvider(private val descriptorSet: VKDescriptorSet)
                 descriptorSet.descriptorSet,
                 bundle.binding,
                 0,
-                VkDescriptorType.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+                VkDescriptorType.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
                 listOf(),
                 listOf(bufferInfo),
                 listOf()

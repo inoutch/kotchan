@@ -6,4 +6,6 @@ class VKValuePerSwapchainImage<T>(
 ) {
     val value: T
         get() = values[indexManager.index]
+
+    fun get(index: Int) = values[index]
 }
