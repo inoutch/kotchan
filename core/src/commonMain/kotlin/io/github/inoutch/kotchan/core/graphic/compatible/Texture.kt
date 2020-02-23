@@ -3,8 +3,6 @@ package io.github.inoutch.kotchan.core.graphic.compatible
 import io.github.inoutch.kotchan.core.Disposer
 import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.graphic
 import io.github.inoutch.kotchan.math.Vector2I
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 
 abstract class Texture(val config: Config) : Disposer() {
     companion object {
@@ -12,9 +10,9 @@ abstract class Texture(val config: Config) : Disposer() {
             return graphic.loadTexture(image, config)
         }
 
-        fun loadFromFileAsync(filepath: String, config: Config = Config()) = GlobalScope.async {
-            val image = Image.loadFromFileAsync(filepath).await() ?: return@async null
-            loadFromImage(image, config)
+        suspend fun loadFromFile(filepath: String, config: Config = Config()): Texture? {
+            val image = Image.loadFromFile(filepath) ?: return null
+            return loadFromImage(image, config)
         }
 
         fun empty(): Texture {

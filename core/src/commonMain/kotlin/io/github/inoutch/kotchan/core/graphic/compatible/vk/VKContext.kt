@@ -50,6 +50,10 @@ import io.github.inoutch.kotlin.vulkan.api.VkViewport
 import io.github.inoutch.kotlin.vulkan.api.VkWriteDescriptorSet
 import io.github.inoutch.kotlin.vulkan.api.vk
 import io.github.inoutch.kotlin.vulkan.utility.MutableProperty
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlin.math.min
 
 class VKContext(

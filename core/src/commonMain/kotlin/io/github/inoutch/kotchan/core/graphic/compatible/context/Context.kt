@@ -21,6 +21,8 @@ import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Unifo
 import io.github.inoutch.kotchan.math.RectI
 import io.github.inoutch.kotchan.math.Vector2I
 import io.github.inoutch.kotchan.math.Vector4F
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 
 interface Context : Disposable {
     fun begin()

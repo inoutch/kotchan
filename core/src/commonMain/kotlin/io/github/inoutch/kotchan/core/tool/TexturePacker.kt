@@ -9,8 +9,6 @@ import io.github.inoutch.kotchan.core.io.file.readTextAsync
 import io.github.inoutch.kotchan.math.RectF
 import io.github.inoutch.kotchan.math.Vector2F
 import io.github.inoutch.kotchan.utility.Path
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
@@ -18,7 +16,7 @@ import kotlinx.serialization.json.JsonConfiguration
 class TexturePacker private constructor() {
     companion object {
         @ExperimentalStdlibApi
-        fun loadFileAsync(textureDir: String, filepath: String) = GlobalScope.async {
+        suspend fun loadFile(textureDir: String, filepath: String): Bundle {
             val text = file.readTextAsync(filepath).await()
             checkNotNull(text) { "Failed to load $filepath" }
 
@@ -26,7 +24,7 @@ class TexturePacker private constructor() {
             val root = json.parse(Root.serializer(), text)
 
             val imagePath = Path.resolve(textureDir, root.meta.image)
-            val texture = Texture.loadFromFileAsync(imagePath).await()
+            val texture = Texture.loadFromFile(imagePath)
             checkNotNull(texture) { "Failed to load $imagePath" }
 
             val textureFrames = root.frames.map {
@@ -39,12 +37,12 @@ class TexturePacker private constructor() {
                         it.value.sourceSize.toVector2F()
                 )
             }
-            Bundle(TextureAtlas(textureFrames, texture.size), texture)
+            return Bundle(TextureAtlas(textureFrames, texture.size), texture)
         }
 
         @ExperimentalStdlibApi
-        fun loadFileWithResourceAsync(textureDir: String, filepath: String) =
-                loadFileAsync(file.getResourcePathWithError(textureDir), file.getResourcePathWithError(filepath))
+        suspend fun loadFileWithResource(textureDir: String, filepath: String) =
+                loadFile(file.getResourcePathWithError(textureDir), file.getResourcePathWithError(filepath))
     }
 
     data class Bundle(val textureAtlas: TextureAtlas, val texture: Texture)

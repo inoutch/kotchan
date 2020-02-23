@@ -158,7 +158,7 @@ attribute vec4 point;
 attribute vec4 color;
 attribute vec2 texcoord;
 
-uniform mat4 u_viewProjectionMatrix;
+uniform mat4 uViewProjectionMatrix;
 
 varying vec4 vColor;
 varying vec2 vTexcoord;
@@ -166,7 +166,7 @@ varying vec2 vTexcoord;
 void main(void) {
     vColor = color;
     vTexcoord = texcoord;
-    gl_Position = u_viewProjectionMatrix * point;
+    gl_Position = uViewProjectionMatrix * point;
 }
 """
 
@@ -179,10 +179,10 @@ precision mediump int;
 varying vec4 vColor;
 varying vec2 vTexcoord;
 
-uniform sampler2D u_texture0;
+uniform sampler2D uTexture0;
 
 void main(void) {
-    gl_FragColor = vColor * texture2D(u_texture0, vTexcoord);
+    gl_FragColor = vColor * texture2D(uTexture0, vTexcoord);
 }
 """
 
@@ -212,8 +212,8 @@ open class StandardShaderProgram private constructor(
 
         private fun createDescriptorSets(): List<DescriptorSet> {
             return listOf(
-                    graphic.createUniformMatrix4F(0, "u_viewProjectionMatrix"),
-                    graphic.createUniformTexture(1, "u_texture0")
+                    graphic.createUniformMatrix4F(0, "uViewProjectionMatrix"),
+                    graphic.createUniformTexture(1, "uTexture0")
             )
         }
     }
