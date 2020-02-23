@@ -1,6 +1,8 @@
 package io.github.inoutch.kotchan.core.graphic.camera
 
 import io.github.inoutch.kotchan.core.KotchanGlobalContext
+import io.github.inoutch.kotchan.math.Matrix4F
+import io.github.inoutch.kotchan.math.Vector3F
 
 class Camera2D private constructor() : Camera() {
     companion object {
@@ -17,5 +19,12 @@ class Camera2D private constructor() : Camera() {
                 update()
             }
         }
+    }
+
+    var position = Vector3F.Zero
+
+    override fun update() {
+        viewMatrix = Matrix4F.createTranslation(position)
+        super.update()
     }
 }
