@@ -16,7 +16,7 @@ open class Polygon(initMesh: Mesh) {
     var visible = true
         set(value) {
             if (field != value) {
-                allPolygons { it.positionsChange.updateAll() }
+                updatePositionAll()
             }
             field = value
         }
@@ -24,7 +24,7 @@ open class Polygon(initMesh: Mesh) {
     open var position = Vector3F.Zero
         set(value) {
             if (field != value) {
-                allPolygons { it.positionsChange.updateAll() }
+                updatePositionAll()
             }
             field = value
         }
@@ -32,7 +32,7 @@ open class Polygon(initMesh: Mesh) {
     open var color = Vector4F(1.0f, 1.0f, 1.0f, 1.0f)
         set(value) {
             if (field != value) {
-                allPolygons { it.colorsChange.updateAll() }
+                updateColorAll()
             }
             field = value
         }
@@ -40,7 +40,7 @@ open class Polygon(initMesh: Mesh) {
     open var scale = Vector3F(1.0f, 1.0f, 1.0f)
         set(value) {
             if (field != value) {
-                positionsChange.updateAll()
+                updatePositionAll()
             }
             field = value
         }
@@ -193,6 +193,18 @@ open class Polygon(initMesh: Mesh) {
         }
         target.range(change.first * 3, change.last * 3)
         normalsChange.reset()
+    }
+
+    protected fun updatePositionAll() {
+        allPolygons { it.positionsChange.updateAll() }
+    }
+
+    protected fun updateColorAll() {
+        allPolygons { it.colorsChange.updateAll() }
+    }
+
+    protected fun updateTexcoordAll() {
+        allPolygons { it.texcoordsChange.updateAll() }
     }
 
     protected open fun transform(): Matrix4F {

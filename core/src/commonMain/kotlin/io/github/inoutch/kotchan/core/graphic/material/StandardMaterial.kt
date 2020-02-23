@@ -18,9 +18,10 @@ class StandardMaterial private constructor(
         fun create(
             standardShaderProgram: StandardShaderProgram,
             camera: Camera,
-            texture: Texture
+            texture: Texture,
+            graphicsPipelineConfig: GraphicsPipelineConfig = GraphicsPipelineConfig()
         ): StandardMaterial {
-            return StandardMaterial(standardShaderProgram, camera, texture)
+            return StandardMaterial(standardShaderProgram, camera, texture, graphicsPipelineConfig)
         }
     }
 

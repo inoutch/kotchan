@@ -393,8 +393,8 @@ class VKContext(
                 listOf(VkImageSubresourceRange(listOf(VkImageAspectFlagBits.VK_IMAGE_ASPECT_DEPTH_BIT), 0, 1, 0, 1)))
     }
 
-    override fun loadTexture(image: Image): Texture {
-        return VKTexture(primaryLogicalDevice, primaryGraphicCommandPool, image)
+    override fun loadTexture(image: Image, config: Texture.Config): Texture {
+        return VKTexture(primaryLogicalDevice, primaryGraphicCommandPool, image, config)
     }
 
     override fun emptyTexture(): Texture {

@@ -3,11 +3,18 @@ package io.github.inoutch.kotchan.core.graphic.compatible
 import io.github.inoutch.kotchan.core.Disposer
 import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.graphic
 import io.github.inoutch.kotchan.math.Vector2I
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 
-abstract class Texture : Disposer() {
+abstract class Texture(val config: Config) : Disposer() {
     companion object {
-        fun loadFromImage(image: Image): Texture {
-            return graphic.loadTexture(image)
+        fun loadFromImage(image: Image, config: Config = Config()): Texture {
+            return graphic.loadTexture(image, config)
+        }
+
+        fun loadFromFileAsync(filepath: String, config: Config = Config()) = GlobalScope.async {
+            val image = Image.loadFromFileAsync(filepath).await() ?: return@async null
+            loadFromImage(image, config)
         }
 
         fun empty(): Texture {
@@ -15,10 +22,13 @@ abstract class Texture : Disposer() {
         }
     }
 
+    data class Config(
+            val addressModeU: TextureAddressMode = TextureAddressMode.CLAMP_TO_EDGE,
+            val addressModeV: TextureAddressMode = TextureAddressMode.CLAMP_TO_EDGE,
+            val magFilter: TextureFilter = TextureFilter.LINEAR,
+            val minFilter: TextureFilter = TextureFilter.LINEAR,
+            val mipmapMode: TextureMipmapMode = TextureMipmapMode.LINER
+    )
+
     abstract val size: Vector2I
-    open var addressModeU: TextureAddressMode = TextureAddressMode.REPEAT
-    open var addressModeV: TextureAddressMode = TextureAddressMode.REPEAT
-    open var magFilter: TextureFilter = TextureFilter.LINEAR
-    open var minFilter: TextureFilter = TextureFilter.LINEAR
-    open var mipmapMode: TextureMipmapMode = TextureMipmapMode.LINER
 }

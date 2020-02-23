@@ -35,7 +35,7 @@ interface Context : Disposable {
     fun setScissor(scissor: RectI)
     fun clearColor(color: Vector4F)
     fun clearDepth(depth: Float)
-    fun loadTexture(image: Image): Texture
+    fun loadTexture(image: Image, config: Texture.Config = Texture.Config()): Texture
     fun emptyTexture(): Texture
     fun createUniform1I(binding: Int, uniformName: String): Uniform1I
     fun createUniform1F(binding: Int, uniformName: String): Uniform1F

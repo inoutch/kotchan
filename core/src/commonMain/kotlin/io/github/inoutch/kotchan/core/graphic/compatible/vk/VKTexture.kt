@@ -17,8 +17,9 @@ import io.github.inoutch.kotlin.vulkan.api.VkMemoryPropertyFlagBits
 class VKTexture(
     logicalDevice: VKLogicalDevice,
     commandPool: VKCommandPool,
-    imageRaw: Image
-) : Texture() {
+    imageRaw: Image,
+    config: Config
+) : Texture(config) {
 
     override val size: Vector2I = imageRaw.size
 
@@ -117,11 +118,11 @@ class VKTexture(
             add(imageView)
 
             sampler = logicalDevice.createSampler(
-                    magFilter.vkParam,
-                    minFilter.vkParam,
-                    mipmapMode.vkParam,
-                    addressModeU.vkParam,
-                    addressModeV.vkParam
+                    config.magFilter.vkParam,
+                    config.minFilter.vkParam,
+                    config.mipmapMode.vkParam,
+                    config.addressModeU.vkParam,
+                    config.addressModeV.vkParam
             )
             add(sampler)
         } catch (e: Error) {

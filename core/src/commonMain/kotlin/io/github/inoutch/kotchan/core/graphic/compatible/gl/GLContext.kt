@@ -105,8 +105,8 @@ class GLContext : Context {
         gl.clear(GL_DEPTH_BUFFER_BIT)
     }
 
-    override fun loadTexture(image: Image): Texture {
-        return GLTexture(image)
+    override fun loadTexture(image: Image, config: Texture.Config): Texture {
+        return GLTexture(image, config)
     }
 
     override fun emptyTexture(): Texture {

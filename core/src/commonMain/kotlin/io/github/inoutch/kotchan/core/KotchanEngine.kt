@@ -3,6 +3,7 @@ package io.github.inoutch.kotchan.core
 import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.config
 import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.graphic
 import io.github.inoutch.kotchan.core.view.scene.SceneManager
+import io.github.inoutch.kotchan.math.RectI
 import io.github.inoutch.kotchan.math.Vector2I
 
 class KotchanEngine(config: KotchanStartupConfig) {
