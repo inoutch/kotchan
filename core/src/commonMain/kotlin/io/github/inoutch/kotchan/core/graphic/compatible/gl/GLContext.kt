@@ -25,6 +25,7 @@ import io.github.inoutch.kotlin.gl.api.GL_ARRAY_BUFFER
 import io.github.inoutch.kotlin.gl.api.GL_COLOR_BUFFER_BIT
 import io.github.inoutch.kotlin.gl.api.GL_DEPTH_BUFFER_BIT
 import io.github.inoutch.kotlin.gl.api.GL_FLOAT
+import io.github.inoutch.kotlin.gl.api.GL_TEXTURE_2D
 import io.github.inoutch.kotlin.gl.api.GL_TRIANGLES
 import io.github.inoutch.kotlin.gl.api.gl
 import io.github.inoutch.kotlin.gl.constant.FLOAT_BYTE_SIZE
@@ -38,7 +39,10 @@ class GLContext : Context {
 
     override fun begin() {}
 
-    override fun end() {}
+    override fun end() {
+        gl.bindTexture(GL_TEXTURE_2D, 0)
+        gl.useProgram(0)
+    }
 
     override fun resize(windowSize: Vector2I) {
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.

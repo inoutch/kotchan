@@ -3,6 +3,7 @@ package io.github.inoutch.kotchan.core.graphic.compatible.gl
 import io.github.inoutch.kotchan.core.graphic.compatible.GraphicsPipeline
 import io.github.inoutch.kotchan.core.graphic.compatible.GraphicsPipelineConfig
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.ShaderProgram
+import io.github.inoutch.kotlin.gl.api.GL_BLEND
 import io.github.inoutch.kotlin.gl.api.GL_CULL_FACE
 import io.github.inoutch.kotlin.gl.api.GL_DEPTH_TEST
 import io.github.inoutch.kotlin.gl.api.GL_LESS
@@ -45,6 +46,12 @@ class GLGraphicsPipeline(
 
         gl.enable(GL_CULL_FACE)
         gl.cullFace(config.cullMode.toGLCullMode())
+
+        gl.enable(GL_BLEND)
+        gl.blendFunc(
+                config.srcBlendFactor.toGLBlendFactor(),
+                config.dstBlendFactor.toGLBlendFactor()
+        )
 
         val shader = shaderProgram.shader
         check(shader is GLShader)

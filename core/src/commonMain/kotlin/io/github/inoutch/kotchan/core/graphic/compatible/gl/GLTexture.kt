@@ -18,6 +18,7 @@ import io.github.inoutch.kotlin.gl.api.GL_TEXTURE_MAG_FILTER
 import io.github.inoutch.kotlin.gl.api.GL_TEXTURE_MIN_FILTER
 import io.github.inoutch.kotlin.gl.api.GL_TEXTURE_WRAP_S
 import io.github.inoutch.kotlin.gl.api.GL_TEXTURE_WRAP_T
+import io.github.inoutch.kotlin.gl.api.GL_UNPACK_ALIGNMENT
 import io.github.inoutch.kotlin.gl.api.GL_UNSIGNED_BYTE
 import io.github.inoutch.kotlin.gl.api.GLint
 import io.github.inoutch.kotlin.gl.api.gl
@@ -72,11 +73,14 @@ class GLTexture(image: Image) : Texture() {
     init {
         val format = GL_RGBA
         gl.bindTexture(GL_TEXTURE_2D, id)
+        gl.pixelStorei(GL_UNPACK_ALIGNMENT, 1)
+        gl.texImage2D(GL_TEXTURE_2D, 0, format, image.size.x, image.size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.byteArray)
+
         gl.texParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, computedMinFilter(minFilter, mipmapMode))
         gl.texParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, computedMagFilter(magFilter))
         gl.texParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, addressModeU.glParam)
         gl.texParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, addressModeV.glParam)
-        gl.texImage2D(GL_TEXTURE_2D, 0, format, image.size.x, image.size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.byteArray)
+        gl.bindTexture(GL_TEXTURE_2D, 0)
     }
 
     fun bind() {
@@ -95,21 +99,34 @@ class GLTexture(image: Image) : Texture() {
     }
 
     private fun computedMagFilter(magFilter: TextureFilter): GLint {
+        // TODO: Improve performance using map
         return when (magFilter) {
             TextureFilter.NEAREST -> GL_NEAREST
             TextureFilter.LINEAR -> GL_LINEAR
         }
     }
 
-    private fun computedMinFilter(minFilter: TextureFilter, mipmapMode: TextureMipmapMode): GLint {
-        return if (minFilter == TextureFilter.LINEAR && mipmapMode == TextureMipmapMode.LINER) {
-            GL_LINEAR_MIPMAP_LINEAR
-        } else if (minFilter == TextureFilter.LINEAR && mipmapMode == TextureMipmapMode.NEAREST) {
-            GL_LINEAR_MIPMAP_NEAREST
-        } else if (minFilter == TextureFilter.NEAREST && mipmapMode == TextureMipmapMode.LINER) {
-            GL_NEAREST_MIPMAP_LINEAR
+    private fun computedMinFilter(
+            minFilter: TextureFilter,
+            mipmapMode: TextureMipmapMode,
+            mipmapLevel: Int = 0
+    ): GLint {
+        // TODO: Improve performance using map
+        if (mipmapLevel > 0) {
+            return if (minFilter == TextureFilter.LINEAR && mipmapMode == TextureMipmapMode.LINER) {
+                GL_LINEAR_MIPMAP_LINEAR
+            } else if (minFilter == TextureFilter.LINEAR && mipmapMode == TextureMipmapMode.NEAREST) {
+                GL_LINEAR_MIPMAP_NEAREST
+            } else if (minFilter == TextureFilter.NEAREST && mipmapMode == TextureMipmapMode.LINER) {
+                GL_NEAREST_MIPMAP_LINEAR
+            } else {
+                GL_NEAREST_MIPMAP_NEAREST
+            }
+        }
+        return if (minFilter == TextureFilter.LINEAR) {
+            GL_LINEAR
         } else {
-            GL_NEAREST_MIPMAP_NEAREST
+            GL_NEAREST
         }
     }
 }
