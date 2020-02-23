@@ -1,20 +1,18 @@
 package io.github.inoutch.kotchan.example
 
 import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.config
-import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.file
 import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.graphic
 import io.github.inoutch.kotchan.core.graphic.batch.Batch
 import io.github.inoutch.kotchan.core.graphic.compatible.Texture
-import io.github.inoutch.kotchan.core.io.file.readBytesFromResourceWithErrorAsync
 import io.github.inoutch.kotchan.core.view.scene.Scene
 import io.github.inoutch.kotchan.core.view.scene.SceneContext
 import io.github.inoutch.kotchan.core.graphic.Mesh
 import io.github.inoutch.kotchan.core.graphic.camera.Camera2D
-import io.github.inoutch.kotchan.core.graphic.compatible.loadPNGByteArrayAsync
+import io.github.inoutch.kotchan.core.graphic.compatible.Image
+import io.github.inoutch.kotchan.core.graphic.compatible.TextureFilter
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.StandardShaderProgram
 import io.github.inoutch.kotchan.core.graphic.material.StandardMaterial
 import io.github.inoutch.kotchan.core.graphic.polygon.Polygon
-import io.github.inoutch.kotchan.core.tool.TexturePacker
 import io.github.inoutch.kotchan.math.RectI
 import io.github.inoutch.kotchan.math.Vector2F
 import io.github.inoutch.kotchan.math.Vector2I
@@ -22,7 +20,7 @@ import io.github.inoutch.kotchan.math.Vector3F
 import io.github.inoutch.kotchan.math.Vector4F
 
 @ExperimentalStdlibApi
-class AppScene(context: SceneContext) : Scene(context) {
+class TriangleScene(context: SceneContext) : Scene(context) {
     private val shaderProgram = StandardShaderProgram.create()
 
     private val camera = Camera2D.create()
@@ -36,23 +34,31 @@ class AppScene(context: SceneContext) : Scene(context) {
     )
 
     override suspend fun init() {
-        val pngByteArray = file.readBytesFromResourceWithErrorAsync("sprites/spritesheet.png").await()
-        val image = loadPNGByteArrayAsync(pngByteArray).await()
-        val texture = disposer.add(Texture.loadFromImage(image))
-
+        val pixels = byteArrayOf(
+                -1, -1, -1, -1, 127, 127, 127, -1,
+                127, 127, 127, -1, -1, -1, -1, -1
+        )
+        val image = Image(pixels, Vector2I(2, 2))
+        val textureConfig = Texture.Config(
+                magFilter = TextureFilter.NEAREST,
+                minFilter = TextureFilter.NEAREST
+        )
+        val texture = disposer.add(Texture.loadFromImage(image, textureConfig))
         val material = StandardMaterial.create(shaderProgram, camera, texture)
         val batch = disposer.add(Batch(material))
 
-        val polygon1 = Polygon(mesh)
-        val polygon2 = Polygon(mesh)
-        polygon1.position = Vector3F(50.0f, 0.0f, 10.0f)
-        polygon1.color = Vector4F(1.0f, 0.0f, 0.0f, 1.0f)
-        polygon2.position = Vector3F(0.0f, 0.0f, 0.0f)
-        polygon2.color = Vector4F(0.0f, 0.0f, 1.0f, 1.0f)
-        batch.add(polygon1, 1)
-        batch.add(polygon2, 0)
+        val polygon1 = Polygon(mesh) // Red
+        val polygon2 = Polygon(mesh) // Blue
 
-        val textureBundle = TexturePacker.loadFileWithResourceAsync("sprites", "sprites/spritesheet.json").await()
+        // Use depth test
+        polygon1.position = Vector3F(50.0f, 0.0f, 0.0f)
+        polygon1.color = Vector4F(1.0f, 0.0f, 0.0f, 1.0f)
+        polygon2.position = Vector3F(0.0f, 0.0f, 10.0f)
+        polygon2.color = Vector4F(0.0f, 0.0f, 1.0f, 1.0f)
+
+        batch.add(polygon1)
+        batch.add(polygon2)
+
         this.batch = batch
     }
 
