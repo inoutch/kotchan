@@ -52,7 +52,7 @@ class AppScene(context: SceneContext) : Scene(context) {
         batch.add(polygon1, 1)
         batch.add(polygon2, 0)
 
-        val textureBundle = TexturePacker.loadFileWithResourceAsync("sprites", "sprites/spritesheet.json").await()
+        val textureBundle = TexturePacker.loadFileWithResource("sprites", "sprites/spritesheet.json")
         this.batch = batch
     }
 
