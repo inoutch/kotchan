@@ -5,7 +5,7 @@ import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.graphic
 import io.github.inoutch.kotchan.core.graphic.material.Material
 import io.github.inoutch.kotchan.extension.fastForEach
 
-abstract class BatchBase<TObject>(val material: Material): Disposer() {
+abstract class BatchBase<TObject>(val material: Material) : Disposer() {
     data class Bundle(val stride: Int, val batchBuffer: BatchBuffer)
 
     abstract val bundles: List<Bundle>

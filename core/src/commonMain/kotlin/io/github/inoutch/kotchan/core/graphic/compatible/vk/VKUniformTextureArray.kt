@@ -4,8 +4,8 @@ import io.github.inoutch.kotchan.core.graphic.compatible.Texture
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformTextureArray
 
 class VKUniformTextureArray(
-        binding: Int,
-        uniformName: String
+    binding: Int,
+    uniformName: String
 ) : UniformTextureArray(binding, uniformName) {
     private var provider: VKDescriptorSetTextureArrayProvider? = null
 

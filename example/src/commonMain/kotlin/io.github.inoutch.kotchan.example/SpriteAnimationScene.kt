@@ -26,7 +26,7 @@ class SpriteAnimationScene(context: SceneContext) : Scene(context) {
     private var batch: Batch? = null
 
     override suspend fun init() {
-        val bundle = TexturePacker.loadFileWithResource("sprites", "sprites/spritesheet.json")
+        val bundle = TexturePacker.loadFromResourceWithError("sprites", "sprites/spritesheet.json")
         disposer.add(bundle.texture)
 
         val animations = listOf(AnimatedSpriteAtlas.AnimationSet(List(8) { "go_${it + 1}.png" }, 0.1f))

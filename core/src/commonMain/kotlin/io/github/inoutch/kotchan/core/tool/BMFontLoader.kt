@@ -147,11 +147,11 @@ class BMFontLoader private constructor() {
     }
 
     data class BMFont(
-            val info: Info,
-            val common: Common,
-            val pages: List<Page>,
-            val chars: Map<Int, Char>,
-            val kernigs: KerningAmount
+        val info: Info,
+        val common: Common,
+        val pages: List<Page>,
+        val chars: Map<Int, Char>,
+        val kernigs: KerningAmount
     ) {
         fun calcWidth(text: String): Float {
             return text.mapNotNull { chars[it.toInt()] }
@@ -175,63 +175,63 @@ class BMFontLoader private constructor() {
     abstract class Chunk(val type: ChunkType)
 
     class Info(
-            type: ChunkType,
-            val face: String,
-            val size: Int,
-            val bold: Int,
-            val italic: Int,
-            val charset: String,
-            val unicode: Int,
-            val stretchH: Int,
-            val smooth: Int,
-            val aa: Int,
-            val outline: Int
+        type: ChunkType,
+        val face: String,
+        val size: Int,
+        val bold: Int,
+        val italic: Int,
+        val charset: String,
+        val unicode: Int,
+        val stretchH: Int,
+        val smooth: Int,
+        val aa: Int,
+        val outline: Int
     ) : Chunk(type)
 
     class Common(
-            type: ChunkType,
-            val lineHeight: Int,
-            val base: Int,
-            val scale: Vector2I,
-            val page: Int,
-            val packed: Int,
-            val alphaChnl: Int,
-            val redChnl: Int,
-            val greenChnl: Int,
-            val blueChnl: Int
+        type: ChunkType,
+        val lineHeight: Int,
+        val base: Int,
+        val scale: Vector2I,
+        val page: Int,
+        val packed: Int,
+        val alphaChnl: Int,
+        val redChnl: Int,
+        val greenChnl: Int,
+        val blueChnl: Int
     ) : Chunk(type)
 
     class Page(
-            type: ChunkType,
-            val id: Int,
-            val file: String
+        type: ChunkType,
+        val id: Int,
+        val file: String
     ) : Chunk(type)
 
     class Chars(
-            type: ChunkType,
-            val count: Int
+        type: ChunkType,
+        val count: Int
     ) : Chunk(type)
 
     class Char(
-            type: ChunkType,
-            val id: Int,
-            val rect: RectI,
-            val offset: Vector2I,
-            val xAdvance: Int,
-            val page: Int,
-            val chnl: Int
+        type: ChunkType,
+        val id: Int,
+        val rect: RectI,
+        val offset: Vector2I,
+        val xAdvance: Int,
+        val page: Int,
+        val chnl: Int
     ) : Chunk(type)
 
     class Kernings(
-            type: ChunkType,
-            val count: Int
+        type: ChunkType,
+        val count: Int
     ) : Chunk(type)
 
     class Kerning(
-            type: ChunkType,
-            val first: Int,
-            val second: Int,
-            val amount: Int
+        type: ChunkType,
+        val first: Int,
+        val second: Int,
+        val amount: Int
     ) : Chunk(type)
 
     class KerningAmount(val kernigs: List<Kerning>) {

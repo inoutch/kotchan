@@ -187,16 +187,16 @@ void main(void) {
 """
 
 open class StandardShaderProgram private constructor(
-        shaderSource: ShaderSource = createShaderSource(),
-        extraDescriptorSets: List<DescriptorSet> = emptyList()
+    shaderSource: ShaderSource = createShaderSource(),
+    extraDescriptorSets: List<DescriptorSet> = emptyList()
 ) : ShaderProgram(
         shaderSource,
         listOf(*createDescriptorSets().toTypedArray(), *extraDescriptorSets.toTypedArray())
 ) {
     companion object {
         fun create(
-                shaderSource: ShaderSource = createShaderSource(),
-                extraDescriptorSets: List<DescriptorSet> = emptyList()
+            shaderSource: ShaderSource = createShaderSource(),
+            extraDescriptorSets: List<DescriptorSet> = emptyList()
         ): StandardShaderProgram {
             return StandardShaderProgram(shaderSource, extraDescriptorSets)
         }

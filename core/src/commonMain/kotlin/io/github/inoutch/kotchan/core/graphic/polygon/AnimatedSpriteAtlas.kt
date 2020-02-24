@@ -3,15 +3,15 @@ package io.github.inoutch.kotchan.core.graphic.polygon
 import io.github.inoutch.kotchan.core.graphic.texture.TextureAtlas
 
 open class AnimatedSpriteAtlas(
-        textureAtlas: TextureAtlas,
-        val config: Config
+    textureAtlas: TextureAtlas,
+    val config: Config
 ) : SpriteAtlas(textureAtlas) {
 
     data class AnimationSet(val names: List<String>, val intervalSec: Float, val count: Int = -1)
 
     data class Config(
-            val animations: List<AnimationSet>,
-            val defaultAnimationId: Int = 0
+        val animations: List<AnimationSet>,
+        val defaultAnimationId: Int = 0
     )
 
     var animationStateId = config.defaultAnimationId

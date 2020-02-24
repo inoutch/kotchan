@@ -43,7 +43,7 @@ class TriangleScene(context: SceneContext) : Scene(context) {
                 magFilter = TextureFilter.NEAREST,
                 minFilter = TextureFilter.NEAREST
         )
-        val texture = disposer.add(Texture.loadFromImage(image, textureConfig))
+        val texture = disposer.add(Texture.load(image, textureConfig))
         val material = StandardMaterial.create(shaderProgram, camera, texture)
         val batch = disposer.add(Batch(material))
 
@@ -56,8 +56,9 @@ class TriangleScene(context: SceneContext) : Scene(context) {
         polygon2.position = Vector3F(0.0f, 0.0f, 10.0f)
         polygon2.color = Vector4F(0.0f, 0.0f, 1.0f, 1.0f)
 
-        batch.add(polygon1)
-        batch.add(polygon2)
+        batch.add(polygon1, 1)
+        batch.add(polygon2, 0)
+        batch.sortByRenderOrder()
 
         this.batch = batch
     }

@@ -10,12 +10,12 @@ import kotlin.math.tan
 abstract class Camera {
     companion object {
         fun createOrthographic(
-                left: Float,
-                right: Float,
-                bottom: Float,
-                top: Float,
-                near: Float,
-                far: Float
+            left: Float,
+            right: Float,
+            bottom: Float,
+            top: Float,
+            near: Float,
+            far: Float
         ): Matrix4F {
             return if (useVulkan) {
                 // for vulkan [z:0.0 ~ 1.0]
@@ -65,9 +65,9 @@ abstract class Camera {
         }
 
         fun createLookAt(
-                eyePosition: Vector3F,
-                target: Vector3F,
-                up: Vector3F
+            eyePosition: Vector3F,
+            target: Vector3F,
+            up: Vector3F
         ): Matrix4F {
             val nUp = up.normalized()
             val zAxis = (eyePosition - target).normalized()

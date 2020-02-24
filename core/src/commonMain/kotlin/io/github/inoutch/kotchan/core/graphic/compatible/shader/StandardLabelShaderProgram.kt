@@ -4,7 +4,6 @@ import io.github.inoutch.kotchan.core.KotchanGlobalContext
 import io.github.inoutch.kotchan.core.graphic.compatible.Texture
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.DescriptorSet
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformMatrix4F
-import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformTexture
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformTextureArray
 import io.github.inoutch.kotchan.extension.toByteArray
 import io.github.inoutch.kotchan.math.Matrix4F
@@ -93,8 +92,8 @@ void main(void) {
 """
 
 open class StandardLabelShaderProgram(
-        shaderSource: ShaderSource = createShaderSource(),
-        extraDescriptorSets: List<DescriptorSet> = emptyList()
+    shaderSource: ShaderSource = createShaderSource(),
+    extraDescriptorSets: List<DescriptorSet> = emptyList()
 ) : ShaderProgram(shaderSource, listOf(*createDescriptorSets().toTypedArray(), *extraDescriptorSets.toTypedArray())) {
     companion object {
         const val TEXTURE_COUNT_MAX = 8

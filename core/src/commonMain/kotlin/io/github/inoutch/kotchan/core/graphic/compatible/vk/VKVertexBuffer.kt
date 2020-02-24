@@ -8,11 +8,11 @@ import io.github.inoutch.kotlin.vulkan.constant.FLOAT_SIZE
 import kotlin.math.max
 
 class VKVertexBuffer(
-        logicalDevice: VKLogicalDevice,
-        commandPool: VKCommandPool,
-        intVertices: IntArray = IntArray(0),
-        floatVertices: FloatArray = FloatArray(0),
-        mode: BufferStorageMode
+    logicalDevice: VKLogicalDevice,
+    commandPool: VKCommandPool,
+    intVertices: IntArray = IntArray(0),
+    floatVertices: FloatArray = FloatArray(0),
+    mode: BufferStorageMode
 ) : VertexBuffer(mode) {
     val buffer: VKBuffer
 

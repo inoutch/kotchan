@@ -66,9 +66,9 @@ class GLTexture(image: Image, config: Config) : Texture(config) {
     }
 
     private fun computedMinFilter(
-            minFilter: TextureFilter,
-            mipmapMode: TextureMipmapMode,
-            mipmapLevel: Int = 0
+        minFilter: TextureFilter,
+        mipmapMode: TextureMipmapMode,
+        mipmapLevel: Int = 0
     ): GLint {
         // TODO: Improve performance using map
         if (mipmapLevel > 0) {

@@ -5,9 +5,9 @@ import io.github.inoutch.kotchan.core.graphic.compatible.shader.ShaderSource
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.attribute.Attribute
 
 class VKShader(
-        logicalDevice: VKLogicalDevice,
-        shaderSource: ShaderSource,
-        attributes: List<Attribute>
+    logicalDevice: VKLogicalDevice,
+    shaderSource: ShaderSource,
+    attributes: List<Attribute>
 ) : Shader(attributes) {
     val vertShaderModule: VKShaderModule
 

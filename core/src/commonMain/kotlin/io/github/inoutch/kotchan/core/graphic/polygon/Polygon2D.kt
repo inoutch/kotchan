@@ -7,8 +7,8 @@ import io.github.inoutch.kotchan.math.Vector2F
 import io.github.inoutch.kotchan.math.Vector3F
 
 open class Polygon2D(
-        initMesh: Mesh,
-        var size: Vector2F
+    initMesh: Mesh,
+    var size: Vector2F
 ) : Polygon(initMesh) {
 
     open var anchorPoint = Vector2F(0.5f, 0.5f)

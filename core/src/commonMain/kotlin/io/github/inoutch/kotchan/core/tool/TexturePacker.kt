@@ -49,10 +49,10 @@ class TexturePacker private constructor() {
 
     @Serializable
     data class FrameRect(
-            val x: Float,
-            val y: Float,
-            val w: Float,
-            val h: Float
+        val x: Float,
+        val y: Float,
+        val w: Float,
+        val h: Float
     ) {
         fun toRectF(): RectF {
             return RectF(Vector2F(x, y), Vector2F(w, h))
@@ -61,17 +61,17 @@ class TexturePacker private constructor() {
 
     @Serializable
     data class Frame(
-            val frame: FrameRect,
-            val rotated: Boolean,
-            val trimmed: Boolean,
-            val spriteSourceSize: FrameRect,
-            val sourceSize: Size
+        val frame: FrameRect,
+        val rotated: Boolean,
+        val trimmed: Boolean,
+        val spriteSourceSize: FrameRect,
+        val sourceSize: Size
     )
 
     @Serializable
     data class Size(
-            val w: Float,
-            val h: Float
+        val w: Float,
+        val h: Float
     ) {
         fun toVector2F(): Vector2F {
             return Vector2F(w, h)
@@ -80,12 +80,12 @@ class TexturePacker private constructor() {
 
     @Serializable
     data class Meta(
-            val app: String,
-            val version: Float,
-            val image: String,
-            val format: String,
-            val size: Size,
-            val scale: String
+        val app: String,
+        val version: Float,
+        val image: String,
+        val format: String,
+        val size: Size,
+        val scale: String
     )
 
     @Serializable

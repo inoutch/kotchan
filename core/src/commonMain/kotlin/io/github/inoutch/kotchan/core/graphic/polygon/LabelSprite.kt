@@ -9,24 +9,24 @@ import io.github.inoutch.kotchan.math.Vector3F
 import io.github.inoutch.kotchan.math.Vector4F
 
 open class LabelSprite private constructor(
-        initialText: String,
-        private val bmFont: BMFontLoader.BMFont,
-        private var labelMesh: LabelMesh
+    initialText: String,
+    private val bmFont: BMFontLoader.BMFont,
+    private var labelMesh: LabelMesh
 ) : Polygon(labelMesh.toMesh()) {
     companion object {
         fun create(
-                initialText: String,
-                bmFont: BMFontLoader.BMFont,
-                fontSize: Float
+            initialText: String,
+            bmFont: BMFontLoader.BMFont,
+            fontSize: Float
         ): LabelSprite {
             return LabelSprite(initialText, bmFont, createLabel(bmFont, initialText, Vector4F(1.0f), fontSize))
         }
 
         private fun createLabel(
-                bmFont: BMFontLoader.BMFont,
-                text: String,
-                color: Vector4F,
-                fontSize: Float = 1.0f
+            bmFont: BMFontLoader.BMFont,
+            text: String,
+            color: Vector4F,
+            fontSize: Float = 1.0f
         ): LabelMesh {
             val lineSize = text.count { it == '\n' } + 1
             val fontRatio = if (fontSize <= 0.0f) 1.0f else fontSize / bmFont.common.lineHeight
@@ -68,10 +68,10 @@ open class LabelSprite private constructor(
     }
 
     private data class LabelMesh(
-            val positions: MutableList<Vector3F> = mutableListOf(),
-            val texcoords: MutableList<Vector2F> = mutableListOf(),
-            val colors: MutableList<Vector4F> = mutableListOf(),
-            val texNumbers: MutableList<Int> = mutableListOf()
+        val positions: MutableList<Vector3F> = mutableListOf(),
+        val texcoords: MutableList<Vector2F> = mutableListOf(),
+        val colors: MutableList<Vector4F> = mutableListOf(),
+        val texNumbers: MutableList<Int> = mutableListOf()
     ) {
         fun toMesh() = Mesh(positions, texcoords, colors)
     }

@@ -11,9 +11,9 @@ import io.github.inoutch.kotlin.gl.api.GLuint
 import io.github.inoutch.kotlin.gl.api.gl
 
 class GLShader(
-        vertSource: String,
-        fragSource: String,
-        attributes: List<Attribute>
+    vertSource: String,
+    fragSource: String,
+    attributes: List<Attribute>
 ) : Shader(attributes) {
     private val disposer = Disposer()
 

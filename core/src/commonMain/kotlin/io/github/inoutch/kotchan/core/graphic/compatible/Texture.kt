@@ -27,11 +27,11 @@ abstract class Texture(val config: Config) : Disposer() {
     }
 
     data class Config(
-            val addressModeU: TextureAddressMode = TextureAddressMode.CLAMP_TO_EDGE,
-            val addressModeV: TextureAddressMode = TextureAddressMode.CLAMP_TO_EDGE,
-            val magFilter: TextureFilter = TextureFilter.LINEAR,
-            val minFilter: TextureFilter = TextureFilter.LINEAR,
-            val mipmapMode: TextureMipmapMode = TextureMipmapMode.LINER
+        val addressModeU: TextureAddressMode = TextureAddressMode.CLAMP_TO_EDGE,
+        val addressModeV: TextureAddressMode = TextureAddressMode.CLAMP_TO_EDGE,
+        val magFilter: TextureFilter = TextureFilter.LINEAR,
+        val minFilter: TextureFilter = TextureFilter.LINEAR,
+        val mipmapMode: TextureMipmapMode = TextureMipmapMode.LINER
     )
 
     abstract val size: Vector2I

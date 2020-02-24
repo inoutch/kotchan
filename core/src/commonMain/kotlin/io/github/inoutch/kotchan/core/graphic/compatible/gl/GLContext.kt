@@ -78,8 +78,8 @@ class GLContext : Context {
     }
 
     override fun createGraphicsPipeline(
-            shaderProgram: ShaderProgram,
-            config: GraphicsPipelineConfig
+        shaderProgram: ShaderProgram,
+        config: GraphicsPipelineConfig
     ): GraphicsPipeline {
         val uniforms = shaderProgram.descriptorSets.filterIsInstance<GLUniform>()
         val uniformTextures = shaderProgram.descriptorSets.filterIsInstance<GLUniformTexture>()
@@ -168,7 +168,7 @@ class GLContext : Context {
     }
 
     private fun vertexPointer(attribute: Attribute) {
-        println("${attribute.location}, ${attribute.type.size}, ${attribute.type.toGLType()}, ${false}, ${attribute.stride * attribute.type.size}")
+        println("${attribute.location}, ${attribute.type.size}, ${attribute.type.toGLType()}, $false, ${attribute.stride * attribute.type.size}")
         gl.vertexAttribPointer(
                 attribute.location,
                 attribute.stride,

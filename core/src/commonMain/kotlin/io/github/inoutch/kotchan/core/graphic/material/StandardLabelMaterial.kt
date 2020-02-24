@@ -6,17 +6,17 @@ import io.github.inoutch.kotchan.core.graphic.compatible.Texture
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.StandardLabelShaderProgram
 
 class StandardLabelMaterial private constructor(
-        standardLabelShaderProgram: StandardLabelShaderProgram,
-        private var camera: Camera,
-        private var textures: List<Texture>,
-        graphicsPipelineConfig: GraphicsPipelineConfig
-): MaterialBase<StandardLabelShaderProgram>(standardLabelShaderProgram, graphicsPipelineConfig) {
+    standardLabelShaderProgram: StandardLabelShaderProgram,
+    private var camera: Camera,
+    private var textures: List<Texture>,
+    graphicsPipelineConfig: GraphicsPipelineConfig
+) : MaterialBase<StandardLabelShaderProgram>(standardLabelShaderProgram, graphicsPipelineConfig) {
     companion object {
         fun create(
-                standardLabelShaderProgram: StandardLabelShaderProgram,
-                camera: Camera,
-                textures: List<Texture>,
-                graphicsPipelineConfig: GraphicsPipelineConfig = GraphicsPipelineConfig()
+            standardLabelShaderProgram: StandardLabelShaderProgram,
+            camera: Camera,
+            textures: List<Texture>,
+            graphicsPipelineConfig: GraphicsPipelineConfig = GraphicsPipelineConfig()
         ): StandardLabelMaterial {
             return StandardLabelMaterial(
                     standardLabelShaderProgram,

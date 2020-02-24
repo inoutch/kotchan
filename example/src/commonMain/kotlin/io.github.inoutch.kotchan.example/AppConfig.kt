@@ -15,6 +15,6 @@ class AppConfig : KotchanStartupConfig() {
 
     @ExperimentalStdlibApi
     override fun createFirstScene(context: SceneContext): Scene {
-        return SpriteAnimationScene(context)
+        return AppScene(context)
     }
 }

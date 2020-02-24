@@ -96,7 +96,7 @@ fun Attribute.toVkFormat(): VkFormat {
 }
 
 fun createVertexDescriptions(
-        attributes: List<Attribute>
+    attributes: List<Attribute>
 ): Pair<List<VkVertexInputBindingDescription>, List<VkVertexInputAttributeDescription>> {
     val inputRate = VkVertexInputRate.VK_VERTEX_INPUT_RATE_VERTEX
     return attributes.mapIndexed { index, attribute ->

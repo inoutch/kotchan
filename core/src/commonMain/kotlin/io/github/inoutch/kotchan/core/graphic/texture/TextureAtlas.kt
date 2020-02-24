@@ -5,8 +5,8 @@ import io.github.inoutch.kotchan.math.Vector2I
 import io.github.inoutch.kotchan.math.Vector3F
 
 data class TextureAtlas(
-        private val frames: List<TextureFrame>,
-        val textureSize: Vector2I
+    private val frames: List<TextureFrame>,
+    val textureSize: Vector2I
 ) {
 
     private val frameMeshes: List<Pair<List<Vector3F>, List<Vector2F>>>

@@ -6,9 +6,9 @@ import io.github.inoutch.kotlin.gl.api.GL_ARRAY_BUFFER
 import io.github.inoutch.kotlin.gl.api.gl
 
 class GLVertexBuffer(
-        intVertices: IntArray = IntArray(0),
-        floatVertices: FloatArray = FloatArray(0),
-        mode: BufferStorageMode
+    intVertices: IntArray = IntArray(0),
+    floatVertices: FloatArray = FloatArray(0),
+    mode: BufferStorageMode
 ) : VertexBuffer(mode) {
     val id = gl.genBuffers(1).first()
 

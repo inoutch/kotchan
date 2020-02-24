@@ -6,8 +6,8 @@ import io.github.inoutch.kotchan.math.Vector2F
 import io.github.inoutch.kotchan.math.Vector3F
 
 open class SpriteAtlas(
-        private val textureAtlas: TextureAtlas,
-        size: Vector2F? = null
+    private val textureAtlas: TextureAtlas,
+    size: Vector2F? = null
 ) : Sprite(size ?: checkNotNull(textureAtlas.frame(0)) { "No frame at texture atlas" }.frame.size) {
 
     init {
