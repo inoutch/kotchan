@@ -9,8 +9,10 @@ class BatchBufferTest {
     @Test
     fun checkAllocate() {
         val nativeBuffer = FloatArray(1000) { 0.0f }
-        val batchBuffer = BatchBuffer(1000) {
+        val batchBuffer = BatchFloatBuffer(1000) {
             object : VertexBuffer(BufferStorageMode.Dynamic) {
+                override fun copyToBuffer(vertices: IntArray, offset: Int, size: Int) {}
+
                 override fun copyToBuffer(vertices: FloatArray, offset: Int, size: Int) {
                     vertices.copyOfRange(offset, offset + size).copyInto(nativeBuffer, offset)
                 }
@@ -46,8 +48,10 @@ class BatchBufferTest {
     @Test
     fun checkRealloc() {
         val nativeBuffer = FloatArray(1000) { 0.0f }
-        val batchBuffer = BatchBuffer(1000) {
+        val batchBuffer = BatchFloatBuffer(1000) {
             object : VertexBuffer(BufferStorageMode.Dynamic) {
+                override fun copyToBuffer(vertices: IntArray, offset: Int, size: Int) {}
+
                 override fun copyToBuffer(vertices: FloatArray, offset: Int, size: Int) {
                     vertices.copyOfRange(offset, offset + size).copyInto(nativeBuffer, offset)
                 }
@@ -80,8 +84,10 @@ class BatchBufferTest {
     @Test
     fun checkFree() {
         val nativeBuffer = FloatArray(1000) { 0.0f }
-        val batchBuffer = BatchBuffer(1000) {
+        val batchBuffer = BatchFloatBuffer(1000) {
             object : VertexBuffer(BufferStorageMode.Dynamic) {
+                override fun copyToBuffer(vertices: IntArray, offset: Int, size: Int) {}
+
                 override fun copyToBuffer(vertices: FloatArray, offset: Int, size: Int) {
                     vertices.copyOfRange(offset, offset + size).copyInto(nativeBuffer, offset)
                 }
@@ -98,8 +104,10 @@ class BatchBufferTest {
     @Test
     fun checkReallocateVertexBuffer() {
         val nativeBuffer = FloatArray(100) { 0.0f }
-        val batchBuffer = BatchBuffer(5) {
+        val batchBuffer = BatchFloatBuffer(5) {
             object : VertexBuffer(BufferStorageMode.Dynamic) {
+                override fun copyToBuffer(vertices: IntArray, offset: Int, size: Int) {}
+
                 override fun copyToBuffer(vertices: FloatArray, offset: Int, size: Int) {
                     vertices.copyOfRange(offset, offset + size).copyInto(nativeBuffer, offset)
                 }
@@ -117,8 +125,10 @@ class BatchBufferTest {
     @Test
     fun checkPartialChange() {
         val nativeBuffer = FloatArray(100) { 0.0f }
-        val batchBuffer = BatchBuffer(5) {
+        val batchBuffer = BatchFloatBuffer(5) {
             object : VertexBuffer(BufferStorageMode.Dynamic) {
+                override fun copyToBuffer(vertices: IntArray, offset: Int, size: Int) {}
+
                 override fun copyToBuffer(vertices: FloatArray, offset: Int, size: Int) {
                     vertices.copyOfRange(offset, offset + size).copyInto(nativeBuffer, offset)
                 }
@@ -139,8 +149,10 @@ class BatchBufferTest {
     @Test
     fun checkSort() {
         val nativeBuffer = FloatArray(100) { 0.0f }
-        val batchBuffer = BatchBuffer(100) {
+        val batchBuffer = BatchFloatBuffer(100) {
             object : VertexBuffer(BufferStorageMode.Dynamic) {
+                override fun copyToBuffer(vertices: IntArray, offset: Int, size: Int) {}
+
                 override fun copyToBuffer(vertices: FloatArray, offset: Int, size: Int) {
                     vertices.copyOfRange(offset, offset + size).copyInto(nativeBuffer, offset)
                 }

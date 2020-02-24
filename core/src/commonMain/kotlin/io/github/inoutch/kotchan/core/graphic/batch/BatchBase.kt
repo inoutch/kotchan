@@ -34,13 +34,13 @@ abstract class BatchBase<TObject>(val material: Material): Disposer() {
 
     fun sortByRenderOrder() {
         objectBundles.sortBy { it.index }
+
+        // Replace by pointer
         var i = 0
         while (i < bundles.size) {
-            bundles[i].batchBuffer.sort {
-                var j = 0
-                while (j < objectBundles.size) {
-                    it.invoke(objectBundles[j].buffers[i].batchBufferPointer)
-                    j++
+            bundles[i].batchBuffer.sort { adder ->
+                objectBundles.fastForEach {
+                    adder.invoke(it.pointers[i])
                 }
             }
             i++
@@ -52,7 +52,7 @@ abstract class BatchBase<TObject>(val material: Material): Disposer() {
     }
 
     private fun allocate(obj: TObject, size: Int, index: Int): BatchObjectBufferBundle<TObject> {
-        val data = bundles.map { BatchObjectBuffer(it.batchBuffer, it.batchBuffer.allocate(it.stride * size)) }
+        val data = bundles.map { it.batchBuffer.allocate(it.stride * size) }
         return BatchObjectBufferBundle(index, obj, data)
     }
 
