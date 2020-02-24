@@ -162,13 +162,7 @@ class GLContext : Context {
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
-    private fun vertexPointer(attributeLocation: GLAttribLocation, dimension: Int, stride: Int) {
-        gl.vertexAttribPointer(attributeLocation.value, dimension, GL_FLOAT, false, stride * FLOAT_BYTE_SIZE)
-        gl.enableVertexAttribArray(attributeLocation.value)
-    }
-
     private fun vertexPointer(attribute: Attribute) {
-        println("${attribute.location}, ${attribute.type.size}, ${attribute.type.toGLType()}, $false, ${attribute.stride * attribute.type.size}")
         gl.vertexAttribPointer(
                 attribute.location,
                 attribute.stride,
