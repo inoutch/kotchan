@@ -46,5 +46,5 @@ interface Context : Disposable {
     fun createUniform4F(binding: Int, uniformName: String): Uniform4F
     fun createUniformMatrix4F(binding: Int, uniformName: String): UniformMatrix4F
     fun createUniformTexture(binding: Int, uniformName: String): UniformTexture
-    fun createUniformTextureArray(binding: Int, uniformName: String): UniformTextureArray
+    fun createUniformTextureArray(binding: Int, uniformName: String, size: Int): UniformTextureArray
 }

@@ -292,6 +292,7 @@ class VKContext(
             val shader = shaderProgram.shader as VKShader
             val uniforms = shaderProgram.descriptorSets.filterIsInstance<VKUniform>()
             val uniformTextures = shaderProgram.descriptorSets.filterIsInstance<VKUniformTexture>()
+            val uniformTextureArrays = shaderProgram.descriptorSets.filterIsInstance<VKUniformTextureArray>()
 
             val descriptorSetLayout = primaryLogicalDevice.createDescriptorSetLayout(shaderProgram.descriptorSets.map {
                 convertToDescriptorSetLayoutBinding(it)
@@ -345,6 +346,13 @@ class VKContext(
                 )
             }
 
+            val descriptorSetUniformTextureArrayProviders = uniformTextureArrays.map {
+                VKValuePerSwapchainImage(
+                        currentSwapchainImageIndexManager,
+                        descriptorSets.map { VKDescriptorSetTextureArrayProvider(it) }
+                )
+            }
+
             val graphicsPipeline = VKGraphicsPipeline(
                     shaderProgram,
                     config,
@@ -352,11 +360,13 @@ class VKContext(
                     pipelineLayout,
                     uniforms,
                     uniformTextures,
+                    uniformTextureArrays,
                     descriptorSetLayout,
                     descriptorPool,
                     descriptorSet,
                     descriptorSetUniformProviders,
-                    descriptorSetSamplerProviders
+                    descriptorSetSamplerProviders,
+                    descriptorSetUniformTextureArrayProviders
             )
             graphicsPipeline.add(localDisposer)
             return graphicsPipeline
@@ -492,8 +502,8 @@ class VKContext(
         return VKUniformTexture(binding, uniformName)
     }
 
-    override fun createUniformTextureArray(binding: Int, uniformName: String): UniformTextureArray {
-        return VKUniformTextureArray(binding, uniformName)
+    override fun createUniformTextureArray(binding: Int, uniformName: String, size: Int): UniformTextureArray {
+        return VKUniformTextureArray(binding, uniformName, size)
     }
 
     override fun dispose() {

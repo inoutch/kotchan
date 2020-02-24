@@ -12,11 +12,13 @@ class VKGraphicsPipeline(
     val pipelineLayout: VKPipelineLayout,
     val uniforms: List<VKUniform>,
     val uniformTextures: List<VKUniformTexture>,
+    val uniformTextureArray: List<VKUniformTextureArray>,
     val descriptorSetLayout: VKDescriptorSetLayout,
     val descriptorPool: VKDescriptorPool,
     val descriptorSet: VKValuePerSwapchainImage<VKDescriptorSet>,
     val descriptorSetUniformProviders: List<VKValuePerSwapchainImage<VKDescriptorSetUniformProvider>>,
-    val descriptorSetTextureProviders: List<VKValuePerSwapchainImage<VKDescriptorSetTextureProvider>>
+    val descriptorSetTextureProviders: List<VKValuePerSwapchainImage<VKDescriptorSetTextureProvider>>,
+    val descriptorSetTextureArrayProviders: List<VKValuePerSwapchainImage<VKDescriptorSetTextureArrayProvider>>
 ) : GraphicsPipeline(shaderProgram, config) {
 
     override fun bind() {
@@ -29,6 +31,11 @@ class VKGraphicsPipeline(
         i = 0
         while (i < uniformTextures.size) {
             uniformTextures[i].bind(descriptorSetTextureProviders[i].value)
+            i++
+        }
+        i = 0
+        while (i < uniformTextureArray.size) {
+            uniformTextureArray[i].bind(descriptorSetTextureArrayProviders[i].value)
             i++
         }
         graphic.bindGraphicsPipeline(this)

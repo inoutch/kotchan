@@ -25,11 +25,9 @@ import io.github.inoutch.kotchan.math.Vector4F
 import io.github.inoutch.kotlin.gl.api.GL_ARRAY_BUFFER
 import io.github.inoutch.kotlin.gl.api.GL_COLOR_BUFFER_BIT
 import io.github.inoutch.kotlin.gl.api.GL_DEPTH_BUFFER_BIT
-import io.github.inoutch.kotlin.gl.api.GL_FLOAT
 import io.github.inoutch.kotlin.gl.api.GL_TEXTURE_2D
 import io.github.inoutch.kotlin.gl.api.GL_TRIANGLES
 import io.github.inoutch.kotlin.gl.api.gl
-import io.github.inoutch.kotlin.gl.constant.FLOAT_BYTE_SIZE
 
 class GLContext : Context {
     private val emptyTexture = loadTexture(Image(byteArrayOf(-1, -1, -1, -1), Vector2I(1, 1)))
@@ -83,12 +81,14 @@ class GLContext : Context {
     ): GraphicsPipeline {
         val uniforms = shaderProgram.descriptorSets.filterIsInstance<GLUniform>()
         val uniformTextures = shaderProgram.descriptorSets.filterIsInstance<GLUniformTexture>()
+        val uniformTextureArrays = shaderProgram.descriptorSets.filterIsInstance<GLUniformTextureArray>()
         return GLGraphicsPipeline(
                 shaderProgram,
                 config,
                 shaderProgram.shader as GLShader,
                 uniforms,
-                uniformTextures
+                uniformTextures,
+                uniformTextureArrays
         )
     }
 
@@ -150,8 +150,8 @@ class GLContext : Context {
         return GLUniformTexture(binding, uniformName)
     }
 
-    override fun createUniformTextureArray(binding: Int, uniformName: String): UniformTextureArray {
-        return GLUniformTextureArray(binding, uniformName)
+    override fun createUniformTextureArray(binding: Int, uniformName: String, size: Int): UniformTextureArray {
+        return GLUniformTextureArray(binding, uniformName, size)
     }
 
     override fun isDisposed(): Boolean {

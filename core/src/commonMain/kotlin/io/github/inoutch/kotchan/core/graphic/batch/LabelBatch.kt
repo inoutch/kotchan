@@ -7,9 +7,14 @@ class LabelBatch(material: Material) : BatchBase<LabelSprite>(material) {
     private val positionBuffer = BatchFloatBuffer()
     private val colorBuffer = BatchFloatBuffer()
     private val texcoordBuffer = BatchFloatBuffer()
-    private val texNumbersBuffer = BatchIntBuffer()
+    private val texNumbersBuffer = BatchFloatBuffer()
 
-    override val bundles: List<Bundle> = listOf()
+    override val bundles: List<Bundle> = listOf(
+            Bundle(3, positionBuffer),
+            Bundle(4, colorBuffer),
+            Bundle(2, texcoordBuffer),
+            Bundle(1, texNumbersBuffer)
+    )
 
     override fun size(obj: LabelSprite): Int {
         return obj.mesh.size

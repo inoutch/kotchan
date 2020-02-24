@@ -61,7 +61,7 @@ open class LabelSprite private constructor(
                         char.rect.size / bmFont.common.scale.toVector2F()
                 ))
                 mesh.colors.addAll(List(6) { color })
-                mesh.texNumbers.addAll(List(4) { texNumber })
+                mesh.texNumbers.addAll(List(6) { texNumber })
             }
             return mesh
         }
@@ -86,12 +86,12 @@ open class LabelSprite private constructor(
 
     protected val texNumbersChange = ChangeRange(mesh.size)
 
-    fun copyTexNumbersTo(target: BufferInterface<Int>, offset: Int = 0) {
+    fun copyTexNumbersTo(target: BufferInterface<Float>, offset: Int = 0) {
         val change = texNumbersChange.change ?: return
         var i = change.first
         while (i < change.last) {
             val t = labelMesh.texNumbers[i]
-            target.copy(offset + i, t)
+            target.copy(offset + i, t.toFloat())
             i++
         }
         target.range(offset + change.first, offset + change.last)

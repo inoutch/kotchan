@@ -15,10 +15,9 @@ class GLUniformTexture(
         val provider = this.provider ?: return
 
         check(texture is GLTexture)
-        texture.bind()
-
-        gl.uniform1i(provider.location, binding)
         gl.activeTexture(GL_TEXTURE0 + binding)
+        texture.bind()
+        gl.uniform1i(provider.location, binding)
     }
 
     fun bind(provider: GLUniformLocationProvider) {

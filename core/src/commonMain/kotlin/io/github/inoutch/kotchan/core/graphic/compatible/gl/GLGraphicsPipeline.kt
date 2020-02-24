@@ -15,7 +15,8 @@ class GLGraphicsPipeline(
     config: GraphicsPipelineConfig,
     private val shader: GLShader,
     private val uniforms: List<GLUniform>,
-    private val uniformTextures: List<GLUniformTexture>
+    private val uniformTextures: List<GLUniformTexture>,
+    private val uniformTextureArrays: List<GLUniformTextureArray>
 ) : GraphicsPipeline(shaderProgram, config) {
     private val uniformProviders = uniforms.map {
         GLUniformLocationProvider(shader, it.descriptorName)
@@ -23,6 +24,10 @@ class GLGraphicsPipeline(
 
     private val uniformTextureProviders = uniformTextures.map {
         GLUniformLocationProvider(shader, it.descriptorName)
+    }
+
+    private val uniformTextureArrayProviders = uniformTextureArrays.map {
+        GLUniformArrayLocationProvider(shader, it.descriptorName, it.size)
     }
 
     override fun bind() {
@@ -35,6 +40,11 @@ class GLGraphicsPipeline(
         i = 0
         while (i < uniformTextures.size) {
             uniformTextures[i].bind(uniformTextureProviders[i])
+            i++
+        }
+        i = 0
+        while (i < uniformTextureArrays.size) {
+            uniformTextureArrays[i].bind(uniformTextureArrayProviders[i])
             i++
         }
 
