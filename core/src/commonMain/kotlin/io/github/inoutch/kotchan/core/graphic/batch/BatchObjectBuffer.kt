@@ -2,7 +2,7 @@ package io.github.inoutch.kotchan.core.graphic.batch
 
 import io.github.inoutch.kotchan.core.graphic.BufferInterface
 
-class BatchPolygonBuffer(
+class BatchObjectBuffer(
     private val batchBuffer: BatchBuffer,
     var batchBufferPointer: BatchBufferPointer
 ) : BufferInterface<Float> {

@@ -1,63 +1,19 @@
 package io.github.inoutch.kotchan.core.graphic.batch
 
-import io.github.inoutch.kotchan.core.Disposer
-import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.graphic
 import io.github.inoutch.kotchan.core.graphic.material.Material
 import io.github.inoutch.kotchan.core.graphic.polygon.Polygon
 
-class Batch(private val material: Material) : Disposer() {
-    private val bufferBundle = BatchBufferBundle()
+class Batch(material: Material) : BatchBase<Polygon>(material) {
+    override val bufferBundle: BatchBufferBundle<Polygon> = BatchBufferBundle()
 
-    private val polygonBundles = mutableListOf<BatchPolygonBufferBundle>()
-
-    fun add(polygon: Polygon, drawOrder: Int = 0) {
-        polygonBundles.add(bufferBundle.allocate(polygon, drawOrder))
+    override fun size(obj: Polygon): Int {
+        return obj.mesh.size
     }
 
-    fun render() {
-        material.bind()
-
-        var i = 0
-        while (i < polygonBundles.size) {
-            bufferBundle.update(polygonBundles[i])
-            i++
-        }
-        bufferBundle.positionBuffer.flush()
-        bufferBundle.colorBuffer.flush()
-        bufferBundle.texcoordBuffer.flush()
-        bufferBundle.normalBuffer.flush()
-        graphic.drawTriangles(bufferBundle)
-    }
-
-    fun sortPositionsByDrawOrder() {
-        polygonBundles.sortBy { it.index }
-        bufferBundle.positionBuffer.sort {
-            var i = 0
-            while (i < polygonBundles.size) {
-                it.invoke(polygonBundles[i].positionsPolygonBuffer.batchBufferPointer)
-                i++
-            }
-        }
-        bufferBundle.colorBuffer.sort {
-            var i = 0
-            while (i < polygonBundles.size) {
-                it.invoke(polygonBundles[i].colorsPolygonBuffer.batchBufferPointer)
-                i++
-            }
-        }
-        bufferBundle.texcoordBuffer.sort {
-            var i = 0
-            while (i < polygonBundles.size) {
-                it.invoke(polygonBundles[i].texcoordsPolygonBuffer.batchBufferPointer)
-                i++
-            }
-        }
-        bufferBundle.normalBuffer.sort {
-            var i = 0
-            while (i < polygonBundles.size) {
-                it.invoke(polygonBundles[i].normalsPolygonBuffer.batchBufferPointer)
-                i++
-            }
-        }
+    override fun update(objectBundle: BatchObjectBufferBundle<Polygon>) {
+        val polygon = objectBundle.obj
+        polygon.copyPositionsTo(objectBundle.buffers[0])
+        polygon.copyColorsTo(objectBundle.buffers[1])
+        polygon.copyTexcoordsTo(objectBundle.buffers[2])
     }
 }

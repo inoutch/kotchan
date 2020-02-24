@@ -2,11 +2,14 @@ package io.github.inoutch.kotchan.core.graphic.compatible.gl
 
 import io.github.inoutch.kotchan.core.graphic.BlendFactor
 import io.github.inoutch.kotchan.core.graphic.CullMode
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.attribute.AttributeType
 import io.github.inoutch.kotlin.gl.api.GL_BACK
 import io.github.inoutch.kotlin.gl.api.GL_DST_ALPHA
 import io.github.inoutch.kotlin.gl.api.GL_DST_COLOR
+import io.github.inoutch.kotlin.gl.api.GL_FLOAT
 import io.github.inoutch.kotlin.gl.api.GL_FRONT
 import io.github.inoutch.kotlin.gl.api.GL_FRONT_AND_BACK
+import io.github.inoutch.kotlin.gl.api.GL_INT
 import io.github.inoutch.kotlin.gl.api.GL_NONE
 import io.github.inoutch.kotlin.gl.api.GL_ONE
 import io.github.inoutch.kotlin.gl.api.GL_ONE_MINUS_DST_ALPHA
@@ -44,4 +47,13 @@ private val blendFactorMap = mapOf(
 
 fun BlendFactor.toGLBlendFactor(): GLint {
     return blendFactorMap.getValue(this)
+}
+
+private val types = mapOf(
+        AttributeType.INT to GL_INT,
+        AttributeType.FLOAT to GL_FLOAT
+)
+
+fun AttributeType.toGLType(): GLint {
+    return types.getValue(this)
 }

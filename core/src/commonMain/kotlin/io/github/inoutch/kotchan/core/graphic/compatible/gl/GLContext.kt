@@ -11,6 +11,7 @@ import io.github.inoutch.kotchan.core.graphic.compatible.context.Context
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.Shader
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.ShaderProgram
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.ShaderSource
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.attribute.Attribute
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform1F
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform1I
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform2F
@@ -18,6 +19,7 @@ import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Unifo
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform4F
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformMatrix4F
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformTexture
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformTextureArray
 import io.github.inoutch.kotchan.math.RectI
 import io.github.inoutch.kotchan.math.Vector2I
 import io.github.inoutch.kotchan.math.Vector4F
@@ -29,13 +31,11 @@ import io.github.inoutch.kotlin.gl.api.GL_TEXTURE_2D
 import io.github.inoutch.kotlin.gl.api.GL_TRIANGLES
 import io.github.inoutch.kotlin.gl.api.gl
 import io.github.inoutch.kotlin.gl.constant.FLOAT_BYTE_SIZE
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 
 class GLContext : Context {
     private val emptyTexture = loadTexture(Image(byteArrayOf(-1, -1, -1, -1), Vector2I(1, 1)))
+
+    private var currentGraphicsPipeline: GraphicsPipeline? = null
 
     init {
         gl.enableVertexAttribArray(0)
@@ -56,22 +56,22 @@ class GLContext : Context {
         return GLVertexBuffer(vertices, bufferStorageMode)
     }
 
-    override fun drawTriangles(batchBufferBundle: BatchBufferBundle) {
-        val positionBuffer = batchBufferBundle.positionBuffer.vertexBuffer as GLVertexBuffer
-        val colorBuffer = batchBufferBundle.colorBuffer.vertexBuffer as GLVertexBuffer
-        val texcoordBuffer = batchBufferBundle.texcoordBuffer.vertexBuffer as GLVertexBuffer
-        gl.bindBuffer(GL_ARRAY_BUFFER, positionBuffer.id)
-        vertexPointer(GLAttribLocation.ATTRIBUTE_POSITION, 3, 0)
-        gl.bindBuffer(GL_ARRAY_BUFFER, colorBuffer.id)
-        vertexPointer(GLAttribLocation.ATTRIBUTE_COLOR, 4, 0)
-        gl.bindBuffer(GL_ARRAY_BUFFER, texcoordBuffer.id)
-        vertexPointer(GLAttribLocation.ATTRIBUTE_TEXCOORD, 2, 0)
+    override fun drawTriangles(batchBufferBundle: BatchBufferBundle<*>) {
+        val graphicsPipeline = currentGraphicsPipeline ?: return
+        val attributes = graphicsPipeline.shaderProgram.shader.attributes
+        var i = 0
+        while (i < batchBufferBundle.bufferInfos.size) {
+            val buffer = batchBufferBundle.getBuffer(i).vertexBuffer as GLVertexBuffer
+            gl.bindBuffer(GL_ARRAY_BUFFER, buffer.id)
+            vertexPointer(attributes[i])
+            i++
+        }
 
         gl.drawArrays(GL_TRIANGLES, 0, batchBufferBundle.size)
     }
 
-    override fun createShader(shaderSource: ShaderSource): Shader {
-        return GLShader(shaderSource.glslVertSource, shaderSource.glslFragSource)
+    override fun createShader(shaderSource: ShaderSource, attributes: List<Attribute>): Shader {
+        return GLShader(shaderSource.glslVertSource, shaderSource.glslFragSource, attributes)
     }
 
     override fun createGraphicsPipeline(
@@ -89,7 +89,9 @@ class GLContext : Context {
         )
     }
 
-    override fun bindGraphicsPipeline(graphicsPipeline: GraphicsPipeline) {}
+    override fun bindGraphicsPipeline(graphicsPipeline: GraphicsPipeline) {
+        currentGraphicsPipeline = graphicsPipeline
+    }
 
     override fun setViewport(viewport: RectI) {
         gl.viewport(viewport.origin.x, viewport.origin.y, viewport.size.x, viewport.size.y)
@@ -145,6 +147,10 @@ class GLContext : Context {
         return GLUniformTexture(binding, uniformName)
     }
 
+    override fun createUniformTextureArray(binding: Int, uniformName: String): UniformTextureArray {
+        return GLUniformTextureArray(binding, uniformName)
+    }
+
     override fun isDisposed(): Boolean {
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
@@ -156,5 +162,17 @@ class GLContext : Context {
     private fun vertexPointer(attributeLocation: GLAttribLocation, dimension: Int, stride: Int) {
         gl.vertexAttribPointer(attributeLocation.value, dimension, GL_FLOAT, false, stride * FLOAT_BYTE_SIZE)
         gl.enableVertexAttribArray(attributeLocation.value)
+    }
+
+    private fun vertexPointer(attribute: Attribute) {
+        println("${attribute.location}, ${attribute.type.size}, ${attribute.type.toGLType()}, ${false}, ${attribute.stride * attribute.type.size}")
+        gl.vertexAttribPointer(
+                attribute.location,
+                attribute.stride,
+                attribute.type.toGLType(),
+                false,
+                attribute.stride * attribute.type.size
+        )
+        gl.enableVertexAttribArray(attribute.location)
     }
 }

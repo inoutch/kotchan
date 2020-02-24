@@ -2,13 +2,19 @@ package io.github.inoutch.kotchan.core.graphic.compatible.gl
 
 import io.github.inoutch.kotchan.core.Disposer
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.Shader
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.attribute.Attribute
+import io.github.inoutch.kotchan.extension.fastForEach
 import io.github.inoutch.kotlin.gl.api.GL_FRAGMENT_SHADER
 import io.github.inoutch.kotlin.gl.api.GL_VERTEX_SHADER
 import io.github.inoutch.kotlin.gl.api.GLenum
 import io.github.inoutch.kotlin.gl.api.GLuint
 import io.github.inoutch.kotlin.gl.api.gl
 
-class GLShader(vertSource: String, fragSource: String) : Shader() {
+class GLShader(
+        vertSource: String,
+        fragSource: String,
+        attributes: List<Attribute>
+) : Shader(attributes) {
     private val disposer = Disposer()
 
     val program: GLuint
@@ -25,9 +31,9 @@ class GLShader(vertSource: String, fragSource: String) : Shader() {
             gl.attachShader(program, vertShader)
             gl.attachShader(program, fragShader)
 
-            bindAttribute(GLAttribLocation.ATTRIBUTE_POSITION)
-            bindAttribute(GLAttribLocation.ATTRIBUTE_COLOR)
-            bindAttribute(GLAttribLocation.ATTRIBUTE_TEXCOORD)
+            attributes.fastForEach {
+                gl.bindAttribLocation(program, it.location, it.locationName)
+            }
             linkShader(program)
 
             disposer.dispose(vertShader)

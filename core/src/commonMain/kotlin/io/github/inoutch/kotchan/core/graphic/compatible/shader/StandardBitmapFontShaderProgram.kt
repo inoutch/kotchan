@@ -1,8 +1,13 @@
 package io.github.inoutch.kotchan.core.graphic.compatible.shader
 
 import io.github.inoutch.kotchan.core.KotchanGlobalContext
+import io.github.inoutch.kotchan.core.graphic.compatible.Texture
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.DescriptorSet
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformMatrix4F
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformTexture
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformTextureArray
 import io.github.inoutch.kotchan.extension.toByteArray
+import io.github.inoutch.kotchan.math.Matrix4F
 
 val standardBitmapFontFragCode = intArrayOf(
         0x03, 0x02, 0x23, 0x07, 0x00, 0x00, 0x01, 0x00, 0x08, 0x00, 0x08, 0x00, 0x25, 0x00, 0x00, 0x00,
@@ -92,6 +97,8 @@ open class StandardBitmapFontShaderProgram(
         extraDescriptorSets: List<DescriptorSet> = emptyList()
 ) : ShaderProgram(shaderSource, listOf(*createDescriptorSets().toTypedArray(), *extraDescriptorSets.toTypedArray())) {
     companion object {
+        const val TEXTURE_COUNT_MAX = 8
+
         private fun createShaderSource(): ShaderSource {
             return ShaderSource(
                     standardVertText,
@@ -103,9 +110,18 @@ open class StandardBitmapFontShaderProgram(
 
         private fun createDescriptorSets(): List<DescriptorSet> {
             return listOf(
-                    KotchanGlobalContext.graphic.createUniformMatrix4F(0, "u_viewProjectionMatrix"),
-                    KotchanGlobalContext.graphic.createUniformTexture(1, "u_texture0")
+                    KotchanGlobalContext.graphic.createUniformMatrix4F(0, "uViewProjectionMatrix"),
+                    KotchanGlobalContext.graphic.createUniformTextureArray(1, "uTextures")
             )
         }
+    }
+
+    private val viewProjectionMatrixUniform = descriptorSets[0] as UniformMatrix4F
+
+    private val textureArrayUniform = descriptorSets[1] as UniformTextureArray
+
+    fun prepare(mvpMatrix: Matrix4F, textures: List<Texture>) {
+        viewProjectionMatrixUniform.set(mvpMatrix)
+        textureArrayUniform.set(textures)
     }
 }

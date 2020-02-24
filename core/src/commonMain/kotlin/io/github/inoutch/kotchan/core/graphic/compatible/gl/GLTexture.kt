@@ -25,7 +25,7 @@ import io.github.inoutch.kotlin.gl.api.gl
 class GLTexture(image: Image, config: Config) : Texture(config) {
     override val size: Vector2I = image.size
 
-    private val id = gl.genTextures(1).first()
+    val id = gl.genTextures(1).first()
 
     private var isDisposedValue = false
 

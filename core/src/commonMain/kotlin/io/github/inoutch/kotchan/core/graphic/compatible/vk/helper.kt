@@ -3,6 +3,8 @@ package io.github.inoutch.kotchan.core.graphic.compatible.vk
 import io.github.inoutch.kotchan.core.graphic.BlendFactor
 import io.github.inoutch.kotchan.core.graphic.CullMode
 import io.github.inoutch.kotchan.core.graphic.PolygonMode
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.attribute.Attribute
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.attribute.AttributeType
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.DescriptorSet
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformTexture
@@ -68,6 +70,46 @@ fun BlendFactor.toVkBlendFactor(): VkBlendFactor {
         BlendFactor.OneMinusSrcAlpha -> VkBlendFactor.VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA
         BlendFactor.DstAlpha -> VkBlendFactor.VK_BLEND_FACTOR_DST_ALPHA
         BlendFactor.OneMinusDstAlpha -> VkBlendFactor.VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA
+    }
+}
+
+fun Attribute.toVkFormat(): VkFormat {
+    return when (type) {
+        AttributeType.INT -> when (stride) {
+            1 -> VkFormat.VK_FORMAT_R32_SFLOAT
+            2 -> VkFormat.VK_FORMAT_R32G32_SFLOAT
+            3 -> VkFormat.VK_FORMAT_R32G32B32_SFLOAT
+            4 -> VkFormat.VK_FORMAT_R32G32B32A32_SFLOAT
+            else -> throw IllegalStateException("Invalid stride value $stride")
+        }
+        AttributeType.FLOAT -> when (stride) {
+            1 -> VkFormat.VK_FORMAT_R32_SFLOAT
+            2 -> VkFormat.VK_FORMAT_R32G32_SFLOAT
+            3 -> VkFormat.VK_FORMAT_R32G32B32_SFLOAT
+            4 -> VkFormat.VK_FORMAT_R32G32B32A32_SFLOAT
+            else -> throw IllegalStateException("Invalid stride value $stride")
+        }
+        else -> throw IllegalStateException("Invalid type value $type")
+    }
+}
+
+fun createVertexDescriptions(
+        attributes: List<Attribute>
+): Pair<List<VkVertexInputBindingDescription>, List<VkVertexInputAttributeDescription>> {
+    val inputRate = VkVertexInputRate.VK_VERTEX_INPUT_RATE_VERTEX
+    return attributes.mapIndexed { index, attribute ->
+        VkVertexInputBindingDescription(
+                index,
+                attribute.stride * attribute.type.size,
+                inputRate
+        )
+    } to attributes.mapIndexed { index, attribute ->
+        VkVertexInputAttributeDescription(
+                attribute.location,
+                index,
+                attribute.toVkFormat(),
+                0
+        )
     }
 }
 

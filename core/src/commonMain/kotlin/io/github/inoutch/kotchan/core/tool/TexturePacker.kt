@@ -16,7 +16,7 @@ import kotlinx.serialization.json.JsonConfiguration
 class TexturePacker private constructor() {
     companion object {
         @ExperimentalStdlibApi
-        suspend fun loadFile(textureDir: String, filepath: String): Bundle {
+        suspend fun loadWithError(textureDir: String, filepath: String): Bundle {
             val text = file.readTextAsync(filepath).await()
             checkNotNull(text) { "Failed to load $filepath" }
 
@@ -41,8 +41,8 @@ class TexturePacker private constructor() {
         }
 
         @ExperimentalStdlibApi
-        suspend fun loadFileWithResource(textureDir: String, filepath: String) =
-                loadFile(file.getResourcePathWithError(textureDir), file.getResourcePathWithError(filepath))
+        suspend fun loadFromResourceWithError(textureDir: String, filepath: String) =
+                loadWithError(file.getResourcePathWithError(textureDir), file.getResourcePathWithError(filepath))
     }
 
     data class Bundle(val textureAtlas: TextureAtlas, val texture: Texture)

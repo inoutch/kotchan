@@ -74,6 +74,8 @@ import io.github.inoutch.kotlin.vulkan.api.VkSubpassDependency
 import io.github.inoutch.kotlin.vulkan.api.VkSubpassDescription
 import io.github.inoutch.kotlin.vulkan.api.VkSurface
 import io.github.inoutch.kotlin.vulkan.api.VkSwapchainCreateInfoKHR
+import io.github.inoutch.kotlin.vulkan.api.VkVertexInputAttributeDescription
+import io.github.inoutch.kotlin.vulkan.api.VkVertexInputBindingDescription
 import io.github.inoutch.kotlin.vulkan.api.VkViewport
 import io.github.inoutch.kotlin.vulkan.api.VkWriteDescriptorSet
 import io.github.inoutch.kotlin.vulkan.api.vk
@@ -353,7 +355,9 @@ class VKLogicalDevice(
         cullMode: VkCullModeFlagBits,
         polygonMode: VkPolygonMode,
         srcFactor: VkBlendFactor,
-        dstFactor: VkBlendFactor
+        dstFactor: VkBlendFactor,
+        bindingDescriptions: List<VkVertexInputBindingDescription>,
+        attributeDescription: List<VkVertexInputAttributeDescription>
     ): VKPipeline {
         val shaderStages = listOf(
                 vertShaderModule.createShaderStage(VkShaderStageFlagBits.VK_SHADER_STAGE_VERTEX_BIT),
@@ -363,8 +367,8 @@ class VKLogicalDevice(
         val vertexInputState = VkPipelineVertexInputStateCreateInfo(
                 VkStructureType.VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
                 0,
-                create2DVertexBindingDescriptions(),
-                create2DVertexAttributeDescriptions()
+                bindingDescriptions,
+                attributeDescription
         )
 
         val inputAssemblyStateCreateInfo = VkPipelineInputAssemblyStateCreateInfo(

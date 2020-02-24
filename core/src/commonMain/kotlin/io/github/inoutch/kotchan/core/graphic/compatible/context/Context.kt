@@ -11,6 +11,7 @@ import io.github.inoutch.kotchan.core.graphic.compatible.buffer.VertexBuffer
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.Shader
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.ShaderProgram
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.ShaderSource
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.attribute.Attribute
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform1F
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform1I
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform2F
@@ -18,6 +19,7 @@ import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Unifo
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform4F
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformMatrix4F
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformTexture
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformTextureArray
 import io.github.inoutch.kotchan.math.RectI
 import io.github.inoutch.kotchan.math.Vector2I
 import io.github.inoutch.kotchan.math.Vector4F
@@ -29,8 +31,8 @@ interface Context : Disposable {
     fun end()
     fun resize(windowSize: Vector2I)
     fun createVertexBuffer(vertices: FloatArray, bufferStorageMode: BufferStorageMode): VertexBuffer
-    fun drawTriangles(batchBufferBundle: BatchBufferBundle)
-    fun createShader(shaderSource: ShaderSource): Shader
+    fun drawTriangles(batchBufferBundle: BatchBufferBundle<*>)
+    fun createShader(shaderSource: ShaderSource, attributes: List<Attribute>): Shader
     fun createGraphicsPipeline(shaderProgram: ShaderProgram, config: GraphicsPipelineConfig): GraphicsPipeline
     fun bindGraphicsPipeline(graphicsPipeline: GraphicsPipeline)
     fun setViewport(viewport: RectI)
@@ -46,4 +48,5 @@ interface Context : Disposable {
     fun createUniform4F(binding: Int, uniformName: String): Uniform4F
     fun createUniformMatrix4F(binding: Int, uniformName: String): UniformMatrix4F
     fun createUniformTexture(binding: Int, uniformName: String): UniformTexture
+    fun createUniformTextureArray(binding: Int, uniformName: String): UniformTextureArray
 }

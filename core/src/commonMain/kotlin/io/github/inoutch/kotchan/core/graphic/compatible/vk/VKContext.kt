@@ -12,6 +12,7 @@ import io.github.inoutch.kotchan.core.graphic.compatible.context.Context
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.Shader
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.ShaderProgram
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.ShaderSource
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.attribute.Attribute
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform1F
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform1I
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform2F
@@ -19,6 +20,7 @@ import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Unifo
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform4F
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformMatrix4F
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformTexture
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformTextureArray
 import io.github.inoutch.kotchan.extension.getProperties
 import io.github.inoutch.kotchan.extension.getProperty
 import io.github.inoutch.kotchan.math.RectI
@@ -50,10 +52,6 @@ import io.github.inoutch.kotlin.vulkan.api.VkViewport
 import io.github.inoutch.kotlin.vulkan.api.VkWriteDescriptorSet
 import io.github.inoutch.kotlin.vulkan.api.vk
 import io.github.inoutch.kotlin.vulkan.utility.MutableProperty
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlin.math.min
 
 class VKContext(
@@ -230,14 +228,10 @@ class VKContext(
         return VKVertexBuffer(primaryLogicalDevice, primaryGraphicCommandPool, vertices, bufferStorageMode)
     }
 
-    override fun drawTriangles(batchBufferBundle: BatchBufferBundle) {
+    override fun drawTriangles(batchBufferBundle: BatchBufferBundle<*>) {
         val graphicsPipeline = currentGraphicsPipeline ?: return
-        val buffers = batchBufferBundle.let {
-            listOf(
-                    it.positionBuffer.vertexBuffer as VKVertexBuffer,
-                    it.colorBuffer.vertexBuffer as VKVertexBuffer,
-                    it.texcoordBuffer.vertexBuffer as VKVertexBuffer
-            )
+        val buffers = batchBufferBundle.bufferInfos.map {
+            it.buffer.vertexBuffer as VKVertexBuffer
         }
 
         val descriptorSetUniformProviders = graphicsPipeline.descriptorSetUniformProviders
@@ -278,8 +272,8 @@ class VKContext(
         currentRenderContext.commandBuffer.cmdEndRenderPass()
     }
 
-    override fun createShader(shaderSource: ShaderSource): Shader {
-        return VKShader(primaryLogicalDevice, shaderSource)
+    override fun createShader(shaderSource: ShaderSource, attributes: List<Attribute>): Shader {
+        return VKShader(primaryLogicalDevice, shaderSource, attributes)
     }
 
     override fun createGraphicsPipeline(shaderProgram: ShaderProgram, config: GraphicsPipelineConfig): GraphicsPipeline {
@@ -297,6 +291,7 @@ class VKContext(
             val pipelineLayout = primaryLogicalDevice.createPipelineLayout(descriptorSetLayout)
             localDisposer.add(pipelineLayout)
 
+            val descriptions = createVertexDescriptions(shader.attributes)
             val pipeline = primaryLogicalDevice.createPipeline(
                     null,
                     pipelineLayout,
@@ -307,7 +302,9 @@ class VKContext(
                     config.cullMode.toVkCullModeFlagBits(),
                     config.polygonMode.toVkPolygonMode(),
                     config.srcBlendFactor.toVkBlendFactor(),
-                    config.dstBlendFactor.toVkBlendFactor()
+                    config.dstBlendFactor.toVkBlendFactor(),
+                    descriptions.first,
+                    descriptions.second
             )
             localDisposer.add(pipeline)
 
@@ -483,6 +480,10 @@ class VKContext(
 
     override fun createUniformTexture(binding: Int, uniformName: String): UniformTexture {
         return VKUniformTexture(binding, uniformName)
+    }
+
+    override fun createUniformTextureArray(binding: Int, uniformName: String): UniformTextureArray {
+        return VKUniformTextureArray(binding, uniformName)
     }
 
     override fun dispose() {

@@ -1,5 +1,6 @@
 package io.github.inoutch.kotchan.core.graphic.compatible.gl
 
+import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.graphic
 import io.github.inoutch.kotchan.core.graphic.compatible.GraphicsPipeline
 import io.github.inoutch.kotchan.core.graphic.compatible.GraphicsPipelineConfig
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.ShaderProgram
@@ -52,6 +53,8 @@ class GLGraphicsPipeline(
                 config.srcBlendFactor.toGLBlendFactor(),
                 config.dstBlendFactor.toGLBlendFactor()
         )
+
+        graphic.bindGraphicsPipeline(this)
 
         val shader = shaderProgram.shader
         check(shader is GLShader)
