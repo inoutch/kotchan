@@ -3,9 +3,12 @@ package io.github.inoutch.kotchan.core.graphic.batch
 import io.github.inoutch.kotchan.core.Disposer
 import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.graphic
 import io.github.inoutch.kotchan.core.graphic.material.Material
+import io.github.inoutch.kotchan.extension.fastForEach
 
 abstract class BatchBase<TObject>(val material: Material): Disposer() {
-    abstract val bufferBundle: BatchBufferBundle<TObject>
+    data class Bundle(val stride: Int, val batchBuffer: BatchBuffer)
+
+    abstract val bundles: List<Bundle>
 
     private val objectBundles = mutableListOf<BatchObjectBufferBundle<TObject>>()
 
@@ -14,7 +17,7 @@ abstract class BatchBase<TObject>(val material: Material): Disposer() {
     abstract fun size(obj: TObject): Int
 
     fun add(obj: TObject, drawOrder: Int = 0) {
-        objectBundles.add(bufferBundle.allocate(obj, size(obj), drawOrder))
+        objectBundles.add(allocate(obj, size(obj), drawOrder))
     }
 
     fun render() {
@@ -25,17 +28,15 @@ abstract class BatchBase<TObject>(val material: Material): Disposer() {
             update(objectBundles[i])
             i++
         }
-        bufferBundle.flushAll()
-        graphic.drawTriangles(bufferBundle)
+        flushAll()
+        graphic.drawTriangles(bundles.map { it.batchBuffer.vertexBuffer }, triangleCount())
     }
 
     fun sortByRenderOrder() {
         objectBundles.sortBy { it.index }
-        val buffers = bufferBundle.buffers
         var i = 0
-        while (i < buffers.size) {
-            val buffer = buffers[i]
-            buffer.sort {
+        while (i < bundles.size) {
+            bundles[i].batchBuffer.sort {
                 var j = 0
                 while (j < objectBundles.size) {
                     it.invoke(objectBundles[j].buffers[i].batchBufferPointer)
@@ -44,5 +45,18 @@ abstract class BatchBase<TObject>(val material: Material): Disposer() {
             }
             i++
         }
+    }
+
+    private fun triangleCount(): Int {
+        return bundles.first().let { it.batchBuffer.size / it.stride }
+    }
+
+    private fun allocate(obj: TObject, size: Int, index: Int): BatchObjectBufferBundle<TObject> {
+        val data = bundles.map { BatchObjectBuffer(it.batchBuffer, it.batchBuffer.allocate(it.stride * size)) }
+        return BatchObjectBufferBundle(index, obj, data)
+    }
+
+    private fun flushAll() {
+        bundles.fastForEach { it.batchBuffer.flush() }
     }
 }

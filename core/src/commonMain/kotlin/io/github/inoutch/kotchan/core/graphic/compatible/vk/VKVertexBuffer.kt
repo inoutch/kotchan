@@ -5,21 +5,26 @@ import io.github.inoutch.kotchan.core.graphic.compatible.buffer.VertexBuffer
 import io.github.inoutch.kotlin.vulkan.api.VkBufferUsageFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkMemoryPropertyFlagBits
 import io.github.inoutch.kotlin.vulkan.constant.FLOAT_SIZE
+import kotlin.math.max
 
 class VKVertexBuffer(
-    logicalDevice: VKLogicalDevice,
-    commandPool: VKCommandPool,
-    vertices: FloatArray,
-    mode: BufferStorageMode
+        logicalDevice: VKLogicalDevice,
+        commandPool: VKCommandPool,
+        intVertices: IntArray = IntArray(0),
+        floatVertices: FloatArray = FloatArray(0),
+        mode: BufferStorageMode
 ) : VertexBuffer(mode) {
     val buffer: VKBuffer
 
     val bufferDeviceMemory: VKBufferDeviceMemory
 
     init {
-        val size = vertices.size.toLong()
+        val byteSize = 4 // Int == Float == 4
+        val size = max(intVertices.size, floatVertices.size).toLong()
+        check(size > 0) { "vertices is empty" }
+
         val bufferTmp = logicalDevice.createBuffer(
-                size * FLOAT_SIZE,
+                size * byteSize,
                 listOf(VkBufferUsageFlagBits.VK_BUFFER_USAGE_VERTEX_BUFFER_BIT)
         )
         add(bufferTmp)
@@ -28,7 +33,11 @@ class VKVertexBuffer(
         add(bufferDeviceMemoryTmp)
 
         val data = bufferDeviceMemoryTmp.mapMemory(0, listOf())
-        data.copy(0, size, vertices)
+        if (intVertices.isNotEmpty()) {
+            data.copy(0, size, intVertices)
+        } else {
+            data.copy(0, size, floatVertices)
+        }
         data.destroy()
 
         if (mode == BufferStorageMode.Static) {
@@ -43,7 +52,7 @@ class VKVertexBuffer(
                     VkMemoryPropertyFlagBits.VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
             ))
             add(bufferDeviceMemory)
-            commandPool.copyBuffer(bufferTmp, 0L, buffer, 0L, size * FLOAT_SIZE)
+            commandPool.copyBuffer(bufferTmp, 0L, buffer, 0L, size * byteSize)
 
             dispose(bufferDeviceMemoryTmp)
             dispose(bufferTmp)
@@ -51,6 +60,16 @@ class VKVertexBuffer(
             buffer = bufferTmp
             bufferDeviceMemory = bufferDeviceMemoryTmp
         }
+    }
+
+    override fun copyToBuffer(vertices: IntArray, offset: Int, size: Int) {
+        if (mode == BufferStorageMode.Static) {
+            return
+        }
+
+        val data = bufferDeviceMemory.mapMemory(0, listOf())
+        data.copy(offset.toLong(), size.toLong(), vertices)
+        data.destroy()
     }
 
     override fun copyToBuffer(vertices: FloatArray, offset: Int, size: Int) {

@@ -1,6 +1,5 @@
 package io.github.inoutch.kotchan.core.graphic.compatible.gl
 
-import io.github.inoutch.kotchan.core.graphic.batch.BatchBufferBundle
 import io.github.inoutch.kotchan.core.graphic.compatible.GraphicsPipeline
 import io.github.inoutch.kotchan.core.graphic.compatible.GraphicsPipelineConfig
 import io.github.inoutch.kotchan.core.graphic.compatible.Image
@@ -52,22 +51,26 @@ class GLContext : Context {
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun createVertexBuffer(vertices: FloatArray, bufferStorageMode: BufferStorageMode): VertexBuffer {
-        return GLVertexBuffer(vertices, bufferStorageMode)
+    override fun createVertexBuffer(vertices: IntArray, bufferStorageMode: BufferStorageMode): VertexBuffer {
+        return GLVertexBuffer(intVertices = vertices, mode = bufferStorageMode)
     }
 
-    override fun drawTriangles(batchBufferBundle: BatchBufferBundle<*>) {
+    override fun createVertexBuffer(vertices: FloatArray, bufferStorageMode: BufferStorageMode): VertexBuffer {
+        return GLVertexBuffer(floatVertices = vertices, mode = bufferStorageMode)
+    }
+
+    override fun drawTriangles(buffers: List<VertexBuffer>, triangleCount: Int) {
         val graphicsPipeline = currentGraphicsPipeline ?: return
         val attributes = graphicsPipeline.shaderProgram.shader.attributes
         var i = 0
-        while (i < batchBufferBundle.bufferInfos.size) {
-            val buffer = batchBufferBundle.getBuffer(i).vertexBuffer as GLVertexBuffer
+        while (i < buffers.size) {
+            val buffer = buffers[i] as GLVertexBuffer
             gl.bindBuffer(GL_ARRAY_BUFFER, buffer.id)
             vertexPointer(attributes[i])
             i++
         }
 
-        gl.drawArrays(GL_TRIANGLES, 0, batchBufferBundle.size)
+        gl.drawArrays(GL_TRIANGLES, 0, triangleCount)
     }
 
     override fun createShader(shaderSource: ShaderSource, attributes: List<Attribute>): Shader {

@@ -1,7 +1,6 @@
 package io.github.inoutch.kotchan.core.graphic.compatible.vk
 
 import io.github.inoutch.kotchan.core.Disposer
-import io.github.inoutch.kotchan.core.graphic.batch.BatchBufferBundle
 import io.github.inoutch.kotchan.core.graphic.compatible.GraphicsPipeline
 import io.github.inoutch.kotchan.core.graphic.compatible.GraphicsPipelineConfig
 import io.github.inoutch.kotchan.core.graphic.compatible.Image
@@ -224,15 +223,26 @@ class VKContext(
         mustRecreateSwapchainInFrame = true
     }
 
-    override fun createVertexBuffer(vertices: FloatArray, bufferStorageMode: BufferStorageMode): VertexBuffer {
-        return VKVertexBuffer(primaryLogicalDevice, primaryGraphicCommandPool, vertices, bufferStorageMode)
+    override fun createVertexBuffer(vertices: IntArray, bufferStorageMode: BufferStorageMode): VertexBuffer {
+        return VKVertexBuffer(
+                logicalDevice = primaryLogicalDevice,
+                commandPool = primaryGraphicCommandPool,
+                intVertices = vertices,
+                mode = bufferStorageMode
+        )
     }
 
-    override fun drawTriangles(batchBufferBundle: BatchBufferBundle<*>) {
+    override fun createVertexBuffer(vertices: FloatArray, bufferStorageMode: BufferStorageMode): VertexBuffer {
+        return VKVertexBuffer(
+                logicalDevice = primaryLogicalDevice,
+                commandPool = primaryGraphicCommandPool,
+                floatVertices = vertices,
+                mode = bufferStorageMode
+        )
+    }
+
+    override fun drawTriangles(buffers: List<VertexBuffer>, triangleCount: Int) {
         val graphicsPipeline = currentGraphicsPipeline ?: return
-        val buffers = batchBufferBundle.bufferInfos.map {
-            it.buffer.vertexBuffer as VKVertexBuffer
-        }
 
         val descriptorSetUniformProviders = graphicsPipeline.descriptorSetUniformProviders
         val descriptorSetTextureProviders = graphicsPipeline.descriptorSetTextureProviders
@@ -267,8 +277,8 @@ class VKContext(
                 0,
                 listOf(graphicsPipeline.descriptorSet.value)
         )
-        currentRenderContext.commandBuffer.cmdBindVertexBuffers(buffers)
-        currentRenderContext.commandBuffer.cmdDraw(batchBufferBundle.size, 1, 0, 0)
+        currentRenderContext.commandBuffer.cmdBindVertexBuffers(buffers.map { it as VKVertexBuffer })
+        currentRenderContext.commandBuffer.cmdDraw(triangleCount, 1, 0, 0)
         currentRenderContext.commandBuffer.cmdEndRenderPass()
     }
 

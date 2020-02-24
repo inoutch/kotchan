@@ -4,7 +4,11 @@ import io.github.inoutch.kotchan.core.graphic.material.Material
 import io.github.inoutch.kotchan.core.graphic.polygon.Polygon
 
 class Batch(material: Material) : BatchBase<Polygon>(material) {
-    override val bufferBundle: BatchBufferBundle<Polygon> = BatchBufferBundle()
+    override val bundles = listOf(
+            Bundle(3, BatchBuffer()),
+            Bundle(4, BatchBuffer()),
+            Bundle(2, BatchBuffer())
+    )
 
     override fun size(obj: Polygon): Int {
         return obj.mesh.size

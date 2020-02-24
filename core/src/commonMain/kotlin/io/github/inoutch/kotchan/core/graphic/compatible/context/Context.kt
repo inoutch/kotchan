@@ -30,8 +30,9 @@ interface Context : Disposable {
     fun begin()
     fun end()
     fun resize(windowSize: Vector2I)
+    fun createVertexBuffer(vertices: IntArray, bufferStorageMode: BufferStorageMode): VertexBuffer
     fun createVertexBuffer(vertices: FloatArray, bufferStorageMode: BufferStorageMode): VertexBuffer
-    fun drawTriangles(batchBufferBundle: BatchBufferBundle<*>)
+    fun drawTriangles(buffers: List<VertexBuffer>, triangleCount: Int)
     fun createShader(shaderSource: ShaderSource, attributes: List<Attribute>): Shader
     fun createGraphicsPipeline(shaderProgram: ShaderProgram, config: GraphicsPipelineConfig): GraphicsPipeline
     fun bindGraphicsPipeline(graphicsPipeline: GraphicsPipeline)
