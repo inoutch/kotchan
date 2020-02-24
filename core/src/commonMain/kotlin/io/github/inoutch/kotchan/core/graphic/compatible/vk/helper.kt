@@ -91,7 +91,6 @@ fun Attribute.toVkFormat(): VkFormat {
             4 -> VkFormat.VK_FORMAT_R32G32B32A32_SFLOAT
             else -> throw IllegalStateException("Invalid stride value $stride")
         }
-        else -> throw IllegalStateException("Invalid type value $type")
     }
 }
 
