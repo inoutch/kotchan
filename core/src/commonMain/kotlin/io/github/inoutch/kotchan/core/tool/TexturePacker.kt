@@ -24,7 +24,7 @@ class TexturePacker private constructor() {
             val root = json.parse(Root.serializer(), text)
 
             val imagePath = Path.resolve(textureDir, root.meta.image)
-            val texture = Texture.loadFromFile(imagePath)
+            val texture = Texture.load(imagePath)
             checkNotNull(texture) { "Failed to load $imagePath" }
 
             val textureFrames = root.frames.map {

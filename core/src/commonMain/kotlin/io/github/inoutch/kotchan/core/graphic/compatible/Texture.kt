@@ -6,13 +6,19 @@ import io.github.inoutch.kotchan.math.Vector2I
 
 abstract class Texture(val config: Config) : Disposer() {
     companion object {
-        fun loadFromImage(image: Image, config: Config = Config()): Texture {
+        fun load(image: Image, config: Config = Config()): Texture {
             return graphic.loadTexture(image, config)
         }
 
-        suspend fun loadFromFile(filepath: String, config: Config = Config()): Texture? {
-            val image = Image.loadFromFile(filepath) ?: return null
-            return loadFromImage(image, config)
+        @ExperimentalStdlibApi
+        suspend fun loadFromResourceWithError(filepath: String, config: Config = Config()): Texture {
+            val image = Image.loadFromResourceWithError(filepath)
+            return load(image, config)
+        }
+
+        suspend fun load(filepath: String, config: Config = Config()): Texture? {
+            val image = Image.load(filepath) ?: return null
+            return load(image, config)
         }
 
         fun empty(): Texture {

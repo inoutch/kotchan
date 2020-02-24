@@ -133,7 +133,7 @@ android {
 task compileShaders {
     def shaderDir = "src/shaders"
     def buildShaderDir = "${buildDir}/shaders"
-    def names = ["standard"]
+    def names = ["standard", "standard_bitmap_font"]
     mkdir(buildShaderDir)
     doLast {
         names.forEach {

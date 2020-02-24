@@ -1,23 +1,24 @@
 package io.github.inoutch.kotchan.core.graphic.batch
 
 import io.github.inoutch.kotchan.core.graphic.material.Material
-/*import io.github.inoutch.kotchan.core.graphic.polygon.Label
+import io.github.inoutch.kotchan.core.graphic.polygon.LabelSprite
 
-class LabelBatch(material: Material) : BatchBase<Label>(material) {
-    override val bufferBundle: BatchBufferBundle<Label> = BatchBufferBundle(listOf(
-            BatchBufferBundle.BufferInfo(3),
-            BatchBufferBundle.BufferInfo(4),
-            BatchBufferBundle.BufferInfo(2),
-            BatchBufferBundle.BufferInfo(1)
-    ))
+class LabelBatch(material: Material) : BatchBase<LabelSprite>(material) {
+    private val positionBuffer = BatchFloatBuffer()
+    private val colorBuffer = BatchFloatBuffer()
+    private val texcoordBuffer = BatchFloatBuffer()
+    private val texNumbersBuffer = BatchIntBuffer()
 
-    override fun size(obj: Label): Int {
+    override val bundles: List<Bundle> = listOf()
+
+    override fun size(obj: LabelSprite): Int {
         return obj.mesh.size
     }
 
-    override fun update(objectBundle: BatchObjectBufferBundle<Label>) {
-        objectBundle.obj.copyPositionsTo(objectBundle.buffers[0])
-        objectBundle.obj.copyColorsTo(objectBundle.buffers[1])
-        objectBundle.obj.copyTexcoordsTo(objectBundle.buffers[2])
+    override fun update(objectBundle: BatchObjectBufferBundle<LabelSprite>) {
+        objectBundle.obj.copyPositionsTo(positionBuffer, objectBundle.pointers[0].first)
+        objectBundle.obj.copyColorsTo(colorBuffer, objectBundle.pointers[1].first)
+        objectBundle.obj.copyTexcoordsTo(texcoordBuffer, objectBundle.pointers[2].first)
+        objectBundle.obj.copyTexNumbersTo(texNumbersBuffer, objectBundle.pointers[3].first)
     }
-}*/
+}

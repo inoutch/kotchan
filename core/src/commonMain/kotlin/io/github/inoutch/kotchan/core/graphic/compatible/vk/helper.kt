@@ -8,6 +8,7 @@ import io.github.inoutch.kotchan.core.graphic.compatible.shader.attribute.Attrib
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.DescriptorSet
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Uniform
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformTexture
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.UniformTextureArray
 import io.github.inoutch.kotlin.vulkan.api.VkBlendFactor
 import io.github.inoutch.kotlin.vulkan.api.VkCullModeFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkDescriptorSetLayoutBinding
@@ -30,6 +31,7 @@ fun findDescriptorType(descriptorSet: DescriptorSet): VkDescriptorType {
     return when (descriptorSet) {
         is Uniform -> VkDescriptorType.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER
         is UniformTexture -> VkDescriptorType.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
+        is UniformTextureArray -> VkDescriptorType.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE
         else -> throw IllegalStateException("Invalid descriptor type")
     }
 }
