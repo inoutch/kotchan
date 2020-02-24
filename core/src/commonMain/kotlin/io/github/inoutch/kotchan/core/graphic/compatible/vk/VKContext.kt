@@ -30,6 +30,7 @@ import io.github.inoutch.kotlin.vulkan.api.VkClearDepthStencilValue
 import io.github.inoutch.kotlin.vulkan.api.VkClearValue
 import io.github.inoutch.kotlin.vulkan.api.VkCommandBufferBeginInfo
 import io.github.inoutch.kotlin.vulkan.api.VkCommandBufferUsageFlagBits
+import io.github.inoutch.kotlin.vulkan.api.VkDescriptorSetLayoutBinding
 import io.github.inoutch.kotlin.vulkan.api.VkExtent2D
 import io.github.inoutch.kotlin.vulkan.api.VkImageAspectFlagBits
 import io.github.inoutch.kotlin.vulkan.api.VkImageLayout.VK_IMAGE_LAYOUT_GENERAL
@@ -246,6 +247,7 @@ class VKContext(
 
         val descriptorSetUniformProviders = graphicsPipeline.descriptorSetUniformProviders
         val descriptorSetTextureProviders = graphicsPipeline.descriptorSetTextureProviders
+        val descriptorSetTextureArrayProviders = graphicsPipeline.descriptorSetTextureArrayProviders
 
         // TODO: Improve performance
         graphicsPipeline.uniforms.forEachIndexed { index, uniform ->
@@ -258,6 +260,7 @@ class VKContext(
         val writeDescriptorSets = mutableListOf<VkWriteDescriptorSet>()
         writeDescriptorSets.addAll(descriptorSetTextureProviders.mapNotNull { it.value.writeDescriptorSet() })
         writeDescriptorSets.addAll(descriptorSetUniformProviders.mapNotNull { it.value.writeDescriptorSet() })
+        writeDescriptorSets.addAll(descriptorSetTextureArrayProviders.mapNotNull { it.value.writeDescriptorSet() })
         if (writeDescriptorSets.isNotEmpty()) {
             primaryLogicalDevice.updateDescriptorSets(writeDescriptorSets)
         }
@@ -294,9 +297,12 @@ class VKContext(
             val uniformTextures = shaderProgram.descriptorSets.filterIsInstance<VKUniformTexture>()
             val uniformTextureArrays = shaderProgram.descriptorSets.filterIsInstance<VKUniformTextureArray>()
 
-            val descriptorSetLayout = primaryLogicalDevice.createDescriptorSetLayout(shaderProgram.descriptorSets.map {
-                convertToDescriptorSetLayoutBinding(it)
-            })
+            val descriptorSetLayoutBindings = mutableListOf<VkDescriptorSetLayoutBinding>()
+            descriptorSetLayoutBindings.addAll(uniforms.map { convertToDescriptorSetLayoutBinding(it) })
+            descriptorSetLayoutBindings.addAll(uniformTextures.map { convertToDescriptorSetLayoutBinding(it) })
+            descriptorSetLayoutBindings.addAll(uniformTextureArrays.map { convertToDescriptorSetLayoutBinding(it, it.size) })
+
+            val descriptorSetLayout = primaryLogicalDevice.createDescriptorSetLayout(descriptorSetLayoutBindings)
             localDisposer.add(descriptorSetLayout)
 
             val pipelineLayout = primaryLogicalDevice.createPipelineLayout(descriptorSetLayout)

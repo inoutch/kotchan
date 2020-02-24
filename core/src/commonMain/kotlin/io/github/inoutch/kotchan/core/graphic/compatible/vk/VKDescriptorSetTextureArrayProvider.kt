@@ -34,13 +34,13 @@ class VKDescriptorSetTextureArrayProvider(private val descriptorSet: VKDescripto
         }
         isChanged = false
         return VkWriteDescriptorSet(
-                descriptorSet.descriptorSet,
-                bundle.binding,
-                0,
-                VkDescriptorType.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-                imageInfos,
-                listOf(),
-                listOf()
+                dstSet = descriptorSet.descriptorSet,
+                dstBinding = bundle.binding,
+                dstArrayElement = 0,
+                descriptorType = VkDescriptorType.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+                imageInfo = imageInfos,
+                bufferInfo = listOf(),
+                texelBufferView = listOf()
         )
     }
 }

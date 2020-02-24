@@ -23,7 +23,7 @@ class BMFontLoader private constructor() {
         }
 
         fun load(source: String): BMFont {
-            val lines = source.split("\n")
+            val lines = source.replace("\r", "").split("\n")
             val chunks = lines
                     .mapNotNull { line -> convertChunk(line.splitWithEscaping(' ').filter { it.isNotEmpty() }) }
                     .groupBy { it.type }

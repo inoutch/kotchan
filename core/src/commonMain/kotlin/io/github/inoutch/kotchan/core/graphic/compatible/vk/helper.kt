@@ -21,17 +21,17 @@ import io.github.inoutch.kotlin.vulkan.api.VkVertexInputBindingDescription
 import io.github.inoutch.kotlin.vulkan.api.VkVertexInputRate
 import io.github.inoutch.kotlin.vulkan.constant.FLOAT_SIZE
 
-fun convertToDescriptorSetLayoutBinding(descriptorSet: DescriptorSet): VkDescriptorSetLayoutBinding {
+fun convertToDescriptorSetLayoutBinding(descriptorSet: DescriptorSet, count: Int = 1): VkDescriptorSetLayoutBinding {
     val type = findDescriptorType(descriptorSet)
     val shaderStageFlagBits = findShaderStageFlag(type)
-    return VkDescriptorSetLayoutBinding(descriptorSet.binding, type, 1, listOf(shaderStageFlagBits), null)
+    return VkDescriptorSetLayoutBinding(descriptorSet.binding, type, count, listOf(shaderStageFlagBits), null)
 }
 
 fun findDescriptorType(descriptorSet: DescriptorSet): VkDescriptorType {
     return when (descriptorSet) {
         is Uniform -> VkDescriptorType.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER
         is UniformTexture -> VkDescriptorType.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
-        is UniformTextureArray -> VkDescriptorType.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE
+        is UniformTextureArray -> VkDescriptorType.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
         else -> throw IllegalStateException("Invalid descriptor type")
     }
 }

@@ -6,7 +6,7 @@ import io.github.inoutch.kotchan.core.graphic.compatible.shader.descriptor.Unifo
 class VKUniformTextureArray(
     binding: Int,
     uniformName: String,
-    size: Int
+    val size: Int
 ) : UniformTextureArray(binding, uniformName) {
     private var provider: VKDescriptorSetTextureArrayProvider? = null
 
