@@ -148,7 +148,7 @@ val standardFragCode = intArrayOf(
         0x17, 0x00, 0x00, 0x00, 0xfd, 0x00, 0x01, 0x00, 0x38, 0x00, 0x01, 0x00
 ).toByteArray()
 
-val standardVertText = """
+const val standard2DVertText = """
 #ifdef GL_ES
 precision mediump float;
 precision mediump int;
@@ -170,7 +170,7 @@ void main(void) {
 }
 """
 
-val standardFragText = """
+const val standard2DFragText = """
 #ifdef GL_ES
 precision mediump float;
 precision mediump int;
@@ -186,7 +186,7 @@ void main(void) {
 }
 """
 
-open class StandardShaderProgram private constructor(
+open class Standard2DShaderProgram private constructor(
     shaderSource: ShaderSource = createShaderSource(),
     extraDescriptorSets: List<DescriptorSet> = emptyList()
 ) : ShaderProgram(
@@ -197,14 +197,14 @@ open class StandardShaderProgram private constructor(
         fun create(
             shaderSource: ShaderSource = createShaderSource(),
             extraDescriptorSets: List<DescriptorSet> = emptyList()
-        ): StandardShaderProgram {
-            return StandardShaderProgram(shaderSource, extraDescriptorSets)
+        ): Standard2DShaderProgram {
+            return Standard2DShaderProgram(shaderSource, extraDescriptorSets)
         }
 
         private fun createShaderSource(): ShaderSource {
             return ShaderSource(
-                    standardVertText,
-                    standardFragText,
+                    standard2DVertText,
+                    standard2DFragText,
                     standardVertCode,
                     standardFragCode
             )

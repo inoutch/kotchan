@@ -58,7 +58,7 @@ abstract class Camera {
             }
             return Matrix4F(
                     Vector4F((1.0f / aspectRatio) * factor, 0.0f, 0.0f, 0.0f),
-                    Vector4F(0.0f, -factor, 0.0f, 0.0f),
+                    Vector4F(0.0f, factor, 0.0f, 0.0f),
                     Vector4F(0.0f, 0.0f, m10, -1.0f),
                     Vector4F(0.0f, 0.0f, m14, 0.0f)
             )

@@ -2,6 +2,8 @@ package io.github.inoutch.kotchan.math
 
 import kotlin.math.abs
 import kotlinx.serialization.Serializable
+import kotlin.math.cos
+import kotlin.math.sin
 
 @Serializable
 data class Matrix4F(val col1: Vector4F, val col2: Vector4F, val col3: Vector4F, val col4: Vector4F) {
@@ -17,6 +19,41 @@ data class Matrix4F(val col1: Vector4F, val col2: Vector4F, val col3: Vector4F, 
                 Vector4F(0.0f, 0.0f, 0.0f, 1.0f))
 
         fun createIdentity() = Matrix4F()
+
+        fun createRotation(axis: Vector3F, radian: Float): Matrix4F {
+            var x = axis.x
+            var y = axis.y
+            var z = axis.z
+
+            val n = axis.x * axis.x + axis.y * axis.y + axis.z * axis.z
+            if (n != 1.0f) {
+                val norm = axis.normalized()
+                x = norm.x
+                y = norm.y
+                z = norm.z
+            }
+
+            val c = cos(radian)
+            val s = sin(radian)
+
+            val t = 1.0f - c
+            val tx = t * x
+            val ty = t * y
+            val tz = t * z
+            val txy = tx * y
+            val txz = tx * z
+            val tyz = ty * z
+            val sx = s * x
+            val sy = s * y
+            val sz = s * z
+
+            return Matrix4F(
+                    Vector4F(c + tx * x, txy + sz, txz - sy, 0.0f),
+                    Vector4F(txy - sz, c + ty * y, tyz + sx, 0.0f),
+                    Vector4F(txz + sy, tyz - sx, c + tz * z, 0.0f),
+                    Vector4F(0.0f, 0.0f, 0.0f, 1.0f)
+            )
+        }
     }
 
     constructor() : this(
@@ -81,6 +118,48 @@ data class Matrix4F(val col1: Vector4F, val col2: Vector4F, val col3: Vector4F, 
                 col3.x * a3 - col3.y * a1 + col3.z * a0
         )
         return Matrix4F(col1, col2, col3, col4) * (1.0f / det)
+    }
+
+    fun inverseWithTranspose(): Matrix4F {
+        val a0 = col1.x * col2.y - col1.y * col2.x
+        val a1 = col1.x * col2.z - col1.z * col2.x
+        val a2 = col1.x * col2.w - col1.w * col2.x
+        val a3 = col1.y * col2.z - col1.z * col2.y
+        val a4 = col1.y * col2.w - col1.w * col2.y
+        val a5 = col1.z * col2.w - col1.w * col2.z
+        val b0 = col3.x * col4.y - col3.y * col4.x
+        val b1 = col3.x * col4.z - col3.z * col4.x
+        val b2 = col3.x * col4.w - col3.w * col4.x
+        val b3 = col3.y * col4.z - col3.z * col4.y
+        val b4 = col3.y * col4.w - col3.w * col4.y
+        val b5 = col3.z * col4.w - col3.w * col4.z
+
+        val det = a0 * b5 - a1 * b4 + a2 * b3 + a3 * b2 - a4 * b1 + a5 * b0
+        if (abs(det) <= 2e-37f)
+            throw Error("could not inverse")
+
+        val m11 = col2.y * b5 - col2.z * b4 + col2.w * b3
+        val m12 = -col1.y * b5 + col1.z * b4 - col1.w * b3
+        val m13 = col4.y * a5 - col4.z * a4 + col4.w * a3
+        val m14 = -col3.y * a5 + col3.z * a4 - col3.w * a3
+        val m21 = -col2.x * b5 + col2.z * b2 - col2.w * b1
+        val m22 = col1.x * b5 - col1.z * b2 + col1.w * b1
+        val m23 = -col4.x * a5 + col4.z * a2 - col4.w * a1
+        val m24 = col3.x * a5 - col3.z * a2 + col3.w * a1
+        val m31 = col2.x * b4 - col2.y * b2 + col2.w * b0
+        val m32 = -col1.x * b4 + col1.y * b2 - col1.w * b0
+        val m33 = col4.x * a4 - col4.y * a2 + col4.w * a0
+        val m34 = -col3.x * a4 + col3.y * a2 - col3.w * a0
+        val m41 = -col2.x * b3 + col2.y * b1 - col2.z * b0
+        val m42 = col1.x * b3 - col1.y * b1 + col1.z * b0
+        val m43 = -col4.x * a3 + col4.y * a1 - col4.z * a0
+        val m44 = col3.x * a3 - col3.y * a1 + col3.z * a0
+        return Matrix4F(
+                Vector4F(m11, m21, m31, m41),
+                Vector4F(m12, m22, m32, m42),
+                Vector4F(m13, m23, m33, m43),
+                Vector4F(m14, m24, m34, m44)
+        ) * (1.0f / det)
     }
 
     operator fun times(other: Vector4F) = Vector4F(

@@ -45,6 +45,24 @@ open class Polygon(initMesh: Mesh) {
             field = value
         }
 
+    open var rotationAxis = Vector3F(0.0f, 0.0f, 1.0f)
+        set(value) {
+            if (field != value) {
+                updatePositionAll()
+                updateNormalAll()
+            }
+            field = value
+        }
+
+    open var rotationRadian = 0.0f
+        set(value) {
+            if (field != value) {
+                updatePositionAll()
+                updateNormalAll()
+            }
+            field = value
+        }
+
     val children: List<Polygon>
         get() = privateChildren
 
@@ -182,10 +200,11 @@ open class Polygon(initMesh: Mesh) {
 
     fun copyNormalsTo(target: BufferInterface<Float>, offset: Int = 0) {
         val change = normalsChange.change ?: return
+        val modelMatrix = transform()
         val nom = mesh.nom()
         var i = change.first
         while (i < change.last) {
-            val n = nom[i]
+            val n = modelMatrix * Vector4F(nom[i], 1.0f)
             target.copy(offset + i * 3 + 0, n.x)
             target.copy(offset + i * 3 + 1, n.y)
             target.copy(offset + i * 3 + 2, n.z)
@@ -207,8 +226,14 @@ open class Polygon(initMesh: Mesh) {
         allPolygons { it.texcoordsChange.updateAll() }
     }
 
+    protected fun updateNormalAll() {
+        allPolygons { it.normalsChange.updateAll() }
+    }
+
     protected open fun transform(): Matrix4F {
-        val currentTransform = Matrix4F.createTranslation(position) * Matrix4F.createScale(scale)
+        val currentTransform = Matrix4F.createTranslation(position) *
+                Matrix4F.createRotation(rotationAxis, rotationRadian) *
+                Matrix4F.createScale(scale)
         val parent = this.parent ?: return currentTransform
         return parent.childrenTransform() * currentTransform
     }

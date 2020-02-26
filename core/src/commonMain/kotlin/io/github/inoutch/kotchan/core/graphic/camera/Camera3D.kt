@@ -6,14 +6,14 @@ import kotlin.math.PI
 
 class Camera3D private constructor() : Camera() {
     companion object {
-        fun create(fieldOfView: Float = 45.0f): Camera3D {
+        fun create(fieldOfView: Float = 45.0f, zNearPlane: Float = 0.1f, zFarPlane: Float = 10.0f): Camera3D {
             return Camera3D().apply {
                 val aspect = config.screenSize.x.toFloat() / config.screenSize.y.toFloat()
                 projectionMatrix = createPerspective(
                         fieldOfView / 180.0f * PI.toFloat(),
                         aspect,
-                        -10000.0f,
-                        10000.0f
+                        zNearPlane,
+                        zFarPlane
                 )
                 update()
             }
@@ -38,7 +38,7 @@ class Camera3D private constructor() : Camera() {
             isChanged = true
         }
 
-    var up = Vector3F(0.0f, 1.0f, 0.0f)
+    var up = Vector3F(0.0f, 0.0f, 1.0f)
         set(value) {
             if (field == value) {
                 return

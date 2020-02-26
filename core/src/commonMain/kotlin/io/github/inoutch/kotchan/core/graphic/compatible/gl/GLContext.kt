@@ -60,6 +60,11 @@ class GLContext : Context {
     override fun drawTriangles(buffers: List<VertexBuffer>, triangleCount: Int) {
         val graphicsPipeline = currentGraphicsPipeline ?: return
         val attributes = graphicsPipeline.shaderProgram.shader.attributes
+
+        check(buffers.size == attributes.size) {
+            "Buffer size does not match attribute size [buffer size = ${buffers.size}, attribute size = ${attributes.size}]"
+        }
+
         var i = 0
         while (i < buffers.size) {
             val buffer = buffers[i] as GLVertexBuffer
@@ -76,8 +81,8 @@ class GLContext : Context {
     }
 
     override fun createGraphicsPipeline(
-        shaderProgram: ShaderProgram,
-        config: GraphicsPipelineConfig
+            shaderProgram: ShaderProgram,
+            config: GraphicsPipelineConfig
     ): GraphicsPipeline {
         val uniforms = shaderProgram.descriptorSets.filterIsInstance<GLUniform>()
         val uniformTextures = shaderProgram.descriptorSets.filterIsInstance<GLUniformTexture>()
