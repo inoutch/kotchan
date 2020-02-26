@@ -4,8 +4,8 @@ import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.config
 import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.graphic
 import io.github.inoutch.kotchan.core.graphic.batch.Batch
 import io.github.inoutch.kotchan.core.graphic.camera.Camera2D
-import io.github.inoutch.kotchan.core.graphic.compatible.shader.StandardShaderProgram
-import io.github.inoutch.kotchan.core.graphic.material.StandardMaterial
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.Standard2DShaderProgram
+import io.github.inoutch.kotchan.core.graphic.material.Standard2DMaterial
 import io.github.inoutch.kotchan.core.graphic.polygon.AnimatedSpriteAtlas
 import io.github.inoutch.kotchan.core.tool.TexturePacker
 import io.github.inoutch.kotchan.core.view.scene.Scene
@@ -19,7 +19,7 @@ import io.github.inoutch.kotchan.math.Vector4F
 class SpriteAnimationScene(context: SceneContext) : Scene(context) {
     private val camera = Camera2D.create()
 
-    private val shaderProgram = StandardShaderProgram.create()
+    private val shaderProgram = Standard2DShaderProgram.create()
 
     private var sprite: AnimatedSpriteAtlas? = null
 
@@ -30,7 +30,7 @@ class SpriteAnimationScene(context: SceneContext) : Scene(context) {
         disposer.add(bundle.texture)
 
         val animations = listOf(AnimatedSpriteAtlas.AnimationSet(List(8) { "go_${it + 1}.png" }, 0.1f))
-        val material = StandardMaterial.create(shaderProgram, camera, bundle.texture)
+        val material = Standard2DMaterial.create(shaderProgram, camera, bundle.texture)
         val sprite = AnimatedSpriteAtlas(bundle.textureAtlas, AnimatedSpriteAtlas.Config(animations))
         sprite.position = Vector3F(config.screenSize / 2.0f, 0.0f)
 

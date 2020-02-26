@@ -10,8 +10,8 @@ import io.github.inoutch.kotchan.core.graphic.Mesh
 import io.github.inoutch.kotchan.core.graphic.camera.Camera2D
 import io.github.inoutch.kotchan.core.graphic.compatible.Image
 import io.github.inoutch.kotchan.core.graphic.compatible.TextureFilter
-import io.github.inoutch.kotchan.core.graphic.compatible.shader.StandardShaderProgram
-import io.github.inoutch.kotchan.core.graphic.material.StandardMaterial
+import io.github.inoutch.kotchan.core.graphic.compatible.shader.Standard2DShaderProgram
+import io.github.inoutch.kotchan.core.graphic.material.Standard2DMaterial
 import io.github.inoutch.kotchan.core.graphic.polygon.Polygon
 import io.github.inoutch.kotchan.math.RectI
 import io.github.inoutch.kotchan.math.Vector2F
@@ -21,7 +21,7 @@ import io.github.inoutch.kotchan.math.Vector4F
 
 @ExperimentalStdlibApi
 class TriangleScene(context: SceneContext) : Scene(context) {
-    private val shaderProgram = StandardShaderProgram.create()
+    private val shaderProgram = Standard2DShaderProgram.create()
 
     private val camera = Camera2D.create()
 
@@ -44,7 +44,7 @@ class TriangleScene(context: SceneContext) : Scene(context) {
                 minFilter = TextureFilter.NEAREST
         )
         val texture = disposer.add(Texture.load(image, textureConfig))
-        val material = StandardMaterial.create(shaderProgram, camera, texture)
+        val material = Standard2DMaterial.create(shaderProgram, camera, texture)
         val batch = disposer.add(Batch(material))
 
         val polygon1 = Polygon(mesh) // Red
