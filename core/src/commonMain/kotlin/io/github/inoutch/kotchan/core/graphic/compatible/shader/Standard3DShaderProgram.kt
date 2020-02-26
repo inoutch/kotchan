@@ -72,7 +72,6 @@ void main(void) {
 
     vec3 lightEffect = ambient + diffuse;
     gl_FragColor = vColor * texture2D(uTexture0, vTexcoord) * vec4(lightEffect, 1.0);
-    gl_FragColor = texture2D(uTexture0, vTexcoord) * vec4(lightEffect, 1.0);
 }
 """
 

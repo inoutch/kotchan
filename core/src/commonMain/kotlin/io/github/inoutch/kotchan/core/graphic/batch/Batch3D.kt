@@ -18,8 +18,8 @@ class Batch3D(material: Material) : BatchBase<Polygon>(material) {
 
     override fun update(objectBundle: BatchObjectBufferBundle<Polygon>) {
         objectBundle.obj.copyPositionsTo(positionBuffer, objectBundle.pointers[0].first)
-        objectBundle.obj.copyPositionsTo(colorBuffer, objectBundle.pointers[1].first)
-        objectBundle.obj.copyPositionsTo(texcoordBuffer, objectBundle.pointers[2].first)
+        objectBundle.obj.copyColorsTo(colorBuffer, objectBundle.pointers[1].first)
+        objectBundle.obj.copyTexcoordsTo(texcoordBuffer, objectBundle.pointers[2].first)
         objectBundle.obj.copyNormalsTo(normalBuffer, objectBundle.pointers[3].first)
     }
 
