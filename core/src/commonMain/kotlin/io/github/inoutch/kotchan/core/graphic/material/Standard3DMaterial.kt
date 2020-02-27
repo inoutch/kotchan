@@ -12,6 +12,7 @@ class Standard3DMaterial private constructor(
         private var texture: Texture,
         private var lightPosition: Vector3F,
         private var lightColor: Vector3F,
+        private var ambientStrength: Float,
         graphicsPipelineConfig: GraphicsPipelineConfig
 ) : MaterialBase<Standard3DShaderProgram>(shaderProgram, graphicsPipelineConfig) {
 
@@ -22,6 +23,7 @@ class Standard3DMaterial private constructor(
                 texture: Texture,
                 lightPosition: Vector3F,
                 lightColor: Vector3F,
+                ambientStrength: Float = 0.2f,
                 graphicsPipelineConfig: GraphicsPipelineConfig = GraphicsPipelineConfig()
         ): Standard3DMaterial {
             return Standard3DMaterial(
@@ -30,6 +32,7 @@ class Standard3DMaterial private constructor(
                     texture,
                     lightPosition,
                     lightColor,
+                    ambientStrength,
                     graphicsPipelineConfig
             )
         }
@@ -45,6 +48,6 @@ class Standard3DMaterial private constructor(
 
     override fun bind() {
         super.bind()
-        shaderProgram.prepare(camera.combine, texture, lightPosition, lightColor)
+        shaderProgram.prepare(camera.combine, texture, lightPosition, lightColor, ambientStrength)
     }
 }
