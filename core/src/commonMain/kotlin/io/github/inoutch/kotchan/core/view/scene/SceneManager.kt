@@ -9,8 +9,8 @@ class SceneManager {
 
     suspend fun render(delta: Float) {
         nextSceneCreateCallback?.let {
-            currentScene = it.invoke(context).apply { init() }
             nextSceneCreateCallback = null
+            currentScene = it.invoke(context).apply { init() }
         }
 
         currentScene?.let {

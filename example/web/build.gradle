@@ -16,6 +16,7 @@ buildscript {
     ext.kotlinVersion = "1.3.61"
     ext.kotchanVersion = "0.0.1"
     ext.kotlinGLVersion = "0.0.1"
+    ext.kotlinVulkanVersion = "0.0.1"
     ext.lwjglVersion = "3.2.1"
     ext.serializationVersion = "0.14.0"
     ext.coroutineVersion = "1.3.3"
@@ -58,7 +59,7 @@ kotlinFrontend {
     npm {}
     webpackBundle {
         bundleName = "main"
-        contentPath = file("src/main/resources/static")
+        contentPath = file("build/resources/main")
     }
 }
 
@@ -69,8 +70,12 @@ dependencies {
 
     implementation "io.github.inoutch:kotchan-js:$kotchanVersion"
     implementation "io.github.inoutch:kotlin-gl-js:$kotlinGLVersion"
+    implementation "io.github.inoutch:kotlin-vulkan-js:$kotlinVulkanVersion"
 }
 
 sourceSets {
-    main.kotlin.srcDirs += "../src/commonMain/kotlin"
+    main {
+        kotlin.srcDirs += "../src/commonMain/kotlin"
+        resources.srcDirs += "../src/commonMain/resources"
+    }
 }

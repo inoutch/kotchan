@@ -13,8 +13,13 @@ class AppConfig : KotchanStartupConfig() {
     override val screenType: ScreenType = ScreenType.FIX_HEIGHT
     override val useVulkanIfSupported: Boolean = true
 
+    override fun onError(error: Error): Boolean {
+        println(error)
+        return false
+    }
+
     @ExperimentalStdlibApi
     override fun createFirstScene(context: SceneContext): Scene {
-        return CubeScene(context)
+        return SpriteAnimationScene(context)
     }
 }

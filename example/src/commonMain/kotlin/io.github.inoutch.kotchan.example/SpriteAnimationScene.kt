@@ -40,6 +40,7 @@ class SpriteAnimationScene(context: SceneContext) : Scene(context) {
 
         this.batch = batch
         this.sprite = sprite
+        println(bundle.textureAtlas)
     }
 
     override suspend fun update(delta: Float) {
@@ -48,7 +49,7 @@ class SpriteAnimationScene(context: SceneContext) : Scene(context) {
     override suspend fun render(delta: Float) {
         graphic.setScissor(RectI(Vector2I.Zero, config.viewportSize))
         graphic.setViewport(config.viewport)
-        graphic.clearColor(Vector4F.Zero)
+        graphic.clearColor(Vector4F(.3f, .3f, .3f, 1.0f))
         graphic.clearDepth(1.0f)
 
         sprite?.update(delta)

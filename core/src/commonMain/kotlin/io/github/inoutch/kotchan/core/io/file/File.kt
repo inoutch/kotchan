@@ -37,6 +37,7 @@ fun File.readTextAsync(filepath: String): Deferred<String?> = GlobalScope.async 
     result?.toUTF8String()
 }
 
+@kotlin.ExperimentalStdlibApi
 fun File.readBytesFromResource(filepath: String): ByteArray? =
         getResourcePath(filepath)?.let { readBytes(it) }
 
@@ -54,6 +55,7 @@ fun File.readTextFromResourceAsync(filepath: String): Deferred<String?> = Global
     getResourcePath(filepath)?.let { readTextAsync(it).await() }
 }
 
+@kotlin.ExperimentalStdlibApi
 fun File.readBytesFromResourceWithError(filepath: String): ByteArray =
         readBytesFromResource(filepath) ?: throw NoSuchFileError(filepath)
 

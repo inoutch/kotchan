@@ -13,6 +13,7 @@ class Image(val byteArray: ByteArray, val size: Vector2I) {
             return loadPNGByteArrayAsync(bytes).await()
         }
 
+        @kotlin.ExperimentalStdlibApi
         suspend fun load(filepath: String): Image? {
             val bytes = file.readBytesAsync(filepath).await() ?: return null
 

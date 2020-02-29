@@ -18,6 +18,10 @@ class WebGLLauncher(
 ) {
     val context: GLContext
 
+    private var thrownError: Error? = null
+
+    private var currentTime = 0.0
+
     init {
         val configCanvas = config.canvas
         val canvas = checkNotNull(configCanvas
@@ -35,13 +39,25 @@ class WebGLLauncher(
         this.context = GLContext()
     }
 
-    fun startAnimation() {
+    suspend fun startAnimation() {
+        val launcher = this
         fun renderLoop() {
             window.requestAnimationFrame {
+                val delta = it - currentTime
+                currentTime = it
                 GlobalScope.launch(Dispatchers.Unconfined) {
-                    engine.render(it.toFloat())
+                    try {
+                        engine.render(delta.toFloat() * 0.001f)
+                    } catch (e: Error) {
+                        launcher.thrownError = e
+                    }
                 }
-                renderLoop()
+                val thrownError = launcher.thrownError
+                if (thrownError == null) {
+                    renderLoop()
+                } else {
+                    throw thrownError
+                }
             }
         }
         renderLoop()

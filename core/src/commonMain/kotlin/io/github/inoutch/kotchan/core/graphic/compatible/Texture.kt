@@ -16,6 +16,7 @@ abstract class Texture(val config: Config) : Disposer() {
             return load(image, config)
         }
 
+        @kotlin.ExperimentalStdlibApi
         suspend fun load(filepath: String, config: Config = Config()): Texture? {
             val image = Image.load(filepath) ?: return null
             return load(image, config)
