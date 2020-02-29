@@ -2,21 +2,20 @@ package io.github.inoutch.kotchan.example
 
 import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.config
 import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.graphic
-import io.github.inoutch.kotchan.core.graphic.Mesh
 import io.github.inoutch.kotchan.core.graphic.batch.Batch
 import io.github.inoutch.kotchan.core.graphic.camera.Camera2D
-import io.github.inoutch.kotchan.core.graphic.compatible.Texture
 import io.github.inoutch.kotchan.core.graphic.compatible.shader.Standard2DShaderProgram
 import io.github.inoutch.kotchan.core.graphic.material.Standard2DMaterial
-import io.github.inoutch.kotchan.core.graphic.polygon.Sprite
+import io.github.inoutch.kotchan.core.graphic.polygon.SpriteAtlas
+import io.github.inoutch.kotchan.core.tool.TexturePacker
 import io.github.inoutch.kotchan.core.view.scene.Scene
 import io.github.inoutch.kotchan.core.view.scene.SceneContext
 import io.github.inoutch.kotchan.math.RectI
-import io.github.inoutch.kotchan.math.Vector2F
 import io.github.inoutch.kotchan.math.Vector2I
+import io.github.inoutch.kotchan.math.Vector3F
 import io.github.inoutch.kotchan.math.Vector4F
 
-class TextureScene(context: SceneContext) : Scene(context) {
+class SpriteAtlasScene(context: SceneContext) : Scene(context) {
     private val shaderProgram = Standard2DShaderProgram.create()
 
     private val camera = Camera2D.create()
@@ -25,13 +24,16 @@ class TextureScene(context: SceneContext) : Scene(context) {
 
     @ExperimentalStdlibApi
     override suspend fun init() {
-        val texture = Texture.loadFromResourceWithError("sprites/counter.png")
-        val material = Standard2DMaterial.create(shaderProgram, camera, texture)
+        val bundle = TexturePacker.loadFromResourceWithError("sprites", "sprites/counter.json")
+        val material = Standard2DMaterial.create(shaderProgram, camera, bundle.texture)
         val batch = disposer.add(Batch(material))
-        val polygon = Sprite(Vector2F(400.0f, 400.0f))
-        polygon.position = (config.screenSize / 2.0f).toVector3F()
-        batch.add(polygon)
+        val polygon = SpriteAtlas(bundle.textureAtlas)
 
+        polygon.position = (config.screenSize / 2.0f).toVector3F()
+        polygon.setAtlas(0)
+        polygon.scale = Vector3F(10.0f)
+
+        batch.add(polygon)
         this.batch = batch
     }
 
