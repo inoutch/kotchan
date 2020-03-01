@@ -7,8 +7,15 @@ actual class KotchanPlatform actual constructor(
     engine: KotchanEngine,
     platformConfig: KotchanPlatformConfig?
 ) {
-    actual val graphic: Context = GLContext()
+    actual fun createLauncher(): KotchanPlatformLauncher {
+        return object : KotchanPlatformLauncher {
+            override fun getGraphics(): Context {
+                return GLContext()
+            }
 
-    actual suspend fun launch() {
+            override suspend fun startAnimation() {
+                // Skip
+            }
+        }
     }
 }

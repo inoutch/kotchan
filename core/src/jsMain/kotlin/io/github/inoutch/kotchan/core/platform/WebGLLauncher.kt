@@ -1,6 +1,8 @@
 package io.github.inoutch.kotchan.core.platform
 
 import io.github.inoutch.kotchan.core.KotchanEngine
+import io.github.inoutch.kotchan.core.KotchanPlatformLauncher
+import io.github.inoutch.kotchan.core.graphic.compatible.context.Context
 import io.github.inoutch.kotchan.core.graphic.compatible.gl.GLContext
 import io.github.inoutch.kotchan.math.Vector2I
 import io.github.inoutch.kotlin.gl.api.gl
@@ -15,7 +17,7 @@ import org.w3c.dom.HTMLCanvasElement
 class WebGLLauncher(
     private val engine: KotchanEngine,
     config: WebGLPlatformConfig
-) {
+): KotchanPlatformLauncher {
     val context: GLContext
 
     private var thrownError: Error? = null
@@ -39,7 +41,11 @@ class WebGLLauncher(
         this.context = GLContext()
     }
 
-    suspend fun startAnimation() {
+    override fun getGraphics(): Context {
+        return context
+    }
+
+    override suspend fun startAnimation() {
         val launcher = this
         fun renderLoop() {
             window.requestAnimationFrame {

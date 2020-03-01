@@ -17,13 +17,15 @@ class KotchanEngine(config: KotchanStartupConfig) {
         try {
             // Initialize platform
             platform = KotchanPlatform(this, platformConfig)
-            KotchanGlobalContext().initialize(startupConfig, platform)
+            val externalLauncher = (platformConfig as? ExternalPlatformLauncherConfig)?.createLauncher(this)
+            val launcher = platform.createLauncher()
+            KotchanGlobalContext().initialize(startupConfig, externalLauncher ?: launcher)
 
             // Initialize kotchan engine
             sceneManager.transitScene { startupConfig.createFirstScene(it) }
 
             // Launch application
-            platform.launch()
+            launcher.startAnimation()
         } catch (e: Error) {
             if (startupConfig.onError(e)) {
                 throw e

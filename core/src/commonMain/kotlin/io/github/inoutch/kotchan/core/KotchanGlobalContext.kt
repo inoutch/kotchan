@@ -26,11 +26,11 @@ class KotchanGlobalContext {
 
     fun initialize(
         startupConfig: KotchanStartupConfig,
-        platform: KotchanPlatform
+        launcher: KotchanPlatformLauncher
     ) {
         KotchanGlobalContext.startupConfig = startupConfig
         file = File()
-        graphic = platform.graphic
+        graphic = launcher.getGraphics()
         useVulkan = graphic is VKContext
     }
 }

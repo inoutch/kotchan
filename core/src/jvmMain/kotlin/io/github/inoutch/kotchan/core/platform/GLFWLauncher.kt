@@ -1,6 +1,7 @@
 package io.github.inoutch.kotchan.core.platform
 
 import io.github.inoutch.kotchan.core.KotchanEngine
+import io.github.inoutch.kotchan.core.KotchanPlatformLauncher
 import io.github.inoutch.kotchan.core.graphic.compatible.context.Context
 import io.github.inoutch.kotchan.core.graphic.compatible.gl.GLContext
 import io.github.inoutch.kotchan.core.graphic.compatible.vk.VKContext
@@ -44,7 +45,7 @@ import org.lwjgl.system.MemoryUtil
 class GLFWLauncher(
     private val engine: KotchanEngine,
     private val config: GLFWLauncherConfig
-) {
+): KotchanPlatformLauncher {
     val context: Context
 
     private val window: Long
@@ -133,7 +134,11 @@ class GLFWLauncher(
         glfwShowWindow(window)
     }
 
-    suspend fun startAnimation() {
+    override fun getGraphics(): Context {
+        return context
+    }
+
+    override suspend fun startAnimation() {
         var lastTime = Timer.milliseconds()
         while (!glfwWindowShouldClose(window)) {
             glfwPollEvents()
