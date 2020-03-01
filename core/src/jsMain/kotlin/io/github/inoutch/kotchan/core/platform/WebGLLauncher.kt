@@ -17,7 +17,7 @@ import org.w3c.dom.HTMLCanvasElement
 class WebGLLauncher(
     private val engine: KotchanEngine,
     config: WebGLPlatformConfig
-): KotchanPlatformLauncher {
+) : KotchanPlatformLauncher {
     val context: GLContext
 
     private var thrownError: Error? = null

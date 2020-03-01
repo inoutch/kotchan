@@ -45,7 +45,7 @@ import org.lwjgl.system.MemoryUtil
 class GLFWLauncher(
     private val engine: KotchanEngine,
     private val config: GLFWLauncherConfig
-): KotchanPlatformLauncher {
+) : KotchanPlatformLauncher {
     val context: Context
 
     private val window: Long

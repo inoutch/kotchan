@@ -185,7 +185,7 @@ class BatchBufferTest {
         assertEquals(4.0f, nativeBuffer[3])
     }
 
-    private fun copy(batchBuffer: BatchBuffer, pointer: BatchBufferPointer, firstValue: Int) {
+    private fun copy(batchBuffer: BatchFloatBuffer, pointer: BatchBufferPointer, firstValue: Int) {
         batchBuffer.range(pointer.first, pointer.last())
         for (i in 0 until pointer.size) {
             batchBuffer.copy(pointer.first + i, (firstValue + i).toFloat())

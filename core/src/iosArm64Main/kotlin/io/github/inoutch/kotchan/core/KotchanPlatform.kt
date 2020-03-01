@@ -42,7 +42,7 @@ actual class KotchanPlatform actual constructor(
     engine: KotchanEngine,
     platformConfig: KotchanPlatformConfig?
 ) {
-    actual val graphic: Context
+    val context: Context
 
     lateinit var eagleContext: KotchanEAGLContext
         private set
@@ -69,7 +69,7 @@ actual class KotchanPlatform actual constructor(
                     vulkanConfig.enableExtensionNames
                             ?: listOf("VK_KHR_surface", "VK_MVK_ios_surface")
             )
-            graphic = VKContext(
+            context = VKContext(
                     createInfo,
                     platformConfig.viewController.windowSize,
                     vulkanConfig.maxFrameInFlight
@@ -77,12 +77,21 @@ actual class KotchanPlatform actual constructor(
                 platformConfig.viewController.createSurface(surface, instance)
             }
         } else {
-            graphic = GLContext()
+            context = GLContext()
             initWithEAGL(platformConfig)
         }
     }
 
-    actual suspend fun launch() {
+    actual fun createLauncher(): KotchanPlatformLauncher {
+        return object : KotchanPlatformLauncher {
+            override fun getGraphics(): Context {
+                return context
+            }
+
+            override suspend fun startAnimation() {
+                // Skip
+            }
+        }
     }
 
     private fun initWithEAGL(config: KotchanPlatformBridgeConfig) {
