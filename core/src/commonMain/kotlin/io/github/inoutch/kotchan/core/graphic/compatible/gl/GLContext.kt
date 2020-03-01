@@ -81,8 +81,8 @@ class GLContext : Context {
     }
 
     override fun createGraphicsPipeline(
-            shaderProgram: ShaderProgram,
-            config: GraphicsPipelineConfig
+        shaderProgram: ShaderProgram,
+        config: GraphicsPipelineConfig
     ): GraphicsPipeline {
         val uniforms = shaderProgram.descriptorSets.filterIsInstance<GLUniform>()
         val uniformTextures = shaderProgram.descriptorSets.filterIsInstance<GLUniformTexture>()

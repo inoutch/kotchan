@@ -2,6 +2,8 @@ package io.github.inoutch.kotchan.core.io.file
 
 import io.github.inoutch.kotchan.extension.toByteArray
 import io.github.inoutch.kotchan.utility.Path
+import kotlin.browser.localStorage
+import kotlin.js.Promise
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.asDeferred
 import kotlinx.serialization.json.Json
@@ -11,8 +13,6 @@ import org.khronos.webgl.Uint8Array
 import org.w3c.xhr.ARRAYBUFFER
 import org.w3c.xhr.XMLHttpRequest
 import org.w3c.xhr.XMLHttpRequestResponseType
-import kotlin.browser.localStorage
-import kotlin.js.Promise
 
 actual class File actual constructor() {
     private val json = Json(JsonConfiguration.Stable)

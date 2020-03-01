@@ -4,7 +4,9 @@ import kotlinx.cinterop.ExportObjCClass
 import kotlinx.cinterop.ObjCAction
 import platform.Foundation.NSCoder
 import platform.QuartzCore.CADisplayLink
+import platform.UIKit.UIScreen
 import platform.UIKit.UIViewController
+import platform.UIKit.contentScaleFactor
 
 @ExperimentalUnsignedTypes
 @ExportObjCClass
@@ -17,6 +19,7 @@ class ViewController : UIViewController {
 
     override fun viewDidLoad() {
         super.viewDidLoad()
+        view.contentScaleFactor = UIScreen.mainScreen.nativeScale
         kotchanViewController.viewDidLoad()
     }
 

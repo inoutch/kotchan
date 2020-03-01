@@ -81,10 +81,10 @@ class KotchanViewController(
         displayLink.preferredFramesPerSecond = startupConfig.fps.toLong()
         displayLink.addToRunLoop(NSRunLoop.mainRunLoop, NSDefaultRunLoopMode)
 
-        windowSize = UIScreen.mainScreen().nativeBounds().useContents {
+        viewportSize = UIScreen.mainScreen().nativeBounds().useContents {
             Vector2I(size.width.toInt(), size.height.toInt())
         }
-        viewportSize = UIScreen.mainScreen().bounds().useContents {
+        windowSize = UIScreen.mainScreen().bounds().useContents {
             Vector2I(size.width.toInt(), size.height.toInt())
         }
 

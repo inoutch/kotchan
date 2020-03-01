@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class DirectoryInfo(
-        val fileItems: MutableList<FileItem>
+    val fileItems: MutableList<FileItem>
 )

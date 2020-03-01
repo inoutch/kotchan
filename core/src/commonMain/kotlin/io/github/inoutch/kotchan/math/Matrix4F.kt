@@ -1,9 +1,9 @@
 package io.github.inoutch.kotchan.math
 
 import kotlin.math.abs
-import kotlinx.serialization.Serializable
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class Matrix4F(val col1: Vector4F, val col2: Vector4F, val col3: Vector4F, val col4: Vector4F) {

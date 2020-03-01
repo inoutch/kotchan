@@ -7,24 +7,24 @@ import io.github.inoutch.kotchan.core.graphic.compatible.shader.Standard3DShader
 import io.github.inoutch.kotchan.math.Vector3F
 
 class Standard3DMaterial private constructor(
-        shaderProgram: Standard3DShaderProgram,
-        private var camera: Camera,
-        private var texture: Texture,
-        private var lightPosition: Vector3F,
-        private var lightColor: Vector3F,
-        private var ambientStrength: Float,
-        graphicsPipelineConfig: GraphicsPipelineConfig
+    shaderProgram: Standard3DShaderProgram,
+    private var camera: Camera,
+    private var texture: Texture,
+    private var lightPosition: Vector3F,
+    private var lightColor: Vector3F,
+    private var ambientStrength: Float,
+    graphicsPipelineConfig: GraphicsPipelineConfig
 ) : MaterialBase<Standard3DShaderProgram>(shaderProgram, graphicsPipelineConfig) {
 
     companion object {
         fun create(
-                standardShaderProgram: Standard3DShaderProgram,
-                camera: Camera,
-                texture: Texture,
-                lightPosition: Vector3F,
-                lightColor: Vector3F,
-                ambientStrength: Float = 0.2f,
-                graphicsPipelineConfig: GraphicsPipelineConfig = GraphicsPipelineConfig()
+            standardShaderProgram: Standard3DShaderProgram,
+            camera: Camera,
+            texture: Texture,
+            lightPosition: Vector3F,
+            lightColor: Vector3F,
+            ambientStrength: Float = 0.2f,
+            graphicsPipelineConfig: GraphicsPipelineConfig = GraphicsPipelineConfig()
         ): Standard3DMaterial {
             return Standard3DMaterial(
                     standardShaderProgram,

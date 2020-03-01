@@ -196,9 +196,9 @@ class OBJLoader private constructor() {
     }
 
     class VertexBundle(
-            val v: Int,
-            val t: Int,
-            val n: Int
+        val v: Int,
+        val t: Int,
+        val n: Int
     ) {
         companion object {
             fun create(v: String, t: String, n: String): VertexBundle {
@@ -231,16 +231,16 @@ class OBJLoader private constructor() {
     }
 
     class Face3V(
-            val v1: VertexBundle,
-            val v2: VertexBundle,
-            val v3: VertexBundle
+        val v1: VertexBundle,
+        val v2: VertexBundle,
+        val v3: VertexBundle
     ) : Chunk
 
     class Face4V(
-            val v1: VertexBundle,
-            val v2: VertexBundle,
-            val v3: VertexBundle,
-            val v4: VertexBundle
+        val v1: VertexBundle,
+        val v2: VertexBundle,
+        val v3: VertexBundle,
+        val v4: VertexBundle
     ) : Chunk {
         fun toFace3V(): List<Face3V> {
             return listOf(
@@ -251,16 +251,16 @@ class OBJLoader private constructor() {
     }
 
     data class Bundle(
-            val materialLib: MaterialLib?,
-            val objects: List<ObjectBundle>
+        val materialLib: MaterialLib?,
+        val objects: List<ObjectBundle>
     )
 
     data class ObjectBundle(
-            val name: String,
-            val vertices: List<Vertex>,
-            val texcoords: List<VertexTexcoord>,
-            val normals: List<VertexNormal>,
-            val faces: List<Face3V>
+        val name: String,
+        val vertices: List<Vertex>,
+        val texcoords: List<VertexTexcoord>,
+        val normals: List<VertexNormal>,
+        val faces: List<Face3V>
     ) {
         fun toMesh(): Mesh {
             return Mesh(

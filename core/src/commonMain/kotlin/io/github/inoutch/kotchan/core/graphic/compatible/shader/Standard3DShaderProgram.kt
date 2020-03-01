@@ -357,8 +357,8 @@ void main(void) {
 """
 
 class Standard3DShaderProgram private constructor(
-        shaderSource: ShaderSource = createShaderSource(),
-        extraDescriptorSets: List<DescriptorSet> = emptyList()
+    shaderSource: ShaderSource = createShaderSource(),
+    extraDescriptorSets: List<DescriptorSet> = emptyList()
 ) : ShaderProgram(
         shaderSource,
         listOf(*createDescriptorSets().toTypedArray(), *extraDescriptorSets.toTypedArray()),
@@ -366,8 +366,8 @@ class Standard3DShaderProgram private constructor(
 ) {
     companion object {
         fun create(
-                shaderSource: ShaderSource = createShaderSource(),
-                extraDescriptorSets: List<DescriptorSet> = emptyList()
+            shaderSource: ShaderSource = createShaderSource(),
+            extraDescriptorSets: List<DescriptorSet> = emptyList()
         ): Standard3DShaderProgram {
             return Standard3DShaderProgram(shaderSource, extraDescriptorSets)
         }
@@ -415,11 +415,11 @@ class Standard3DShaderProgram private constructor(
     private val ambientStrengthUniform = descriptorSets[5] as Uniform1F
 
     fun prepare(
-            mvpMatrix: Matrix4F,
-            texture: Texture,
-            lightPosition: Vector3F,
-            lightColor: Vector3F,
-            ambientStrength: Float
+        mvpMatrix: Matrix4F,
+        texture: Texture,
+        lightPosition: Vector3F,
+        lightColor: Vector3F,
+        ambientStrength: Float
     ) {
         viewProjectionMatrixUniform.set(mvpMatrix)
         invViewProjectionMatrixUniform.set(mvpMatrix.inverseWithTranspose())
