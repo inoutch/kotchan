@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		95115E1D240B4F8D00DEDCAB /* obj in Resources */ = {isa = PBXBuildFile; fileRef = 95115E1C240B4F8D00DEDCAB /* obj */; };
 		9518D9D322BF797200C462C0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 95DF423522BBE90E0074D5AB /* Main.storyboard */; };
 		9518D9EB22C8F48B00C462C0 /* sample.wav in Resources */ = {isa = PBXBuildFile; fileRef = 9518D9E222C8F48B00C462C0 /* sample.wav */; };
 		9518D9EF22C8F4A100C462C0 /* sprites in Resources */ = {isa = PBXBuildFile; fileRef = 9518D9EC22C8F4A100C462C0 /* sprites */; };
@@ -18,6 +19,7 @@
 
 /* Begin PBXFileReference section */
 		2CB540391F56C2C4006EE521 /* kotlin-example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "kotlin-example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		95115E1C240B4F8D00DEDCAB /* obj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = obj; sourceTree = "<group>"; };
 		9518D9E222C8F48B00C462C0 /* sample.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sample.wav; sourceTree = "<group>"; };
 		9518D9EC22C8F4A100C462C0 /* sprites */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sprites; sourceTree = "<group>"; };
 		9518D9ED22C8F4A100C462C0 /* tiles */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tiles; sourceTree = "<group>"; };
@@ -72,6 +74,7 @@
 		9518D9D622C8F48B00C462C0 /* resources */ = {
 			isa = PBXGroup;
 			children = (
+				95115E1C240B4F8D00DEDCAB /* obj */,
 				9518D9EE22C8F4A100C462C0 /* font */,
 				9518D9EC22C8F4A100C462C0 /* sprites */,
 				9518D9ED22C8F4A100C462C0 /* tiles */,
@@ -152,6 +155,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				95115E1D240B4F8D00DEDCAB /* obj in Resources */,
 				9518D9F022C8F4A100C462C0 /* tiles in Resources */,
 				9518D9D322BF797200C462C0 /* Main.storyboard in Resources */,
 				9518D9EF22C8F4A100C462C0 /* sprites in Resources */,

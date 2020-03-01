@@ -77,7 +77,6 @@ actual class File actual constructor() {
             val files = manager.contentsOfDirectoryAtPath(filepath, error.ptr)
             val errorValue = error.value
             if (errorValue != null) {
-//                logger.error("${errorValue.localizedDescription} [code=${errorValue.code}, path=$filepath]")
                 return@memScoped emptyList()
             } else if (files == null) {
                 return@memScoped emptyList()

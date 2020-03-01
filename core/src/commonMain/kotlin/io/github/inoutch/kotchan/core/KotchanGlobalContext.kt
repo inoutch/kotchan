@@ -3,8 +3,10 @@ package io.github.inoutch.kotchan.core
 import io.github.inoutch.kotchan.core.graphic.compatible.context.Context
 import io.github.inoutch.kotchan.core.graphic.compatible.vk.VKContext
 import io.github.inoutch.kotchan.core.io.file.File
+import kotlin.native.concurrent.ThreadLocal
 
 class KotchanGlobalContext {
+    @ThreadLocal
     companion object {
         lateinit var file: File
             private set

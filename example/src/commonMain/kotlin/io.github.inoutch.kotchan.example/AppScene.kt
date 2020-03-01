@@ -27,9 +27,8 @@ class AppScene(context: SceneContext) : Scene(context) {
     override suspend fun init() {
         val bmFont = BMFontLoader.loadFromResourceWithError("font/sample.fnt")
         val label = LabelSprite.create("Hello World!", bmFont, 60.0f)
-        val textures = bmFont.pages.map { Texture.loadFromResourceWithError(Path.resolve("font", it.file)) }
-
-        val batch = disposer.add(LabelBatch(StandardLabelMaterial.create(shaderProgram, camera, textures)))
+        //val textures = bmFont.pages.map { Texture.loadFromResourceWithError(Path.resolve("font", it.file)) }
+        val batch = disposer.add(LabelBatch(StandardLabelMaterial.create(shaderProgram, camera, emptyList())))
         batch.add(label, 0)
 
         this.batch = batch

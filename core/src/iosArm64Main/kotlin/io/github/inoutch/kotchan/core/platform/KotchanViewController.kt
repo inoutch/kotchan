@@ -2,6 +2,7 @@ package io.github.inoutch.kotchan.core.platform
 
 import eaglview.EAGLView
 import io.github.inoutch.kotchan.core.KotchanEngine
+import io.github.inoutch.kotchan.core.KotchanGlobalContext.Companion.useVulkan
 import io.github.inoutch.kotchan.core.KotchanStartupConfig
 import io.github.inoutch.kotchan.math.Vector2I
 import io.github.inoutch.kotchan.utility.Timer
@@ -93,21 +94,31 @@ class KotchanViewController(
         runBlocking {
             engine.run(KotchanPlatformBridgeConfig(kotchanViewController, viewControllerConfig))
         }
-        initWithEAGL()
 
+        if (!useVulkan) {
+            initWithEAGL()
+        }
         lastTime = Timer.milliseconds()
     }
 
     fun render() {
         GlobalScope.launch(MainLoopDispatcher) {
-            val now = Timer.milliseconds()
-            renderWithEAGL {
-                gl.clearColor(1.0f, 0.0f, 0.0f, 1.0f)
-                gl.clear(GL_COLOR_BUFFER_BIT)
+            runBlocking {
+                val now = Timer.milliseconds()
+                if (useVulkan) {
+                    renderWithMetal {
+                        engine.render((now - lastTime) / 1000.0f)
+                    }
+                } else {
+                    renderWithEAGL {
+                        gl.clearColor(1.0f, 0.0f, 0.0f, 1.0f)
+                        gl.clear(GL_COLOR_BUFFER_BIT)
 
-                engine.render((now - lastTime) / 1000.0f)
+                        engine.render((now - lastTime) / 1000.0f)
+                    }
+                }
+                lastTime = now
             }
-            lastTime = now
         }
     }
 
@@ -175,5 +186,9 @@ class KotchanViewController(
         scope()
 
         engine.platform.eagleContext.presentFramebuffer()
+    }
+
+    private suspend fun renderWithMetal(scope: suspend () -> Unit) {
+        scope()
     }
 }
