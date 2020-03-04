@@ -18,8 +18,8 @@ class KotchanEngine(config: KotchanStartupConfig) {
             // Initialize platform
             platform = KotchanPlatform(this, platformConfig)
             val externalLauncher = (platformConfig as? ExternalPlatformLauncherConfig)?.createLauncher(this)
-            val launcher = platform.createLauncher()
-            KotchanGlobalContext().initialize(startupConfig, externalLauncher ?: launcher)
+            val launcher = externalLauncher ?: platform.createLauncher()
+            KotchanGlobalContext().initialize(startupConfig,  launcher)
 
             // Initialize kotchan engine
             sceneManager.transitScene { startupConfig.createFirstScene(it) }

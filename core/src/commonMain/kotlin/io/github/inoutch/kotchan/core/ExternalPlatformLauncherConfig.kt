@@ -1,5 +1,5 @@
 package io.github.inoutch.kotchan.core
 
-interface ExternalPlatformLauncherConfig {
+interface ExternalPlatformLauncherConfig : KotchanPlatformConfig {
     fun createLauncher(engine: KotchanEngine): KotchanPlatformLauncher
 }
