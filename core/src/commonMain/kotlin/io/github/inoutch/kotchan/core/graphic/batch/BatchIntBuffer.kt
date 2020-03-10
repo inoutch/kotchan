@@ -72,8 +72,8 @@ class BatchIntBuffer(
     }
 
     override fun free(batchBufferPointer: BatchBufferPointer) {
-        pointers.remove(batchBufferPointer)
         reallocate(batchBufferPointer, 0)
+        pointers.remove(batchBufferPointer)
     }
 
     override fun sort(scope: (adder: (pointer: BatchBufferPointer) -> Unit) -> Unit) {

@@ -12,12 +12,29 @@ abstract class BatchBase<TObject>(val material: Material) : Disposer() {
 
     private val objectBundles = mutableListOf<BatchObjectBufferBundle<TObject>>()
 
+    private val objectBundleCache = mutableMapOf<TObject, BatchObjectBufferBundle<TObject>>()
+
     abstract fun update(objectBundle: BatchObjectBufferBundle<TObject>)
 
     abstract fun size(obj: TObject): Int
 
     fun add(obj: TObject, drawOrder: Int = 0) {
-        objectBundles.add(allocate(obj, size(obj), drawOrder))
+        check(!objectBundleCache.containsKey(obj)) { "Object has already been added to batch" }
+        val bundle = allocate(obj, size(obj), drawOrder)
+        objectBundles.add(bundle)
+        objectBundleCache[obj] = bundle
+    }
+
+    fun remove(obj: TObject) {
+        val bundle = objectBundleCache[obj] ?: return
+        objectBundles.remove(bundle)
+        objectBundleCache.remove(obj)
+
+        var i = 0
+        while (i < bundles.size) {
+            bundles[i].batchBuffer.free(bundle.pointers[i])
+            i++
+        }
     }
 
     fun render() {
