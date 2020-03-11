@@ -14,7 +14,7 @@ class BatchBufferTest {
                 override fun copyToBuffer(vertices: IntArray, offset: Int, size: Int) {}
 
                 override fun copyToBuffer(vertices: FloatArray, offset: Int, size: Int) {
-                    vertices.copyOfRange(offset, offset + size).copyInto(nativeBuffer, offset)
+                    vertices.copyOfRange(0, size).copyInto(nativeBuffer, offset)
                 }
             }
         }
@@ -22,6 +22,9 @@ class BatchBufferTest {
         assertEquals(0, batchBuffer.size)
 
         val pointer1 = batchBuffer.allocate(30)
+        assertEquals(pointer1.first, 0)
+        assertEquals(pointer1.size, 30)
+
         assertEquals(30, batchBuffer.size)
         batchBuffer.range(pointer1.first, pointer1.first + 30)
         for (i in 0 until 30) {
@@ -36,6 +39,9 @@ class BatchBufferTest {
         }
 
         val pointer2 = batchBuffer.allocate(10)
+        assertEquals(pointer2.first, 30)
+        assertEquals(pointer2.size, 10)
+
         assertEquals(40, batchBuffer.size)
         copy(batchBuffer, pointer2, 30)
         batchBuffer.flush()

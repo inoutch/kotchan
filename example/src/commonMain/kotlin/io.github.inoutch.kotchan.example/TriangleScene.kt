@@ -33,6 +33,8 @@ class TriangleScene(context: SceneContext) : Scene(context) {
             listOf(Vector4F(1.0f, 1.0f, 1.0f, 1.0f), Vector4F(1.0f, 1.0f, 1.0f, 1.0f), Vector4F(1.0f, 1.0f, 1.0f, 1.0f))
     )
 
+    private var polygon: Polygon? = null
+
     override suspend fun init() {
         val pixels = byteArrayOf(
                 -1, -1, -1, -1, 127, 127, 127, -1,
@@ -61,9 +63,15 @@ class TriangleScene(context: SceneContext) : Scene(context) {
         batch.sortByRenderOrder()
 
         this.batch = batch
+        this.polygon = polygon1
+        batch.remove(polygon2)
     }
 
     override suspend fun update(delta: Float) {
+        val polygon = this.polygon
+        if (polygon != null) {
+            polygon.position += Vector3F(0.1f, 0.0f,0.0f)
+        }
     }
 
     override suspend fun render(delta: Float) {
