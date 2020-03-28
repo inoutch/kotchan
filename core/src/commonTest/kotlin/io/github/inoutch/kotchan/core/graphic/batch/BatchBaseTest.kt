@@ -83,7 +83,7 @@ class BatchBaseTest {
         batch.add(10)
         batch.render()
 
-        testLogger.assertEquals(listOf("size: 10", "allocate: 30", "bind", "update: 10, 0, 0, 30", "flush"))
+        testLogger.assertEquals(listOf("size: 10", "allocate: 30", "bind", "update: 10, 0, 0, 30", "flush", "copyToBuffer: 0, 0, []"))
         testLogger.clear()
 
         batch.add(30)
@@ -128,7 +128,7 @@ class BatchBaseTest {
         testLogger.clear()
 
         batch.render()
-        testLogger.assertEquals(listOf("bind", "update: 10, 0, 0, 30", "update: 27, 0, 30, 81", "flush"))
+        testLogger.assertEquals(listOf("bind", "update: 10, 0, 0, 30", "update: 27, 0, 30, 81", "flush", "copyToBuffer: 0, 0, []"))
         testLogger.clear()
 
         batch.remove(27)
@@ -184,7 +184,8 @@ class BatchBaseTest {
                 "update: 3, 3, 9, 9",
                 "update: 4, 4, 18, 12",
                 "update: 5, 5, 30, 15",
-                "flush"
+                "flush",
+                "copyToBuffer: 0, 45, ${List(45) { 0.0f }}"
         ))
     }
 }

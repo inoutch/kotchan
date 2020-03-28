@@ -38,12 +38,12 @@ class MockContext(val testLogger: TestLogger) : Context {
     }
 
     override fun createVertexBuffer(vertices: IntArray, bufferStorageMode: BufferStorageMode): VertexBuffer {
-        testLogger.log(this, "createVertexBuffer:int: ${vertices.size}, $bufferStorageMode, ${vertices.toList()}")
+        testLogger.log(this, "createVertexBuffer:int: ${vertices.size}, $bufferStorageMode, ${vertices.size}")
         return MockVertexBuffer(testLogger, vertices.size, bufferStorageMode)
     }
 
     override fun createVertexBuffer(vertices: FloatArray, bufferStorageMode: BufferStorageMode): VertexBuffer {
-        testLogger.log(this, "createVertexBuffer:float: ${vertices.size}, $bufferStorageMode, ${vertices.toList()}")
+        testLogger.log(this, "createVertexBuffer:float: ${vertices.size}, $bufferStorageMode, ${vertices.size}")
         return MockVertexBuffer(testLogger, vertices.size, bufferStorageMode)
     }
 

@@ -10,11 +10,12 @@ class MockVertexBuffer(val logger: TestLogger?, size: Int, mode: BufferStorageMo
     private val nativeFloatBuffer = FloatArray(size) { 0.0f }
 
     override fun copyToBuffer(vertices: IntArray, offset: Int, size: Int) {
-        logger?.log(this, "copyToBuffer - offset: $offset, size: $size, vertices: $vertices")
+        logger?.log(this, "copyToBuffer: $offset, $size, ${vertices.copyOfRange(0, size).toList()}")
         vertices.copyOfRange(0, size).copyInto(nativeIntBuffer)
     }
 
     override fun copyToBuffer(vertices: FloatArray, offset: Int, size: Int) {
+        logger?.log(this, "copyToBuffer: $offset, $size, ${vertices.copyOfRange(0, size).toList()}")
         vertices.copyOfRange(0, size).copyInto(nativeFloatBuffer)
     }
 }
