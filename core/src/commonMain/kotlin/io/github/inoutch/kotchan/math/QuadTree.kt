@@ -69,13 +69,17 @@ class QuadTree<T : QuadTree.Object>(val level: Int, val size: Vector2F) {
         val p1 = obj.position / size * cellSize
         val p2 = p1 + obj.size / size * cellSize
         val index = calcMortonNumber(p1.toVector2I(), p2.toVector2I(), level, offsets)
+        if (index < 0 || index >= cells.size) {
+            return
+        }
+
         val node = Cell(index, obj)
         cells[index].add(node)
         objectIndexes[obj] = node
     }
 
     fun remove(obj: T) {
-        val node = objectIndexes.getValue(obj)
+        val node = objectIndexes[obj] ?: return
         cells[node.index].remove(node)
         objectIndexes.remove(obj)
     }
@@ -87,6 +91,7 @@ class QuadTree<T : QuadTree.Object>(val level: Int, val size: Vector2F) {
         var cell = cells[morton + offsets[depth]]
 
         do {
+            // Search objects in current cell and stack
             for (i in 0 until cell.size) {
                 val currentObj = cell[i].obj
                 for (j in i + 1 until cell.size) {
@@ -98,6 +103,7 @@ class QuadTree<T : QuadTree.Object>(val level: Int, val size: Vector2F) {
                 }
             }
 
+            // Make sure it have the depth
             val offset = offsets.getOrNull(depth + 1)
             if (offset != null) {
                 stack.addAll(cell.map { it.obj })
@@ -106,8 +112,8 @@ class QuadTree<T : QuadTree.Object>(val level: Int, val size: Vector2F) {
                 depth++
                 continue
             }
-            var checkedNum = morton and 0x3
 
+            var checkedNum = morton and 0x3
             while (true) {
                 if (checkedNum < 3) {
                     morton++
@@ -118,8 +124,10 @@ class QuadTree<T : QuadTree.Object>(val level: Int, val size: Vector2F) {
                 depth--
                 morton = (morton shr 2)
                 checkedNum = morton and 0x3
-                for (i in 0 until cell.size) {
+                var i = 0
+                while (i < cell.size && stack.isNotEmpty()) {
                     stack.removeAt(stack.size - 1)
+                    i++
                 }
             }
         } while (depth != 0)
