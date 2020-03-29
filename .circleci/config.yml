@@ -1,0 +1,22 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: 'circleci/android:api-26'
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - gradle-v1-{{ .Branch }}-{{ checksum "build.gradle" }}-{{ checksum "core/build.gradle" }}
+      - run: ./gradlew ktlint
+      - run: ./gradlew jvmTest
+      - save_cache:
+          key: gradle-v1-{{ .Branch }}-{{ checksum "build.gradle" }}-{{ checksum "core/build.gradle" }}
+          paths:
+            - ~/.gradle
+
+workflow:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
