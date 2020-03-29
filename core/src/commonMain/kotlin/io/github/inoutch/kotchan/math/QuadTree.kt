@@ -106,14 +106,17 @@ class QuadTree<T : QuadTree.Object>(val level: Int, val size: Vector2F) {
             // Make sure it have the depth
             val offset = offsets.getOrNull(depth + 1)
             if (offset != null) {
-                stack.addAll(cell.map { it.obj })
+                // Add current objects to stack
+                for (c in cell) {
+                    stack.add(c.obj)
+                }
                 morton = morton shl 2
                 cell = cells[morton + offset]
                 depth++
                 continue
             }
 
-            var checkedNum = morton and 0x3
+            var checkedNum = morton and 0b11
             while (true) {
                 if (checkedNum < 3) {
                     morton++
@@ -123,10 +126,12 @@ class QuadTree<T : QuadTree.Object>(val level: Int, val size: Vector2F) {
 
                 depth--
                 morton = (morton shr 2)
-                checkedNum = morton and 0x3
+                checkedNum = morton and 0b11
+                cell = cells[morton + offsets[depth]]
                 var i = 0
-                while (i < cell.size && stack.isNotEmpty()) {
-                    stack.removeAt(stack.size - 1)
+                val s = cell.size
+                while (i < s && stack.isNotEmpty()) {
+                    stack.removeAt(stack.lastIndex)
                     i++
                 }
             }

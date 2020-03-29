@@ -16,7 +16,7 @@ inline fun <T> List<T>.fastForEachIndexed(action: (Int, T) -> Unit) {
     }
 }
 
-fun <T> List<T>.toPairs(): List<Pair<T, T>> {
+fun <T> List<T>.toCombination(): List<Pair<T, T>> {
     val pairs = mutableListOf<Pair<T, T>>()
     for (x in this.indices) {
         for (y in x + 1 until this.size) {

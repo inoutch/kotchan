@@ -1,6 +1,6 @@
 package io.github.inoutch.kotchan.math
 
-import io.github.inoutch.kotchan.extension.toPairs
+import io.github.inoutch.kotchan.extension.toCombination
 import io.github.inoutch.kotchan.utility.Timer
 import io.github.inoutch.kotchan.utility.measure
 import kotlin.random.Random
@@ -29,6 +29,31 @@ class QuadTreeTest {
         assertEquals(1 + 1, QuadTree.calcMortonNumber(Vector2I(5, 1), Vector2I(7, 3), 4, offsets))
         assertEquals(11 + 5, QuadTree.calcMortonNumber(Vector2I(2, 6), Vector2I(3, 7), 4, offsets))
         assertEquals(0, QuadTree.calcMortonNumber(Vector2I(3, 3), Vector2I(6, 6), 4, offsets))
+    }
+
+    @Test
+    fun check3Nodes() {
+        val quadTree = QuadTree<QuadTree.Object>(3, Vector2F(100.0f, 100.0f))
+        // A1
+        quadTree.add(object : QuadTree.Object {
+            override val position: Vector2F = Vector2F(70.0f, 20.0f)
+            override val size: Vector2F = Vector2F(20.0f, 20.0f)
+        })
+        // A2
+        quadTree.add(object : QuadTree.Object {
+            override val position: Vector2F = Vector2F(40.0f, 40.0f)
+            override val size: Vector2F = Vector2F(50.0f, 50.0f)
+        })
+        // A3
+        quadTree.add(object : QuadTree.Object {
+            override val position: Vector2F = Vector2F(28.0f, 28.0f)
+            override val size: Vector2F = Vector2F(20.0f, 20.0f)
+        })
+        var count = 0
+        quadTree.collision { obj1, obj2 ->
+            count++
+        }
+        assertEquals(2, count)
     }
 
     @Test
@@ -78,7 +103,7 @@ class QuadTreeTest {
         var n2 = 0
         println("checkRandom")
         Timer.measure { t ->
-            objects.toPairs().forEach {
+            objects.toCombination().forEach {
                 if (Circle.collision(
                                 Circle(it.first.position + it.first.size / 2.0f, it.first.size.x / 2.0f),
                                 Circle(it.second.position + it.second.size / 2.0f, it.second.size.x / 2.0f))) {
