@@ -19,11 +19,11 @@ import kotlin.test.Test
 
 class BatchTest {
     data class MockSprites(
-            val sprite1: Sprite = Sprite(Vector2F(10, 10)),
-            val sprite2: Sprite = Sprite(Vector2F(10, 10)),
-            val sprite3: Sprite = Sprite(Vector2F(10, 10)),
-            val baseVertices: List<Vector3F> = Sprite.createSquarePositions(Vector2F.Zero, Vector2F(10.0f, 10.0f)),
-            val baseTexcoords: List<Vector2F> = Sprite.createSquareTexcoords(Vector2F.Zero, Vector2F(1.0f, 1.0f))
+        val sprite1: Sprite = Sprite(Vector2F(10, 10)),
+        val sprite2: Sprite = Sprite(Vector2F(10, 10)),
+        val sprite3: Sprite = Sprite(Vector2F(10, 10)),
+        val baseVertices: List<Vector3F> = Sprite.createSquarePositions(Vector2F.Zero, Vector2F(10.0f, 10.0f)),
+        val baseTexcoords: List<Vector2F> = Sprite.createSquareTexcoords(Vector2F.Zero, Vector2F(1.0f, 1.0f))
     ) {
         fun transformPositions(sprite: Sprite, position: Vector3F): Array<Float> {
             sprite.position = position

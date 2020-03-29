@@ -158,11 +158,11 @@ class BatchBaseTest {
                 return obj
             }
         }
-        batch.add(3, 3)//0:9
-        batch.add(4, 4)//9:12
-        batch.add(2, 2)//21:6
-        batch.add(5, 5)//27:15
-        batch.add(1, 1)//42:3
+        batch.add(3, 3) // 0:9
+        batch.add(4, 4) // 9:12
+        batch.add(2, 2) // 21:6
+        batch.add(5, 5) // 27:15
+        batch.add(1, 1) // 42:3
         testLogger.clear()
 
         batch.sortByRenderOrder()
