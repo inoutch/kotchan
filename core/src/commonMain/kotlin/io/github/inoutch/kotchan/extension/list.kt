@@ -15,3 +15,13 @@ inline fun <T> List<T>.fastForEachIndexed(action: (Int, T) -> Unit) {
         i++
     }
 }
+
+fun <T> List<T>.toPairs(): List<Pair<T, T>> {
+    val pairs = mutableListOf<Pair<T, T>>()
+    for (x in this.indices) {
+        for (y in x + 1 until this.size) {
+            pairs.add(Pair(this[x], this[y]))
+        }
+    }
+    return pairs
+}
