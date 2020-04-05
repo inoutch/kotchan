@@ -15,6 +15,11 @@ class ChangeRange(size: Int) {
         this.change = IntRange(0, size)
     }
 
+    fun resizeAndUpdate(size: Int, first: Int) {
+        this.size = size
+        update(first, size)
+    }
+
     fun update(first: Int, last: Int) {
         val change = this.change
         this.change = if (change == null) {

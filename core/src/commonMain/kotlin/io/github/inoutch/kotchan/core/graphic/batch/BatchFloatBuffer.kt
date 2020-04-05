@@ -45,8 +45,7 @@ class BatchFloatBuffer(
         val diff = size - batchBufferPointer.size
         val newSize = last() + diff
         val oldVertices = vertices.copyOf()
-        range(batchBufferPointer.first, newSize)
-        changeRange.resize(newSize)
+        changeRange.resizeAndUpdate(newSize, batchBufferPointer.first)
 
         if (vertices.size < newSize) {
             // Need reallocate vertex buffer

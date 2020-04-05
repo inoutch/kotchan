@@ -217,6 +217,9 @@ class VKContext(
             mustRecreateSwapchainInFrame = true
         }
         currentFrame = (currentFrame + 1) % inFlightFences.size
+
+        // TODO: Synchronize by maxFrameInFlight value
+        vk.deviceWaitIdle(primaryLogicalDevice.device)
     }
 
     override fun resize(windowSize: Vector2I) {
